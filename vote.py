@@ -80,7 +80,9 @@ def get_vote_data(bill_id):
                             "POLY_NM": ["POLY_NM", "POLY", "POLYCD", "POLY_CD", "PARTY_NM"],
                             "BILL_ID": ["BILL_ID", "BILLID", "BILL_KEY"],
                             "BILL_NAME": ["BILL_NAME", "BILL_NM", "BILLNM", "BILL_TITLE"],
-                            "RESULT_VOTE_MOD": ["RESULT_VOTE_MOD", "RESULT", "VOTE_RESULT", "VOTING_RESULT"]
+                            "RESULT_VOTE_MOD": ["RESULT_VOTE_MOD", "RESULT", "VOTE_RESULT", "VOTING_RESULT"],
+                            "BILL_NO": ["BILL_NO", "BILLNO"],
+                            "VOTE_DATE": ["VOTE_DATE", "VOTE", "VOTEDATE"]
                         }
                         
                         # 실제 필드 이름 확인 (첫 번째 항목에서)
