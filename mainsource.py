@@ -12,7 +12,7 @@ params = {
     "KEY": api_key,
     "Type": "json",
     "pIndex": "1",
-    "pSize": "10"
+    "pSize": "300"
 }
 
 # 4. API 요청 보내기
@@ -58,7 +58,7 @@ if response.status_code == 200:
                                 print(f"- {key}: {value}")
                             
                             # 필터링을 위한 필드 매핑
-                            target_fields = ["HG_NM", "POLY_NM", "MONA_CD", "CMITS"]
+                            target_fields = ["HG_NM", "POLY_NM", "MONA_CD", "CMITS", "TEL_NO", "E_MAIL", "HOMEPAGE"]
                             
                             # 발견된 필드 매핑
                             found_fields = {}
