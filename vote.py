@@ -46,7 +46,7 @@ def get_vote_data(bill_id):
         "KEY": api_key,
         "Type": "json",
         "pIndex": "1",
-        "pSize": "100",
+        "pSize": "1000",
         "AGE": "22",         # 22대 국회로 설정
         "BILL_ID": bill_id   # 파일에서 가져온 BILL_ID
     }
