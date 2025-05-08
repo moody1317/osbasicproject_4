@@ -10,7 +10,7 @@ params = {
     "KEY": api_key,
     "Type": "json",
     "pIndex": "1",
-    "pSize": "20",
+    "pSize": "1000",
     "AGE": "22"  # 22대 국회
 }
 
