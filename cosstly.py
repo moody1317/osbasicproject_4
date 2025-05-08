@@ -69,7 +69,7 @@ if response.status_code == 200:
                         "data": filtered_data
                     }
                     
-                    with open("bill_age_data.json", "w", encoding="utf-8") as f:
+                    with open("cosstly.json", "w", encoding="utf-8") as f:
                         json.dump(output_data, f, ensure_ascii=False, indent=2)
                     print(f"\n{len(filtered_data)}개의 정보가 'bill_age_data.json' 파일로 저장되었습니다.")
                 else:

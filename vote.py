@@ -11,7 +11,7 @@ vote_api_url = "https://open.assembly.go.kr/portal/openapi/nojepdqqaweusdfbi"  #
 def get_bill_ids_from_file():
     try:
         # 파일이 존재하는지 확인
-        filename = "nxjuyqnxadtotdrbw_data.json"
+        filename = "all.json"
         if not os.path.exists(filename):
             print(f"파일 '{filename}'이 존재하지 않습니다. all.py를 먼저 실행해주세요.")
             return None

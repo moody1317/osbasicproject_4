@@ -37,10 +37,16 @@ if response.status_code == 200:
 
                     # 필요한 필드만 추출
                     target_fields = ["BILL_NO", "BILL_NM", "PROPOSER", "PROC_RESULT_CD", "ANNOUNCE_DT"]
-
+                    korean_labels = {
+                                "BILL_NO": "의안번호",
+                                "BILL_NM": "의안명",
+                                "PROPOSER": "제안자",
+                                "PROC_RESULT_CD": "의안결과",
+                                "ANNOUNCE_DT": "공포일",
+                            }
                     filtered_rows = []
                     for row in rows:
-                        filtered_row = {field: row.get(field, "") for field in target_fields}
+                        filtered_row = {korean_labels[field]: row.get(field, "") for field in target_fields}
                         filtered_rows.append(filtered_row)
 
                     filtered_data = {
@@ -51,7 +57,7 @@ if response.status_code == 200:
                     print(json.dumps(filtered_data, indent=4, ensure_ascii=False))
 
                     # JSON 파일로 저장
-                    with open("filtered_bills.json", "w", encoding="utf-8") as f:
+                    with open("law.json", "w", encoding="utf-8") as f:
                         json.dump(filtered_data, f, ensure_ascii=False, indent=2)
                     print("\n📁 'filtered_committee_members.json' 파일로 저장 완료.")
                 else:

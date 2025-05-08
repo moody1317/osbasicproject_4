@@ -50,10 +50,10 @@ if response.status_code == 200:
                     print(json.dumps(filtered_data, indent=5, ensure_ascii=False))
 
                     # 파일 저장
-                    with open("filtered_committee_members.json", "w", encoding="utf-8") as f:
+                    with open("bill.json", "w", encoding="utf-8") as f:
                         json.dump(filtered_data, f, ensure_ascii=False, indent=2)
 
-                    print("\n📁 'filtered_committee_members.json' 파일로 저장 완료.")
+                    print("\n📁 'bill.json' 파일로 저장 완료.")
                 else:
                     print("'row' 키가 없거나 형식이 올바르지 않습니다.")
             else:
