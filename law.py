@@ -13,7 +13,7 @@ params = {
     "KEY": api_key,
     "Type": "json",
     "pIndex": "1",
-    "pSize": "100",  # 최대 100개 요청
+    "pSize": "1000",  # 최대 1000개 요청
     "AGE": "22"   # 22대 의안만
 }
 
