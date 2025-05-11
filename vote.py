@@ -13,12 +13,11 @@ def get_bill_ids_from_file():
         # 파일이 존재하는지 확인
         filename_list={
             "all": "all.json",
-            "bill": "bill.json",
             "cost": "cost.json",
             "cosstly": "cosstly.json",
             "etc": "etc.json"
         }
-        filename = "all.json"
+        
         for key in filename_list:
             if not os.path.exists(filename_list[key]):
                 print(f"파일 '{filename_list[key]}'이 존재하지 않습니다.")
@@ -141,14 +140,13 @@ def main():
     if not bill_ids_dict or len(bill_ids_dict) == 0:
         print("BILL_ID 목록을 가져오지 못했습니다.")
         return
-    
+
     for filename, bill_ids in bill_ids_dict.items():
         print(f"\n=== 파일 '{filename}'의 BILL_ID {len(bill_ids)}개 처리 시작 ===")
 
         all_vote_data = []
-        max_bills = min(5, len(bill_ids))  # API 부하 방지를 위해 최대 5개
-        
-        for i, bill_id in enumerate(bill_ids[:max_bills]):
+
+        for i, bill_id in enumerate(bill_ids):
             vote_data = get_vote_data(bill_id)
             
             if vote_data:
@@ -162,10 +160,10 @@ def main():
                         for field in ["HG_NM", "POLY_NM", "BILL_ID", "BILL_NAME", "RESULT_VOTE_MOD"]:
                             print(f"- {field}: {vote.get(field, '')}")
             
-            if i < max_bills - 1:
+            if i < len(bill_ids) - 1:
                 print("다음 API 호출 전 1초 대기...")
                 time.sleep(1)
-        
+
         if all_vote_data:
             # 저장 파일 이름 결정: 예) vote_cost.json
             output_name = filename.replace(".json", "")
