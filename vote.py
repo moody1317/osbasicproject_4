@@ -11,29 +11,38 @@ vote_api_url = "https://open.assembly.go.kr/portal/openapi/nojepdqqaweusdfbi"  #
 def get_bill_ids_from_file():
     try:
         # 파일이 존재하는지 확인
+        filename_list={
+            "all": "all.json",
+            "bill": "bill.json",
+            "cost": "cost.json",
+            "cosstly": "cosstly.json",
+            "etc": "etc.json"
+        }
         filename = "all.json"
-        if not os.path.exists(filename):
-            print(f"파일 '{filename}'이 존재하지 않습니다. all.py를 먼저 실행해주세요.")
-            return None
+        for key in filename_list:
+            if not os.path.exists(filename_list[key]):
+                print(f"파일 '{filename_list[key]}'이 존재하지 않습니다.")
+                return None
+        bill_ids_list={}
+        for key in filename_list:
+            # 파일 내용 읽기
+            with open(filename_list[key], "r", encoding="utf-8") as f:
+                file_data = json.load(f)
         
-        # 파일 내용 읽기
-        with open(filename, "r", encoding="utf-8") as f:
-            file_data = json.load(f)
+            # BILL_ID 목록 추출
+            bill_ids = []
+            if "data" in file_data:
+                for item in file_data["data"]:
+                    if item.get("BILL_ID"):
+                        bill_ids.append(item["BILL_ID"])
         
-        # BILL_ID 목록 추출
-        bill_ids = []
-        if "data" in file_data:
-            for item in file_data["data"]:
-                if item.get("BILL_ID"):
-                    bill_ids.append(item["BILL_ID"])
-        
-        print(f"파일에서 {len(bill_ids)}개의 BILL_ID를 가져왔습니다.")
-        if len(bill_ids) > 0:
-            print("가져온 BILL_ID 목록 (최대 5개):")
-            for i, bill_id in enumerate(bill_ids[:5]):
-                print(f"{i+1}. {bill_id}")
-            
-        return bill_ids
+            print(f"파일에서 {len(bill_ids)}개의 BILL_ID를 가져왔습니다.")
+            if len(bill_ids) > 0:
+                print("가져온 BILL_ID 목록 (최대 5개):")
+                for i, bill_id in enumerate(bill_ids[:5]):
+                    print(f"{i+1}. {bill_id}")
+            bill_ids_list[filename_list[key]]=bill_ids
+        return bill_ids_list
     
     except Exception as e:
         print(f"파일 읽기 오류: {e}")
@@ -125,59 +134,53 @@ def get_vote_data(bill_id):
     
     return None
 
-# 메인 함수
 def main():
-    # BILL_ID 목록 가져오기
-    bill_ids = get_bill_ids_from_file()
+    # BILL_ID 목록 딕셔너리 형태로 가져오기
+    bill_ids_dict = get_bill_ids_from_file()
     
-    if not bill_ids or len(bill_ids) == 0:
+    if not bill_ids_dict or len(bill_ids_dict) == 0:
         print("BILL_ID 목록을 가져오지 못했습니다.")
         return
     
-    # 결과 저장용 리스트
-    all_vote_data = []
-    
-    # 처리할 BILL_ID 수 제한 (API 부하 방지)
-    max_bills = min(5, len(bill_ids))
-    
-    print(f"\n최대 {max_bills}개의 BILL_ID에 대해 투표 정보를 조회합니다.")
-    
-    for i, bill_id in enumerate(bill_ids[:max_bills]):
-        # 투표 정보 API 호출
-        vote_data = get_vote_data(bill_id)
+    for filename, bill_ids in bill_ids_dict.items():
+        print(f"\n=== 파일 '{filename}'의 BILL_ID {len(bill_ids)}개 처리 시작 ===")
+
+        all_vote_data = []
+        max_bills = min(5, len(bill_ids))  # API 부하 방지를 위해 최대 5개
         
-        if vote_data:
-            all_vote_data.extend(vote_data)
-            print(f"누적 투표 데이터: {len(all_vote_data)}개")
+        for i, bill_id in enumerate(bill_ids[:max_bills]):
+            vote_data = get_vote_data(bill_id)
             
-            # 최대 5개의 결과 데이터 출력 (예시)
-            if i == 0:  # 첫 번째 의안의 결과만 출력
-                print("\n---- 투표 결과 예시 ----")
-                display_count = min(5, len(vote_data))
-                for j, vote in enumerate(vote_data[:display_count]):
-                    print(f"\n투표 {j+1}:")
-                    for field in ["HG_NM", "POLY_NM", "BILL_ID", "BILL_NAME", "RESULT_VOTE_MOD"]:
-                        print(f"- {field}: {vote.get(field, '')}")
+            if vote_data:
+                all_vote_data.extend(vote_data)
+                print(f"[{filename}] 누적 투표 데이터: {len(all_vote_data)}개")
+
+                if i == 0:  # 첫 번째 의안의 결과 예시
+                    print("\n---- 투표 결과 예시 ----")
+                    for j, vote in enumerate(vote_data[:min(5, len(vote_data))]):
+                        print(f"\n투표 {j+1}:")
+                        for field in ["HG_NM", "POLY_NM", "BILL_ID", "BILL_NAME", "RESULT_VOTE_MOD"]:
+                            print(f"- {field}: {vote.get(field, '')}")
+            
+            if i < max_bills - 1:
+                print("다음 API 호출 전 1초 대기...")
+                time.sleep(1)
         
-        # API 호출 간격 (부하 방지)
-        if i < max_bills - 1:
-            print("다음 API 호출 전 1초 대기...")
-            time.sleep(1)
-    
-    # 결과 처리
-    if len(all_vote_data) > 0:
-        # 결과를 JSON 파일로 저장
-        output_data = {
-            "vote_data": all_vote_data
-        }
-        
-        output_filename = "vote_data_filtered.json"
-        with open(output_filename, "w", encoding="utf-8") as f:
-            json.dump(output_data, f, ensure_ascii=False, indent=2)
-        print(f"\n총 {len(all_vote_data)}개의 투표 데이터가 '{output_filename}' 파일로 저장되었습니다.")
-        print("저장된 데이터에는 HG_NM, POLY_NM, BILL_ID, BILL_NAME, RESULT_VOTE_MOD 필드만 포함되어 있습니다.")
-    else:
-        print("\n저장할 투표 데이터가 없습니다.")
+        if all_vote_data:
+            # 저장 파일 이름 결정: 예) vote_cost.json
+            output_name = filename.replace(".json", "")
+            output_filename = f"vote_{output_name}.json"
+
+            output_data = {
+                "vote_data": all_vote_data
+            }
+
+            with open(output_filename, "w", encoding="utf-8") as f:
+                json.dump(output_data, f, ensure_ascii=False, indent=2)
+
+            print(f"\n✅ '{output_filename}' 파일로 {len(all_vote_data)}개의 투표 데이터가 저장되었습니다.")
+        else:
+            print(f"\n❗ '{filename}'에 대해 저장할 투표 데이터가 없습니다.")
 
 # 프로그램 실행
 if __name__ == "__main__":
