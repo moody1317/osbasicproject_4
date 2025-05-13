@@ -1,67 +1,48 @@
-# 위원회 위원 명단
 import requests
 import json
+import math
 
-# 1. API URL 설정
 api_url = "https://open.assembly.go.kr/portal/openapi/nktulghcadyhmiqxi"
-
-# 2. API 키 설정
 api_key = "927928bf24af47d4afa7b805ed0bf4fc"
 
-# 3. 요청 파라미터 설정 (AGE는 21, 22)
+p_size = 1000
 params = {
     "KEY": api_key,
     "Type": "json",
-    "pIndex": "1",
-    "pSize": "1000"
+    "pIndex": 1,
+    "pSize": p_size
 }
 
-# 4. API 요청 보내기
+# 전체 데이터를 저장할 리스트
+all_rows = []
+
+print("📡 첫 페이지 호출 중...")
 response = requests.get(api_url, params=params)
+data = response.json()
 
-# 5. 응답 분석 및 필터링
-if response.status_code == 200:
-    try:
+try:
+    list_total_count = data["nktulghcadyhmiqxi"][0]["head"][0]["list_total_count"]
+    total_pages = math.ceil(list_total_count / p_size)
+    print(f"총 {list_total_count}건, {total_pages}페이지 처리 예정")
+
+    for page in range(1, total_pages + 1):
+        print(f"📄 {page}/{total_pages} 페이지 수집 중...")
+        params["pIndex"] = page
+        response = requests.get(api_url, params=params)
         data = response.json()
-        if 'nktulghcadyhmiqxi' in data and isinstance(data['nktulghcadyhmiqxi'], list):
-            api_list = data['nktulghcadyhmiqxi']
-            
-            if len(api_list) > 1:
-                second_item = api_list[1]
-                if isinstance(second_item, dict) and 'row' in second_item:
-                    rows = second_item['row']
-                    
-                    print(f"'row' 데이터 개수: {len(rows)}")
+        rows = data["nktulghcadyhmiqxi"][1].get("row", [])
+        all_rows.extend(rows)
 
-                    # 필터링할 필드
-                    target_fields = ["DEPT_NM", "JOB_RES_NM", "HG_NM", "POLY_NM", "MONA_CD"]
+    # 필터링
+    target_fields = ["DEPT_NM", "JOB_RES_NM", "HG_NM", "POLY_NM", "MONA_CD"]
+    filtered_rows = [
+        {field: row.get(field, "") for field in target_fields} for row in all_rows
+    ]
 
-                    # 필드 매핑 결과 및 필터링된 데이터
-                    filtered_rows = []
-                    for row in rows:
-                        filtered_row = {field: row.get(field, "") for field in target_fields}
-                        filtered_rows.append(filtered_row)
-                    
-                    filtered_data = {"nktulghcadyhmiqxi": filtered_rows}
+    with open("committee.json", "w", encoding="utf-8") as f:
+        json.dump({"committee_members": filtered_rows}, f, ensure_ascii=False, indent=2)
 
-                    # 출력
-                    print("\n필터링된 결과:")
-                    print(json.dumps(filtered_data, indent=5, ensure_ascii=False))
+    print(f"\n✅ 총 {len(filtered_rows)}명의 위원회 위원 명단이 'committee.json'에 저장되었습니다.")
 
-                    # 파일 저장
-                    with open("committee.json", "w", encoding="utf-8") as f:
-                        json.dump(filtered_data, f, ensure_ascii=False, indent=2)
-
-                    print("\n📁 'filtered_committee_members.json' 파일로 저장 완료.")
-                else:
-                    print("'row' 키가 없거나 형식이 올바르지 않습니다.")
-            else:
-                print("API 응답에 유효한 데이터가 없습니다.")
-        else:
-            print("'nktulghcadyhmiqxi' 키를 찾을 수 없거나 리스트가 아닙니다.")
-    except json.JSONDecodeError:
-        print("⚠️ JSON 변환 실패. 응답 내용:")
-        print(response.text[:1000])
-else:
-    print(f"API 요청 실패: {response.status_code}")
-    print(response.text[:1000])
+except Exception as e:
+    print("❌ 오류 발생:", str(e))
