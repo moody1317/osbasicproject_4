@@ -1,68 +1,62 @@
-# 국회의원 발의법률안
 import requests
 import json
+import math
 
-# 1. API URL 설정
-api_url = "https://open.assembly.go.kr/portal/openapi/nzmimeepazxkubdpn"
-
-# 2. API 키 설정
 api_key = "927928bf24af47d4afa7b805ed0bf4fc"
+api_url = "https://open.assembly.go.kr/portal/openapi/nzmimeepazxkubdpn"
+age = "22"
+p_size = 1000
 
-# 3. 요청 파라미터 설정 (AGE는 21, 22)
+# 전체 데이터 저장 리스트
+all_bills = []
+
+# 첫 페이지에서 전체 개수 파악
 params = {
     "KEY": api_key,
     "Type": "json",
-    "pIndex": "1",
-    "pSize": "1000",
-    "AGE": "22"  # 22대 의안만
+    "pIndex": 1,
+    "pSize": p_size,
+    "AGE": age
 }
+print("📡 첫 페이지 호출 중...")
+resp = requests.get(api_url, params=params)
+data = resp.json()
 
-# 4. API 요청 보내기
-response = requests.get(api_url, params=params)
+try:
+    list_total_count = data["nzmimeepazxkubdpn"][0]["head"][0]["list_total_count"]
+    total_pages = math.ceil(list_total_count / p_size)
+    print(f"총 {list_total_count}건의 데이터, {total_pages}페이지")
 
-# 5. 응답 분석 및 필터링
-if response.status_code == 200:
-    try:
-        data = response.json()
-        if 'nzmimeepazxkubdpn' in data and isinstance(data['nzmimeepazxkubdpn'], list):
-            api_list = data['nzmimeepazxkubdpn']
-            
-            if len(api_list) > 1:
-                second_item = api_list[1]
-                if isinstance(second_item, dict) and 'row' in second_item:
-                    rows = second_item['row']
-                    
-                    print(f"'row' 데이터 개수: {len(rows)}")
+    # 각 페이지 반복 요청
+    for page in range(1, total_pages + 1):
+        print(f"📄 {page}/{total_pages} 페이지 처리 중...")
+        params["pIndex"] = page
+        resp = requests.get(api_url, params=params)
+        data = resp.json()
+        rows = data["nzmimeepazxkubdpn"][1].get("row", [])
 
-                    # 필터링할 필드
-                    target_fields = ["PROC_RESULT", "PROPOSER", "RST_PROPOSER", "PUBL_PROPOSER", "BILL_NAME"]
+        for row in rows:
+            bill_id = row.get("BILL_ID", "")
+            main_proposer = row.get("RST_PROPOSER", "")
+            co_proposers_raw = row.get("PUBL_PROPOSER")
+            proc_result = row.get("PROC_RESULT", "")  # 본회의 처리 결과
 
-                    # 필드 매핑 결과 및 필터링된 데이터
-                    filtered_rows = []
-                    for row in rows:
-                        filtered_row = {field: row.get(field, "") for field in target_fields}
-                        filtered_rows.append(filtered_row)
-                    
-                    filtered_data = {"nzmimeepazxkubdpn": filtered_rows}
+            co_proposers = []
+            if isinstance(co_proposers_raw, str):
+                co_proposers = [name.strip() for name in co_proposers_raw.split(",") if name.strip()]
 
-                    # 출력
-                    print("\n필터링된 결과:")
-                    print(json.dumps(filtered_data, indent=5, ensure_ascii=False))
+            all_bills.append({
+                "BILL_ID": bill_id,
+                "MAIN_PROPOSER": main_proposer,
+                "CO_PROPOSERS": co_proposers,
+                "PROC_RESULT": proc_result  # 여기에 본회의 처리 결과 포함
+            })
 
-                    # 파일 저장
-                    with open("bill.json", "w", encoding="utf-8") as f:
-                        json.dump(filtered_data, f, ensure_ascii=False, indent=2)
+    # JSON 저장
+    with open("bill.json", "w", encoding="utf-8") as f:
+        json.dump({"bills": all_bills}, f, ensure_ascii=False, indent=2)
 
-                    print("\n📁 'bill.json' 파일로 저장 완료.")
-                else:
-                    print("'row' 키가 없거나 형식이 올바르지 않습니다.")
-            else:
-                print("API 응답에 유효한 데이터가 없습니다.")
-        else:
-            print("'nzmimeepazxkubdpn' 키를 찾을 수 없거나 리스트가 아닙니다.")
-    except json.JSONDecodeError:
-        print("⚠️ JSON 변환 실패. 응답 내용:")
-        print(response.text[:1000])
-else:
-    print(f"API 요청 실패: {response.status_code}")
-    print(response.text[:1000])
+    print(f"✅ 총 {len(all_bills)}개의 의안이 저장되었습니다.")
+
+except Exception as e:
+    print("❌ 처리 중 오류 발생:", str(e))

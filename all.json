@@ -2,2343 +2,4098 @@
   "data": [
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2M5I0G4Q1A6Q1P5N0V1J2Z9Z2L4O2"
+      "BILL_ID": "PRC_C2M5I0G4Q1A6Q1P5N0V1J2Z9Z2L4O2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2M5I0G4Q1A6Q1P5N0V1J2Z9Z2L4O2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2M5X0R4H1A7E1P3E3M5J3M2S4P1Q3"
+      "BILL_ID": "PRC_J2M5X0R4H1A7E1P3E3M5J3M2S4P1Q3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2M5X0R4H1A7E1P3E3M5J3M2S4P1Q3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2A5B0M4Z1A7N1J3R3D3A4E7A6B2Z2"
+      "BILL_ID": "PRC_O2A5B0M4Z1A7N1J3R3D3A4E7A6B2Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2A5B0M4Z1A7N1J3R3D3A4E7A6B2Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2R5X0P4V0X8J1S6Y0Y4Q4V1X9L6D7"
+      "BILL_ID": "PRC_L2R5X0P4V0X8J1S6Y0Y4Q4V1X9L6D7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2R5X0P4V0X8J1S6Y0Y4Q4V1X9L6D7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2D5H0F4N0Q8B1C6S1W5W1M6Q3Z5K8"
+      "BILL_ID": "PRC_G2D5H0F4N0Q8B1C6S1W5W1M6Q3Z5K8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2D5H0F4N0Q8B1C6S1W5W1M6Q3Z5K8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2L5F0X4S0W8X1I6S0K5C5D5Y6Z0T3"
+      "BILL_ID": "PRC_C2L5F0X4S0W8X1I6S0K5C5D5Y6Z0T3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2L5F0X4S0W8X1I6S0K5C5D5Y6Z0T3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2J5B0I4P1S7S1K3O5Z1D2S5K6K4H7"
+      "BILL_ID": "PRC_W2J5B0I4P1S7S1K3O5Z1D2S5K6K4H7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2J5B0I4P1S7S1K3O5Z1D2S5K6K4H7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2M5P0Y4D2A1S1I5J2F3G0F0Y3Z8X0"
+      "BILL_ID": "PRC_F2M5P0Y4D2A1S1I5J2F3G0F0Y3Z8X0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2M5P0Y4D2A1S1I5J2F3G0F0Y3Z8X0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2U5X0W4Y2E1H1L5F2Y2M0X8W5M4R2"
+      "BILL_ID": "PRC_S2U5X0W4Y2E1H1L5F2Y2M0X8W5M4R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2U5X0W4Y2E1H1L5F2Y2M0X8W5M4R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2Q5T0V4Z2U1P1K5V2H3P2E9X4C3X1"
+      "BILL_ID": "PRC_S2Q5T0V4Z2U1P1K5V2H3P2E9X4C3X1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2Q5T0V4Z2U1P1K5V2H3P2E9X4C3X1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2N5E0X4S2F1R1H5B2Z4L1T7O4L8X2"
+      "BILL_ID": "PRC_W2N5E0X4S2F1R1H5B2Z4L1T7O4L8X2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2N5E0X4S2F1R1H5B2Z4L1T7O4L8X2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2N5G0V4F2J8H1H5D5B0Y0F4P4L1C8"
+      "BILL_ID": "PRC_Y2N5G0V4F2J8H1H5D5B0Y0F4P4L1C8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2N5G0V4F2J8H1H5D5B0Y0F4P4L1C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2F5I0E4C0Q4D1H3W5V6H0F7B3G7E7"
+      "BILL_ID": "PRC_Z2F5I0E4C0Q4D1H3W5V6H0F7B3G7E7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "12.29여객기참사진상규명과피해자및유가족의피해구제를위한특별위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2F5I0E4C0Q4D1H3W5V6H0F7B3G7E7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2S5Q0C3F0D5D1P6X1M8U1R3G9O1Y9"
+      "BILL_ID": "PRC_T2S5Q0C3F0D5D1P6X1M8U1R3G9O1Y9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2S5Q0C3F0D5D1P6X1M8U1R3G9O1Y9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2N5O0W3O0Q4V0M9R4W6P5S3N0Q5R2"
+      "BILL_ID": "PRC_N2N5O0W3O0Q4V0M9R4W6P5S3N0Q5R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2N5O0W3O0Q4V0M9R4W6P5S3N0Q5R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2G5L0H3T0B4U0A9C5B9Q1Z6B3B2H6"
+      "BILL_ID": "PRC_G2G5L0H3T0B4U0A9C5B9Q1Z6B3B2H6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2G5L0H3T0B4U0A9C5B9Q1Z6B3B2H6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2N5H0E3Q0Q4O0F9N5D3B5L0R1V9G0"
+      "BILL_ID": "PRC_O2N5H0E3Q0Q4O0F9N5D3B5L0R1V9G0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2N5H0E3Q0Q4O0F9N5D3B5L0R1V9G0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2T5E0V3A0T4P0M9Z5Z1I5A0D7S0W6"
+      "BILL_ID": "PRC_W2T5E0V3A0T4P0M9Z5Z1I5A0D7S0W6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2T5E0V3A0T4P0M9Z5Z1I5A0D7S0W6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2D5E0N3A0N4E0C9B5F0W4V7F4H1A2"
+      "BILL_ID": "PRC_V2D5E0N3A0N4E0C9B5F0W4V7F4H1A2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2D5E0N3A0N4E0C9B5F0W4V7F4H1A2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2B5N0Q3R0B4D0Y9N5R2S5J0R3J8B7"
+      "BILL_ID": "PRC_C2B5N0Q3R0B4D0Y9N5R2S5J0R3J8B7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2B5N0Q3R0B4D0Y9N5R2S5J0R3J8B7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2R5N0H3N0K5V1C6M2X1W0L1J6Q8C5"
+      "BILL_ID": "PRC_Q2R5N0H3N0K5V1C6M2X1W0L1J6Q8C5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2R5N0H3N0K5V1C6M2X1W0L1J6Q8C5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2Z5I0V3W0D5I1T6N2E1C5T4P6D4U7"
+      "BILL_ID": "PRC_Z2Z5I0V3W0D5I1T6N2E1C5T4P6D4U7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2Z5I0V3W0D5I1T6N2E1C5T4P6D4U7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Z5Z0C1Z2F2B1S8L4I5R5N2Q4V3R3"
+      "BILL_ID": "PRC_B2Z5Z0C1Z2F2B1S8L4I5R5N2Q4V3R3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Z5Z0C1Z2F2B1S8L4I5R5N2Q4V3R3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2B4S1T2C0V4T1E5P2O2E5H2U3F7D3"
+      "BILL_ID": "PRC_J2B4S1T2C0V4T1E5P2O2E5H2U3F7D3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2B4S1T2C0V4T1E5P2O2E5H2U3F7D3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2Z5X0S1Y2Z2E1M7M1C4Q0T5G1G2B5"
+      "BILL_ID": "PRC_W2Z5X0S1Y2Z2E1M7M1C4Q0T5G1G2B5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2Z5X0S1Y2Z2E1M7M1C4Q0T5G1G2B5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2E5T0U3P1U7H0W9X0G0O3P4E6G1A4"
+      "BILL_ID": "PRC_H2E5T0U3P1U7H0W9X0G0O3P4E6G1A4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2E5T0U3P1U7H0W9X0G0O3P4E6G1A4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2H5J0I3S1Q2V1I5T1D8Z0A5X9B6D1"
+      "BILL_ID": "PRC_A2H5J0I3S1Q2V1I5T1D8Z0A5X9B6D1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2H5J0I3S1Q2V1I5T1D8Z0A5X9B6D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2F5B0R3D2W0F1N4J2E6L4R9L3N6H4"
+      "BILL_ID": "PRC_A2F5B0R3D2W0F1N4J2E6L4R9L3N6H4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2F5B0R3D2W0F1N4J2E6L4R9L3N6H4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2I5D0J3T0E4S1K0A1P8C4N7H1A3J7"
+      "BILL_ID": "PRC_H2I5D0J3T0E4S1K0A1P8C4N7H1A3J7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2I5D0J3T0E4S1K0A1P8C4N7H1A3J7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2U5N0L3O0Q7J0A9L5D9R4U1T0G8O8"
+      "BILL_ID": "PRC_E2U5N0L3O0Q7J0A9L5D9R4U1T0G8O8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "외교통일위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2U5N0L3O0Q7J0A9L5D9R4U1T0G8O8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2Q5H0X3W0U4O1E0E1A6P3B7E2W2G2"
+      "BILL_ID": "PRC_E2Q5H0X3W0U4O1E0E1A6P3B7E2W2G2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2Q5H0X3W0U4O1E0E1A6P3B7E2W2G2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2P5Q0W3R0N4G1Z0T2C0R3W3G3L7W2"
+      "BILL_ID": "PRC_I2P5Q0W3R0N4G1Z0T2C0R3W3G3L7W2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2P5Q0W3R0N4G1Z0T2C0R3W3G3L7W2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2H5M0T3U0V7Q1D0J0T2N3S4X2X7H3"
+      "BILL_ID": "PRC_R2H5M0T3U0V7Q1D0J0T2N3S4X2X7H3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "외교통일위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2H5M0T3U0V7Q1D0J0T2N3S4X2X7H3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2X5O0E3Q1T9G1Z1Y0F0T4V3K0K0O2"
+      "BILL_ID": "PRC_A2X5O0E3Q1T9G1Z1Y0F0T4V3K0K0O2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2X5O0E3Q1T9G1Z1Y0F0T4V3K0K0O2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2P5Q0Y2Y0X7X1V1U1V2C1D8C3C2A2"
+      "BILL_ID": "PRC_R2P5Q0Y2Y0X7X1V1U1V2C1D8C3C2A2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "권영진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2P5Q0Y2Y0X7X1V1U1V2C1D8C3C2A2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2S5U0O2M2E4G1O6T4Q9X4O1D3S1M9"
+      "BILL_ID": "PRC_L2S5U0O2M2E4G1O6T4Q9X4O1D3S1M9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2S5U0O2M2E4G1O6T4Q9X4O1D3S1M9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2I5R0E2E2A4O1O6F4S8Q2N8E6H2Y1"
+      "BILL_ID": "PRC_E2I5R0E2E2A4O1O6F4S8Q2N8E6H2Y1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2I5R0E2E2A4O1O6F4S8Q2N8E6H2Y1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2A5J0X2P2X4S1M6O0J4A4Q9Q1T5L0"
+      "BILL_ID": "PRC_T2A5J0X2P2X4S1M6O0J4A4Q9Q1T5L0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2A5J0X2P2X4S1M6O0J4A4Q9Q1T5L0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2K5P0M2V2J4D1R6C0T3F5A1C4V2Q4"
+      "BILL_ID": "PRC_R2K5P0M2V2J4D1R6C0T3F5A1C4V2Q4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2K5P0M2V2J4D1R6C0T3F5A1C4V2Q4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2P5R0E2S1T9G1R5N5F8T5C5P6H4J8"
+      "BILL_ID": "PRC_C2P5R0E2S1T9G1R5N5F8T5C5P6H4J8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2P5R0E2S1T9G1R5N5F8T5C5P6H4J8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2N5J0F2P2D0B1V9G0A8E2V8I1W2R3"
+      "BILL_ID": "PRC_A2N5J0F2P2D0B1V9G0A8E2V8I1W2R3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2N5J0F2P2D0B1V9G0A8E2V8I1W2R3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2W5P0Q2X1B9L1T5M5G6M3L0J2O5Y0"
+      "BILL_ID": "PRC_H2W5P0Q2X1B9L1T5M5G6M3L0J2O5Y0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2W5P0Q2X1B9L1T5M5G6M3L0J2O5Y0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2V5H0N2C2S0D1W9C0M9P1H1S8D3T9"
+      "BILL_ID": "PRC_G2V5H0N2C2S0D1W9C0M9P1H1S8D3T9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2V5H0N2C2S0D1W9C0M9P1H1S8D3T9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2K5V0G2I1A9V1F5E5T5V4N6Y6F1D3"
+      "BILL_ID": "PRC_H2K5V0G2I1A9V1F5E5T5V4N6Y6F1D3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2K5V0G2I1A9V1F5E5T5V4N6Y6F1D3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2O5D0G2F1A9H1X5A5O2X0G4B8G0X2"
+      "BILL_ID": "PRC_K2O5D0G2F1A9H1X5A5O2X0G4B8G0X2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2O5D0G2F1A9H1X5A5O2X0G4B8G0X2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2T5T0H2D1Z9T1W5M5Z2B4C6R8D1T2"
+      "BILL_ID": "PRC_F2T5T0H2D1Z9T1W5M5Z2B4C6R8D1T2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2T5T0H2D1Z9T1W5M5Z2B4C6R8D1T2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2J5L0H2Z2K0B1B9X1A0I4S1W9P3T0"
+      "BILL_ID": "PRC_B2J5L0H2Z2K0B1B9X1A0I4S1W9P3T0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2J5L0H2Z2K0B1B9X1A0I4S1W9P3T0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2X5E0D2O1B9S1C5Q5F7B2E4Y7F0C2"
+      "BILL_ID": "PRC_E2X5E0D2O1B9S1C5Q5F7B2E4Y7F0C2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2X5E0D2O1B9S1C5Q5F7B2E4Y7F0C2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2T5O0Q2E1I9I1L5O5C1V2K1P0P8M5"
+      "BILL_ID": "PRC_B2T5O0Q2E1I9I1L5O5C1V2K1P0P8M5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2T5O0Q2E1I9I1L5O5C1V2K1P0P8M5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2A5W0K2N2Q0S1J9E1H1B2Y8O5S3R9"
+      "BILL_ID": "PRC_I2A5W0K2N2Q0S1J9E1H1B2Y8O5S3R9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2A5W0K2N2Q0S1J9E1H1B2Y8O5S3R9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2S5U0Z2U2F4Y1L4O3K8I1K3I0T3F5"
+      "BILL_ID": "PRC_M2S5U0Z2U2F4Y1L4O3K8I1K3I0T3F5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2S5U0Z2U2F4Y1L4O3K8I1K3I0T3F5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2B5S0F2P2S4S1X5D5Y6S3Z2F7E4K5"
+      "BILL_ID": "PRC_U2B5S0F2P2S4S1X5D5Y6S3Z2F7E4K5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2B5S0F2P2S4S1X5D5Y6S3Z2F7E4K5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2U5E0I2Z2I4K1S1O1F9Y5G3Z1C9A9"
+      "BILL_ID": "PRC_A2U5E0I2Z2I4K1S1O1F9Y5G3Z1C9A9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2U5E0I2Z2I4K1S1O1F9Y5G3Z1C9A9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2Y5D0L2Q2K4Q1M1W2T8L0P6A7L5L5"
+      "BILL_ID": "PRC_J2Y5D0L2Q2K4Q1M1W2T8L0P6A7L5L5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2Y5D0L2Q2K4Q1M1W2T8L0P6A7L5L5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2E5F0A2N1A8P1W5M1C3H4R0L9J2S3"
+      "BILL_ID": "PRC_T2E5F0A2N1A8P1W5M1C3H4R0L9J2S3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2E5F0A2N1A8P1W5M1C3H4R0L9J2S3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2V5I0Y2N1T7O1V4H2B7D4W7U7F0M0"
+      "BILL_ID": "PRC_W2V5I0Y2N1T7O1V4H2B7D4W7U7F0M0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "기획재정위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2V5I0Y2N1T7O1V4H2B7D4W7U7F0M0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2F5T0R2Z1N9B1B5C3V8J5F5F0H2U6"
+      "BILL_ID": "PRC_N2F5T0R2Z1N9B1B5C3V8J5F5F0H2U6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2F5T0R2Z1N9B1B5C3V8J5F5F0H2U6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2M5N0W2L1Z7I1B4W3G4L5F5E8F6F8"
+      "BILL_ID": "PRC_Q2M5N0W2L1Z7I1B4W3G4L5F5E8F6F8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "기획재정위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2M5N0W2L1Z7I1B4W3G4L5F5E8F6F8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2F5B0B2J1S8S1M7R5A8Y0H4Q4V3G8"
+      "BILL_ID": "PRC_M2F5B0B2J1S8S1M7R5A8Y0H4Q4V3G8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2F5B0B2J1S8S1M7R5A8Y0H4Q4V3G8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2E5C0L2N1T8V1U8Z0G3U1V9H5W0U2"
+      "BILL_ID": "PRC_A2E5C0L2N1T8V1U8Z0G3U1V9H5W0U2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2E5C0L2N1T8V1U8Z0G3U1V9H5W0U2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2X5S0P2S1F8N1K8E0P1S4V0B5I5Q7"
+      "BILL_ID": "PRC_V2X5S0P2S1F8N1K8E0P1S4V0B5I5Q7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2X5S0P2S1F8N1K8E0P1S4V0B5I5Q7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2I5G0T2A1A8O1X8O0A5Y0Z4R9G9W0"
+      "BILL_ID": "PRC_O2I5G0T2A1A8O1X8O0A5Y0Z4R9G9W0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2I5G0T2A1A8O1X8O0A5Y0Z4R9G9W0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2G5C0V2S1W8W1D8S0L6A3W3N1O0V7"
+      "BILL_ID": "PRC_F2G5C0V2S1W8W1D8S0L6A3W3N1O0V7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2G5C0V2S1W8W1D8S0L6A3W3N1O0V7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2X5X0P1P0C7B1V3K0F1K1F1P1D7Y5"
+      "BILL_ID": "PRC_O2X5X0P1P0C7B1V3K0F1K1F1P1D7Y5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2X5X0P1P0C7B1V3K0F1K1F1P1D7Y5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2D5F0U2Z1R8S1I5N1A1G3B3P9H9I7"
+      "BILL_ID": "PRC_U2D5F0U2Z1R8S1I5N1A1G3B3P9H9I7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2D5F0U2Z1R8S1I5N1A1G3B3P9H9I7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2D5I0T2O1A8A1Q7Q5O9G4M8N2I0J5"
+      "BILL_ID": "PRC_K2D5I0T2O1A8A1Q7Q5O9G4M8N2I0J5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2D5I0T2O1A8A1Q7Q5O9G4M8N2I0J5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2G5X0R2G1Y8X1D7A5Q5Q0S4K5H9R2"
+      "BILL_ID": "PRC_T2G5X0R2G1Y8X1D7A5Q5Q0S4K5H9R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2G5X0R2G1Y8X1D7A5Q5Q0S4K5H9R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2I5Q0C2B1K8L1M8O0Y7H3V1Z0V2G6"
+      "BILL_ID": "PRC_R2I5Q0C2B1K8L1M8O0Y7H3V1Z0V2G6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2I5Q0C2B1K8L1M8O0Y7H3V1Z0V2G6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2D5E0B2U1S7R1N4S0R5U5N7R0S9E2"
+      "BILL_ID": "PRC_T2D5E0B2U1S7R1N4S0R5U5N7R0S9E2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "기획재정위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2D5E0B2U1S7R1N4S0R5U5N7R0S9E2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2M5H0A2M1B8O1D8S0A8I5Y1L5O5K0"
+      "BILL_ID": "PRC_T2M5H0A2M1B8O1D8S0A8I5Y1L5O5K0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2M5H0A2M1B8O1D8S0A8I5Y1L5O5K0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F5T0K2I1L8P1K8S1Z1P5M9G2M0I1"
+      "BILL_ID": "PRC_G2F5T0K2I1L8P1K8S1Z1P5M9G2M0I1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F5T0K2I1L8P1K8S1Z1P5M9G2M0I1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2N5B0A2A2G5E1H4Z3B8V3K4T3R5P6"
+      "BILL_ID": "PRC_O2N5B0A2A2G5E1H4Z3B8V3K4T3R5P6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2N5B0A2A2G5E1H4Z3B8V3K4T3R5P6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2F5C0D2I1T9N1C9M0E1Y0S1N9K7Z2"
+      "BILL_ID": "PRC_H2F5C0D2I1T9N1C9M0E1Y0S1N9K7Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2F5C0D2I1T9N1C9M0E1Y0S1N9K7Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2A5N0B1L2X3U1W5T0Q0X1Z6V4F8U5"
+      "BILL_ID": "PRC_H2A5N0B1L2X3U1W5T0Q0X1Z6V4F8U5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2A5N0B1L2X3U1W5T0Q0X1Z6V4F8U5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2W5C0M1A2H1G1V8Y4E4P0V0A7X8V9"
+      "BILL_ID": "PRC_W2W5C0M1A2H1G1V8Y4E4P0V0A7X8V9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2W5C0M1A2H1G1V8Y4E4P0V0A7X8V9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2A5Z0N1O2H1D1P5O5I6E1E8X5X0Q4"
+      "BILL_ID": "PRC_B2A5Z0N1O2H1D1P5O5I6E1E8X5X0Q4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2A5Z0N1O2H1D1P5O5I6E1E8X5X0Q4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2V5N0N1Y1V6R1Q4J1D5F5C7I2E8E3"
+      "BILL_ID": "PRC_J2V5N0N1Y1V6R1Q4J1D5F5C7I2E8E3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2V5N0N1Y1V6R1Q4J1D5F5C7I2E8E3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2V5P0R2V0R3M1T6V3Z4S2C6E1G0S2"
+      "BILL_ID": "PRC_P2V5P0R2V0R3M1T6V3Z4S2C6E1G0S2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2V5P0R2V0R3M1T6V3Z4S2C6E1G0S2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2H5V0B2P2K5W1P4E3N6I5U5F9E4K9"
+      "BILL_ID": "PRC_M2H5V0B2P2K5W1P4E3N6I5U5F9E4K9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2H5V0B2P2K5W1P4E3N6I5U5F9E4K9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2W5X0T1L0G6R1Z0C2Y7S1P3L4T2C5"
+      "BILL_ID": "PRC_Q2W5X0T1L0G6R1Z0C2Y7S1P3L4T2C5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2W5X0T1L0G6R1Z0C2Y7S1P3L4T2C5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2H5L0K1X2K2Q1R7U1V1C5K3T2G4M9"
+      "BILL_ID": "PRC_X2H5L0K1X2K2Q1R7U1V1C5K3T2G4M9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2H5L0K1X2K2Q1R7U1V1C5K3T2G4M9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2M5G0X2J2A5N1M4U3W4C4Q5E1N8K8"
+      "BILL_ID": "PRC_Q2M5G0X2J2A5N1M4U3W4C4Q5E1N8K8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2M5G0X2J2A5N1M4U3W4C4Q5E1N8K8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2Q5D0D1Z0F6Q1H0H4H7H4A5M6U5X8"
+      "BILL_ID": "PRC_D2Q5D0D1Z0F6Q1H0H4H7H4A5M6U5X8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2Q5D0D1Z0F6Q1H0H4H7H4A5M6U5X8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2O4H0L9S2F4Y1Q7L3J6F2Q2H6F8K6"
+      "BILL_ID": "PRC_E2O4H0L9S2F4Y1Q7L3J6F2Q2H6F8K6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2O4H0L9S2F4Y1Q7L3J6F2Q2H6F8K6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2G5W0A2X2E4C1T1M2I9H3M3V0Q1M3"
+      "BILL_ID": "PRC_D2G5W0A2X2E4C1T1M2I9H3M3V0Q1M3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2G5W0A2X2E4C1T1M2I9H3M3V0Q1M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2Q5J0Q2U2D5M1C4W3V2Y3M6H4J4K8"
+      "BILL_ID": "PRC_Q2Q5J0Q2U2D5M1C4W3V2Y3M6H4J4K8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2Q5J0Q2U2D5M1C4W3V2Y3M6H4J4K8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2O5H0X2B1I7K1O4N2D8H5B2C9Q3J7"
+      "BILL_ID": "PRC_P2O5H0X2B1I7K1O4N2D8H5B2C9Q3J7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "기획재정위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2O5H0X2B1I7K1O4N2D8H5B2C9Q3J7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2W5V0Q2K1Q7W1L4I3J0Q5L2G5Z1R1"
+      "BILL_ID": "PRC_H2W5V0Q2K1Q7W1L4I3J0Q5L2G5Z1R1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "기획재정위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2W5V0Q2K1Q7W1L4I3J0Q5L2G5Z1R1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2E5J0F1V1H6M1Y4T1G7G4Q9D9N2D8"
+      "BILL_ID": "PRC_J2E5J0F1V1H6M1Y4T1G7G4Q9D9N2D8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2E5J0F1V1H6M1Y4T1G7G4Q9D9N2D8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2Q5F0Q1I1P6J1C4Y1I9G0O5W6X5A3"
+      "BILL_ID": "PRC_T2Q5F0Q1I1P6J1C4Y1I9G0O5W6X5A3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2Q5F0Q1I1P6J1C4Y1I9G0O5W6X5A3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2Q5Q0R2H1H9G1X9J0L5F5V7B1O3R7"
+      "BILL_ID": "PRC_S2Q5Q0R2H1H9G1X9J0L5F5V7B1O3R7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2Q5Q0R2H1H9G1X9J0L5F5V7B1O3R7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2J5N0T2G1Y7V1B9N3L6Y2R3X9R6Z0"
+      "BILL_ID": "PRC_O2J5N0T2G1Y7V1B9N3L6Y2R3X9R6Z0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2J5N0T2G1Y7V1B9N3L6Y2R3X9R6Z0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2W5V0B2V1B7K1M9Y3P3A3O6A2Y2U3"
+      "BILL_ID": "PRC_X2W5V0B2V1B7K1M9Y3P3A3O6A2Y2U3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2W5V0B2V1B7K1M9Y3P3A3O6A2Y2U3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2F5T0O1O1T6Z1F4Q1Z5I2R3R7J8I6"
+      "BILL_ID": "PRC_Z2F5T0O1O1T6Z1F4Q1Z5I2R3R7J8I6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2F5T0O1O1T6Z1F4Q1Z5I2R3R7J8I6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2N5S0A2Z1F7J1S9G3J7B2A2U3M1J9"
+      "BILL_ID": "PRC_Q2N5S0A2Z1F7J1S9G3J7B2A2U3M1J9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2N5S0A2Z1F7J1S9G3J7B2A2U3M1J9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2H5A0N2V2W5T1S4L3O3P2V8U6E9F1"
+      "BILL_ID": "PRC_G2H5A0N2V2W5T1S4L3O3P2V8U6E9F1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2H5A0N2V2W5T1S4L3O3P2V8U6E9F1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2D5N0A1G1K6F1I4Y2T0R0N7F6O0M1"
+      "BILL_ID": "PRC_V2D5N0A1G1K6F1I4Y2T0R0N7F6O0M1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2D5N0A1G1K6F1I4Y2T0R0N7F6O0M1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2K5V0K2H2B5G1K4W3D5A3E0C1Q6P3"
+      "BILL_ID": "PRC_C2K5V0K2H2B5G1K4W3D5A3E0C1Q6P3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2K5V0K2H2B5G1K4W3D5A3E0C1Q6P3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2K5L0K2K2I0J1I7P5Q1O4P6N6O1M2"
+      "BILL_ID": "PRC_D2K5L0K2K2I0J1I7P5Q1O4P6N6O1M2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "맹성규의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2K5L0K2K2I0J1I7P5Q1O4P6N6O1M2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2M5G0E2U1D1F1P4F4H3U1A3R7S7D1"
+      "BILL_ID": "PRC_F2M5G0E2U1D1F1P4F4H3U1A3R7S7D1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서영교의원ㆍ정춘생의원ㆍ윤종오의원 외 188인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2M5G0E2U1D1F1P4F4H3U1A3R7S7D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Q4O1N2N0V2W1U5V3T9S4S3A8B9Z9"
+      "BILL_ID": "PRC_P2Q4O1N2N0V2W1U5V3T9S4S3A8B9Z9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김남희의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Q4O1N2N0V2W1U5V3T9S4S3A8B9Z9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2P4O1O2M0N6L1M0I4I2G5F9G1E0F9"
+      "BILL_ID": "PRC_H2P4O1O2M0N6L1M0I4I2G5F9G1E0F9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "임오경의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2P4O1O2M0N6L1M0I4I2G5F9G1E0F9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2Q5I0O1M0L9H1U2G4U8L5G7L8V2L5"
+      "BILL_ID": "PRC_C2Q5I0O1M0L9H1U2G4U8L5G7L8V2L5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용민의원ㆍ황운하의원ㆍ천하람의원 외 188인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2Q5I0O1M0L9H1U2G4U8L5G7L8V2L5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2C4R1D2E0V2F1D1K3M2T3W3C4D9L5"
+      "BILL_ID": "PRC_L2C4R1D2E0V2F1D1K3M2T3W3C4D9L5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2C4R1D2E0V2F1D1K3M2T3W3C4D9L5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2M4X1X2K1S9N1M3N5U5J3U1A5C1O1"
+      "BILL_ID": "PRC_S2M4X1X2K1S9N1M3N5U5J3U1A5C1O1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2M4X1X2K1S9N1M3N5U5J3U1A5C1O1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2V4L1D2U1Z9X1L3D5M6G0P2P9D2G4"
+      "BILL_ID": "PRC_Z2V4L1D2U1Z9X1L3D5M6G0P2P9D2G4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2V4L1D2U1Z9X1L3D5M6G0P2P9D2G4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2E4M1L2M0X4L1X5K2X9U0U2W9X4I8"
+      "BILL_ID": "PRC_Z2E4M1L2M0X4L1X5K2X9U0U2W9X4I8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2E4M1L2M0X4L1X5K2X9U0U2W9X4I8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2P4Q1X2Y2X7V1V3U2V2J4K9I2H8H3"
+      "BILL_ID": "PRC_R2P4Q1X2Y2X7V1V3U2V2J4K9I2H8H3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박희승의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2P4Q1X2Y2X7V1V3U2V2J4K9I2H8H3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2B4E1J2C1Y9D1O5B3H8P0F1K6Q0O5"
+      "BILL_ID": "PRC_H2B4E1J2C1Y9D1O5B3H8P0F1K6Q0O5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2B4E1J2C1Y9D1O5B3H8P0F1K6Q0O5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2S4Y1U1Z2Y7H1Z1H0D8K3K9M5F1P6"
+      "BILL_ID": "PRC_H2S4Y1U1Z2Y7H1Z1H0D8K3K9M5F1P6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2S4Y1U1Z2Y7H1Z1H0D8K3K9M5F1P6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2G4V1P1M2Y7N1S1U0Q9T0O8S4T5S5"
+      "BILL_ID": "PRC_P2G4V1P1M2Y7N1S1U0Q9T0O8S4T5S5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2G4V1P1M2Y7N1S1U0Q9T0O8S4T5S5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2K4L1J2K2S3S1Q4R0P2O3O7D0E5C7"
+      "BILL_ID": "PRC_M2K4L1J2K2S3S1Q4R0P2O3O7D0E5C7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박상웅의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2K4L1J2K2S3S1Q4R0P2O3O7D0E5C7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2E4V1L2D2C3J1F4T3T2R3J3L4Q6A5"
+      "BILL_ID": "PRC_T2E4V1L2D2C3J1F4T3T2R3J3L4Q6A5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2E4V1L2D2C3J1F4T3T2R3J3L4Q6A5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2T4F1T1D2B0L1F7F3K6Y5G4D5Z3Y2"
+      "BILL_ID": "PRC_M2T4F1T1D2B0L1F7F3K6Y5G4D5Z3Y2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2T4F1T1D2B0L1F7F3K6Y5G4D5Z3Y2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2W4O1U1O2M0D1H7M4N0R4P1P1N7W2"
+      "BILL_ID": "PRC_Z2W4O1U1O2M0D1H7M4N0R4P1P1N7W2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2W4O1U1O2M0D1H7M4N0R4P1P1N7W2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2A4E1W1J2B5Z1A1Y1T8O5Q3D8S5D8"
+      "BILL_ID": "PRC_C2A4E1W1J2B5Z1A1Y1T8O5Q3D8S5D8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2A4E1W1J2B5Z1A1Y1T8O5Q3D8S5D8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2O4A1M1Q2D5F1D2Q2P4P2A9F5S5F9"
+      "BILL_ID": "PRC_C2O4A1M1Q2D5F1D2Q2P4P2A9F5S5F9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2O4A1M1Q2D5F1D2Q2P4P2A9F5S5F9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2I4S1R1H2E0R1Q7D4K1W3N1D6N6C0"
+      "BILL_ID": "PRC_K2I4S1R1H2E0R1Q7D4K1W3N1D6N6C0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2I4S1R1H2E0R1Q7D4K1W3N1D6N6C0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2G4P1U1A2L2O1E3J5W2U0Q2C4Z9X9"
+      "BILL_ID": "PRC_V2G4P1U1A2L2O1E3J5W2U0Q2C4Z9X9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2G4P1U1A2L2O1E3J5W2U0Q2C4Z9X9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2A4J1S1J2N2H1A3U5R4N2C7K2E1W1"
+      "BILL_ID": "PRC_T2A4J1S1J2N2H1A3U5R4N2C7K2E1W1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2A4J1S1J2N2H1A3U5R4N2C7K2E1W1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2L4K1A1I2Q2K1H3Q5A3F1D9W0H6K0"
+      "BILL_ID": "PRC_Z2L4K1A1I2Q2K1H3Q5A3F1D9W0H6K0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2L4K1A1I2Q2K1H3Q5A3F1D9W0H6K0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2I4T1H1M2K7D1S0P0O1G0B3K9Y2O1"
+      "BILL_ID": "PRC_N2I4T1H1M2K7D1S0P0O1G0B3K9Y2O1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2I4T1H1M2K7D1S0P0O1G0B3K9Y2O1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2S4I1N2I2G0U1K6M1K4G5P5L5O9G1"
+      "BILL_ID": "PRC_Q2S4I1N2I2G0U1K6M1K4G5P5L5O9G1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2S4I1N2I2G0U1K6M1K4G5P5L5O9G1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2H4K1L1N2O7F1Y0R0M0K1G4Q5E2E7"
+      "BILL_ID": "PRC_V2H4K1L1N2O7F1Y0R0M0K1G4Q5E2E7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2H4K1L1N2O7F1Y0R0M0K1G4Q5E2E7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2M4J1U1M2X2Q1A3I5D0D0L8F0V7I1"
+      "BILL_ID": "PRC_T2M4J1U1M2X2Q1A3I5D0D0L8F0V7I1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2M4J1U1M2X2Q1A3I5D0D0L8F0V7I1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2C4F1Y1X2K7G0O9Y5Y9C2U6S5K1O8"
+      "BILL_ID": "PRC_K2C4F1Y1X2K7G0O9Y5Y9C2U6S5K1O8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2C4F1Y1X2K7G0O9Y5Y9C2U6S5K1O8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2S4C1J1U2Z7B1N0Z0D1T4G1J9B9B3"
+      "BILL_ID": "PRC_P2S4C1J1U2Z7B1N0Z0D1T4G1J9B9B3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2S4C1J1U2Z7B1N0Z0D1T4G1J9B9B3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2U4H1E1T2K7M0R9P5S8N2S0K3V4K2"
+      "BILL_ID": "PRC_I2U4H1E1T2K7M0R9P5S8N2S0K3V4K2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2U4H1E1T2K7M0R9P5S8N2S0K3V4K2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2J4M1D1F2U7F0O9P5K4J0U2N5O3H7"
+      "BILL_ID": "PRC_M2J4M1D1F2U7F0O9P5K4J0U2N5O3H7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2J4M1D1F2U7F0O9P5K4J0U2N5O3H7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2V4Z1G2K0B3O1I3O3O4C0T1Y7R5Z2"
+      "BILL_ID": "PRC_B2V4Z1G2K0B3O1I3O3O4C0T1Y7R5Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2V4Z1G2K0B3O1I3O3O4C0T1Y7R5Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2K4Y1U2E0G3S1F3U3O5A0J7H0V3U8"
+      "BILL_ID": "PRC_Y2K4Y1U2E0G3S1F3U3O5A0J7H0V3U8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2K4Y1U2E0G3S1F3U3O5A0J7H0V3U8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2G4N1B2K2C0Q1O6U1Y5J5E6Y7C6N4"
+      "BILL_ID": "PRC_I2G4N1B2K2C0Q1O6U1Y5J5E6Y7C6N4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2G4N1B2K2C0Q1O6U1Y5J5E6Y7C6N4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2Z4M1D2P0H3W1U3D3Z7Q1S6Y2F6K1"
+      "BILL_ID": "PRC_G2Z4M1D2P0H3W1U3D3Z7Q1S6Y2F6K1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2Z4M1D2P0H3W1U3D3Z7Q1S6Y2F6K1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2G4W1P2P2V0G1Q6P0J5R3Y3E6V8T0"
+      "BILL_ID": "PRC_V2G4W1P2P2V0G1Q6P0J5R3Y3E6V8T0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2G4W1P2P2V0G1Q6P0J5R3Y3E6V8T0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2C4L1X1C2P7G2P0G3D4F4F5E9B3K6"
+      "BILL_ID": "PRC_E2C4L1X1C2P7G2P0G3D4F4F5E9B3K6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "외교통일위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2C4L1X1C2P7G2P0G3D4F4F5E9B3K6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2K4Z1V2T0G3B1B3D3G6C0I5X2A4N5"
+      "BILL_ID": "PRC_E2K4Z1V2T0G3B1B3D3G6C0I5X2A4N5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2K4Z1V2T0G3B1B3D3G6C0I5X2A4N5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2W4Z1G2N0B3B1Y3C2X8C5R8J4V2Z2"
+      "BILL_ID": "PRC_N2W4Z1G2N0B3B1Y3C2X8C5R8J4V2Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2W4Z1G2N0B3B1Y3C2X8C5R8J4V2Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2P4P1J2C0R3N1U3N2Y7R4Y9N0E0X3"
+      "BILL_ID": "PRC_K2P4P1J2C0R3N1U3N2Y7R4Y9N0E0X3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2P4P1J2C0R3N1U3N2Y7R4Y9N0E0X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2G4A1N2W0X3G1P3A2Z5G5Z0G2W6D9"
+      "BILL_ID": "PRC_C2G4A1N2W0X3G1P3A2Z5G5Z0G2W6D9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2G4A1N2W0X3G1P3A2Z5G5Z0G2W6D9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2E4S1X2G0S3K1I3I4O1Y3V4R4V9M6"
+      "BILL_ID": "PRC_P2E4S1X2G0S3K1I3I4O1Y3V4R4V9M6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2E4S1X2G0S3K1I3I4O1Y3V4R4V9M6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2Y4Z1H2F2G0E1E5D2E4Z2Y9Y9X5Y9"
+      "BILL_ID": "PRC_Z2Y4Z1H2F2G0E1E5D2E4Z2Y9Y9X5Y9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김예지의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2Y4Z1H2F2G0E1E5D2E4Z2Y9Y9X5Y9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2H4M1M1J2J5C1D7E0L0Q5J3M3S3O8"
+      "BILL_ID": "PRC_Y2H4M1M1J2J5C1D7E0L0Q5J3M3S3O8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2H4M1M1J2J5C1D7E0L0Q5J3M3S3O8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2V4H1W1T2K5M1O6E4Q9T0V7Q9S0U0"
+      "BILL_ID": "PRC_R2V4H1W1T2K5M1O6E4Q9T0V7Q9S0U0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2V4H1W1T2K5M1O6E4Q9T0V7Q9S0U0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2S4Q1U2M0A2J1I1S3N4H3B0Z5M9U8"
+      "BILL_ID": "PRC_L2S4Q1U2M0A2J1I1S3N4H3B0Z5M9U8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2S4Q1U2M0A2J1I1S3N4H3B0Z5M9U8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2L4B1A2B0P2P1Q1F2K6E5G2E6O0K2"
+      "BILL_ID": "PRC_Y2L4B1A2B0P2P1Q1F2K6E5G2E6O0K2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2L4B1A2B0P2P1Q1F2K6E5G2E6O0K2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2K4A1L1L2Z5P1B7I0A4R2Q3E3Y4V4"
+      "BILL_ID": "PRC_O2K4A1L1L2Z5P1B7I0A4R2Q3E3Y4V4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2K4A1L1L2Z5P1B7I0A4R2Q3E3Y4V4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2B4Z1A2Y1Y8X1F7F5E2F0D7D4B7K5"
+      "BILL_ID": "PRC_A2B4Z1A2Y1Y8X1F7F5E2F0D7D4B7K5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김정호의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2B4Z1A2Y1Y8X1F7F5E2F0D7D4B7K5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2I4H1P2P1N8O1N7N5L2U5U1S5T7R9"
+      "BILL_ID": "PRC_I2I4H1P2P1N8O1N7N5L2U5U1S5T7R9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김정호의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2I4H1P2P1N8O1N7N5L2U5U1S5T7R9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2K4K0J8H2I3G1H7O3P0O5O6M8N5L4"
+      "BILL_ID": "PRC_C2K4K0J8H2I3G1H7O3P0O5O6M8N5L4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "허영의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2K4K0J8H2I3G1H7O3P0O5O6M8N5L4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2J4T1U1I2W7R1N8O1P8E5T9P6J5W1"
+      "BILL_ID": "PRC_Y2J4T1U1I2W7R1N8O1P8E5T9P6J5W1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2J4T1U1I2W7R1N8O1P8E5T9P6J5W1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2J4I1E1E2D8D0B8A4B6I2J6I3I7H4"
+      "BILL_ID": "PRC_J2J4I1E1E2D8D0B8A4B6I2J6I3I7H4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "장종태의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2J4I1E1E2D8D0B8A4B6I2J6I3I7H4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2M4F1W1H2E7P1D9L4V2Y3N2U2B8H2"
+      "BILL_ID": "PRC_E2M4F1W1H2E7P1D9L4V2Y3N2U2B8H2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2M4F1W1H2E7P1D9L4V2Y3N2U2B8H2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2S4F1P1C2J8N1I0O4E3U3M5B1L0B6"
+      "BILL_ID": "PRC_M2S4F1P1C2J8N1I0O4E3U3M5B1L0B6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2S4F1P1C2J8N1I0O4E3U3M5B1L0B6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2T4Q1D1X2J7W1N9W5K0N2K0F8Z1J8"
+      "BILL_ID": "PRC_Y2T4Q1D1X2J7W1N9W5K0N2K0F8Z1J8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2T4Q1D1X2J7W1N9W5K0N2K0F8Z1J8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2X4L1A1M2D7V1C9P3U5H5J5E4Z2Q5"
+      "BILL_ID": "PRC_P2X4L1A1M2D7V1C9P3U5H5J5E4Z2Q5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2X4L1A1M2D7V1C9P3U5H5J5E4Z2Q5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_N2I4D1Q2A1W7R1H9M3K2B4O3G9Y5O3"
+      "BILL_ID": "ARC_N2I4D1Q2A1W7R1H9M3K2B4O3G9Y5O3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_N2I4D1Q2A1W7R1H9M3K2B4O3G9Y5O3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2J4H1I2G1H2G1N5O1M2N4L4M1K6S0"
+      "BILL_ID": "PRC_J2J4H1I2G1H2G1N5O1M2N4L4M1K6S0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강선우의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2J4H1I2G1H2G1N5O1M2N4L4M1K6S0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2V4T1U2S1A6A1Z4Z1Y4Y4W2F9F8D0"
+      "BILL_ID": "PRC_U2V4T1U2S1A6A1Z4Z1Y4Y4W2F9F8D0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강선우의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2V4T1U2S1A6A1Z4Z1Y4Y4W2F9F8D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2I4J1H2I1E3C1C3B4C5A2A0J1H7H4"
+      "BILL_ID": "PRC_K2I4J1H2I1E3C1C3B4C5A2A0J1H7H4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김성원의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2I4J1H2I1E3C1C3B4C5A2A0J1H7H4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2R4Q1Q2P1N1N1V1W0U6T3T6S1S1A0"
+      "BILL_ID": "PRC_Q2R4Q1Q2P1N1N1V1W0U6T3T6S1S1A0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김성원의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2R4Q1Q2P1N1N1V1W0U6T3T6S1S1A0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2J4H1I1G2F9F1V6W5U2V2T4R4S7A1"
+      "BILL_ID": "PRC_I2J4H1I1G2F9F1V6W5U2V2T4R4S7A1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박민규의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2J4H1I1G2F9F1V6W5U2V2T4R4S7A1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2K4J1J2R0S2Q1R2P2N6O0K9L0J8H1"
+      "BILL_ID": "PRC_M2K4J1J2R0S2Q1R2P2N6O0K9L0J8H1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조계원의원 등 19인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2K4J1J2R0S2Q1R2P2N6O0K9L0J8H1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_M2K4D1X2I1J3S1B3K2C8J0Y3V4U6K3"
+      "BILL_ID": "ARC_M2K4D1X2I1J3S1B3K2C8J0Y3V4U6K3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_M2K4D1X2I1J3S1B3K2C8J0Y3V4U6K3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Y2C4S1M2Y1M2U1T8Q1O8S0G3E1P5M0"
+      "BILL_ID": "ARC_Y2C4S1M2Y1M2U1T8Q1O8S0G3E1P5M0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Y2C4S1M2Y1M2U1T8Q1O8S0G3E1P5M0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_P2G4U1E2T1J2Q1I5G0M0S3X2V3R7U2"
+      "BILL_ID": "ARC_P2G4U1E2T1J2Q1I5G0M0S3X2V3R7U2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_P2G4U1E2T1J2Q1I5G0M0S3X2V3R7U2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Q4X1W1W2V7V1U4U3J4K1I2H6H4G9"
+      "BILL_ID": "PRC_P2Q4X1W1W2V7V1U4U3J4K1I2H6H4G9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "주철현의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Q4X1W1W2V7V1U4U3J4K1I2H6H4G9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2N4V1U1U2S7T1R4S3A6A0Z2X3Y5W8"
+      "BILL_ID": "PRC_N2N4V1U1U2S7T1R4S3A6A0Z2X3Y5W8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "주철현의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2N4V1U1U2S7T1R4S3A6A0Z2X3Y5W8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Z4N1A1J2R7P2M0I3C7V5T3Z6J1X0"
+      "BILL_ID": "PRC_P2Z4N1A1J2R7P2M0I3C7V5T3Z6J1X0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Z4N1A1J2R7P2M0I3C7V5T3Z6J1X0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2T4O1S1H2I7K2Q0S3G3H4A7J4Y6A3"
+      "BILL_ID": "PRC_R2T4O1S1H2I7K2Q0S3G3H4A7J4Y6A3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2T4O1S1H2I7K2Q0S3G3H4A7J4Y6A3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2P4Z1U1B2D7X2F0W3U4Z1S3S8Y3L8"
+      "BILL_ID": "PRC_Q2P4Z1U1B2D7X2F0W3U4Z1S3S8Y3L8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2P4Z1U1B2D7X2F0W3U4Z1S3S8Y3L8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2H4L1L1G2N7C2C0J3Y7B2Z8E4W1M7"
+      "BILL_ID": "PRC_X2H4L1L1G2N7C2C0J3Y7B2Z8E4W1M7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2H4L1L1G2N7C2C0J3Y7B2Z8E4W1M7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2M4A1A1J2P7L2H0N3N4N5K3G9Q6Z2"
+      "BILL_ID": "PRC_H2M4A1A1J2P7L2H0N3N4N5K3G9Q6Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2M4A1A1J2P7L2H0N3N4N5K3G9Q6Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2X4Y1Z1D2C7K2K0K3K8W2V9Q5F8B5"
+      "BILL_ID": "PRC_X2X4Y1Z1D2C7K2K0K3K8W2V9Q5F8B5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2X4Y1Z1D2C7K2K0K3K8W2V9Q5F8B5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2F4J1V1W2O7B2Y0A3V2Z0O6E4M0T2"
+      "BILL_ID": "PRC_E2F4J1V1W2O7B2Y0A3V2Z0O6E4M0T2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2F4J1V1W2O7B2Y0A3V2Z0O6E4M0T2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2Q4E1I1O2J7U2U0P3P3Z1J1O4M5X7"
+      "BILL_ID": "PRC_X2Q4E1I1O2J7U2U0P3P3Z1J1O4M5X7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2Q4E1I1O2J7U2U0P3P3Z1J1O4M5X7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2W4J1R1U2W7W2Q0A3Z9N4Y7S1R4P4"
+      "BILL_ID": "PRC_C2W4J1R1U2W7W2Q0A3Z9N4Y7S1R4P4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2W4J1R1U2W7W2Q0A3Z9N4Y7S1R4P4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2B4O1Y1P2S7V2O0Y3Q2X3H8N5T3E0"
+      "BILL_ID": "PRC_T2B4O1Y1P2S7V2O0Y3Q2X3H8N5T3E0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2B4O1Y1P2S7V2O0Y3Q2X3H8N5T3E0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2H4F1T1Y2E7Q2F0P3C9W1C8U6F3M2"
+      "BILL_ID": "PRC_Z2H4F1T1Y2E7Q2F0P3C9W1C8U6F3M2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2H4F1T1Y2E7Q2F0P3C9W1C8U6F3M2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2J4B1Z1R2M7N2F0B3J6Z2K1Z2F3W7"
+      "BILL_ID": "PRC_O2J4B1Z1R2M7N2F0B3J6Z2K1Z2F3W7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2J4B1Z1R2M7N2F0B3J6Z2K1Z2F3W7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2Y4N1C1P2I7R2C0Y3V5L2D8R8H1K3"
+      "BILL_ID": "PRC_W2Y4N1C1P2I7R2C0Y3V5L2D8R8H1K3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2Y4N1C1P2I7R2C0Y3V5L2D8R8H1K3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2M4G1C2J0J9Y1C1W5M6G0W1Y6Q3B4"
+      "BILL_ID": "PRC_E2M4G1C2J0J9Y1C1W5M6G0W1Y6Q3B4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2M4G1C2J0J9Y1C1W5M6G0W1Y6Q3B4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2J4Y1E1K2I7R1I1I2G4H5A3D5D4R7"
+      "BILL_ID": "PRC_Y2J4Y1E1K2I7R1I1I2G4H5A3D5D4R7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2J4Y1E1K2I7R1I1I2G4H5A3D5D4R7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2W4U1V1R2W7H1O1Z2M7G2S9O1W4D5"
+      "BILL_ID": "PRC_U2W4U1V1R2W7H1O1Z2M7G2S9O1W4D5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2W4U1V1R2W7H1O1Z2M7G2S9O1W4D5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2W4Z1Z2X0H9V1B1J5J6I5D8C8Z2M4"
+      "BILL_ID": "PRC_N2W4Z1Z2X0H9V1B1J5J6I5D8C8Z2M4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2W4Z1Z2X0H9V1B1J5J6I5D8C8Z2M4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2K4G1P2Z0P9J1N0E4F3Y5I4A6S3V1"
+      "BILL_ID": "PRC_A2K4G1P2Z0P9J1N0E4F3Y5I4A6S3V1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용민의원 외 169인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2K4G1P2Z0P9J1N0E4F3Y5I4A6S3V1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2K4I1A2K0L9J1O0V4D2K1Y4P3I7H7"
+      "BILL_ID": "PRC_G2K4I1A2K0L9J1O0V4D2K1Y4P3I7H7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용민의원 외 169인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2K4I1A2K0L9J1O0V4D2K1Y4P3I7H7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_D2C4U1N2I0N4F1H7F4N0O0P8R8M2U3"
+      "BILL_ID": "ARC_D2C4U1N2I0N4F1H7F4N0O0P8R8M2U3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_D2C4U1N2I0N4F1H7F4N0O0P8R8M2U3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2U4Z1H1H2U9A1S6C1F9H4G7N6H0X3"
+      "BILL_ID": "PRC_B2U4Z1H1H2U9A1S6C1F9H4G7N6H0X3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2U4Z1H1H2U9A1S6C1F9H4G7N6H0X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2X4V1V1R2R6Q0R9P4P7O0W7W4U1V6"
+      "BILL_ID": "PRC_Y2X4V1V1R2R6Q0R9P4P7O0W7W4U1V6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정희용의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2X4V1V1R2R6Q0R9P4P7O0W7W4U1V6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2I4H1D0B2A5B1Z5H3G5H2F8E5M2L4"
+      "BILL_ID": "PRC_H2I4H1D0B2A5B1Z5H3G5H2F8E5M2L4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강대식의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2I4H1D0B2A5B1Z5H3G5H2F8E5M2L4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2X4O1Y1Q2E1C1K7A2X7J2V0M3F7K2"
+      "BILL_ID": "PRC_V2X4O1Y1Q2E1C1K7A2X7J2V0M3F7K2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2X4O1Y1Q2E1C1K7A2X7J2V0M3F7K2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2D4X1O1R2F1Q1I7V2B4O5Z2L9I5B5"
+      "BILL_ID": "PRC_G2D4X1O1R2F1Q1I7V2B4O5Z2L9I5B5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2D4X1O1R2F1Q1I7V2B4O5Z2L9I5B5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2G4X1O1Z2W1X1W3C4E9I4P1G5A9O1"
+      "BILL_ID": "PRC_J2G4X1O1Z2W1X1W3C4E9I4P1G5A9O1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2G4X1O1Z2W1X1W3C4E9I4P1G5A9O1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2Y4B1M1S2O1D1Y7S2A2P5T0X2N1N2"
+      "BILL_ID": "PRC_O2Y4B1M1S2O1D1Y7S2A2P5T0X2N1N2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2Y4B1M1S2O1D1Y7S2A2P5T0X2N1N2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Q4E1E1T2V0O1K5R4K2B1P6Y1C3K1"
+      "BILL_ID": "PRC_B2Q4E1E1T2V0O1K5R4K2B1P6Y1C3K1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Q4E1E1T2V0O1K5R4K2B1P6Y1C3K1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2U4H1J1I2W1O1L8K0A6B4E5H9Y6H7"
+      "BILL_ID": "PRC_J2U4H1J1I2W1O1L8K0A6B4E5H9Y6H7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2U4H1J1I2W1O1L8K0A6B4E5H9Y6H7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2H4V1D1I2I0Y1Z5E4H4F2O5L7N9Y1"
+      "BILL_ID": "PRC_X2H4V1D1I2I0Y1Z5E4H4F2O5L7N9Y1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2H4V1D1I2I0Y1Z5E4H4F2O5L7N9Y1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2H4O1A1L2F1O1E3O5S4C4Q1P5R2F5"
+      "BILL_ID": "PRC_Q2H4O1A1L2F1O1E3O5S4C4Q1P5R2F5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2H4O1A1L2F1O1E3O5S4C4Q1P5R2F5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2T4J1N1Q0T5B1Y5A1F9R4F8V0G2U0"
+      "BILL_ID": "PRC_C2T4J1N1Q0T5B1Y5A1F9R4F8V0G2U0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2T4J1N1Q0T5B1Y5A1F9R4F8V0G2U0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2B4E1Y1A0F5Q1K5U1C4Y3T1N1X3P8"
+      "BILL_ID": "PRC_O2B4E1Y1A0F5Q1K5U1C4Y3T1N1X3P8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2B4E1Y1A0F5Q1K5U1C4Y3T1N1X3P8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2R4A1J1S0W5U1F5C1U8K0Q5N2S9Q6"
+      "BILL_ID": "PRC_R2R4A1J1S0W5U1F5C1U8K0Q5N2S9Q6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2R4A1J1S0W5U1F5C1U8K0Q5N2S9Q6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2C4Z1D1G0G5K1N5U1T6L1S4Y3R7Z6"
+      "BILL_ID": "PRC_G2C4Z1D1G0G5K1N5U1T6L1S4Y3R7Z6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2C4Z1D1G0G5K1N5U1T6L1S4Y3R7Z6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2K4A1J1J0W6E1U4F0L0Q0M8Z5U1B8"
+      "BILL_ID": "PRC_U2K4A1J1J0W6E1U4F0L0Q0M8Z5U1B8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2K4A1J1J0W6E1U4F0L0Q0M8Z5U1B8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2C4K1F1V1K3U1X3D5W7O0N3N9W8V9"
+      "BILL_ID": "PRC_X2C4K1F1V1K3U1X3D5W7O0N3N9W8V9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "외교통일위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2C4K1F1V1K3U1X3D5W7O0N3N9W8V9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2C4C1O1V2V0N2G0J5X0V5Z3L7Z5Z0"
+      "BILL_ID": "PRC_N2C4C1O1V2V0N2G0J5X0V5Z3L7Z5Z0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2C4C1O1V2V0N2G0J5X0V5Z3L7Z5Z0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2C4N1D1M0L8Q1W3W0D9M1C2M8B3H4"
+      "BILL_ID": "PRC_J2C4N1D1M0L8Q1W3W0D9M1C2M8B3H4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2C4N1D1M0L8Q1W3W0D9M1C2M8B3H4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2K4W1T1T2P6R1I8Y2Q6Q1W8U5P0U1"
+      "BILL_ID": "PRC_V2K4W1T1T2P6R1I8Y2Q6Q1W8U5P0U1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2K4W1T1T2P6R1I8Y2Q6Q1W8U5P0U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2Z4I1D1M2S6Z1F8T2M7B2D3M0R5H9"
+      "BILL_ID": "PRC_E2Z4I1D1M2S6Z1F8T2M7B2D3M0R5H9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2Z4I1D1M2S6Z1F8T2M7B2D3M0R5H9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2P4B1H0V3J0M1P7O4A4M5Y9X0C7X2"
+      "BILL_ID": "PRC_L2P4B1H0V3J0M1P7O4A4M5Y9X0C7X2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국회운영위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2P4B1H0V3J0M1P7O4A4M5Y9X0C7X2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2V4R1V1X2H6Y1C8B2X9E0F6D5G6N5"
+      "BILL_ID": "PRC_R2V4R1V1X2H6Y1C8B2X9E0F6D5G6N5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2V4R1V1X2H6Y1C8B2X9E0F6D5G6N5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2S4Q1Z0R3L0Y1Q8D2Y7A5W2X8C9B7"
+      "BILL_ID": "PRC_I2S4Q1Z0R3L0Y1Q8D2Y7A5W2X8C9B7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국회운영위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2S4Q1Z0R3L0Y1Q8D2Y7A5W2X8C9B7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2J4E1S1S2I6G1V8L3M0C1P3H8S0H1"
+      "BILL_ID": "PRC_A2J4E1S1S2I6G1V8L3M0C1P3H8S0H1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2J4E1S1S2I6G1V8L3M0C1P3H8S0H1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2K4C1X1H2F0M2Z0D5K9K3C8T6P7Z2"
+      "BILL_ID": "PRC_A2K4C1X1H2F0M2Z0D5K9K3C8T6P7Z2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2K4C1X1H2F0M2Z0D5K9K3C8T6P7Z2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2Q4G1S1S2N0G2F1V0C8F0W5X5H5R7"
+      "BILL_ID": "PRC_F2Q4G1S1S2N0G2F1V0C8F0W5X5H5R7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2Q4G1S1S2N0G2F1V0C8F0W5X5H5R7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2C4G1F1Y2S0Q2R0C5W8C3F1C5Z6M3"
+      "BILL_ID": "PRC_G2C4G1F1Y2S0Q2R0C5W8C3F1C5Z6M3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2C4G1F1Y2S0Q2R0C5W8C3F1C5Z6M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2I4I1T1G2K0Y2W0S5Q7W4I5Z6F4V1"
+      "BILL_ID": "PRC_V2I4I1T1G2K0Y2W0S5Q7W4I5Z6F4V1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2I4I1T1G2K0Y2W0S5Q7W4I5Z6F4V1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2J4H1A1A2Q0F2E1P0V2V1B6K5S2G6"
+      "BILL_ID": "PRC_Q2J4H1A1A2Q0F2E1P0V2V1B6K5S2G6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2J4H1A1A2Q0F2E1P0V2V1B6K5S2G6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2K4E1S1W2Q0J2W0P5B5M3M3A9Q0Y0"
+      "BILL_ID": "PRC_F2K4E1S1W2Q0J2W0P5B5M3M3A9Q0Y0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2K4E1S1W2Q0J2W0P5B5M3M3A9Q0Y0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2R4P1Q1O2O1W1X3V5W1U0V9T3G3G7"
+      "BILL_ID": "PRC_S2R4P1Q1O2O1W1X3V5W1U0V9T3G3G7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "박정하의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2R4P1Q1O2O1W1X3V5W1U0V9T3G3G7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2K4I1J1H0I8P1O1P0N8N4M1M0U6V7"
+      "BILL_ID": "PRC_J2K4I1J1H0I8P1O1P0N8N4M1M0U6V7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "최보윤의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2K4I1J1H0I8P1O1P0N8N4M1M0U6V7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F4F1N1O0M6N1L6J4K9S2S1R1R5P9"
+      "BILL_ID": "PRC_G2F4F1N1O0M6N1L6J4K9S2S1R1R5P9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "황희의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F4F1N1O0M6N1L6J4K9S2S1R1R5P9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Q4O1W1X0V8V1U1V0T9T3C9A3A7Y8"
+      "BILL_ID": "PRC_P2Q4O1W1X0V8V1U1V0T9T3C9A3A7Y8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "최보윤의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Q4O1W1X0V8V1U1V0T9T3C9A3A7Y8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2G4F1B1B2Z5A1Y1Z2X6F1G9E0F9D5"
+      "BILL_ID": "PRC_G2G4F1B1B2Z5A1Y1Z2X6F1G9E0F9D5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이달희의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2G4F1B1B2Z5A1Y1Z2X6F1G9E0F9D5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2N4M1L0K2E3D1C0L2U1T1S2R6L8K2"
+      "BILL_ID": "PRC_G2N4M1L0K2E3D1C0L2U1T1S2R6L8K2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이헌승의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2N4M1L0K2E3D1C0L2U1T1S2R6L8K2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2N4W1U0T2U9T0P9N1L7K4L9T4S9Q0"
+      "BILL_ID": "PRC_P2N4W1U0T2U9T0P9N1L7K4L9T4S9Q0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정연욱의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2N4W1U0T2U9T0P9N1L7K4L9T4S9Q0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2Q4R1Q0Y1W7V0W9U5Q4P3O0O9N0V7"
+      "BILL_ID": "PRC_R2Q4R1Q0Y1W7V0W9U5Q4P3O0O9N0V7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서명옥의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2Q4R1Q0Y1W7V0W9U5Q4P3O0O9N0V7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2O4W1V0T3S0A1B3Z3Y8X0F7E3C7D0"
+      "BILL_ID": "PRC_N2O4W1V0T3S0A1B3Z3Y8X0F7E3C7D0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김예지의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2O4W1V0T3S0A1B3Z3Y8X0F7E3C7D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2R4Q0Z9W2U4Q0Q9O3N0Z4X6E4C1C1"
+      "BILL_ID": "PRC_S2R4Q0Z9W2U4Q0Q9O3N0Z4X6E4C1C1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김원이의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2R4Q0Z9W2U4Q0Q9O3N0Z4X6E4C1C1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4C1C0B2J8I1H0F2G1O3N4L0K3L0"
+      "BILL_ID": "PRC_E2D4C1C0B2J8I1H0F2G1O3N4L0K3L0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "최형두의원 등 25인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4C1C0B2J8I1H0F2G1O3N4L0K3L0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F4E0D9L2I6H1Q0P1O0M2J8G9E1N7"
+      "BILL_ID": "PRC_G2F4E0D9L2I6H1Q0P1O0M2J8G9E1N7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조경태의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F4E0D9L2I6H1Q0P1O0M2J8G9E1N7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2I4S0D9A2Q4N2O1M2W5U1E3L1Q6D1"
+      "BILL_ID": "PRC_I2I4S0D9A2Q4N2O1M2W5U1E3L1Q6D1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2I4S0D9A2Q4N2O1M2W5U1E3L1Q6D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2S4O1N1M0K5T1S0Q5P9X1W3X5W6U8"
+      "BILL_ID": "PRC_T2S4O1N1M0K5T1S0Q5P9X1W3X5W6U8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김윤덕의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2S4O1N1M0K5T1S0Q5P9X1W3X5W6U8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2Z4S0G9D2V4O2L1P2C3S0A6U5O6Y6"
+      "BILL_ID": "PRC_K2Z4S0G9D2V4O2L1P2C3S0A6U5O6Y6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2Z4S0G9D2V4O2L1P2C3S0A6U5O6Y6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2U4G0Y9L2W4N2S1A2G4Z3P4T6T7J6"
+      "BILL_ID": "PRC_R2U4G0Y9L2W4N2S1A2G4Z3P4T6T7J6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2U4G0Y9L2W4N2S1A2G4Z3P4T6T7J6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2B4Y0M9S2B0M1H6Z5Q5N1F4B2V7T2"
+      "BILL_ID": "PRC_A2B4Y0M9S2B0M1H6Z5Q5N1F4B2V7T2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2B4Y0M9S2B0M1H6Z5Q5N1F4B2V7T2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2I4H0H9G1G1O1P1N2O7M5M4K2T9T8"
+      "BILL_ID": "PRC_K2I4H0H9G1G1O1P1N2O7M5M4K2T9T8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박형수의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2I4H0H9G1G1O1P1N2O7M5M4K2T9T8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2X4J0R9O3L0E1L1F3A1T5X7T9S5N0"
+      "BILL_ID": "PRC_R2X4J0R9O3L0E1L1F3A1T5X7T9S5N0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2X4J0R9O3L0E1L1F3A1T5X7T9S5N0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2P4B0X9R2X5Q1K4I2J4W5B5O4D3L2"
+      "BILL_ID": "PRC_A2P4B0X9R2X5Q1K4I2J4W5B5O4D3L2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2P4B0X9R2X5Q1K4I2J4W5B5O4D3L2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2X4W0J9E2K5U1X4E1P2L3J6Y0N5K1"
+      "BILL_ID": "PRC_B2X4W0J9E2K5U1X4E1P2L3J6Y0N5K1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2X4W0J9E2K5U1X4E1P2L3J6Y0N5K1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2U4R0Q9L2B5N1L6E1X4I3V0M9C3W9"
+      "BILL_ID": "PRC_C2U4R0Q9L2B5N1L6E1X4I3V0M9C3W9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2U4R0Q9L2B5N1L6E1X4I3V0M9C3W9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2Z4L0R9D2C5O1C4N1I2Q0X0G6W3X4"
+      "BILL_ID": "PRC_N2Z4L0R9D2C5O1C4N1I2Q0X0G6W3X4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2Z4L0R9D2C5O1C4N1I2Q0X0G6W3X4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2B4R0J8Q2I3C1P1A5T1R4L1R9T4J6"
+      "BILL_ID": "PRC_I2B4R0J8Q2I3C1P1A5T1R4L1R9T4J6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2B4R0J8Q2I3C1P1A5T1R4L1R9T4J6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2J4A1L0C3U0C1P7D3Q9B0Y1Y4S1Q8"
+      "BILL_ID": "PRC_M2J4A1L0C3U0C1P7D3Q9B0Y1Y4S1Q8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국회운영위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2J4A1L0C3U0C1P7D3Q9B0Y1Y4S1Q8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2N4M0O9E2I4I1I7N3D1V1N8V0N0S3"
+      "BILL_ID": "PRC_T2N4M0O9E2I4I1I7N3D1V1N8V0N0S3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2N4M0O9E2I4I1I7N3D1V1N8V0N0S3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2B4A0M9X2V4T1P7W3Q3A2P9S0P8F2"
+      "BILL_ID": "PRC_K2B4A0M9X2V4T1P7W3Q3A2P9S0P8F2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2B4A0M9X2V4T1P7W3Q3A2P9S0P8F2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2X4N0B9H2M4X1D7K3Y8M2Q1Z8Y7R6"
+      "BILL_ID": "PRC_F2X4N0B9H2M4X1D7K3Y8M2Q1Z8Y7R6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2X4N0B9H2M4X1D7K3Y8M2Q1Z8Y7R6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2E4A0B9U2Z4B1B7L2T9Q2B8J3J8W9"
+      "BILL_ID": "PRC_H2E4A0B9U2Z4B1B7L2T9Q2B8J3J8W9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국방위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2E4A0B9U2Z4B1B7L2T9Q2B8J3J8W9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2O4B1L1K0W7T1S4Z5W4T4C0G5W5A4"
+      "BILL_ID": "PRC_L2O4B1L1K0W7T1S4Z5W4T4C0G5W5A4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2O4B1L1K0W7T1S4Z5W4T4C0G5W5A4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2B4C0A9Z2X7F1E1F2E1D3Y3X4Y7X5"
+      "BILL_ID": "PRC_S2B4C0A9Z2X7F1E1F2E1D3Y3X4Y7X5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "백승아의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2B4C0A9Z2X7F1E1F2E1D3Y3X4Y7X5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2W4E1D1D0C5B1I6Q2P6N2M0I1H1I0"
+      "BILL_ID": "PRC_X2W4E1D1D0C5B1I6Q2P6N2M0I1H1I0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이양수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2W4E1D1D0C5B1I6Q2P6N2M0I1H1I0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2L4K0U9R2Q4Z1V0V1D3C4Z5V7W6F6"
+      "BILL_ID": "PRC_E2L4K0U9R2Q4Z1V0V1D3C4Z5V7W6F6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서명옥의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2L4K0U9R2Q4Z1V0V1D3C4Z5V7W6F6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2E4E1D1B0B5A1B4I0J2H0G6G2E3G5"
+      "BILL_ID": "PRC_W2E4E1D1B0B5A1B4I0J2H0G6G2E3G5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "서영교의원 등 19인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2E4E1D1B0B5A1B4I0J2H0G6G2E3G5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_E2P4F1S1Q0E7L1B6O5Y2J1N5G0U5X3"
+      "BILL_ID": "ARC_E2P4F1S1Q0E7L1B6O5Y2J1N5G0U5X3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_E2P4F1S1Q0E7L1B6O5Y2J1N5G0U5X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_F2M4X1W1S0Y7W1T6J4M9O0Z6S3F6M2"
+      "BILL_ID": "ARC_F2M4X1W1S0Y7W1T6J4M9O0Z6S3F6M2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_F2M4X1W1S0Y7W1T6J4M9O0Z6S3F6M2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_T2F4T1M1F0M7A1R0X2Q9M2D5R8C6V9"
+      "BILL_ID": "ARC_T2F4T1M1F0M7A1R0X2Q9M2D5R8C6V9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_T2F4T1M1F0M7A1R0X2Q9M2D5R8C6V9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_S2C4B1J1W0T7E1O0Q2Z4K4S1I6W5V2"
+      "BILL_ID": "ARC_S2C4B1J1W0T7E1O0Q2Z4K4S1I6W5V2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_S2C4B1J1W0T7E1O0Q2Z4K4S1I6W5V2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Y2X4N1J1N0Z7G1F0T1I8H1K5B7H1N9"
+      "BILL_ID": "ARC_Y2X4N1J1N0Z7G1F0T1I8H1K5B7H1N9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Y2X4N1J1N0Z7G1F0T1I8H1K5B7H1N9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2A4Z1U0T1S0R1Y7Y4Y1X1W6E5C6B4"
+      "BILL_ID": "PRC_Z2A4Z1U0T1S0R1Y7Y4Y1X1W6E5C6B4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "백승아의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2A4Z1U0T1S0R1Y7Y4Y1X1W6E5C6B4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4Z1A0Y2X5W1E8D5E6C1B9J2H5I4"
+      "BILL_ID": "PRC_E2D4Z1A0Y2X5W1E8D5E6C1B9J2H5I4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4Z1A0Y2X5W1E8D5E6C1B9J2H5I4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2C4B1J1I0H1F1N7M0G2F5E5D8L9K4"
+      "BILL_ID": "PRC_D2C4B1J1I0H1F1N7M0G2F5E5D8L9K4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "진선미의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2C4B1J1I0H1F1N7M0G2F5E5D8L9K4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2M4L0K9J2F6E1C0C0K3J1I3H8P1M3"
+      "BILL_ID": "PRC_E2M4L0K9J2F6E1C0C0K3J1I3H8P1M3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김병주의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2M4L0K9J2F6E1C0C0K3J1I3H8P1M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2U4S1R0Q2Y5X1Y6X1V4K0J6Z1Y4W2"
+      "BILL_ID": "PRC_M2U4S1R0Q2Y5X1Y6X1V4K0J6Z1Y4W2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "조정훈의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2U4S1R0Q2Y5X1Y6X1V4K0J6Z1Y4W2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2C4D0L9M1K9K1I6J3H4I3Q1O2P8N8"
+      "BILL_ID": "PRC_E2C4D0L9M1K9K1I6J3H4I3Q1O2P8N8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "임종득의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2C4D0L9M1K9K1I6J3H4I3Q1O2P8N8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_T2E4S1X0J3I0Y1V3Z5R3D4U1U8B3U7"
+      "BILL_ID": "ARC_T2E4S1X0J3I0Y1V3Z5R3D4U1U8B3U7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_T2E4S1X0J3I0Y1V3Z5R3D4U1U8B3U7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2T4D1K0X3T0X1U1P3L0X2Q1P0N7O4"
+      "BILL_ID": "ARC_V2T4D1K0X3T0X1U1P3L0X2Q1P0N7O4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2T4D1K0X3T0X1U1P3L0X2Q1P0N7O4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2T4U0S8A0B7Z1Z7Y1Z6X4X5F8G5E5"
+      "BILL_ID": "PRC_V2T4U0S8A0B7Z1Z7Y1Z6X4X5F8G5E5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정을호의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2T4U0S8A0B7Z1Z7Y1Z6X4X5F8G5E5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Q4O0M8N0L7M1U7U2S0T0S5Q6Q2Y8"
+      "BILL_ID": "PRC_P2Q4O0M8N0L7M1U7U2S0T0S5Q6Q2Y8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정을호의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Q4O0M8N0L7M1U7U2S0T0S5Q6Q2Y8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4S1T0S0N9M2L1K2S6S0R1Q8O5X3"
+      "BILL_ID": "PRC_V2U4S1T0S0N9M2L1K2S6S0R1Q8O5X3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이정헌의원 등 18인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4S1T0S0N9M2L1K2S6S0R1Q8O5X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2W4X1W0V0T8P1O4P2N2M1U9T6S9S2"
+      "BILL_ID": "PRC_P2W4X1W0V0T8P1O4P2N2M1U9T6S9S2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "임광현의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2W4X1W0V0T8P1O4P2N2M1U9T6S9S2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2I4I0H9H0F3H1F3F2N7O1M9M8L5J3"
+      "BILL_ID": "PRC_M2I4I0H9H0F3H1F3F2N7O1M9M8L5J3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김준혁의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2I4I0H9H0F3H1F3F2N7O1M9M8L5J3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4E1D0Y1X0W1X1V4D6C3B6B6A9I2"
+      "BILL_ID": "PRC_E2D4E1D0Y1X0W1X1V4D6C3B6B6A9I2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정진욱의원 등 23인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4E1D0Y1X0W1X1V4D6C3B6B6A9I2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_M2I4R1Z0K2S4F1I5O1D7G4F4T8D3W8"
+      "BILL_ID": "ARC_M2I4R1Z0K2S4F1I5O1D7G4F4T8D3W8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_M2I4R1Z0K2S4F1I5O1D7G4F4T8D3W8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2P4N1M0N1V6U1S9R4R9Z5Y7W8X2W9"
+      "BILL_ID": "PRC_Q2P4N1M0N1V6U1S9R4R9Z5Y7W8X2W9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박대출의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2P4N1M0N1V6U1S9R4R9Z5Y7W8X2W9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2K4J1I0I1Q6P1O0M2N1V4U5S1T8S1"
+      "BILL_ID": "PRC_L2K4J1I0I1Q6P1O0M2N1V4U5S1T8S1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "박대출의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2K4J1I0I1Q6P1O0M2N1V4U5S1T8S1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2C4L1K0I1J1H1P7O5P8N3M1I5H1H3"
+      "BILL_ID": "PRC_E2C4L1K0I1J1H1P7O5P8N3M1I5H1H3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "민형배의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2C4L1K0I1J1H1P7O5P8N3M1I5H1H3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2A4N1N0N1V7X0T9F5H7Y2U1P2Q1N2"
+      "BILL_ID": "PRC_L2A4N1N0N1V7X0T9F5H7Y2U1P2Q1N2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용민의원 외 169인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2A4N1N0N1V7X0T9F5H7Y2U1P2Q1N2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_P2H4F1L0S1E6V1R5Y1D5V2G6Q9B8P2"
+      "BILL_ID": "ARC_P2H4F1L0S1E6V1R5Y1D5V2G6Q9B8P2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_P2H4F1L0S1E6V1R5Y1D5V2G6Q9B8P2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_R2T4A1L0D1D6S1M5A1E5P2B2B9R2L9"
+      "BILL_ID": "ARC_R2T4A1L0D1D6S1M5A1E5P2B2B9R2L9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_R2T4A1L0D1D6S1M5A1E5P2B2B9R2L9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_T2I4X1Y0W1R6K1U4C5R8K2J4N6S6Q3"
+      "BILL_ID": "ARC_T2I4X1Y0W1R6K1U4C5R8K2J4N6S6Q3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_T2I4X1Y0W1R6K1U4C5R8K2J4N6S6Q3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2C4W1G0C1M6Y1C0K1N5F5W5C7W2O2"
+      "BILL_ID": "ARC_X2C4W1G0C1M6Y1C0K1N5F5W5C7W2O2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2C4W1G0C1M6Y1C0K1N5F5W5C7W2O2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_S2D4M1R0S1G5D0G9D3U9F0J7S5N2U1"
+      "BILL_ID": "ARC_S2D4M1R0S1G5D0G9D3U9F0J7S5N2U1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_S2D4M1R0S1G5D0G9D3U9F0J7S5N2U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2O4O1X0V1U1S1T4I3H9F4E5F4N6M3"
+      "BILL_ID": "PRC_S2O4O1X0V1U1S1T4I3H9F4E5F4N6M3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서명옥의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2O4O1X0V1U1S1T4I3H9F4E5F4N6M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2J4R1Q0P1P1O0W9V3T3A3Z1H1I2H1"
+      "BILL_ID": "PRC_L2J4R1Q0P1P1O0W9V3T3A3Z1H1I2H1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김윤덕의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2J4R1Q0P1P1O0W9V3T3A3Z1H1I2H1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2H4H1Q0O0N8M1U6S1A0Y0X3Y3U9T2"
+      "BILL_ID": "PRC_I2H4H1Q0O0N8M1U6S1A0Y0X3Y3U9T2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송석준의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2H4H1Q0O0N8M1U6S1A0Y0X3Y3U9T2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4S0T9S2O6M1N8L1K4T5R6S1Q4P7"
+      "BILL_ID": "PRC_V2U4S0T9S2O6M1N8L1K4T5R6S1Q4P7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이종욱의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4S0T9S2O6M1N8L1K4T5R6S1Q4P7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2L4K0I9I2Q6P1O8N1J4G1F4N9M1L0"
+      "BILL_ID": "PRC_E2L4K0I9I2Q6P1O8N1J4G1F4N9M1L0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이종욱의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2L4K0I9I2Q6P1O8N1J4G1F4N9M1L0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2N4M0U9T2Q4Z0Y9U3B3A0Z0G7F7E9"
+      "BILL_ID": "PRC_Q2N4M0U9T2Q4Z0Y9U3B3A0Z0G7F7E9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김원이의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2N4M0U9T2Q4Z0Y9U3B3A0Z0G7F7E9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2Y4N0K9J2R6R1P8O1X3V0V1U0C8Z1"
+      "BILL_ID": "PRC_Z2Y4N0K9J2R6R1P8O1X3V0V1U0C8Z1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이종욱의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2Y4N0K9J2R6R1P8O1X3V0V1U0C8Z1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2Y4G0F9D2E6D1L8K0J5H2I8Q5P8N7"
+      "BILL_ID": "PRC_R2Y4G0F9D2E6D1L8K0J5H2I8Q5P8N7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이종욱의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2Y4G0F9D2E6D1L8K0J5H2I8Q5P8N7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2W4T0R9A2Z5Y2X2F1E4B5X8W5V3U9"
+      "BILL_ID": "PRC_N2W4T0R9A2Z5Y2X2F1E4B5X8W5V3U9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "양부남의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2W4T0R9A2Z5Y2X2F1E4B5X8W5V3U9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2B4B0A9A0Z9Z1H5G0G0E0F7D9E8M0"
+      "BILL_ID": "PRC_C2B4B0A9A0Z9Z1H5G0G0E0F7D9E8M0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "최형두의원 등 18인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2B4B0A9A0Z9Z1H5G0G0E0F7D9E8M0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2X4Y0W9V2D6C1C3B0Z7H1A9B0J3I3"
+      "BILL_ID": "PRC_Y2X4Y0W9V2D6C1C3B0Z7H1A9B0J3I3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박충권의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2X4Y0W9V2D6C1C3B0Z7H1A9B0J3I3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F4E0L9K2J5I1Q5P4O2N2J4G6F6N2"
+      "BILL_ID": "PRC_G2F4E0L9K2J5I1Q5P4O2N2J4G6F6N2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "맹성규의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F4E0L9K2J5I1Q5P4O2N2J4G6F6N2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2V4T0P9Q2O3O1N7O2M6M1Z4A6Y8Y3"
+      "BILL_ID": "PRC_V2V4T0P9Q2O3O1N7O2M6M1Z4A6Y8Y3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용태의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2V4T0P9Q2O3O1N7O2M6M1Z4A6Y8Y3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2O4E0V9X1K0Y1N5G2U1E0K9S8I3C8"
+      "BILL_ID": "PRC_R2O4E0V9X1K0Y1N5G2U1E0K9S8I3C8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2O4E0V9X1K0Y1N5G2U1E0K9S8I3C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2R4A0Y9Y1R0G2K0P2O7O5C5L7H4G0"
+      "BILL_ID": "PRC_N2R4A0Y9Y1R0G2K0P2O7O5C5L7H4G0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2R4A0Y9Y1R0G2K0P2O7O5C5L7H4G0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2Q4P0U9J1H0F1C5X1Y9A0L0E6I4S4"
+      "BILL_ID": "PRC_A2Q4P0U9J1H0F1C5X1Y9A0L0E6I4S4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2Q4P0U9J1H0F1C5X1Y9A0L0E6I4S4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2Q4S0H9I1P0R2H0D0N7M0F7X5J8J2"
+      "BILL_ID": "PRC_H2Q4S0H9I1P0R2H0D0N7M0F7X5J8J2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2Q4S0H9I1P0R2H0D0N7M0F7X5J8J2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2M4Z0R9G1V0R1M5E1Q7J3J3I9X7X4"
+      "BILL_ID": "PRC_B2M4Z0R9G1V0R1M5E1Q7J3J3I9X7X4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2M4Z0R9G1V0R1M5E1Q7J3J3I9X7X4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2Q4Q0X9X1J0Z2F0Q1U7J0S4G3O2U1"
+      "BILL_ID": "PRC_I2Q4Q0X9X1J0Z2F0Q1U7J0S4G3O2U1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2Q4Q0X9X1J0Z2F0Q1U7J0S4G3O2U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2D4D0V9J1W0C2K0E1A2Y1Z2Y2X1A7"
+      "BILL_ID": "PRC_T2D4D0V9J1W0C2K0E1A2Y1Z2Y2X1A7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2D4D0V9J1W0C2K0E1A2Y1Z2Y2X1A7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2S4A0F9V1X0Q1Q5F2Q2R1V0J4U4D1"
+      "BILL_ID": "PRC_Q2S4A0F9V1X0Q1Q5F2Q2R1V0J4U4D1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2S4A0F9V1X0Q1Q5F2Q2R1V0J4U4D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2C4B0M9Y0U5O1C4Y2K4W5A6E5P5N7"
+      "BILL_ID": "PRC_D2C4B0M9Y0U5O1C4Y2K4W5A6E5P5N7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2C4B0M9Y0U5O1C4Y2K4W5A6E5P5N7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2D4K0L9D0O5B1M4N2A9S1V5L7S3R6"
+      "BILL_ID": "PRC_B2D4K0L9D0O5B1M4N2A9S1V5L7S3R6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2D4K0L9D0O5B1M4N2A9S1V5L7S3R6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2K4K0O9L0L5Q1W4W2N5B4H4F7Z1A6"
+      "BILL_ID": "PRC_J2K4K0O9L0L5Q1W4W2N5B4H4F7Z1A6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2K4K0O9L0L5Q1W4W2N5B4H4F7Z1A6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2O4H0N9E0Q5G1B4T2S9A5I2S1S2X8"
+      "BILL_ID": "PRC_S2O4H0N9E0Q5G1B4T2S9A5I2S1S2X8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2O4H0N9E0Q5G1B4T2S9A5I2S1S2X8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2T4Y0R9S0D2K0J9U1J7I2K8N3H2N4"
+      "BILL_ID": "PRC_O2T4Y0R9S0D2K0J9U1J7I2K8N3H2N4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2T4Y0R9S0D2K0J9U1J7I2K8N3H2N4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2U4V0P9M0S2O0K9O1S8K2S6Q1V6D4"
+      "BILL_ID": "PRC_N2U4V0P9M0S2O0K9O1S8K2S6Q1V6D4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2U4V0P9M0S2O0K9O1S8K2S6Q1V6D4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2T4H0C8S2F3R1U1B5H3V2Z5H9I0A5"
+      "BILL_ID": "PRC_H2T4H0C8S2F3R1U1B5H3V2Z5H9I0A5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2T4H0C8S2F3R1U1B5H3V2Z5H9I0A5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2E4E0W9L0J2N0O9O1Q5K5Z5Z0N4I1"
+      "BILL_ID": "PRC_A2E4E0W9L0J2N0O9O1Q5K5Z5Z0N4I1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2E4E0W9L0J2N0O9O1Q5K5Z5Z0N4I1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2K4A0O8L2B3Z1A0C0T6I1A0V2U1F9"
+      "BILL_ID": "PRC_F2K4A0O8L2B3Z1A0C0T6I1A0V2U1F9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2K4A0O8L2B3Z1A0C0T6I1A0V2U1F9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2D4U0X8X2N3S1N5N2T0A0H5R5I7S7"
+      "BILL_ID": "PRC_J2D4U0X8X2N3S1N5N2T0A0H5R5I7S7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2D4U0X8X2N3S1N5N2T0A0H5R5I7S7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2B4E0C9A0X3Y0T9J5Q0U3J4B5K0K1"
+      "BILL_ID": "PRC_Z2B4E0C9A0X3Y0T9J5Q0U3J4B5K0K1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "교육위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2B4E0C9A0X3Y0T9J5Q0U3J4B5K0K1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2Y4Y0P9E0L2Q0R9V1U5B1E5Q3E0L6"
+      "BILL_ID": "PRC_G2Y4Y0P9E0L2Q0R9V1U5B1E5Q3E0L6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2Y4Y0P9E0L2Q0R9V1U5B1E5Q3E0L6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2A4J0Y9I2L0O1F6H5H2R5Q5B1K5R2"
+      "BILL_ID": "PRC_Y2A4J0Y9I2L0O1F6H5H2R5Q5B1K5R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2A4J0Y9I2L0O1F6H5H2R5Q5B1K5R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2G4Z0A9H2E3N1F7Q0R3H4U4G0U1B2"
+      "BILL_ID": "PRC_P2G4Z0A9H2E3N1F7Q0R3H4U4G0U1B2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2G4Z0A9H2E3N1F7Q0R3H4U4G0U1B2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2S4T0T9X0B3P0J9L1Y6S3N0L9S7V1"
+      "BILL_ID": "PRC_Z2S4T0T9X0B3P0J9L1Y6S3N0L9S7V1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2S4T0T9X0B3P0J9L1Y6S3N0L9S7V1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2U4U0G9W0C3H0C9M2W8M5C9C5N7T0"
+      "BILL_ID": "PRC_S2U4U0G9W0C3H0C9M2W8M5C9C5N7T0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2U4U0G9W0C3H0C9M2W8M5C9C5N7T0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2I4Y0O9A0B3B0E9O3J1E1S0S3S6Z0"
+      "BILL_ID": "PRC_Z2I4Y0O9A0B3B0E9O3J1E1S0S3S6Z0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "농림축산식품해양수산위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2I4Y0O9A0B3B0E9O3J1E1S0S3S6Z0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2Y4E0I9O2V4I2L1M0L0R1Y9O7P7E7"
+      "BILL_ID": "PRC_Q2Y4E0I9O2V4I2L1M0L0R1Y9O7P7E7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2Y4E0I9O2V4I2L1M0L0R1Y9O7P7E7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2M4C0P8Q2N8T1I3P2J8G4Z0Z7L8B1"
+      "BILL_ID": "PRC_S2M4C0P8Q2N8T1I3P2J8G4Z0Z7L8B1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2M4C0P8Q2N8T1I3P2J8G4Z0Z7L8B1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2T4M0E9H2D0C1V6P4L1K0R6M8Q1P8"
+      "BILL_ID": "PRC_S2T4M0E9H2D0C1V6P4L1K0R6M8Q1P8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "여성가족위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2T4M0E9H2D0C1V6P4L1K0R6M8Q1P8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2V4G0V9O0K2K0X9U1U4D2W2D2B9I0"
+      "BILL_ID": "PRC_S2V4G0V9O0K2K0X9U1U4D2W2D2B9I0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2V4G0V9O0K2K0X9U1U4D2W2D2B9I0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2F4K0Z9J0R2C0A9Y1A9W1D8A5W9A2"
+      "BILL_ID": "PRC_J2F4K0Z9J0R2C0A9Y1A9W1D8A5W9A2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2F4K0Z9J0R2C0A9Y1A9W1D8A5W9A2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2I4X0P9W0E2F0T9I1N3F5D1M1E6D0"
+      "BILL_ID": "PRC_M2I4X0P9W0E2F0T9I1N3F5D1M1E6D0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2I4X0P9W0E2F0T9I1N3F5D1M1E6D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2H4F0U9C0C2M0U9C1Y7H5K7V0O7C5"
+      "BILL_ID": "PRC_M2H4F0U9C0C2M0U9C1Y7H5K7V0O7C5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2H4F0U9C0C2M0U9C1Y7H5K7V0O7C5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2A4K0T9U0V2C0V9F1Z3P1L1K1X0T5"
+      "BILL_ID": "PRC_U2A4K0T9U0V2C0V9F1Z3P1L1K1X0T5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "문화체육관광위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2A4K0T9U0V2C0V9F1Z3P1L1K1X0T5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2K4Y0U9B2E4C2V1M0M5S2Y0W4C3W9"
+      "BILL_ID": "PRC_V2K4Y0U9B2E4C2V1M0M5S2Y0W4C3W9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2K4Y0U9B2E4C2V1M0M5S2Y0W4C3W9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2T4S0S9R1R9Z1A0Y1W1X0W4W6S6S2"
+      "BILL_ID": "PRC_T2T4S0S9R1R9Z1A0Y1W1X0W4W6S6S2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서미화의원 등 21인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2T4S0S9R1R9Z1A0Y1W1X0W4W6S6S2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2X4V0V8D0E5C1B6B5Z4A5W9X9V5V7"
+      "BILL_ID": "PRC_W2X4V0V8D0E5C1B6B5Z4A5W9X9V5V7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김기웅의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2X4V0V8D0E5C1B6B5Z4A5W9X9V5V7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2G4H0F9G0E9F1D3L2L6K1L4J0J3I2"
+      "BILL_ID": "PRC_L2G4H0F9G0E9F1D3L2L6K1L4J0J3I2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "서천호의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2G4H0F9G0E9F1D3L2L6K1L4J0J3I2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2W4U0C9D2B3B1Z0A4V9W3U1V1T4S8"
+      "BILL_ID": "PRC_V2W4U0C9D2B3B1Z0A4V9W3U1V1T4S8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "손명수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2W4U0C9D2B3B1Z0A4V9W3U1V1T4S8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2L4M0K8J2J7R1R3Q3R2P2P6O4W6W8"
+      "BILL_ID": "PRC_N2L4M0K8J2J7R1R3Q3R2P2P6O4W6W8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박성민의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2L4M0K8J2J7R1R3Q3R2P2P6O4W6W8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4C0C9B1B9Z1A6Z3Z5H0H5F6E9F4"
+      "BILL_ID": "PRC_V2U4C0C9B1B9Z1A6Z3Z5H0H5F6E9F4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "오기형의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4C0C9B1B9Z1A6Z3Z5H0H5F6E9F4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2Q4R0P9Q0P9K1L7J3K9I2J4H7P8P1"
+      "BILL_ID": "PRC_S2Q4R0P9Q0P9K1L7J3K9I2J4H7P8P1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "장철민의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2Q4R0P9Q0P9K1L7J3K9I2J4H7P8P1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2M4V0T7U3T1R1A6Y0X9W0W6M5K0J4"
+      "BILL_ID": "PRC_O2M4V0T7U3T1R1A6Y0X9W0W6M5K0J4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "성일종의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2M4V0T7U3T1R1A6Y0X9W0W6M5K0J4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2C4D0B9C1A3Z0Z9V4W1U2U0S6R9S6"
+      "BILL_ID": "PRC_U2C4D0B9C1A3Z0Z9V4W1U2U0S6R9S6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "유영하의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2C4D0B9C1A3Z0Z9V4W1U2U0S6R9S6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2T4R0S8R1P2P1L4M0K8K2J4K6I9I6"
+      "BILL_ID": "PRC_T2T4R0S8R1P2P1L4M0K8K2J4K6I9I6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김승수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2T4R0S8R1P2P1L4M0K8K2J4K6I9I6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2W4V0W8U2C8D1B4C1A8A5Z5V7V4U3"
+      "BILL_ID": "PRC_W2W4V0W8U2C8D1B4C1A8A5Z5V7V4U3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김동아의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2W4V0W8U2C8D1B4C1A8A5Z5V7V4U3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2K4K0G8G1F3D1E0C5D6K4J9K7I3J6"
+      "BILL_ID": "PRC_L2K4K0G8G1F3D1E0C5D6K4J9K7I3J6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강민국의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2K4K0G8G1F3D1E0C5D6K4J9K7I3J6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2D4S0V9L1P0C1U4K4O4O3D0J4G1C3"
+      "BILL_ID": "PRC_H2D4S0V9L1P0C1U4K4O4O3D0J4G1C3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2D4S0V9L1P0C1U4K4O4O3D0J4G1C3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2V4Q0A9W0M4H1Y9R4R5T2H2J4M8Q3"
+      "BILL_ID": "PRC_K2V4Q0A9W0M4H1Y9R4R5T2H2J4M8Q3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2V4Q0A9W0M4H1Y9R4R5T2H2J4M8Q3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2Z4G0P9D1B0N1P4G4P6S3T5H0I9B4"
+      "BILL_ID": "PRC_D2Z4G0P9D1B0N1P4G4P6S3T5H0I9B4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2Z4G0P9D1B0N1P4G4P6S3T5H0I9B4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2V4T0U8C3A0B1Z3A3Y9Y3H4F0F0E6"
+      "BILL_ID": "PRC_U2V4T0U8C3A0B1Z3A3Y9Y3H4F0F0E6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "권영진의원ㆍ손명수의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2V4T0U8C3A0B1Z3A3Y9Y3H4F0F0E6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2E4C0C8B3B0Z1H6I1G7H2F8F1E5F7"
+      "BILL_ID": "PRC_D2E4C0C8B3B0Z1H6I1G7H2F8F1E5F7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이기헌의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2E4C0C8B3B0Z1H6I1G7H2F8F1E5F7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2K4I0I8G1P6P1N0O5N9N0L1B9B8Z8"
+      "BILL_ID": "PRC_J2K4I0I8G1P6P1N0O5N9N0L1B9B8Z8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "황정아의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2K4I0I8G1P6P1N0O5N9N0L1B9B8Z8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2C4A0B7Q1Q2O1N6O0M5M0U2V6T6U6"
+      "BILL_ID": "PRC_B2C4A0B7Q1Q2O1N6O0M5M0U2V6T6U6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "최수진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2C4A0B7Q1Q2O1N6O0M5M0U2V6T6U6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4C0B7C3B0Z1H4G1E1D0E2B7Z6Y0"
+      "BILL_ID": "PRC_V2U4C0B7C3B0Z1H4G1E1D0E2B7Z6Y0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "장경태의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4C0B7C3B0Z1H4G1E1D0E2B7Z6Y0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2D4L0M8K2K9J1J4I3I4E5F0D5B5C5"
+      "BILL_ID": "PRC_F2D4L0M8K2K9J1J4I3I4E5F0D5B5C5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "백종헌의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2D4L0M8K2K9J1J4I3I4E5F0D5B5C5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2G4G0F9G0E5E1A1Z3Z0X2Y2W7X7F6"
+      "BILL_ID": "PRC_H2G4G0F9G0E5E1A1Z3Z0X2Y2W7X7F6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박홍배의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2G4G0F9G0E5E1A1Z3Z0X2Y2W7X7F6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2J4J0I8J2Q6R1P9O1O5M4N0V3W1U8"
+      "BILL_ID": "PRC_L2J4J0I8J2Q6R1P9O1O5M4N0V3W1U8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김남희의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2J4J0I8J2Q6R1P9O1O5M4N0V3W1U8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2F4F0E9E0D5D1C0C4K8I4J9H6I4G4"
+      "BILL_ID": "PRC_X2F4F0E9E0D5D1C0C4K8I4J9H6I4G4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송언석의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2F4F0E9E0D5D1C0C4K8I4J9H6I4G4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2Y4Y0X8V2W9U1C3D2B6C3A2B3Z4H9"
+      "BILL_ID": "PRC_Q2Y4Y0X8V2W9U1C3D2B6C3A2B3Z4H9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김윤의원 등 22인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2Y4Y0X8V2W9U1C3D2B6C3A2B3Z4H9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2W4U0C8C0A5B0Z9A5Y7G4H0F1F0E5"
+      "BILL_ID": "PRC_W2W4U0C8C0A5B0Z9A5Y7G4H0F1F0E5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "장종태의원 등 19인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2W4U0C8C0A5B0Z9A5Y7G4H0F1F0E5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2O4O0N8N2M8K1L4G0H9F3G2E1F6D3"
+      "BILL_ID": "PRC_G2O4O0N8N2M8K1L4G0H9F3G2E1F6D3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김형동의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2O4O0N8N2M8K1L4G0H9F3G2E1F6D3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2C4A0B8Z2V7V1U0U3T5T2S5S9A8Z8"
+      "BILL_ID": "PRC_B2C4A0B8Z2V7V1U0U3T5T2S5S9A8Z8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박정현의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2C4A0B8Z2V7V1U0U3T5T2S5S9A8Z8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_E2M4A0V9C0L2Z1S6Y4V8L4R9O5J5R8"
+      "BILL_ID": "ARC_E2M4A0V9C0L2Z1S6Y4V8L4R9O5J5R8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_E2M4A0V9C0L2Z1S6Y4V8L4R9O5J5R8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2Q4U0V9S0P2M1L6U4A8H4M0K7Z1S0"
+      "BILL_ID": "ARC_X2Q4U0V9S0P2M1L6U4A8H4M0K7Z1S0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2Q4U0V9S0P2M1L6U4A8H4M0K7Z1S0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_S2A4K0W9K0Z2U1D6I4P8Q3H0W4H8G7"
+      "BILL_ID": "ARC_S2A4K0W9K0Z2U1D6I4P8Q3H0W4H8G7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_S2A4K0W9K0Z2U1D6I4P8Q3H0W4H8G7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2O4L0L9E0U2G1R6D4J8E2F0U7Q1H1"
+      "BILL_ID": "ARC_X2O4L0L9E0U2G1R6D4J8E2F0U7Q1H1",
+      "PROC_RESULT_CD": "부결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2O4L0L9E0U2G1R6D4J8E2F0U7Q1H1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2G4C0H9W0W2H1O6B4C8X0F6L5Z9R2"
+      "BILL_ID": "ARC_V2G4C0H9W0W2H1O6B4C8X0F6L5Z9R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2G4C0H9W0W2H1O6B4C8X0F6L5Z9R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Y2F4E0Q9N0U2X1Y6F4M6W5U6R8T4B7"
+      "BILL_ID": "ARC_Y2F4E0Q9N0U2X1Y6F4M6W5U6R8T4B7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Y2F4E0Q9N0U2X1Y6F4M6W5U6R8T4B7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_A2Q4K0V9F0Q2S1Q6K4B6Z4N6T4R3Y4"
+      "BILL_ID": "ARC_A2Q4K0V9F0Q2S1Q6K4B6Z4N6T4R3Y4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_A2Q4K0V9F0Q2S1Q6K4B6Z4N6T4R3Y4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_G2R4Q0P9H0N2Q1J6P4Z3K5D5G4E3D0"
+      "BILL_ID": "ARC_G2R4Q0P9H0N2Q1J6P4Z3K5D5G4E3D0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_G2R4Q0P9H0N2Q1J6P4Z3K5D5G4E3D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2R4R0Q8Q3M0K0L9J4K0I0J8Q4P0Q7"
+      "BILL_ID": "PRC_S2R4R0Q8Q3M0K0L9J4K0I0J8Q4P0Q7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김은혜의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2R4R0Q8Q3M0K0L9J4K0I0J8Q4P0Q7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_H2E4P0N9Y0P2X0O9N0D1Z5K3X1X1K1"
+      "BILL_ID": "ARC_H2E4P0N9Y0P2X0O9N0D1Z5K3X1X1K1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_H2E4P0N9Y0P2X0O9N0D1Z5K3X1X1K1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_W2H4M0Q8P3T0Z1R8P3S1E0V2O7F8C7"
+      "BILL_ID": "ARC_W2H4M0Q8P3T0Z1R8P3S1E0V2O7F8C7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_W2H4M0Q8P3T0Z1R8P3S1E0V2O7F8C7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_C2Z4B0S8I3P0O1X8M2F7W1U1Y9U6C3"
+      "BILL_ID": "ARC_C2Z4B0S8I3P0O1X8M2F7W1U1Y9U6C3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_C2Z4B0S8I3P0O1X8M2F7W1U1Y9U6C3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2F4G0E8E2C9L2L2J3K8I5J3H4I9D7"
+      "BILL_ID": "PRC_H2F4G0E8E2C9L2L2J3K8I5J3H4I9D7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정준호의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2F4G0E8E2C9L2L2J3K8I5J3H4I9D7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2H4F0F8E1E2M1L7L5J0K1I6J0R2P4"
+      "BILL_ID": "PRC_I2H4F0F8E1E2M1L7L5J0K1I6J0R2P4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김석기의원 등 191인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2H4F0F8E1E2M1L7L5J0K1I6J0R2P4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_E2N4D0J8X3H0N1N0J0F5M5G8Y3W5V0"
+      "BILL_ID": "ARC_E2N4D0J8X3H0N1N0J0F5M5G8Y3W5V0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_E2N4D0J8X3H0N1N0J0F5M5G8Y3W5V0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_C2A4B0A8H3R0V0R9F2L0E3Z7P8F7S5"
+      "BILL_ID": "ARC_C2A4B0A8H3R0V0R9F2L0E3Z7P8F7S5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_C2A4B0A8H3R0V0R9F2L0E3Z7P8F7S5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2N4I0J8H2H1G1E0F0N2N1L8M4L6L8"
+      "BILL_ID": "PRC_M2N4I0J8H2H1G1E0F0N2N1L8M4L6L8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김상욱의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2N4I0J8H2H1G1E0F0N2N1L8M4L6L8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2J4J0I8G2H6F1G5N4E5C1D0L3L4J0"
+      "BILL_ID": "PRC_B2J4J0I8G2H6F1G5N4E5C1D0L3L4J0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "안상훈의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2J4J0I8G2H6F1G5N4E5C1D0L3L4J0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2W4W0V8V0U8U1Q4O2P4N4O4M6N7V2"
+      "BILL_ID": "PRC_Y2W4W0V8V0U8U1Q4O2P4N4O4M6N7V2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김미애의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2W4W0V8V0U8U1Q4O2P4N4O4M6N7V2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2S4O0M7L2M2L1Y0U2T5U0T7R2A2Y3"
+      "BILL_ID": "PRC_T2S4O0M7L2M2L1Y0U2T5U0T7R2A2Y3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박성민의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2S4O0M7L2M2L1Y0U2T5U0T7R2A2Y3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2R4A0W8N2T7X1F9F3X4D2D1Y2V4C7"
+      "BILL_ID": "PRC_G2R4A0W8N2T7X1F9F3X4D2D1Y2V4C7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2R4A0W8N2T7X1F9F3X4D2D1Y2V4C7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2R4O0U8J2A6E1J7I4Y1Y3O2Z0P3O6"
+      "BILL_ID": "PRC_K2R4O0U8J2A6E1J7I4Y1Y3O2Z0P3O6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2R4O0U8J2A6E1J7I4Y1Y3O2Z0P3O6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2I4K0R8B2G6B1B7C4B0Y3V4H9Y6D0"
+      "BILL_ID": "PRC_M2I4K0R8B2G6B1B7C4B0Y3V4H9Y6D0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정무위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2I4K0R8B2G6B1B7C4B0Y3V4H9Y6D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2L4A0W8L1E9F1H6H4Y4Y1U1J5I4D6"
+      "BILL_ID": "PRC_Y2L4A0W8L1E9F1H6H4Y4Y1U1J5I4D6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "산업통상자원중소벤처기업위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2L4A0W8L1E9F1H6H4Y4Y1U1J5I4D6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2R4G0H8P2B7P1V2D5H7Y0P3S7B2C4"
+      "BILL_ID": "PRC_D2R4G0H8P2B7P1V2D5H7Y0P3S7B2C4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "법제사법위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2R4G0H8P2B7P1V2D5H7Y0P3S7B2C4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2P4T0C8H2P3A1B1K5A2E4C0Y8M9F8"
+      "BILL_ID": "PRC_P2P4T0C8H2P3A1B1K5A2E4C0Y8M9F8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "보건복지위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2P4T0C8H2P3A1B1K5A2E4C0Y8M9F8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2T4O0D8W2J0S1B1R5J4K5W2T0V9C2"
+      "BILL_ID": "PRC_I2T4O0D8W2J0S1B1R5J4K5W2T0V9C2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2T4O0D8W2J0S1B1R5J4K5W2T0V9C2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2V4N0X8X2I1V1I7K4K2Y5L0K6E6M5"
+      "BILL_ID": "PRC_K2V4N0X8X2I1V1I7K4K2Y5L0K6E6M5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "국토교통위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2V4N0X8X2I1V1I7K4K2Y5L0K6E6M5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2V4W0U8Q2Q2P0P9O1O3N0N5V2U6U1"
+      "BILL_ID": "PRC_X2V4W0U8Q2Q2P0P9O1O3N0N5V2U6U1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이철규의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2V4W0U8Q2Q2P0P9O1O3N0N5V2U6U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2F4G0E8F0D1Z1A6Y4Y3X1X2W3W5E6"
+      "BILL_ID": "PRC_H2F4G0E8F0D1Z1A6Y4Y3X1X2W3W5E6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "백종헌의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2F4G0E8F0D1Z1A6Y4Y3X1X2W3W5E6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2F4D0D8Z1Z4Y1W6X2V2W4D6E0D4D4"
+      "BILL_ID": "PRC_D2F4D0D8Z1Z4Y1W6X2V2W4D6E0D4D4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김재원의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2F4D0D8Z1Z4Y1W6X2V2W4D6E0D4D4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2W4F0D6C2D7C1K6J4H9G4C7D1B1A5"
+      "BILL_ID": "PRC_O2W4F0D6C2D7C1K6J4H9G4C7D1B1A5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "백승아의원 등 28인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2W4F0D6C2D7C1K6J4H9G4C7D1B1A5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2D4E0D7B2A5I1H0G3H4G5C1A1Z7X0"
+      "BILL_ID": "PRC_V2D4E0D7B2A5I1H0G3H4G5C1A1Z7X0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "박성민의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2D4E0D7B2A5I1H0G3H4G5C1A1Z7X0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_K2J4J0H8Q1Q9O1P1O4O7M3U5V0T5U3"
+      "BILL_ID": "PRC_K2J4J0H8Q1Q9O1P1O4O7M3U5V0T5U3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조정훈의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_K2J4J0H8Q1Q9O1P1O4O7M3U5V0T5U3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2X4F0F8E1E9D1D1B2C9K4I8J6H3I5"
+      "BILL_ID": "PRC_W2X4F0F8E1E9D1D1B2C9K4I8J6H3I5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김승수의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2X4F0F8E1E9D1D1B2C9K4I8J6H3I5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2E4C0D8B0B1J1K6I3J9H3I1G9O4P6"
+      "BILL_ID": "PRC_D2E4C0D8B0B1J1K6I3J9H3I1G9O4P6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "백종헌의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2E4C0D8B0B1J1K6I3J9H3I1G9O4P6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2H4Q0Q8O1P9N1O4M2N0I2H6I0G6G2"
+      "BILL_ID": "PRC_J2H4Q0Q8O1P9N1O4M2N0I2H6I0G6G2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이기헌의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2H4Q0Q8O1P9N1O4M2N0I2H6I0G6G2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2N4L0M8L1L2K1R6S3R4R0P2O1O6K0"
+      "BILL_ID": "PRC_N2N4L0M8L1L2K1R6S3R4R0P2O1O6K0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이기헌의원 등 18인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2N4L0M8L1L2K1R6S3R4R0P2O1O6K0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2K4J0H7G2V9W0V9U4S3A3B6A6Y2X3"
+      "BILL_ID": "PRC_C2K4J0H7G2V9W0V9U4S3A3B6A6Y2X3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한기호의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2K4J0H7G2V9W0V9U4S3A3B6A6Y2X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2D4C0C8A1B4X0V9W1U0V3T4U4B1A1"
+      "BILL_ID": "PRC_C2D4C0C8A1B4X0V9W1U0V3T4U4B1A1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "전진숙의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2D4C0C8A1B4X0V9W1U0V3T4U4B1A1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2I4I0G8F2F0E1F7M0N0L5K0K5J8J1"
+      "BILL_ID": "PRC_R2I4I0G8F2F0E1F7M0N0L5K0K5J8J1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정희용의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2I4I0G8F2F0E1F7M0N0L5K0K5J8J1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2V4W0L8L0K9K1J0J5I3I1Q2O6P0N1"
+      "BILL_ID": "PRC_X2V4W0L8L0K9K1J0J5I3I1Q2O6P0N1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "임오경의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2V4W0L8L0K9K1J0J5I3I1Q2O6P0N1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F4Z0Y6X1W4E1D7A0I6H5H3F6O9N1"
+      "BILL_ID": "PRC_G2F4Z0Y6X1W4E1D7A0I6H5H3F6O9N1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "안규백의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F4Z0Y6X1W4E1D7A0I6H5H3F6O9N1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2U4U0C8D2B1A1A0Y2Z7H5I3G7G8E7"
+      "BILL_ID": "PRC_W2U4U0C8D2B1A1A0Y2Z7H5I3G7G8E7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한민수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2U4U0C8D2B1A1A0Y2Z7H5I3G7G8E7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Q2A4D0K8P2P1V1D3X1N4D3G7U9H9T5"
+      "BILL_ID": "ARC_Q2A4D0K8P2P1V1D3X1N4D3G7U9H9T5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Q2A4D0K8P2P1V1D3X1N4D3G7U9H9T5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_R2K4N0N8M2P0L1U8P2Z9Z0L8W8X1V2"
+      "BILL_ID": "ARC_R2K4N0N8M2P0L1U8P2Z9Z0L8W8X1V2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_R2K4N0N8M2P0L1U8P2Z9Z0L8W8X1V2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2H4C0R8K2W0A1X7T4K1W2P0V6G5C6"
+      "BILL_ID": "ARC_V2H4C0R8K2W0A1X7T4K1W2P0V6G5C6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2H4C0R8K2W0A1X7T4K1W2P0V6G5C6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2Z4J0K8Y2V0L1O7O2H7M5C8O8X9X6"
+      "BILL_ID": "ARC_I2Z4J0K8Y2V0L1O7O2H7M5C8O8X9X6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2Z4J0K8Y2V0L1O7O2H7M5C8O8X9X6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2G4N0O8M2N0L1L4K5S6S2R7R3Q5Q2"
+      "BILL_ID": "PRC_F2G4N0O8M2N0L1L4K5S6S2R7R3Q5Q2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서일준의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2G4N0O8M2N0L1L4K5S6S2R7R3Q5Q2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_H2Y4X0Q8R2Q0E1P7E1P1O5D7I3P5I8"
+      "BILL_ID": "ARC_H2Y4X0Q8R2Q0E1P7E1P1O5D7I3P5I8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_H2Y4X0Q8R2Q0E1P7E1P1O5D7I3P5I8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Z4Z0X8W1X2E1F1D1E6D3B3B5J2K3"
+      "BILL_ID": "PRC_B2Z4Z0X8W1X2E1F1D1E6D3B3B5J2K3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이상식의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Z4Z0X8W1X2E1F1D1E6D3B3B5J2K3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2M4M0L8J0J8I1J6Q2R2Q3O6O5N3N3"
+      "BILL_ID": "PRC_Q2M4M0L8J0J8I1J6Q2R2Q3O6O5N3N3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이달희의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2M4M0L8J0J8I1J6Q2R2Q3O6O5N3N3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2I4G0G8E0D8E1L6M2L1L2J0Q8P3Q2"
+      "BILL_ID": "PRC_H2I4G0G8E0D8E1L6M2L1L2J0Q8P3Q2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이달희의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2I4G0G8E0D8E1L6M2L1L2J0Q8P3Q2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2P4N0L8M0S9S1Q8R3Q5X4Y1W5X3V2"
+      "BILL_ID": "PRC_O2P4N0L8M0S9S1Q8R3Q5X4Y1W5X3V2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김용태의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2P4N0L8M0S9S1Q8R3Q5X4Y1W5X3V2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2L4T0U8S1T2R1Q0Q4Y1Y3X9Y7W0U6"
+      "BILL_ID": "PRC_L2L4T0U8S1T2R1Q0Q4Y1Y3X9Y7W0U6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김도읍의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2L4T0U8S1T2R1Q0Q4Y1Y3X9Y7W0U6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2R4Q0Q8P1P2O1O0K4K0I1H5I1G8G1"
+      "BILL_ID": "PRC_R2R4Q0Q8P1P2O1O0K4K0I1H5I1G8G1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김도읍의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2R4Q0Q8P1P2O1O0K4K0I1H5I1G8G1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2A4Y0G8H1F2F1E1F1D5D1L8J8K3I0"
+      "BILL_ID": "PRC_Z2A4Y0G8H1F2F1E1F1D5D1L8J8K3I0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이상식의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2A4Y0G8H1F2F1E1F1D5D1L8J8K3I0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2L4K0S7R2P5O1K6J3J5I4H8P1N2M0"
+      "BILL_ID": "PRC_E2L4K0S7R2P5O1K6J3J5I4H8P1N2M0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김형동의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2L4K0S7R2P5O1K6J3J5I4H8P1N2M0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2W4W0J8I0I8G1H6F4G7B3C2B8B9Z7"
+      "BILL_ID": "PRC_Y2W4W0J8I0I8G1H6F4G7B3C2B8B9Z7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이훈기의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2W4W0J8I0I8G1H6F4G7B3C2B8B9Z7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2W4V0U7C2B6I1H9I4H1F0V9U5T8S0"
+      "BILL_ID": "PRC_W2W4V0U7C2B6I1H9I4H1F0V9U5T8S0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조정훈의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2W4V0U7C2B6I1H9I4H1F0V9U5T8S0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_H2E4I0T8D1G2Q2Z0G4P5L5Q2C9R3G8"
+      "BILL_ID": "ARC_H2E4I0T8D1G2Q2Z0G4P5L5Q2C9R3G8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_H2E4I0T8D1G2Q2Z0G4P5L5Q2C9R3G8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_P2V4R0B8U1H2C2E0N4K2J5R1F9X3E0"
+      "BILL_ID": "ARC_P2V4R0B8U1H2C2E0N4K2J5R1F9X3E0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_P2V4R0B8U1H2C2E0N4K2J5R1F9X3E0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_P2C4S0L8H1Z2D2E0U4L0N0F2O1W0C8"
+      "BILL_ID": "ARC_P2C4S0L8H1Z2D2E0U4L0N0F2O1W0C8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_P2C4S0L8H1Z2D2E0U4L0N0F2O1W0C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_J2E4C0Y8W1V2L2N0W3J9T4D9E0V4B1"
+      "BILL_ID": "ARC_J2E4C0Y8W1V2L2N0W3J9T4D9E0V4B1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_J2E4C0Y8W1V2L2N0W3J9T4D9E0V4B1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2M4N0L7L0K3K1S3Q1R9Q3Q2O5W0X6"
+      "BILL_ID": "PRC_N2M4N0L7L0K3K1S3Q1R9Q3Q2O5W0X6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김미애의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2M4N0L7L0K3K1S3Q1R9Q3Q2O5W0X6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2V4W0U7V0C3B1C3A1A8Z3A9H8I9G1"
+      "BILL_ID": "PRC_X2V4W0U7V0C3B1C3A1A8Z3A9H8I9G1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김미애의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2V4W0U7V0C3B1C3A1A8Z3A9H8I9G1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2I4G0F7G0N3O1M6N4M0K4K4G0H5F4"
+      "BILL_ID": "PRC_I2I4G0F7G0N3O1M6N4M0K4K4G0H5F4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김위상의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2I4G0F7G0N3O1M6N4M0K4K4G0H5F4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2Z4X0Y7W1X1T1R4R3P5Q2P5P7X3W8"
+      "BILL_ID": "PRC_Y2Z4X0Y7W1X1T1R4R3P5Q2P5P7X3W8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "윤한홍의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2Z4X0Y7W1X1T1R4R3P5Q2P5P7X3W8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2C4D0B8J0K2I1I3G0H8F3G9O9O3N9"
+      "BILL_ID": "PRC_E2C4D0B8J0K2I1I3G0H8F3G9O9O3N9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "양문석의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2C4D0B8J0K2I1I3G0H8F3G9O9O3N9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2D4B0C7A0B5Z1H3I4G8G3F2G0E3M1"
+      "BILL_ID": "PRC_H2D4B0C7A0B5Z1H3I4G8G3F2G0E3M1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한병도의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2D4B0C7A0B5Z1H3I4G8G3F2G0E3M1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2I4G0G7F1G0N1M6M1K3M2K4K9G7E9"
+      "BILL_ID": "PRC_J2I4G0G7F1G0N1M6M1K3M2K4K9G7E9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김성환의원 등 50인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2I4G0G7F1G0N1M6M1K3M2K4K9G7E9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4B0A7I2H6G1H6F4C2A4Z9X8G7H5"
+      "BILL_ID": "PRC_E2D4B0A7I2H6G1H6F4C2A4Z9X8G7H5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이춘석의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4B0A7I2H6G1H6F4C2A4Z9X8G7H5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2M4L0K7J2J5S1R8P1O3W0V6U0S9T1"
+      "BILL_ID": "PRC_E2M4L0K7J2J5S1R8P1O3W0V6U0S9T1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "권영진의원 등 19인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2M4L0K7J2J5S1R8P1O3W0V6U0S9T1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2J4G0R7Q1P8Q1G7B4C4K3G4A7L7V6"
+      "BILL_ID": "PRC_W2J4G0R7Q1P8Q1G7B4C4K3G4A7L7V6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "행정안전위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2J4G0R7Q1P8Q1G7B4C4K3G4A7L7V6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2U4G0H7Y1F7C1X7H3D1A3O8J9V2Q2"
+      "BILL_ID": "PRC_B2U4G0H7Y1F7C1X7H3D1A3O8J9V2Q2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "환경노동위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2U4G0H7Y1F7C1X7H3D1A3O8J9V2Q2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2D4C0B6Z2A4W1V4T4R4A3B3A3Y2X1"
+      "BILL_ID": "PRC_V2D4C0B6Z2A4W1V4T4R4A3B3A3Y2X1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강훈식의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2D4C0B6Z2A4W1V4T4R4A3B3A3Y2X1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2A4I0N6L2U4S1R4P3Q8Y5X7V9W0V8"
+      "BILL_ID": "PRC_Z2A4I0N6L2U4S1R4P3Q8Y5X7V9W0V8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강훈식의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2A4I0N6L2U4S1R4P3Q8Y5X7V9W0V8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2F4G0O7N2L5K1K6T2R0T2S8A0Z6X3"
+      "BILL_ID": "PRC_G2F4G0O7N2L5K1K6T2R0T2S8A0Z6X3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강경숙의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2F4G0O7N2L5K1K6T2R0T2S8A0Z6X3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2X4F0D7C2D5B1Y6X1V9T4U0D3B4B4"
+      "BILL_ID": "PRC_Y2X4F0D7C2D5B1Y6X1V9T4U0D3B4B4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강경숙의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2X4F0D7C2D5B1Y6X1V9T4U0D3B4B4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2A4Y0X6F1G8F1D4C0K2I3J9I2K4J0"
+      "BILL_ID": "PRC_Z2A4Y0X6F1G8F1D4C0K2I3J9I2K4J0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이재정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2A4Y0X6F1G8F1D4C0K2I3J9I2K4J0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Z4Y0Z6X1F8E1F4E0C4Y4W2X6W3V7"
+      "BILL_ID": "PRC_B2Z4Y0Z6X1F8E1F4E0C4Y4W2X6W3V7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이재정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Z4Y0Z6X1F8E1F4E0C4Y4W2X6W3V7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2L4M0U6T1R8Q1R4Z0X3W1W8W2E2C8"
+      "BILL_ID": "PRC_H2L4M0U6T1R8Q1R4Z0X3W1W8W2E2C8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이재정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2L4M0U6T1R8Q1R4Z0X3W1W8W2E2C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_M2L4B0U7P2L9B1L6L3X4K5Y6E6A5A2"
+      "BILL_ID": "ARC_M2L4B0U7P2L9B1L6L3X4K5Y6E6A5A2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_M2L4B0U7P2L9B1L6L3X4K5Y6E6A5A2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2W4V0R6P2O7P1N4U3C0B5A6A2Z3I5"
+      "BILL_ID": "PRC_X2W4V0R6P2O7P1N4U3C0B5A6A2Z3I5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정을호의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2W4V0R6P2O7P1N4U3C0B5A6A2Z3I5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2A4Z0C7M2G6P1U4T4C8Q1Z6K3E0H7"
+      "BILL_ID": "ARC_V2A4Z0C7M2G6P1U4T4C8Q1Z6K3E0H7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2A4Z0C7M2G6P1U4T4C8Q1Z6K3E0H7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_K2D4L0M7W2X6M1S4O2B5Y3P8S7F0C8"
+      "BILL_ID": "ARC_K2D4L0M7W2X6M1S4O2B5Y3P8S7F0C8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_K2D4L0M7W2X6M1S4O2B5Y3P8S7F0C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2J4H0H7Q1O1O1N2O5M3U4U4T3U9S9"
+      "BILL_ID": "PRC_I2J4H0H7Q1O1O1N2O5M3U4U4T3U9S9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한기호의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2J4H0H7Q1O1O1N2O5M3U4U4T3U9S9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_J2Z4N0D7V2H6F1A3S4I9C5X1W1V3Z6"
+      "BILL_ID": "ARC_J2Z4N0D7V2H6F1A3S4I9C5X1W1V3Z6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_J2Z4N0D7V2H6F1A3S4I9C5X1W1V3Z6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Z2N4T0B7F2L6O1R0O5O3P5B0K9Q1O8"
+      "BILL_ID": "ARC_Z2N4T0B7F2L6O1R0O5O3P5B0K9Q1O8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Z2N4T0B7F2L6O1R0O5O3P5B0K9Q1O8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2G4D0H7M2B6S1F0Y4R3R1M6I3E6D1"
+      "BILL_ID": "ARC_I2G4D0H7M2B6S1F0Y4R3R1M6I3E6D1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2G4D0H7M2B6S1F0Y4R3R1M6I3E6D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2C4L0I7H1Q8M1L3U1I5I2Q0M1M3U8"
+      "BILL_ID": "PRC_D2C4L0I7H1Q8M1L3U1I5I2Q0M1M3U8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이수진의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2C4L0I7H1Q8M1L3U1I5I2Q0M1M3U8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2C4A0W7X1V5W1U8V0T8T0B6A5A2Y4"
+      "BILL_ID": "PRC_C2C4A0W7X1V5W1U8V0T8T0B6A5A2Y4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강대식의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2C4A0W7X1V5W1U8V0T8T0B6A5A2Y4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2I4R0P7Q1O9N1V4W4U7T1R3S0O7M6"
+      "BILL_ID": "PRC_J2I4R0P7Q1O9N1V4W4U7T1R3S0O7M6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "배현진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2I4R0P7Q1O9N1V4W4U7T1R3S0O7M6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_R2M4D0F7B2T4I1C4N3S0W0Z0O1A9C7"
+      "BILL_ID": "ARC_R2M4D0F7B2T4I1C4N3S0W0Z0O1A9C7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_R2M4D0F7B2T4I1C4N3S0W0Z0O1A9C7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Y2U4Y0J7R2E4X1Y4B0C5D1T9I8C6Q1"
+      "BILL_ID": "ARC_Y2U4Y0J7R2E4X1Y4B0C5D1T9I8C6Q1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Y2U4Y0J7R2E4X1Y4B0C5D1T9I8C6Q1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2Q4B0R7T2S4I1E1P3Q3I5E8S1G2O2"
+      "BILL_ID": "ARC_I2Q4B0R7T2S4I1E1P3Q3I5E8S1G2O2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2Q4B0R7T2S4I1E1P3Q3I5E8S1G2O2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_D2A4K0M7H2W4T0B9Z1C2D5L1P6S9F2"
+      "BILL_ID": "ARC_D2A4K0M7H2W4T0B9Z1C2D5L1P6S9F2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_D2A4K0M7H2W4T0B9Z1C2D5L1P6S9F2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2E4D0C7Y1X8U1L5K4E2E4C9B4K5J3"
+      "BILL_ID": "PRC_X2E4D0C7Y1X8U1L5K4E2E4C9B4K5J3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "서삼석의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2E4D0C7Y1X8U1L5K4E2E4C9B4K5J3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2T4R0S7Q1R7P1X0Y2W3X2V9W4U8V1"
+      "BILL_ID": "PRC_X2T4R0S7Q1R7P1X0Y2W3X2V9W4U8V1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조경태의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2T4R0S7Q1R7P1X0Y2W3X2V9W4U8V1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2R4N0L7J1K0R1Q0R0P7P0N7O0W6X0"
+      "BILL_ID": "PRC_Q2R4N0L7J1K0R1Q0R0P7P0N7O0W6X0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "임오경의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2R4N0L7J1K0R1Q0R0P7P0N7O0W6X0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2U4I0G7M2E3F1X1T2J7U4J2V7F3O7"
+      "BILL_ID": "ARC_I2U4I0G7M2E3F1X1T2J7U4J2V7F3O7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2U4I0G7M2E3F1X1T2J7U4J2V7F3O7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2N4U0O7X2Y2Y1C7K4H1Z4Z5B4A2R3"
+      "BILL_ID": "ARC_I2N4U0O7X2Y2Y1C7K4H1Z4Z5B4A2R3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2N4U0O7X2Y2Y1C7K4H1Z4Z5B4A2R3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2D4C0D7B1B5J1K5I2J8H0F0G7C0D1"
+      "BILL_ID": "PRC_F2D4C0D7B1B5J1K5I2J8H0F0G7C0D1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이양수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2D4C0D7B1B5J1K5I2J8H0F0G7C0D1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2V4U0B7B1H8G0G9M1L8K1J5P0N3M4"
+      "BILL_ID": "PRC_W2V4U0B7B1H8G0G9M1L8K1J5P0N3M4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이철규의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2V4U0B7B1H8G0G9M1L8K1J5P0N3M4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2U4T0Q7T1S8R0Z9W1V9E5D1A5I7G0"
+      "BILL_ID": "PRC_X2U4T0Q7T1S8R0Z9W1V9E5D1A5I7G0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이철규의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2U4T0Q7T1S8R0Z9W1V9E5D1A5I7G0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_E2I4I0Y7R2I2T1N4C1N9T0A8G7V9J3"
+      "BILL_ID": "ARC_E2I4I0Y7R2I2T1N4C1N9T0A8G7V9J3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_E2I4I0Y7R2I2T1N4C1N9T0A8G7V9J3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_G2N4B0O7H2D2T1L4W1X3C1V2E4Q2P6"
+      "BILL_ID": "ARC_G2N4B0O7H2D2T1L4W1X3C1V2E4Q2P6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_G2N4B0O7H2D2T1L4W1X3C1V2E4Q2P6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_L2I4C0H7N2N2W1M4Z0A6N2C0H4J8R1"
+      "BILL_ID": "ARC_L2I4C0H7N2N2W1M4Z0A6N2C0H4J8R1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_L2I4C0H7N2N2W1M4Z0A6N2C0H4J8R1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_M2Y4A0O7R2P2G1H3T2G6D1Z9G9L0T1"
+      "BILL_ID": "ARC_M2Y4A0O7R2P2G1H3T2G6D1Z9G9L0T1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_M2Y4A0O7R2P2G1H3T2G6D1Z9G9L0T1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2D4F0O7H2W2G1M1X0J2E2T3O1Z9M3"
+      "BILL_ID": "ARC_I2D4F0O7H2W2G1M1X0J2E2T3O1Z9M3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2D4F0O7H2W2G1M1X0J2E2T3O1Z9M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_C2A4M0W7H2E2U0L8Z5W5D3P2U7T2A3"
+      "BILL_ID": "ARC_C2A4M0W7H2E2U0L8Z5W5D3P2U7T2A3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_C2A4M0W7H2E2U0L8Z5W5D3P2U7T2A3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2E4R0A7P2P2E0M8C5K5R2F6N3K8U9"
+      "BILL_ID": "ARC_X2E4R0A7P2P2E0M8C5K5R2F6N3K8U9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2E4R0A7P2P2E0M8C5K5R2F6N3K8U9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_B2U4U0H7N2J2O0N8R5I5F1J9G2D2U5"
+      "BILL_ID": "ARC_B2U4U0H7N2J2O0N8R5I5F1J9G2D2U5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_B2U4U0H7N2J2O0N8R5I5F1J9G2D2U5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_K2W4D0G7Z1T9A1F6Z0R2U1W1K3L0D0"
+      "BILL_ID": "ARC_K2W4D0G7Z1T9A1F6Z0R2U1W1K3L0D0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_K2W4D0G7Z1T9A1F6Z0R2U1W1K3L0D0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2B4J0K7I1J2H1G3G1O4P0N4N8M9K4"
+      "BILL_ID": "PRC_D2B4J0K7I1J2H1G3G1O4P0N4N8M9K4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조정훈의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2B4J0K7I1J2H1G3G1O4P0N4N8M9K4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2P4N0M7M1K7L1T0S2S2Q3R8P4Q8Y7"
+      "BILL_ID": "PRC_O2P4N0M7M1K7L1T0S2S2Q3R8P4Q8Y7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조경태의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2P4N0M7M1K7L1T0S2S2Q3R8P4Q8Y7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2P4P0O6U2T0S1Q0P5M7U0U7S3R1Y1"
+      "BILL_ID": "PRC_H2P4P0O6U2T0S1Q0P5M7U0U7S3R1Y1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "구자근의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2P4P0O6U2T0S1Q0P5M7U0U7S3R1Y1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2K4L0K7K1S6Q1R3P5Q4O1P1E6C4D5"
+      "BILL_ID": "PRC_M2K4L0K7K1S6Q1R3P5Q4O1P1E6C4D5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "최형두의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2K4L0K7K1S6Q1R3P5Q4O1P1E6C4D5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2M4N0L7J1K6S1T3R2P7Q1O9P3X6X9"
+      "BILL_ID": "PRC_O2M4N0L7J1K6S1T3R2P7Q1O9P3X6X9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강유정의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2M4N0L7J1K6S1T3R2P7Q1O9P3X6X9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2X4W0V7T1C7Z1E6D5A7J4I2H1N0M4"
+      "BILL_ID": "PRC_Q2X4W0V7T1C7Z1E6D5A7J4I2H1N0M4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한민수의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2X4W0V7T1C7Z1E6D5A7J4I2H1N0M4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2B4D0K7L1J5J1I0G1H6P1Q0O0O8N2"
+      "BILL_ID": "PRC_D2B4D0K7L1J5J1I0G1H6P1Q0O0O8N2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김도읍의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2B4D0K7L1J5J1I0G1H6P1Q0O0O8N2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2R4Z0A6Z0Z7X0W9W5E9F5D2E6C5B4"
+      "BILL_ID": "PRC_T2R4Z0A6Z0Z7X0W9W5E9F5D2E6C5B4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정성호의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2R4Z0A6Z0Z7X0W9W5E9F5D2E6C5B4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Z2A4Y0U7U1S1U1S0S4Q7R0Z6X7Y1W0"
+      "BILL_ID": "PRC_Z2A4Y0U7U1S1U1S0S4Q7R0Z6X7Y1W0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김현정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Z2A4Y0U7U1S1U1S0S4Q7R0Z6X7Y1W0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2F4G0E7F1D1E1C0C5K1J0J1I2I9G4"
+      "BILL_ID": "PRC_X2F4G0E7F1D1E1C0C5K1J0J1I2I9G4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김현정의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2F4G0E7F1D1E1C0C5K1J0J1I2I9G4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2T4R0S7Q1Q1Z1X0X4W8X2V9V9D9C1"
+      "BILL_ID": "PRC_S2T4R0S7Q1Q1Z1X0X4W8X2V9V9D9C1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김현정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2T4R0S7Q1Q1Z1X0X4W8X2V9V9D9C1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2W4X0F7G0E1E1C3B5C8J5K7J7J1H5"
+      "BILL_ID": "PRC_Y2W4X0F7G0E1E1C3B5C8J5K7J7J1H5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한기호의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2W4X0F7G0E1E1C3B5C8J5K7J7J1H5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2K4K0I7J1R2P1Q2O1P0N3O2W6U7V0"
+      "BILL_ID": "PRC_L2K4K0I7J1R2P1Q2O1P0N3O2W6U7V0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "조인철의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2K4K0I7J1R2P1Q2O1P0N3O2W6U7V0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2K4S0S7R1R5P1O0P1W3X2V5W1V8T4"
+      "BILL_ID": "PRC_L2K4S0S7R1R5P1O0P1W3X2V5W1V8T4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "윤종군의원 등 20인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2K4S0S7R1R5P1O0P1W3X2V5W1V8T4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_E2I4S0I7L1T6Y1U0D1L9Z3B3T0T9S9"
+      "BILL_ID": "ARC_E2I4S0I7L1T6Y1U0D1L9Z3B3T0T9S9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_E2I4S0I7L1T6Y1U0D1L9Z3B3T0T9S9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4E0C7C1A0B1X1X1W3U3V4T3U8C8"
+      "BILL_ID": "PRC_E2D4E0C7C1A0B1X1X1W3U3V4T3U8C8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강경숙의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4E0C7C1A0B1X1X1W3U3V4T3U8C8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_P2A4R0T7T1K2W1C8P5E4O0Z4O7N3H9"
+      "BILL_ID": "ARC_P2A4R0T7T1K2W1C8P5E4O0Z4O7N3H9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_P2A4R0T7T1K2W1C8P5E4O0Z4O7N3H9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_H2X4J0Q7K1B2E1F7M4T8K3E9Z9Z1N8"
+      "BILL_ID": "ARC_H2X4J0Q7K1B2E1F7M4T8K3E9Z9Z1N8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_H2X4J0Q7K1B2E1F7M4T8K3E9Z9Z1N8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2L4L0K7S0S9R1R4Q2Q1P5W4X0W8W2"
+      "BILL_ID": "PRC_N2L4L0K7S0S9R1R4Q2Q1P5W4X0W8W2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박희승의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2L4L0K7S0S9R1R4Q2Q1P5W4X0W8W2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_U2X4L0V7O1V2A1S7L0H1G3N2F2O2C4"
+      "BILL_ID": "ARC_U2X4L0V7O1V2A1S7L0H1G3N2F2O2C4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_U2X4L0V7O1V2A1S7L0H1G3N2F2O2C4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Z2U4D0O7C1D2Y1I5K2Z1R4I6W3Q8I5"
+      "BILL_ID": "ARC_Z2U4D0O7C1D2Y1I5K2Z1R4I6W3Q8I5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Z2U4D0O7C1D2Y1I5K2Z1R4I6W3Q8I5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2Z4L0L7M1J2A1V5S1Y3M2V8M9K0F0"
+      "BILL_ID": "ARC_V2Z4L0L7M1J2A1V5S1Y3M2V8M9K0F0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2Z4L0L7M1J2A1V5S1Y3M2V8M9K0F0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_D2H4Y0X7G1M2Y1K5T1P0P3H7H4J5N6"
+      "BILL_ID": "ARC_D2H4Y0X7G1M2Y1K5T1P0P3H7H4J5N6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_D2H4Y0X7G1M2Y1K5T1P0P3H7H4J5N6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_K2N4P0F7W1M2P1N4S0Q6K2A0N1B0R0"
+      "BILL_ID": "ARC_K2N4P0F7W1M2P1N4S0Q6K2A0N1B0R0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_K2N4P0F7W1M2P1N4S0Q6K2A0N1B0R0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2O4N0M6I2G7H0V9T1U9T5I7G8H5G0"
+      "BILL_ID": "PRC_O2O4N0M6I2G7H0V9T1U9T5I7G8H5G0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "유상범의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2O4N0M6I2G7H0V9T1U9T5I7G8H5G0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2H4E0D6C2K6J0P9O5N4M1U8U7S7Z8"
+      "BILL_ID": "PRC_I2H4E0D6C2K6J0P9O5N4M1U8U7S7Z8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박대출의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2H4E0D6C2K6J0P9O5N4M1U8U7S7Z8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_F2E4D0C6W1V4U1D4B2B1Z4I0G4D3L1"
+      "BILL_ID": "PRC_F2E4D0C6W1V4U1D4B2B1Z4I0G4D3L1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "어기구의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_F2E4D0C6W1V4U1D4B2B1Z4I0G4D3L1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2R4P0O7P0I8I1H6H5G8E4F9M3O2M0"
+      "BILL_ID": "PRC_R2R4P0O7P0I8I1H6H5G8E4F9M3O2M0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김현의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2R4P0O7P0I8I1H6H5G8E4F9M3O2M0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2A4J0J7H0G2G0F8G4B5C5A7Y3Z7Y9"
+      "BILL_ID": "PRC_A2A4J0J7H0G2G0F8G4B5C5A7Y3Z7Y9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "어기구의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2A4J0J7H0G2G0F8G4B5C5A7Y3Z7Y9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2L4E0E6D1L4K1H4P2O0E5D6L2I7I3"
+      "BILL_ID": "PRC_L2L4E0E6D1L4K1H4P2O0E5D6L2I7I3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "어기구의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2L4E0E6D1L4K1H4P2O0E5D6L2I7I3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2B4Z0Z7Y0G8G1E1F0E8E1C3D4L2J5"
+      "BILL_ID": "PRC_A2B4Z0Z7Y0G8G1E1F0E8E1C3D4L2J5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "남인순의원ㆍ김대식의원 등 33인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2B4Z0Z7Y0G8G1E1F0E8E1C3D4L2J5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4B0C7A0B1J1J0I3G4G3F8G5N2O2"
+      "BILL_ID": "PRC_E2D4B0C7A0B1J1J0I3G4G3F8G5N2O2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이종배의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4B0C7A0B1J1J0I3G4G3F8G5N2O2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2M4N0L7L0K2L0J9R4S8Q1Q2P7Q3O9"
+      "BILL_ID": "PRC_Q2M4N0L7L0K2L0J9R4S8Q1Q2P7Q3O9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이기헌의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2M4N0L7L0K2L0J9R4S8Q1Q2P7Q3O9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_M2U4V0T7U0S1T1R0Z5A7Y2Z2X4X3W6"
+      "BILL_ID": "PRC_M2U4V0T7U0S1T1R0Z5A7Y2Z2X4X3W6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "윤종군의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_M2U4V0T7U0S1T1R0Z5A7Y2Z2X4X3W6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2D4B0J6I2H6I1G5O1N2M4M0L9T8S2"
+      "BILL_ID": "PRC_E2D4B0J6I2H6I1G5O1N2M4M0L9T8S2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "백혜련의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2D4B0J6I2H6I1G5O1N2M4M0L9T8S2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_N2L4M0K7K0T3R1R0Q3Q2P2L8L4J8K4"
+      "BILL_ID": "PRC_N2L4M0K7K0T3R1R0Q3Q2P2L8L4J8K4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서명옥의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_N2L4M0K7K0T3R1R0Q3Q2P2L8L4J8K4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2O4K0L6J2I5G1P3Q5O4V2W4S9Q8P9"
+      "BILL_ID": "PRC_P2O4K0L6J2I5G1P3Q5O4V2W4S9Q8P9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김정재의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2O4K0L6J2I5G1P3Q5O4V2W4S9Q8P9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2N4N0M7N0L1L1T0S5S8Q4R4Q1Q7M2"
+      "BILL_ID": "PRC_P2N4N0M7N0L1L1T0S5S8Q4R4Q1Q7M2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김도읍의원 등 19인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2N4N0M7N0L1L1T0S5S8Q4R4Q1Q7M2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2L4J0K7I0J1H1I7E5C1C2B2C7A3I4"
+      "BILL_ID": "PRC_D2L4J0K7I0J1H1I7E5C1C2B2C7A3I4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김선교의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2L4J0K7I0J1H1I7E5C1C2B2C7A3I4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2Q4M0L6J2K7J1R4Q1X4T1T7S8R0P5"
+      "BILL_ID": "PRC_S2Q4M0L6J2K7J1R4Q1X4T1T7S8R0P5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김예지의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2Q4M0L6J2K7J1R4Q1X4T1T7S8R0P5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Y4W0V6T2U7C1A5Z3Y4Z0H0F1E5F0"
+      "BILL_ID": "PRC_B2Y4W0V6T2U7C1A5Z3Y4Z0H0F1E5F0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "임오경의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Y4W0V6T2U7C1A5Z3Y4Z0H0F1E5F0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2T4S0Q6R2P4M1L4J0H0Q2R8P7O5M6"
+      "BILL_ID": "PRC_L2T4S0Q6R2P4M1L4J0H0Q2R8P7O5M6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한병도의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2T4S0Q6R2P4M1L4J0H0Q2R8P7O5M6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4B0A6Z2I0D1M0J0I9R3Q1M4S7R2"
+      "BILL_ID": "PRC_V2U4B0A6Z2I0D1M0J0I9R3Q1M4S7R2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김대식의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4B0A6Z2I0D1M0J0I9R3Q1M4S7R2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2P4O0V6W2V1U1S4A1Z3Y2Z8Y6H4G1"
+      "BILL_ID": "PRC_Q2P4O0V6W2V1U1S4A1Z3Y2Z8Y6H4G1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "윤후덕의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2P4O0V6W2V1U1S4A1Z3Y2Z8Y6H4G1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2B4K0G6Q1N4J1I5H1N5M1L7K6Q1P6"
+      "BILL_ID": "PRC_C2B4K0G6Q1N4J1I5H1N5M1L7K6Q1P6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "소병훈의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2B4K0G6Q1N4J1I5H1N5M1L7K6Q1P6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2X4X0W6U1V0T2U1Q3Q6O4N5N7L4N5"
+      "BILL_ID": "PRC_P2X4X0W6U1V0T2U1Q3Q6O4N5N7L4N5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강선우의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2X4X0W6U1V0T2U1Q3Q6O4N5N7L4N5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_K2O4L0L6Y2B8Y2Z1Q1T1G3O6Y2D7G6"
+      "BILL_ID": "ARC_K2O4L0L6Y2B8Y2Z1Q1T1G3O6Y2D7G6",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_K2O4L0L6Y2B8Y2Z1Q1T1G3O6Y2D7G6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_C2Z4Z0C6Z2W8Q2R0G1B1Q0E5I5T8S0"
+      "BILL_ID": "ARC_C2Z4Z0C6Z2W8Q2R0G1B1Q0E5I5T8S0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_C2Z4Z0C6Z2W8Q2R0G1B1Q0E5I5T8S0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_R2I4Y0R6W2E8T1C8Q3J0R3D7G7Z3X4"
+      "BILL_ID": "ARC_R2I4Y0R6W2E8T1C8Q3J0R3D7G7Z3X4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_R2I4Y0R6W2E8T1C8Q3J0R3D7G7Z3X4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2O4N0I6J2I7H1F3N5O1N2L6K5K6T1"
+      "BILL_ID": "PRC_P2O4N0I6J2I7H1F3N5O1N2L6K5K6T1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "허종식의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2O4N0I6J2I7H1F3N5O1N2L6K5K6T1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_O2Q4F0K6H2F8F1L6N1W3C3O8Y9P0W8"
+      "BILL_ID": "ARC_O2Q4F0K6H2F8F1L6N1W3C3O8Y9P0W8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_O2Q4F0K6H2F8F1L6N1W3C3O8Y9P0W8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2L4H0K6Q2T8F1C5W4X4S1S7B3B9W1"
+      "BILL_ID": "ARC_X2L4H0K6Q2T8F1C5W4X4S1S7B3B9W1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2L4H0K6Q2T8F1C5W4X4S1S7B3B9W1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2W4L0F6G2W8D1C5P2S1U1T1X3O0F4"
+      "BILL_ID": "ARC_V2W4L0F6G2W8D1C5P2S1U1T1X3O0F4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2W4L0F6G2W8D1C5P2S1U1T1X3O0F4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2A4Y0H6H2G6E1D4E2M4L0J3I4N0L5"
+      "BILL_ID": "PRC_B2A4Y0H6H2G6E1D4E2M4L0J3I4N0L5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "구자근의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2A4Y0H6H2G6E1D4E2M4L0J3I4N0L5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2Y4X0K6I2H7G1O1M2K9T3U1S5R2P4"
+      "BILL_ID": "PRC_C2Y4X0K6I2H7G1O1M2K9T3U1S5R2P4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이연희의원 등 18인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2Y4X0K6I2H7G1O1M2K9T3U1S5R2P4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_I2J4I0Z6U2T7W1P5B4R9Q1D3E9G7G2"
+      "BILL_ID": "ARC_I2J4I0Z6U2T7W1P5B4R9Q1D3E9G7G2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_I2J4I0Z6U2T7W1P5B4R9Q1D3E9G7G2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_W2J4Y0S6F2Y7K1L5B3A6L4Z8W8V9W6"
+      "BILL_ID": "ARC_W2J4Y0S6F2Y7K1L5B3A6L4Z8W8V9W6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_W2J4Y0S6F2Y7K1L5B3A6L4Z8W8V9W6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_D2H4B0L6L2H7O1O5Q2X8A4R0F9M2M1"
+      "BILL_ID": "ARC_D2H4B0L6L2H7O1O5Q2X8A4R0F9M2M1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_D2H4B0L6L2H7O1O5Q2X8A4R0F9M2M1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_V2J4R0J6N2Q7I1G4S2R9R4F1F9U0T4"
+      "BILL_ID": "ARC_V2J4R0J6N2Q7I1G4S2R9R4F1F9U0T4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_V2J4R0J6N2Q7I1G4S2R9R4F1F9U0T4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_Z2B4D0J6D2S7J1N4B2Z1J3S8X0M2S1"
+      "BILL_ID": "ARC_Z2B4D0J6D2S7J1N4B2Z1J3S8X0M2S1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_Z2B4D0J6D2S7J1N4B2Z1J3S8X0M2S1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_T2C4H0N6B2V7A1D4S0L9W2U7G5S8W7"
+      "BILL_ID": "ARC_T2C4H0N6B2V7A1D4S0L9W2U7G5S8W7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_T2C4H0N6B2V7A1D4S0L9W2U7G5S8W7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "ARC_X2T4G0X6O2N7T1W3H5B4K0T8M4L7X7"
+      "BILL_ID": "ARC_X2T4G0X6O2N7T1W3H5B4K0T8M4L7X7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "정부",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=ARC_X2T4G0X6O2N7T1W3H5B4K0T8M4L7X7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2U4T0D6C1R8Y1J1U5N1T2W6M3Y3K0"
+      "BILL_ID": "PRC_G2U4T0D6C1R8Y1J1U5N1T2W6M3Y3K0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2U4T0D6C1R8Y1J1U5N1T2W6M3Y3K0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2B4G0U6Q1T8O1H1B5U1L0C0S2E6N0"
+      "BILL_ID": "PRC_R2B4G0U6Q1T8O1H1B5U1L0C0S2E6N0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2B4G0U6Q1T8O1H1B5U1L0C0S2E6N0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2E4G0C6K1K8P1M1E5X0I2B5I5Z5E2"
+      "BILL_ID": "PRC_A2E4G0C6K1K8P1M1E5X0I2B5I5Z5E2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "과학기술정보방송통신위원장",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2E4G0C6K1K8P1M1E5X0I2B5I5Z5E2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2W4V0U6V1R9P0O9T0R5S5A8Z8X6W9"
+      "BILL_ID": "PRC_Y2W4V0U6V1R9P0O9T0R5S5A8Z8X6W9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "장종태의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2W4V0U6V1R9P0O9T0R5S5A8Z8X6W9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_T2T4S0Y6X2W0E1D6C3B9X3U8T8C1B8"
+      "BILL_ID": "PRC_T2T4S0Y6X2W0E1D6C3B9X3U8T8C1B8",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "임이자의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_T2T4S0Y6X2W0E1D6C3B9X3U8T8C1B8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Y2Y4X0F6F1D3F1D4D0B5C0K4I9J5H3"
+      "BILL_ID": "PRC_Y2Y4X0F6F1D3F1D4D0B5C0K4I9J5H3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "권영세의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Y2Y4X0F6F1D3F1D4D0B5C0K4I9J5H3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2O4N0O6J0I3H1F1O2P4N2M6S0R6Z6"
+      "BILL_ID": "PRC_P2O4N0O6J0I3H1F1O2P4N2M6S0R6Z6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "홍기원의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2O4N0O6J0I3H1F1O2P4N2M6S0R6Z6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2P4O0N6M1U9S1R5S4R4Z1Y5X0F1E0"
+      "BILL_ID": "PRC_H2P4O0N6M1U9S1R5S4R4Z1Y5X0F1E0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김현의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2P4O0N6M1U9S1R5S4R4Z1Y5X0F1E0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2T4U0T6R2Z1Y1Y5X2W6E3C9D5C8A0"
+      "BILL_ID": "PRC_U2T4U0T6R2Z1Y1Y5X2W6E3C9D5C8A0",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김주영의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2T4U0T6R2Z1Y1Y5X2W6E3C9D5C8A0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2C4J0I6H1F8N1M4L4K4S1R2Q4Q3P5"
+      "BILL_ID": "PRC_G2C4J0I6H1F8N1M4L4K4S1R2Q4Q3P5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "정성호의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2C4J0I6H1F8N1M4L4K4S1R2Q4Q3P5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2V4A0U6T2T0Z1Z4Y0E2D2V8U6B2A6"
+      "BILL_ID": "PRC_W2V4A0U6T2T0Z1Z4Y0E2D2V8U6B2A6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송재봉의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2V4A0U6T2T0Z1Z4Y0E2D2V8U6B2A6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_I2G4I0G6G1O3O1N0L2M3K5L8S3T2S4"
+      "BILL_ID": "PRC_I2G4I0G6G1O3O1N0L2M3K5L8S3T2S4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한병도의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_I2G4I0G6G1O3O1N0L2M3K5L8S3T2S4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2M4K0J6H1I9E0D9B4A0I3J2H8G4E9"
+      "BILL_ID": "PRC_L2M4K0J6H1I9E0D9B4A0I3J2H8G4E9",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "김원이의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2M4K0J6H1I9E0D9B4A0I3J2H8G4E9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_S2R4N0L6J1K9J0R9Q4R0Q5Y7W2X2W2"
+      "BILL_ID": "PRC_S2R4N0L6J1K9J0R9Q4R0Q5Y7W2X2W2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김원이의원 등 16인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_S2R4N0L6J1K9J0R9Q4R0Q5Y7W2X2W2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2G4F0F6E1A8Z1Y7W5X7F4F0E2F2D8"
+      "BILL_ID": "PRC_H2G4F0F6E1A8Z1Y7W5X7F4F0E2F2D8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이수진의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2G4F0F6E1A8Z1Y7W5X7F4F0E2F2D8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2V4W0U6V1T3U1P6Q1O0P2N7L9M6U1"
+      "BILL_ID": "PRC_X2V4W0U6V1T3U1P6Q1O0P2N7L9M6U1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강준현의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2V4W0U6V1T3U1P6Q1O0P2N7L9M6U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2J4I0E6D0D4C1A6I4H2I2H6F2O2I7"
+      "BILL_ID": "PRC_L2J4I0E6D0D4C1A6I4H2I2H6F2O2I7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "권영세의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2J4I0E6D0D4C1A6I4H2I2H6F2O2I7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2T4T0S6I1I1G1H3G0G9F4N0N5M5M8"
+      "BILL_ID": "PRC_V2T4T0S6I1I1G1H3G0G9F4N0N5M5M8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송재봉의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2T4T0S6I1I1G1H3G0G9F4N0N5M5M8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2L4J0L6S1T1R1Q3Q0O8P5X0Y1W1U6"
+      "BILL_ID": "PRC_L2L4J0L6S1T1R1Q3Q0O8P5X0Y1W1U6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송재봉의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2L4J0L6S1T1R1Q3Q0O8P5X0Y1W1U6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2B4A0A6Z1Z0H1G8G2E4F2D1E4M5M7"
+      "BILL_ID": "PRC_B2B4A0A6Z1Z0H1G8G2E4F2D1E4M5M7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "서영교의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2B4A0A6Z1Z0H1G8G2E4F2D1E4M5M7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_D2M4O0C6L1C7Q1N3H2F9I3O4Z1L2F5"
+      "BILL_ID": "PRC_D2M4O0C6L1C7Q1N3H2F9I3O4Z1L2F5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박대출의원 등 108인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_D2M4O0C6L1C7Q1N3H2F9I3O4Z1L2F5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2T4R0S6Q1R0P1Q1Y0Y8W1X7W0U1U1"
+      "BILL_ID": "PRC_X2T4R0S6Q1R0P1Q1Y0Y8W1X7W0U1U1",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이병진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2T4R0S6Q1R0P1Q1Y0Y8W1X7W0U1U1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2N4O0N6N1L0T1U0S5T3R1S5Q2R0Z7"
+      "BILL_ID": "PRC_P2N4O0N6N1L0T1U0S5T3R1S5Q2R0Z7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이병진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2N4O0N6N1L0T1U0S5T3R1S5Q2R0Z7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2E4F0D6D1C3A1B0W3X6W3W4U0V0T5"
+      "BILL_ID": "PRC_W2E4F0D6D1C3A1B0W3X6W3W4U0V0T5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박홍배의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2E4F0D6D1C3A1B0W3X6W3W4U0V0T5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2U4U0T6B1B0Z1A9Y2Z2Y0F3G0F0F9"
+      "BILL_ID": "PRC_W2U4U0T6B1B0Z1A9Y2Z2Y0F3G0F0F9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송옥주의원 등 14인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2U4U0T6B1B0Z1A9Y2Z2Y0F3G0F0F9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_A2T4Y0W6A1H3Y1W6O2T4E3D0L1I1M5"
+      "BILL_ID": "PRC_A2T4Y0W6A1H3Y1W6O2T4E3D0L1I1M5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한준호의원 외 169인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_A2T4Y0W6A1H3Y1W6O2T4E3D0L1I1M5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_E2F4D0C6C0R4S1Q5R1P5P3O4W9X6V8"
+      "BILL_ID": "PRC_E2F4D0C6C0R4S1Q5R1P5P3O4W9X6V8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이병진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_E2F4D0C6C0R4S1Q5R1P5P3O4W9X6V8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2E4F0B6B0Z7Y1Z2X5Y4G2G4E2D0D2"
+      "BILL_ID": "PRC_G2E4F0B6B0Z7Y1Z2X5Y4G2G4E2D0D2",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "주호영의원 등 31인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2E4F0B6B0Z7Y1Z2X5Y4G2G4E2D0D2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2I4G0H6P1O1O0M9N4M3T0U6S9T8R5"
+      "BILL_ID": "PRC_H2I4G0H6P1O1O0M9N4M3T0U6S9T8R5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "조계원의원 등 17인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2I4G0H6P1O1O0M9N4M3T0U6S9T8R5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2R4Q0O6P0W5Y1W4W0U6T2U8B6C1A1"
+      "BILL_ID": "PRC_R2R4Q0O6P0W5Y1W4W0U6T2U8B6C1A1",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "이철규의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2R4Q0O6P0W5Y1W4W0U6T2U8B6C1A1"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_W2U4T0V6U0T4A1Z0A2Z5X4G4E3D5C7"
+      "BILL_ID": "PRC_W2U4T0V6U0T4A1Z0A2Z5X4G4E3D5C7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김영호의원 등 20인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_W2U4T0V6U0T4A1Z0A2Z5X4G4E3D5C7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Z4Y0Y6G1H0F1G9E3F1D0Z6Z1Y9Y7"
+      "BILL_ID": "PRC_B2Z4Y0Y6G1H0F1G9E3F1D0Z6Z1Y9Y7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "김선교의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Z4Y0Y6G1H0F1G9E3F1D0Z6Z1Y9Y7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_O2M4N0V6W0U5U1T0R1S3O5O3M9N5M3"
+      "BILL_ID": "PRC_O2M4N0V6W0U5U1T0R1S3O5O3M9N5M3",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박충권의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_O2M4N0V6W0U5U1T0R1S3O5O3M9N5M3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_B2Z4H0I6G0H7F1E3E5M6N0L5L2K4I6"
+      "BILL_ID": "PRC_B2Z4H0I6G0H7F1E3E5M6N0L5L2K4I6",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "허영의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_B2Z4H0I6G0H7F1E3E5M6N0L5L2K4I6"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2U4T0U6S1T0R1Z4Z2Y3Y3W5X9W9W7"
+      "BILL_ID": "PRC_U2U4T0U6S1T0R1Z4Z2Y3Y3W5X9W9W7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "임이자의원 등 11인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2U4T0U6S1T0R1Z4Z2Y3Y3W5X9W9W7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2O4O0M6N0V7W1U4U1S5R5S4N8O0M8"
+      "BILL_ID": "PRC_P2O4O0M6N0V7W1U4U1S5R5S4N8O0M8",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "신영대의원 등 15인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2O4O0M6N0V7W1U4U1S5R5S4N8O0M8"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_J2I4Q0P6N0O4M1J6H3G7F0G6O5O5N7"
+      "BILL_ID": "PRC_J2I4Q0P6N0O4M1J6H3G7F0G6O5O5N7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "신성범의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_J2I4Q0P6N0O4M1J6H3G7F0G6O5O5N7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_L2M4K0L6Z1Y0Z0X8X5V3W1E8F7D8D2"
+      "BILL_ID": "PRC_L2M4K0L6Z1Y0Z0X8X5V3W1E8F7D8D2",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "한병도의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_L2M4K0L6Z1Y0Z0X8X5V3W1E8F7D8D2"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2A4Z0X6Y0G3F1E9C0Y5G2F3G0E2C5"
+      "BILL_ID": "PRC_C2A4Z0X6Y0G3F1E9C0Y5G2F3G0E2C5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이연희의원 등 22인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2A4Z0X6Y0G3F1E9C0Y5G2F3G0E2C5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2A4Y0X6L0J3I0E8C3B4C3B3J1H6G5"
+      "BILL_ID": "PRC_R2A4Y0X6L0J3I0E8C3B4C3B3J1H6G5",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "송재봉의원 등 18인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2A4Y0X6L0J3I0E8C3B4C3B3J1H6G5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2Q4O0N6V0T4S1T5S4A1Z2X3W9X6T7"
+      "BILL_ID": "PRC_R2Q4O0N6V0T4S1T5S4A1Z2X3W9X6T7",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이병진의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2Q4O0N6V0T4S1T5S4A1Z2X3W9X6T7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_Q2O4N0V5W3V0U1S5R1Q8Y1X4V2Y2W0"
+      "BILL_ID": "PRC_Q2O4N0V5W3V0U1S5R1Q8Y1X4V2Y2W0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "이종배의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_Q2O4N0V5W3V0U1S5R1Q8Y1X4V2Y2W0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2Q4P0P5Y3W0P1Y3W4V3W2U8Q1P3N4"
+      "BILL_ID": "PRC_R2Q4P0P5Y3W0P1Y3W4V3W2U8Q1P3N4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한병도의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2Q4P0P5Y3W0P1Y3W4V3W2U8Q1P3N4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_V2U4C0D5C3A0Z1U3V4U5T2R4Z0H9F9"
+      "BILL_ID": "PRC_V2U4C0D5C3A0Z1U3V4U5T2R4Z0H9F9",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "한병도의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_V2U4C0D5C3A0Z1U3V4U5T2R4Z0H9F9"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_C2L4K0I5K3S0R1P6O0W6X1W6U2T9P7"
+      "BILL_ID": "PRC_C2L4K0I5K3S0R1P6O0W6X1W6U2T9P7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강대식의원 등 12인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_C2L4K0I5K3S0R1P6O0W6X1W6U2T9P7"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2Q4Q0Z5X3W0V1D5E1C8B0A2V0W8V4"
+      "BILL_ID": "PRC_R2Q4Q0Z5X3W0V1D5E1C8B0A2V0W8V4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강준현의원 등 27인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2Q4Q0Z5X3W0V1D5E1C8B0A2V0W8V4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2U4D0C5F3E0B0J9J1G8P4O3L4H1I4"
+      "BILL_ID": "PRC_X2U4D0C5F3E0B0J9J1G8P4O3L4H1I4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "강민국의원 등 13인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2U4D0C5F3E0B0J9J1G8P4O3L4H1I4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_G2E4S0T5R3Q1P1X0Y3W5V0U5B0A2B5"
+      "BILL_ID": "PRC_G2E4S0T5R3Q1P1X0Y3W5V0U5B0A2B5",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "박충권의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_G2E4S0T5R3Q1P1X0Y3W5V0U5B0A2B5"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_P2Q4P0X5V3U0T1U6C5A2Y3X3Y9V3T0"
+      "BILL_ID": "PRC_P2Q4P0X5V3U0T1U6C5A2Y3X3Y9V3T0",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박충권의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_P2Q4P0X5V3U0T1U6C5A2Y3X3Y9V3T0"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_X2A4X0I5U3L0T1D6L5T2K1D9G6Q3S4"
+      "BILL_ID": "PRC_X2A4X0I5U3L0T1D6L5T2K1D9G6Q3S4",
+      "PROC_RESULT_CD": "수정가결",
+      "PROPOSER": "박찬대의원 외 170인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_X2A4X0I5U3L0T1D6L5T2K1D9G6Q3S4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_H2W4Q0Y5K3I0J1S6X4T5O0T4M2E7C3"
+      "BILL_ID": "PRC_H2W4Q0Y5K3I0J1S6X4T5O0T4M2E7C3",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강유정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_H2W4Q0Y5K3I0J1S6X4T5O0T4M2E7C3"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_U2B4A0P5D3I0R1F4G5A0N4H6N3D1W4"
+      "BILL_ID": "PRC_U2B4A0P5D3I0R1F4G5A0N4H6N3D1W4",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강유정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_U2B4A0P5D3I0R1F4G5A0N4H6N3D1W4"
     },
     {
       "AGE": "22",
-      "BILL_ID": "PRC_R2C4R0F5Q3N0N1H4N5T0N0T4N2Y0U7"
+      "BILL_ID": "PRC_R2C4R0F5Q3N0N1H4N5T0N0T4N2Y0U7",
+      "PROC_RESULT_CD": "원안가결",
+      "PROPOSER": "강유정의원 등 10인",
+      "DETAIL_LINK": "https://likms.assembly.go.kr/bill/billDetail.do?billId=PRC_R2C4R0F5Q3N0N1H4N5T0N0T4N2Y0U7"
     }
   ]
 }
