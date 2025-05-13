@@ -5,35 +5,40 @@
       "BILL_NO": "2200060",
       "BILL_NAME": "인공지능 기본법 제정 촉구에 관한 청원",
       "PROPOSER": "오병일",
-      "PROC_RESULT_CD": "본회의불부의"
+      "PROC_RESULT_CD": "본회의불부의",
+      "INTD_ASBLM_NM": "김남근"
     },
     {
       "BILL_ID": "PRC_V2Z4I1B1D2P1G0D9E0I5N4P4P7B1R7",
       "BILL_NO": "2200058",
       "BILL_NAME": "2025년 1월 1일 코인 과세 유예 요청에 관한 청원",
       "PROPOSER": "유현준외 56,143인",
-      "PROC_RESULT_CD": "본회의불부의"
+      "PROC_RESULT_CD": "본회의불부의",
+      "INTD_ASBLM_NM": "유현준"
     },
     {
       "BILL_ID": "PRC_V2T4U1S1M0B7E1W3O4Z9F1M4Q7W9R2",
       "BILL_NO": "2200052",
       "BILL_NAME": "쿠팡 청문회 개최에 관한 청원",
       "PROPOSER": "조혜연외 50,027인",
-      "PROC_RESULT_CD": "본회의불부의"
+      "PROC_RESULT_CD": "본회의불부의",
+      "INTD_ASBLM_NM": "조혜연"
     },
     {
       "BILL_ID": "PRC_U2O4Q1L0W0A7L1U6J5M5B3W8M5J4G4",
       "BILL_NO": "2200047",
       "BILL_NAME": "낙동강녹조재난 국회청문회 요구에 관한 청원",
       "PROPOSER": "정은아",
-      "PROC_RESULT_CD": "철회"
+      "PROC_RESULT_CD": "철회",
+      "INTD_ASBLM_NM": "김정호"
     },
     {
       "BILL_ID": "PRC_Z2K4P0O6O1U0W1O8F0P6H1C9K9J6R1",
       "BILL_NO": "2200005",
       "BILL_NAME": "금투세 전면 폐지 요청에 관한 청원",
       "PROPOSER": "김기석외 53,475인",
-      "PROC_RESULT_CD": "본회의불부의"
+      "PROC_RESULT_CD": "본회의불부의",
+      "INTD_ASBLM_NM": "김기석"
     }
   ]
 }
