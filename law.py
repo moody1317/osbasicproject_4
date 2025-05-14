@@ -65,7 +65,7 @@ if response.status_code == 200:
 
                     # 필터링된 데이터 저장
                     filtered_data = {
-                        "nwbpacrgavhjryiph": filtered_rows
+                        "data": filtered_rows
                     }
 
                     # JSON 파일로 저장

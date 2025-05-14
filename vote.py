@@ -10,48 +10,40 @@ vote_api_url = "https://open.assembly.go.kr/portal/openapi/nojepdqqaweusdfbi"  #
 # 먼저 all.py에서 생성한 JSON 파일에서 BILL_ID 목록 가져오기
 def get_bill_ids_from_file():
     try:
+        # 파일이 존재하는지 확인
         filename_list = {
             "all": "all.json",
+            "law": "law.json",
             "cost": "cost.json",
             "cosstly": "cosstly.json",
             "etc": "etc.json"
         }
-
-        bill_ids_list = {}
-        total_bills = 0
-
+        
         for key in filename_list:
-            filepath = filename_list[key]
-
-            if not os.path.exists(filepath):
-                print(f"파일 '{filepath}'이 존재하지 않습니다.")
-                continue
-
-            with open(filepath, "r", encoding="utf-8") as f:
+            if not os.path.exists(filename_list[key]):
+                print(f"파일 '{filename_list[key]}'이 존재하지 않습니다.")
+                return None
+        bill_ids_list = {}
+        for key in filename_list:
+            # 파일 내용 읽기
+            with open(filename_list[key], "r", encoding="utf-8") as f:
                 file_data = json.load(f)
-
+        
+            # BILL_ID 목록 추출
             bill_ids = []
             if "data" in file_data:
                 for item in file_data["data"]:
                     if item.get("BILL_ID"):
                         bill_ids.append(item["BILL_ID"])
-
-            if not bill_ids:
-                print(f"⚠️ '{filepath}'에는 유효한 BILL_ID가 없습니다. 건너뜁니다.")
-                continue
-
-            total_bills += len(bill_ids)
-            bill_ids_list[filepath] = bill_ids
-
-            print(f"'{filepath}'에서 {len(bill_ids)}개의 BILL_ID를 가져왔습니다.")
-            print("가져온 BILL_ID 목록 (최대 5개):")
-            for i, bill_id in enumerate(bill_ids[:5]):
-                print(f"{i+1}. {bill_id}")
-
-        print(f"\n📊 총 유효 BILL_ID 수: {total_bills}개")
-
+        
+            print(f"파일에서 {len(bill_ids)}개의 BILL_ID를 가져왔습니다.")
+            if len(bill_ids) > 0:
+                print("가져온 BILL_ID 목록 (최대 5개):")
+                for i, bill_id in enumerate(bill_ids[:5]):
+                    print(f"{i+1}. {bill_id}")
+            bill_ids_list[filename_list[key]] = bill_ids
         return bill_ids_list
-
+    
     except Exception as e:
         print(f"파일 읽기 오류: {e}")
         return None
