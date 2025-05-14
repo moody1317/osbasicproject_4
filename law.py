@@ -56,17 +56,11 @@ if response.status_code == 200:
                         all_data.extend(rows)
 
                     # 필요한 필드만 추출
-                    target_fields = ["BILL_NO", "BILL_NM", "PROPOSER", "PROC_RESULT_CD", "ANNOUNCE_DT"]
-                    korean_labels = {
-                        "BILL_NO": "의안번호",
-                        "BILL_NM": "의안명",
-                        "PROPOSER": "제안자",
-                        "PROC_RESULT_CD": "의안결과",
-                        "ANNOUNCE_DT": "공포일",
-                    }
+                    target_fields = ["BILL_ID","BILL_NO", "BILL_NM", "PROPOSER", "PROC_RESULT_CD", "ANNOUNCE_DT"]
+                    
                     filtered_rows = []
                     for row in all_data:
-                        filtered_row = {korean_labels[field]: row.get(field, "") for field in target_fields}
+                        filtered_row = {field: row.get(field, "") for field in target_fields}
                         filtered_rows.append(filtered_row)
 
                     # 필터링된 데이터 저장

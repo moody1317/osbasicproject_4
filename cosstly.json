@@ -1,64 +1,79 @@
 {
   "data": [
     {
-      "BILL_ID": "PRC_U2W5F0P4X2X1I1P7A3H4P1W8K9K6S1",
-      "AGE": "22"
-    },
-    {
-      "BILL_ID": "PRC_B2L5S0P4W2J1Z1D7Y3A5H1E7V4B7A6",
-      "AGE": "22"
-    },
-    {
+      "age": "22",
       "BILL_ID": "PRC_F2S5D0O4B2F1P1M7F3U3O3N8B6R8C7",
-      "AGE": "22"
+      "PROC_RESULT_CD": "수정가결"
     },
     {
-      "BILL_ID": "PRC_C2R5K0E4P2H1H1S7P3P3G1U7O2X7S2",
-      "AGE": "22"
-    },
-    {
-      "BILL_ID": "PRC_Y2U5W0A4H2Y1L1P7D2A5G0O9C6J1U1",
-      "AGE": "22"
-    },
-    {
-      "BILL_ID": "PRC_I2H5T0S4T2Q1N1F7M3V4T3X6E2J3C1",
-      "AGE": "22"
-    },
-    {
-      "BILL_ID": "PRC_D2R5X0O4D2J1B1G7X3V4W5S2G6D4K8",
-      "AGE": "22"
-    },
-    {
-      "BILL_ID": "PRC_P2N5G0B4C2W1O1C7U3C3X5K9R0U9S4",
-      "AGE": "22"
-    },
-    {
+      "age": "22",
       "BILL_ID": "PRC_P2A5Q0E4K2P1U1X7Q3O5O3R7R1V6O8",
-      "AGE": "22"
+      "PROC_RESULT_CD": "원안가결"
     },
     {
-      "BILL_ID": "PRC_P2T5N0V4P2T1T1B7L3A5I5Y4I7D6L7",
-      "AGE": "22"
+      "age": "22",
+      "BILL_ID": "PRC_B2L5S0P4W2J1Z1D7Y3A5H1E7V4B7A6",
+      "PROC_RESULT_CD": "원안가결"
     },
     {
+      "age": "22",
+      "BILL_ID": "PRC_Y2U5W0A4H2Y1L1P7D2A5G0O9C6J1U1",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
       "BILL_ID": "PRC_W2C5U0C4Z2M1M1W7K3N1Z3J3E4Y8W3",
-      "AGE": "22"
+      "PROC_RESULT_CD": "원안가결"
     },
     {
+      "age": "22",
       "BILL_ID": "PRC_W2P5T0W4Z2C1X1G7Z3E2H5G5F1C3C3",
-      "AGE": "22"
+      "PROC_RESULT_CD": "수정가결"
     },
     {
+      "age": "22",
+      "BILL_ID": "PRC_C2R5K0E4P2H1H1S7P3P3G1U7O2X7S2",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
+      "BILL_ID": "PRC_P2T5N0V4P2T1T1B7L3A5I5Y4I7D6L7",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
+      "BILL_ID": "PRC_P2N5G0B4C2W1O1C7U3C3X5K9R0U9S4",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
+      "BILL_ID": "PRC_U2W5F0P4X2X1I1P7A3H4P1W8K9K6S1",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
+      "BILL_ID": "PRC_I2H5T0S4T2Q1N1F7M3V4T3X6E2J3C1",
+      "PROC_RESULT_CD": "원안가결"
+    },
+    {
+      "age": "22",
+      "BILL_ID": "PRC_D2R5X0O4D2J1B1G7X3V4W5S2G6D4K8",
+      "PROC_RESULT_CD": "수정가결"
+    },
+    {
+      "age": "22",
       "BILL_ID": "PRC_G2D4Z0W9Y0C2U1E6Y4I7B1D7J8L1Y8",
-      "AGE": "22"
+      "PROC_RESULT_CD": "원안가결"
     },
     {
+      "age": "22",
       "BILL_ID": "PRC_F2I4M0C9P0S2M1L6G4C6P3Q9Y4W1O5",
-      "AGE": "22"
+      "PROC_RESULT_CD": "수정가결"
     },
     {
+      "age": "22",
       "BILL_ID": "PRC_C2V4P0U9I0D2U1G6J4H6A1Z7O6Z4O2",
-      "AGE": "22"
+      "PROC_RESULT_CD": "수정가결"
     }
   ]
 }

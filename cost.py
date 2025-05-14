@@ -59,13 +59,15 @@ if response.status_code == 200:
                         rows = second_item.get('row', [])
                         all_data.extend(rows)
 
-                    # AGE와 BILL_ID만 추출
+                    # PROC_RESULT_CD와 BILL_ID만 추출
                     filtered_data = []
                     for row in all_data:
-                        age = row.get("AGE", "")
+                        re = row.get("PROC_RESULT_CD", "")
+                        age=row.get("AGE","")
                         bill_id = row.get("BILL_ID", "")
                         filtered_data.append({
-                            "AGE": age,
+                            "age":age,
+                            "PROC_RESULT_CD": re,
                             "BILL_ID": bill_id
                         })
 

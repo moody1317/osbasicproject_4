@@ -5,7 +5,7 @@ from collections import defaultdict
 
 def summarize_votes_with_ratios():
     summary = defaultdict(lambda: {"찬성": 0, "반대": 0, "기권": 0})
-    bill_ids_set = set()  # 고유한 BILL_ID 저장용
+    bill_ids_set = set()  # 고유한 BILL_ID 저장용 ->중복처리
 
     # vote_로 시작하는 모든 JSON 파일 읽기
     vote_files = glob.glob("vote_*.json")

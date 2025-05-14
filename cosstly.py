@@ -63,10 +63,12 @@ if response.status_code == 200:
                     filtered_data = []
                     for row in all_data:
                         bill_id = row.get("BILL_ID", "")
-                        age = row.get("AGE", "")
+                        age=row.get("AGE","")
+                        re = row.get("PROC_RESULT_CD", "")
                         filtered_data.append({
+                            "age":age,
                             "BILL_ID": bill_id,
-                            "AGE": age
+                            "PROC_RESULT_CD": re
                         })
 
                     # 결과를 JSON 파일로 저장
