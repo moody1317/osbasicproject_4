@@ -1,0 +1,348 @@
+/* 디자인 토큰 - 색상 및 타이포그래피 */
+:root {
+    /* 메인 색상 */
+    --main1: #dbe5ffff;
+    --main2: #d8e4ff42; /* 25% 불투명도 */
+    
+    /* 사이드 색상 */
+    --side: #e7eeffff;
+    --side2: #dedfe2ff;
+    
+    /* 채팅 관련 색상 */
+    --chatting: #e7e4ffff;
+    --sent: #ddd4e1ff;
+    
+    /* 텍스트 색상 */
+    --string: #000000ff;
+    --example: #898b8eff;
+    --number: #8d8a8aff;
+    
+    /* 기타 UI 요소 */
+    --drop: #6b77ff6b; /* 42% 불투명도 */
+    --light-blue: #70c8e9;
+    
+    /* 차트 색상 */
+    --chart-red-1: #FF3D3D;
+    --chart-red-2: #FF5C5C;
+    --chart-red-3: #FF7878;
+    --chart-red-4: #FF9595;
+    --chart-red-5: #FFB2B2;
+    --chart-red-bg: #FFE5E5;
+}
+
+/* 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Roboto:wght@400;500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    color: var(--string);
+    font-family: 'Noto Sans KR', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 헤더 스타일 */
+header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.logo img {
+    height: auto;
+    width: 180px;
+}
+
+/* 네비게이션 스타일 */
+nav {
+    border-bottom: 1px solid var(--side2);
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    width: 100%;
+}
+
+nav li {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 20px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+nav li.active {
+    font-weight: 500;
+}
+
+nav li.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--light-blue);
+}
+
+nav li:hover {
+    background-color: var(--main2);
+}
+
+/* 메인 콘텐츠 스타일 */
+.content-container {
+    width: 100%;
+    padding: 0 15px;
+}
+
+.party-header {
+    text-align: center;
+    font-size: 36px;
+    margin-bottom: 40px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.party-header a {
+    display: inline-block;
+    margin-left: 10px;
+    color: inherit;
+    transition: transform 0.2s;
+}
+
+.party-header a:hover {
+    transform: scale(1.1);
+}
+
+.party-header svg {
+    width: 36px;
+    height: 36px;
+}
+
+/* 차트 컨테이너 */
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 50px;
+    gap: 30px;
+}
+
+.chart-section {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+}
+
+.pie-chart {
+    width: 100%;
+    margin: 0 auto;
+    position: relative;
+}
+
+.pie-chart svg {
+    width: 100%;
+    height: auto;
+}
+
+/* 로고 이미지 스타일 */
+#party-logo {
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1));
+}
+
+.statistics-section {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--chart-red-bg);
+}
+
+.statistics-section h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.stats-item {
+    margin-bottom: 15px;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.stats-item:hover {
+    background-color: rgba(255, 255, 255, 0.7);
+}
+
+.stats-item .value {
+    font-weight: 700;
+    color: var(--chart-red-1);
+}
+
+.stats-item .label {
+    margin-right: 10px;
+}
+
+/* 드롭다운 스타일 */
+.party-selector {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    z-index: 100;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    background-color: white;
+    border: 1px solid var(--side2);
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 180px;
+}
+
+.dropdown-btn svg {
+    margin-left: 10px;
+    transition: transform 0.2s;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    z-index: 1;
+    border: 1px solid var(--side2);
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.dropdown-content a {
+    color: var(--string);
+    padding: 8px 15px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
+    font-size: 14px;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--main2);
+}
+
+.dropdown.active .dropdown-content {
+    display: block;
+}
+
+.dropdown.active .dropdown-btn svg {
+    transform: rotate(180deg);
+}
+
+/* 챗봇 아이콘 */
+.robot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 1000;
+    background-color: var(--main1);
+}
+
+.robot-icon:hover {
+    transform: scale(1.05);
+}
+
+.robot-icon img {
+    width: 60px;
+    height: 60px;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .chart-container {
+        flex-direction: column;
+    }
+    
+    .party-header {
+        font-size: 28px;
+    }
+    
+    .party-header svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .stats-item {
+        font-size: 18px;
+    }
+    
+    .dropdown-btn {
+        padding: 6px 12px;
+        font-size: 14px;
+        min-width: 150px;
+    }
+    
+    .dropdown-content {
+        min-width: 150px;
+    }
+    
+    nav li {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .party-header {
+        font-size: 24px;
+        margin-bottom: 60px;
+    }
+    
+    .party-selector {
+        top: 35px;
+        right: 50%;
+        transform: translateX(50%);
+    }
+}
