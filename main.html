@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>백일하 - 정치 대시보드</title>
+    <style>
+        /* 디자인 토큰 - 색상 및 타이포그래피 */
+        :root {
+            /* 메인 색상 */
+            --main1: #dbe5ffff;
+            --main2: #d8e4ff42; /* 25% 불투명도 */
+            
+            /* 사이드 색상 */
+            --side: #e7eeffff;
+            --side2: #dedfe2ff;
+            
+            /* 채팅 관련 색상 */
+            --chatting: #e7e4ffff;
+            --sent: #ddd4e1ff;
+            
+            /* 텍스트 색상 */
+            --string: #000000ff;
+            --example: #898b8eff;
+            --number: #8d8a8aff;
+            
+            /* 기타 UI 요소 */
+            --drop: #6b77ff6b; /* 42% 불투명도 */
+            --light-blue: #70c8e9;
+        }
+
+        /* 폰트 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Blinker:wght@400&family=Roboto:wght@400&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: white;
+            color: var(--string);
+            font-family: 'Blinker', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            color: var(--light-blue);
+            font-size: 35px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* 네비게이션 스타일 */
+        nav {
+            border-bottom: 1px solid var(--side2);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            width: 100%;
+        }
+
+        nav li {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        nav li:hover {
+            background-color: var(--main2);
+        }
+
+        /* 메인 콘텐츠 스타일 */
+        .content-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: var(--side);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            width: calc(50% - 10px);
+            min-height: 300px;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 25px;
+            margin-bottom: 20px;
+        }
+
+        .ranking-list {
+            list-style: none;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .rank-number {
+            font-size: 35px;
+            margin-right: 15px;
+            width: 40px;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 15px;
+        }
+
+        .info {
+            flex: 1;
+        }
+
+        .name {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .party-name {
+            color: var(--example);
+            font-size: 15px;
+        }
+
+        .percentage {
+            font-size: 25px;
+            width: 80px;
+            text-align: right;
+        }
+
+        .show-more {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--example);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* 하단 섹션 스타일 */
+        .bottom-section {
+            margin-top: 20px;
+        }
+
+        .percentages-container, .notices-container {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 1162px;
+            max-width: 100%;
+            height: 1px;
+            background-color: var(--main1);
+            opacity: 0.5;
+        }
+
+        .percentages-list, .notices-list {
+            list-style: none;
+            margin-left: 20px;
+        }
+
+        .percentages-list li, .notices-list li {
+            margin-bottom: 5px;
+            color: var(--number);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .percentages-list li::before, .notices-list li::before {
+            content: ".";
+            font-size: 20px;
+            margin-right: 5px;
+            line-height: 0;
+            position: relative;
+            top: -3px;
+        }
+
+        .more-link {
+            color: var(--example);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .robot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--side);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .robot-icon img {
+            width: 30px;
+            height: 30px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .card {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo" style="margin: 15px 0;">
+            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/becd83e08d855316b8bdb8dc4e9336582b35615b/logo.png" alt="백일하 로고" style="height: auto; width: 180px;">
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li>정당</li>
+            <li>국회의원</li>
+            <li>의정 활동</li>
+            <li>기타</li>
+        </ul>
+    </nav>
+
+    <div class="content-container">
+        <div class="card">
+            <h2 class="card-title">명예의 정당</h2>
+            <ul class="ranking-list">
+                <li class="ranking-item">
+                    <div class="rank-number">1</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">A 정당</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+                <li class="ranking-item">
+                    <div class="rank-number">2</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">B 정당</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+                <li class="ranking-item">
+                    <div class="rank-number">3</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">C 정당</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+            </ul>
+            <div class="show-more">&lt;더보기&gt;</div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">명예의 의원</h2>
+            <ul class="ranking-list">
+                <li class="ranking-item">
+                    <div class="rank-number">1</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">A 의원</div>
+                        <div class="party-name">정당명</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+                <li class="ranking-item">
+                    <div class="rank-number">2</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">A 의원</div>
+                        <div class="party-name">정당명</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+                <li class="ranking-item">
+                    <div class="rank-number">3</div>
+                    <div class="avatar"></div>
+                    <div class="info">
+                        <div class="name">A 의원</div>
+                        <div class="party-name">정당명</div>
+                    </div>
+                    <div class="percentage">00%</div>
+                </li>
+            </ul>
+            <div class="show-more">&lt;더보기&gt;</div>
+        </div>
+    </div>
+
+    <div class="bottom-section">
+        <div class="percentages-container">
+            <h3 class="section-title">상세 퍼센트 <span class="more-link">&gt;</span></h3>
+            <ul class="percentages-list">
+                <li>출석 00%</li>
+                <li>청원 제안 00%</li>
+                <li>...</li>
+            </ul>
+        </div>
+
+        <div class="notices-container">
+            <h3 class="section-title">공지사항 <span class="more-link">&gt;</span></h3>
+            <ul class="notices-list">
+                <li>서버 점검 시간(00월 00일 00:00 ~ 00: 00)</li>
+                <li>제 22대 국회의원 선거일</li>
+                <li>000 의원 퇴출→000의원 대체</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="robot-icon">
+        <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아이콘" style="width: 50px; height: 50px;">
+    </div>
+
+    <script>
+        // 간단한 상호작용 추가
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('nav li');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.style.borderBottom = 'none');
+                    this.style.borderBottom = '2px solid var(--light-blue)';
+                });
+            });
+
+            // 기본적으로 첫 번째 탭 선택
+            navItems[0].style.borderBottom = '2px solid var(--light-blue)';
+        });
+    </script>
+</body>
+</html>
