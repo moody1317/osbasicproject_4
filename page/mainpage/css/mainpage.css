@@ -1,0 +1,245 @@
+/* 디자인 토큰 - 색상 및 타이포그래피 */
+:root {
+    /* 메인 색상 */
+    --main1: #dbe5ffff;
+    --main2: #d8e4ff42; /* 25% 불투명도 */
+    
+    /* 사이드 색상 */
+    --side: #e7eeffff;
+    --side2: #dedfe2ff;
+    
+    /* 채팅 관련 색상 */
+    --chatting: #e7e4ffff;
+    --sent: #ddd4e1ff;
+    
+    /* 텍스트 색상 */
+    --string: #000000ff;
+    --example: #898b8eff;
+    --number: #8d8a8aff;
+    
+    /* 기타 UI 요소 */
+    --drop: #6b77ff6b; /* 42% 불투명도 */
+    --light-blue: #70c8e9;
+}
+
+/* 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@400&family=Roboto:wght@400&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    color: var(--string);
+    font-family: 'Blinker', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 헤더 스타일 */
+header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    margin: 15px 0;
+}
+
+/* 네비게이션 스타일 */
+nav {
+    border-bottom: 1px solid var(--side2);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    width: 100%;
+}
+
+nav li {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+nav li:hover {
+    background-color: var(--main2);
+}
+
+/* 메인 콘텐츠 스타일 */
+.content-container {
+    display: flex;
+    justify-content: center !important; /* 중앙 정렬 - 강제 적용 */
+    gap: 40px !important; /* 카드 사이 여백을 강제 적용 */
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.card {
+    background-color: var(--side);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    width: 480px !important; /* 고정 너비 강제 적용 */
+    max-width: 100%;
+    min-height: 300px;
+    margin-bottom: 20px;
+    flex: 0 0 auto !important; /* 너비 자동 조정 방지 */
+}
+
+.card-title {
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.ranking-list {
+    list-style: none;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    justify-content: space-between;
+}
+
+.rank-number {
+    font-size: 35px;
+    margin-right: 15px;
+    min-width: 40px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.info {
+    flex: 1;
+    max-width: 100px;
+    margin-right: 10px;
+}
+
+.name {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.party-name {
+    color: var(--example);
+    font-size: 15px;
+}
+
+.percentage {
+    font-size: 25px;
+    min-width: 50px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.show-more {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--example);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* 하단 섹션 스타일 */
+.bottom-section {
+    margin-top: 20px;
+}
+
+.percentages-container, .notices-container {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 1162px;
+    max-width: 100%;
+    height: 1px;
+    background-color: var(--main1);
+    opacity: 0.5;
+}
+
+.percentages-list, .notices-list {
+    list-style: none;
+    margin-left: 20px;
+}
+
+.percentages-list li, .notices-list li {
+    margin-bottom: 5px;
+    color: var(--number);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.percentages-list li::before, .notices-list li::before {
+    content: ".";
+    font-size: 20px;
+    margin-right: 5px;
+    line-height: 0;
+    position: relative;
+    top: -3px;
+}
+
+.more-link {
+    color: var(--example);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+.robot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--side);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.robot-icon img {
+    width: 50px;
+    height: 50px;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .card {
+        width: 100%;
+    }
+}
