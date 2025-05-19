@@ -1,0 +1,281 @@
+/* 디자인 토큰 - 색상 및 타이포그래피 */
+:root {
+    /* 메인 색상 */
+    --main1: #dbe5ffff;
+    --main2: #d8e4ff42; /* 25% 불투명도 */
+    
+    /* 사이드 색상 */
+    --side: #e7eeffff;
+    --side2: #dedfe2ff;
+    
+    /* 채팅 관련 색상 */
+    --chatting: #e7e4ffff;
+    --sent: #ddd4e1ff;
+    
+    /* 텍스트 색상 */
+    --string: #000000ff;
+    --example: #898b8eff;
+    --number: #8d8a8aff;
+    
+    /* 기타 UI 요소 */
+    --drop: #6b77ff6b; /* 42% 불투명도 */
+    --light-blue: #70c8e9;
+}
+
+/* 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    color: var(--string);
+    font-family: 'Noto Sans KR', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 헤더 스타일 */
+header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.logo img {
+    height: auto;
+    width: 180px;
+}
+
+/* 네비게이션 스타일 */
+nav {
+    border-bottom: 1px solid var(--side2);
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    width: 100%;
+}
+
+nav li {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 20px;
+    position: relative;
+}
+
+nav li.active {
+    font-weight: 500;
+}
+
+nav li.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--light-blue);
+}
+
+nav li:hover {
+    background-color: var(--main2);
+}
+
+/* 메인 콘텐츠 스타일 */
+.content-container {
+    width: 100%;
+    padding: 0 15px;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.settings-btn {
+    position: absolute;
+    right: 0;
+    top: 5px;
+    background-color: white;
+    border: 1px solid var(--side2);
+    border-radius: 5px;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.settings-btn svg {
+    margin-left: 5px;
+}
+
+/* 테이블 스타일 */
+.party-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.party-table th {
+    background-color: var(--side);
+    padding: 15px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--side2);
+}
+
+.party-table th:first-child {
+    width: 80px;
+    text-align: center;
+}
+
+.party-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid var(--side2);
+}
+
+.rank-cell {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #ddd;
+    margin: 0 auto;
+}
+
+.home-icon {
+    text-align: center;
+}
+
+.home-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--example);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.home-icon svg:hover {
+    color: var(--light-blue);
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    margin-bottom: 60px;
+    font-size: 14px;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 0 3px;
+    text-decoration: none;
+    color: var(--string);
+    border-radius: 3px;
+}
+
+.pagination a:hover, .pagination a.active {
+    background-color: var(--light-blue);
+    color: white;
+}
+
+.pagination .prev-next {
+    color: var(--example);
+}
+
+/* 챗봇 아이콘 */
+.robot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.robot-icon:hover {
+    transform: scale(1.05);
+}
+
+.robot-icon img {
+    width: 60px;
+    height: 60px;
+}
+
+/* 모바일 대응 */
+@media screen and (max-width: 768px) {
+    .page-title {
+        font-size: 24px;
+    }
+    
+    .party-table th:nth-child(3),
+    .party-table td:nth-child(3) {
+        display: none;
+    }
+    
+    .settings-btn {
+        padding: 3px 10px;
+        font-size: 14px;
+    }
+
+    nav li {
+        font-size: 16px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
+
+    .pagination a {
+        margin-bottom: 5px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .party-table th:nth-child(4),
+    .party-table td:nth-child(4) {
+        display: none;
+    }
+
+    .rank-cell {
+        font-size: 20px;
+    }
+
+    .content-container {
+        padding: 0 5px;
+    }
+}

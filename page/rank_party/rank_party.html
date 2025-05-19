@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>백일하 - 제 22대 정당 RANK</title>
+    <style>
+        /* 디자인 토큰 - 색상 및 타이포그래피 */
+        :root {
+            /* 메인 색상 */
+            --main1: #dbe5ffff;
+            --main2: #d8e4ff42; /* 25% 불투명도 */
+            
+            /* 사이드 색상 */
+            --side: #e7eeffff;
+            --side2: #dedfe2ff;
+            
+            /* 채팅 관련 색상 */
+            --chatting: #e7e4ffff;
+            --sent: #ddd4e1ff;
+            
+            /* 텍스트 색상 */
+            --string: #000000ff;
+            --example: #898b8eff;
+            --number: #8d8a8aff;
+            
+            /* 기타 UI 요소 */
+            --drop: #6b77ff6b; /* 42% 불투명도 */
+            --light-blue: #70c8e9;
+        }
+
+        /* 폰트 설정 */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: white;
+            color: var(--string);
+            font-family: 'Noto Sans KR', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 헤더 스타일 */
+        header {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .logo img {
+            height: auto;
+            width: 180px;
+        }
+
+        /* 네비게이션 스타일 */
+        nav {
+            border-bottom: 1px solid var(--side2);
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            width: 100%;
+        }
+
+        nav li {
+            flex: 1;
+            text-align: center;
+            padding: 15px 0;
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+        }
+
+        nav li.active {
+            font-weight: 500;
+        }
+
+        nav li.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--light-blue);
+        }
+
+        nav li:hover {
+            background-color: var(--main2);
+        }
+
+        /* 메인 콘텐츠 스타일 */
+        .content-container {
+            width: 100%;
+            padding: 0 15px;
+        }
+
+        .page-title {
+            text-align: center;
+            font-size: 30px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .settings-btn {
+            position: absolute;
+            right: 0;
+            top: 5px;
+            background-color: white;
+            border: 1px solid var(--side2);
+            border-radius: 5px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .settings-btn svg {
+            margin-left: 5px;
+        }
+
+        /* 테이블 스타일 */
+        .party-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        .party-table th {
+            background-color: var(--side);
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            border-bottom: 1px solid var(--side2);
+        }
+
+        .party-table th:first-child {
+            width: 80px;
+            text-align: center;
+        }
+
+        .party-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid var(--side2);
+        }
+
+        .rank-cell {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin: 0 auto;
+        }
+
+        .home-icon {
+            text-align: center;
+        }
+
+        .home-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--example);
+            cursor: pointer;
+            transition: color 0.2s;
+            vertical-align: middle;
+            position: relative;
+            top: 2px;
+        }
+
+        .home-icon a {
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .home-icon a:hover svg {
+            color: var(--light-blue);
+        }
+
+        /* 페이지네이션 스타일 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 60px;
+            font-size: 14px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 0 3px;
+            text-decoration: none;
+            color: var(--string);
+            border-radius: 3px;
+        }
+
+        .pagination a:hover, .pagination a.active {
+            background-color: var(--light-blue);
+            color: white;
+        }
+
+        .pagination .prev-next {
+            color: var(--example);
+        }
+
+        /* 챗봇 아이콘 */
+        .robot-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .robot-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .robot-icon img {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* 모바일 대응 */
+        @media screen and (max-width: 768px) {
+            .page-title {
+                font-size: 24px;
+            }
+            
+            .party-table th:nth-child(3),
+            .party-table td:nth-child(3) {
+                display: none;
+            }
+            
+            .settings-btn {
+                padding: 3px 10px;
+                font-size: 14px;
+            }
+
+            nav li {
+                font-size: 16px;
+            }
+
+            .pagination {
+                flex-wrap: wrap;
+            }
+
+            .pagination a {
+                margin-bottom: 5px;
+            }
+        }
+
+        @media screen and (max-width: 576px) {
+            .party-table th:nth-child(4),
+            .party-table td:nth-child(4) {
+                display: none;
+            }
+
+            .rank-cell {
+                font-size: 20px;
+            }
+
+            .content-container {
+                padding: 0 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/logo.png" alt="백일하 로고">
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li class="active">정당</li>
+            <li>국회의원</li>
+            <li>의정 활동</li>
+            <li>기타</li>
+        </ul>
+    </nav>
+
+    <div class="content-container">
+        <h1 class="page-title">
+            제 22대 정당 RANK
+            <button class="settings-btn">
+                설정
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 17H21V15H3V17ZM3 13H21V11H3V13ZM3 9H21V7H3V9Z" fill="currentColor"/>
+                </svg>
+            </button>
+        </h1>
+
+        <table class="party-table">
+            <thead>
+                <tr>
+                    <th>순위</th>
+                    <th>교섭 단체</th>
+                    <th>정당명</th>
+                    <th>원내대표</th>
+                    <th>정당 홈페이지</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="rank-cell">1</td>
+                    <td>
+                        <div class="avatar"></div>
+                    </td>
+                    <td>국민의 힘</td>
+                    <td>권성동</td>
+                    <td class="home-icon">
+                        <a href="#" title="정당 홈페이지 바로가기">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">2</td>
+                    <td>
+                        <div class="avatar"></div>
+                    </td>
+                    <td>국민의 힘</td>
+                    <td>권성동</td>
+                    <td class="home-icon">
+                        <a href="#" title="정당 홈페이지 바로가기">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">3</td>
+                    <td>
+                        <div class="avatar"></div>
+                    </td>
+                    <td>국민의 힘</td>
+                    <td>권성동</td>
+                    <td class="home-icon">
+                        <a href="#" title="정당 홈페이지 바로가기">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">4</td>
+                    <td>
+                        <div class="avatar"></div>
+                    </td>
+                    <td>국민의 힘</td>
+                    <td>권성동</td>
+                    <td class="home-icon">
+                        <a href="#" title="정당 홈페이지 바로가기">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="rank-cell">5</td>
+                    <td>
+                        <div class="avatar"></div>
+                    </td>
+                    <td>국민의 힘</td>
+                    <td>권성동</td>
+                    <td class="home-icon">
+                        <a href="#" title="정당 홈페이지 바로가기">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination">
+            <a href="#" class="prev-next">&lt;&lt; 이전</a>
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">6</a>
+            <a href="#">7</a>
+            <a href="#">8</a>
+            <a href="#">9</a>
+            <a href="#">10</a>
+            <a href="#" class="prev-next">다음 &gt;</a>
+        </div>
+    </div>
+
+    <div class="robot-icon">
+        <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png" alt="챗봇 아이콘">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 네비게이션 탭 선택 효과
+            const navItems = document.querySelectorAll('nav li');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // 페이지네이션 활성화 효과
+            const paginationLinks = document.querySelectorAll('.pagination a');
+            paginationLinks.forEach(link => {
+                if (!link.classList.contains('prev-next')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        paginationLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                }
+            });
+
+            // 설정 버튼 클릭 효과
+            const settingsBtn = document.querySelector('.settings-btn');
+            settingsBtn.addEventListener('click', function() {
+                alert('설정 메뉴를 엽니다.');
+            });
+
+            // 홈페이지 아이콘 클릭 효과
+            const homeIcons = document.querySelectorAll('.home-icon a');
+            homeIcons.forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    alert('정당 홈페이지로 이동합니다.');
+                });
+            });
+            
+            // 테이블 행에 호버 효과 추가
+            const tableRows = document.querySelectorAll('.party-table tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'var(--main2)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+            
+            // 이전/다음 페이지네이션 버튼 기능
+            const prevButton = document.querySelector('.pagination .prev-next:first-child');
+            const nextButton = document.querySelector('.pagination .prev-next:last-child');
+            const pageButtons = Array.from(document.querySelectorAll('.pagination a:not(.prev-next)'));
+            
+            prevButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const activePage = document.querySelector('.pagination a.active');
+                const activeIndex = pageButtons.indexOf(activePage);
+                
+                if (activeIndex > 0) {
+                    activePage.classList.remove('active');
+                    pageButtons[activeIndex - 1].classList.add('active');
+                }
+            });
+            
+            nextButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                const activePage = document.querySelector('.pagination a.active');
+                const activeIndex = pageButtons.indexOf(activePage);
+                
+                if (activeIndex < pageButtons.length - 1) {
+                    activePage.classList.remove('active');
+                    pageButtons[activeIndex + 1].classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
