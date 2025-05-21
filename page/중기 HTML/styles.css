@@ -1,0 +1,610 @@
+/* 디자인 토큰 - 색상 및 타이포그래피 */
+:root {
+    /* 메인 색상 */
+    --main1: #dbe5ffff;
+    --main2: #d8e4ff42; /* 25% 불투명도 */
+    
+    /* 사이드 색상 */
+    --side: #e7eeffff;
+    --side2: #dedfe2ff;
+    
+    /* 챗팅 관련 색상 */
+    --chatting: #e7e4ffff;
+    --sent: #ddd4e1ff;
+    
+    /* 텍스트 색상 */
+    --string: #000000ff;
+    --example: #898b8eff;
+    --number: #8d8a8aff;
+    
+    /* 기타 UI 요소 */
+    --drop: #6b77ff6b; /* 42% 불투명도 */
+    --light-blue: #70c8e9;
+    --chatbot-bg: #f0f4ff;
+    --user-message-bg: #e3e9ff;
+    --bot-message-bg: #e7e4ffff;
+}
+
+/* 폰트 설정 */
+@import url('https://fonts.googleapis.com/css2?family=Blinker:wght@400&family=Roboto:wght@400&display=swap');
+
+/* 기본 스타일 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: white;
+    color: var(--string);
+    font-family: 'Blinker', sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* 헤더 스타일 */
+header {
+    margin-bottom: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.logo img {
+    height: auto;
+    width: 180px;
+}
+
+/* 네비게이션 스타일 */
+nav {
+    border-bottom: 1px solid var(--side2);
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    width: 100%;
+}
+
+nav li {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    font-size: 20px;
+    position: relative;
+    transition: background-color 0.2s;
+}
+
+nav li:hover {
+    background-color: var(--main2);
+}
+
+nav li:hover::after, nav li.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--light-blue);
+}
+
+nav li.active {
+    font-weight: 500;
+}
+
+/* 서브메뉴 스타일 */
+.submenu-wrapper {
+    display: none;
+    width: 100%;
+    background-color: var(--main1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    left: 0;
+    z-index: 100;
+    top: 100%;
+}
+
+.submenu-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.submenu-item {
+    flex: 1;
+    color: var(--string);
+    background-color: var(--main1);
+    text-decoration: none;
+    font-size: 18px;
+    padding: 15px 0;
+    text-align: center;
+    transition: background-color 0.2s, color 0.2s;
+    display: block;
+}
+
+.submenu-item:hover {
+    color: var(--light-blue);
+    background-color: var(--main2);
+}
+
+.sticky-nav-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 콘텐츠 컨테이너 조정 */
+.content-container {
+    width: 100%;
+    padding: 0 15px;
+    margin-top: 20px;
+}
+
+/* 컨테이너 스타일 */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.content-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 15px;
+    margin-top: 20px;
+}
+
+.card {
+    background-color: var(--side);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    width: calc(50% - 10px);
+    min-height: 300px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    text-align: center;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.ranking-list {
+    list-style: none;
+}
+
+.ranking-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.rank-number {
+    font-size: 35px;
+    margin-right: 15px;
+    width: 40px;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #DDD;
+    margin-right: 15px;
+}
+
+.info {
+    flex: 1;
+}
+
+.name {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.party-name {
+    color: var(--example);
+    font-size: 15px;
+}
+
+.percentage {
+    font-size: 25px;
+    width: 80px;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.show-more {
+    text-align: center;
+    margin-top: 15px;
+    color: var(--example);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.bottom-section {
+    margin-top: 20px;
+}
+
+.percentages-container, .notices-container {
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 1162px;
+    max-width: 100%;
+    height: 1px;
+    background-color: var(--main1);
+    opacity: 0.5;
+}
+
+.percentages-list, .notices-list {
+    list-style: none;
+    margin-left: 20px;
+}
+
+.percentages-list li, .notices-list li {
+    margin-bottom: 5px;
+    color: var(--number);
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.percentages-list li::before, .notices-list li::before {
+    content: ".";
+    font-size: 20px;
+    margin-right: 5px;
+    line-height: 0;
+    position: relative;
+    top: -3px;
+}
+
+.more-link {
+    color: var(--example);
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+/* 챗봇 아이콘 */
+.robot-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    z-index: 1000;
+    background-color: var(--main1);
+}
+
+.robot-icon:hover {
+    transform: scale(1.05);
+}
+
+.robot-icon img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* 챗봇 모달 스타일 */
+.chatbot-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 400px;
+    height: 600px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+    z-index: 2000;
+    display: none;
+    overflow: hidden;
+}
+
+.chatbot-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--chatbot-bg);
+}
+
+.chatbot-header {
+    padding: 15px;
+    background-color: var(--main1);
+    color: var(--string);
+    text-align: center;
+    position: relative;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.date {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--string);
+}
+
+.chatbot-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 15px;
+    border-radius: 15px;
+    word-wrap: break-word;
+}
+
+.message.bot {
+    align-self: flex-start;
+    display: flex;
+    align-items: flex-start;
+}
+
+.bot-avatar {
+    min-width: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 10px;
+    background-color: var(--main1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.bot-avatar img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.message-content {
+    background-color: var(--bot-message-bg);
+    padding: 12px 15px;
+    border-radius: 15px;
+}
+
+.message-content p {
+    margin-bottom: 5px;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.small-text {
+    font-size: 12px;
+    color: var(--example);
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: var(--user-message-bg);
+}
+
+.suggestion-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+.suggestion-btn {
+    background-color: white;
+    border: 1px solid var(--side2);
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--string);
+    transition: all 0.2s;
+}
+
+.suggestion-btn:hover {
+    background-color: var(--main2);
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid var(--side2);
+    background-color: white;
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--side2);
+    border-radius: 25px;
+    outline: none;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.send-button {
+    background: none;
+    border: none;
+    margin-left: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timestamp {
+    font-size: 11px;
+    color: var(--example);
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+    align-items: center;
+    font-size: 14px;
+}
+
+.pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #555;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 3px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination a:hover, .pagination a.active {
+    background-color: var(--light-blue);
+    color: white;
+}
+
+.pagination .navigate {
+    color: #999;
+    margin: 0 10px;
+}
+
+.pagination span {
+    color: #ddd;
+    margin: 0 5px;
+}
+
+/* 푸터 스타일 */
+footer {
+  margin-top: 40px;
+  padding: 20px;
+  font-size: 12px;
+  color: gray;
+  text-align: center;
+  border-top: 1px solid #ddd;
+  background-color: #f9f9f9;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    nav li {
+        font-size: 16px;
+        padding: 10px 0;
+    }
+    
+    .robot-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .robot-icon img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .chatbot-modal {
+        width: 95%;
+        height: 80%;
+    }
+
+    .card {
+        width: calc(50% - 10px);
+        min-width: 0;
+    }
+
+    .content-container {
+        flex-wrap: nowrap;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    body {
+        padding: 10px;
+    }
+    
+    .logo img {
+        width: 150px;
+    }
+    
+    nav li {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+    
+    .chatbot-modal {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+    }
+
+    .content-container {
+        flex-wrap: wrap;
+    }
+
+    .card {
+        width: 100%;
+    }
+}
