@@ -116,6 +116,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let filteredData = [...billData];
 
+    // 본회의 상세 페이지로 이동
+    function navigateToMeetingDetail(bill) {
+        // URL 파라미터로 본회의 정보 전달
+        const params = new URLSearchParams({
+            bill_id: bill.id,
+            bill_number: bill.billNumber,
+            title: bill.title,
+            proposer: bill.proposer,
+            date: bill.date,
+            status: bill.status,
+            committee: bill.committee
+        });
+        
+        console.log(`본회의 [${bill.id}] 상세 페이지로 이동`);
+        
+        // more_meeting.html 페이지로 이동
+        window.location.href = `more_meeting.html?${params.toString()}`;
+    }
     
     // 법안 목록 테이블 생성 함수
     function renderBillTable(page = 1) {
@@ -135,7 +153,9 @@ document.addEventListener('DOMContentLoaded', function() {
             tableBody.appendChild(noDataRow);
             
             // 페이지네이션 업데이트 (데이터가 없어도 호출)
-            window.createPagination(0, 1, ITEMS_PER_PAGE, () => {});
+            if (window.createPagination) {
+                window.createPagination(0, 1, ITEMS_PER_PAGE, () => {});
+            }
             return;
         }
 
@@ -167,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // 클릭 이벤트 추가
             row.addEventListener('click', function() {
-                showBillDetail(bill);
+                navigateToMeetingDetail(bill);
             });
 
             // 호버 효과를 위한 스타일 추가
@@ -177,15 +197,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // 페이지네이션 업데이트
-        window.createPagination(
-            filteredData.length,
-            currentPage,
-            ITEMS_PER_PAGE,
-            (newPage) => {
-                currentPage = newPage;
-                renderBillTable(currentPage);
-            }
-        );
+        if (window.createPagination) {
+            window.createPagination(
+                filteredData.length,
+                currentPage,
+                ITEMS_PER_PAGE,
+                (newPage) => {
+                    currentPage = newPage;
+                    renderBillTable(currentPage);
+                }
+            );
+        }
     }
 
     // 상태에 따른 클래스명 반환
@@ -196,12 +218,6 @@ document.addEventListener('DOMContentLoaded', function() {
             case '심의중': return 'pending';
             default: return '';
         }
-    }
-
-    // 법안 상세 정보 표시
-    function showBillDetail(bill) {
-        alert(`법안명: ${bill.title}\n의안번호: ${bill.billNumber}\n제안자: ${bill.proposer}\n소관위원회: ${bill.committee}\n상태: ${bill.status}`);
-        // 실제로는 모달이나 상세 페이지로 이동하도록 구현
     }
 
     // 검색 기능
