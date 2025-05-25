@@ -123,19 +123,17 @@
 
 .bill-table tbody tr {
     border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s;
-}
-
-.bill-table tbody tr:hover {
-    background-color: var(--main2);
+    cursor: pointer;
 }
 
 .bill-table tbody tr.passed {
     background-color: rgba(232, 245, 233, 0.3);
+    border-left: 4px solid #4caf50;
 }
 
 .bill-table tbody tr.rejected {
     background-color: rgba(255, 235, 238, 0.3);
+    border-left: 4px solid #f44336;
 }
 
 .bill-table td {
@@ -216,6 +214,14 @@
     .bill-table td:nth-child(5) {
         display: none;
     }
+
+    .bill-table tbody tr:hover {
+        transform: none;
+    }
+
+    .bill-table tbody tr::after {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 576px) {
@@ -241,10 +247,7 @@
     }
     
     .bill-table th:nth-child(2),
-    .bill-table td:nth-child(2) {
-        display: none;
-    }
-    
+    .bill-table td:nth-child(2),
     .bill-table th:nth-child(5),
     .bill-table td:nth-child(5) {
         display: none;
