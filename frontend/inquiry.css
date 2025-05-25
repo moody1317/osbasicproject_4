@@ -1,0 +1,123 @@
+/* 도움말 및 문의 페이지 전용 스타일 */
+.content-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 섹션 스타일 */
+.help-section, .inquiry-section {
+    margin-bottom: 50px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.help-section h2, .inquiry-section h2 {
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--string);
+    border-bottom: 2px solid var(--main1);
+    padding-bottom: 15px;
+}
+
+.help-section ul, .inquiry-section ul {
+    list-style: none;
+}
+
+.help-section ul li, .inquiry-section ul li {
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background-color: var(--main2);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.help-section ul li:hover, .inquiry-section ul li:hover {
+    background-color: var(--main1);
+    transform: translateX(10px);
+}
+
+.help-section ul li a, .inquiry-section ul li a {
+    text-decoration: none;
+    color: var(--string);
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 화살표 아이콘 추가 */
+.help-section ul li a::after, .inquiry-section ul li a::after {
+    content: '→';
+    font-size: 20px;
+    color: var(--light-blue);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.help-section ul li:hover a::after, .inquiry-section ul li:hover a::after {
+    opacity: 1;
+}
+
+/* 섹션 타이틀의 '>' 스타일 */
+.help-section h2::after, .inquiry-section h2::after {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--light-blue);
+    border-right: 2px solid var(--light-blue);
+    transform: rotate(45deg);
+    margin-left: 10px;
+    position: relative;
+    top: -2px;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .content-container {
+        padding: 20px 10px;
+    }
+
+    
+    
+    .help-section, .inquiry-section {
+        padding: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .help-section h2, .inquiry-section h2 {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .help-section ul li, .inquiry-section ul li {
+        padding: 12px 15px;
+        margin-bottom: 15px;
+    }
+    
+    .help-section ul li a, .inquiry-section ul li a {
+        font-size: 16px;
+    }
+    
+    .help-section ul li:hover, .inquiry-section ul li:hover {
+        transform: translateX(5px);
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .help-section h2, .inquiry-section h2 {
+        font-size: 18px;
+    }
+    
+    .help-section ul li a, .inquiry-section ul li a {
+        font-size: 14px;
+    }
+    
+    .help-section ul li, .inquiry-section ul li {
+        padding: 10px 12px;
+    }
+}

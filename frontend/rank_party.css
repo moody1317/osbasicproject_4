@@ -1,0 +1,164 @@
+/* 메인 콘텐츠 스타일 */
+.content-container {
+    width: 100%;
+    padding: 0 15px;
+    margin-top: 40px; 
+}
+
+.page-title {
+    text-align: center;
+    font-size: 36px; 
+    font-weight: 600;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.settings-btn {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: white;
+    border: 1px solid var(--side2);
+    border-radius: 5px;
+    padding: 4px 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.settings-btn svg {
+    margin-left: 5px;
+}
+
+.dropdown {
+    position: absolute;
+    right: 0;
+    top: 67px; 
+    background-color: white;
+    border: 1px solid var(--side2);
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    display: none;
+    width: 160px;
+    font-size: 14px;
+}
+
+.dropdown.active {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 8px 12px; 
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.dropdown-item:hover {
+    background-color: var(--main2);
+}
+
+.dropdown-item.active {
+    background-color: var(--main1);
+    font-weight: 500;
+}
+
+/* 테이블 스타일 */
+.party-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 50px;
+    margin-top: 15px; /* 테이블 상단 여백 추가 */
+}
+
+.party-table th {
+    background-color: var(--side);
+    padding: 15px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid var(--side2);
+}
+
+.party-table th:first-child {
+    width: 80px;
+    text-align: center;
+}
+
+.party-table th.home-header {
+    text-align: center;
+}
+
+.party-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid var(--side2);
+}
+
+.rank-cell {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #DDD;
+    margin: 0 auto;
+}
+
+.home-header {
+    text-align: center;
+}
+
+.home-icon {
+    text-align: center;
+}
+
+.home-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--example);
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.home-icon a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.home-icon a:hover svg {
+    color: var(--light-blue);
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 768px) {
+    .party-table th:nth-child(3),
+    .party-table td:nth-child(3) {
+        display: none;
+    }
+    
+    .settings-btn {
+        padding: 3px 10px;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 567px) {
+    .party-table th:nth-child(4),
+    .party-table td:nth-child(4) {
+        display: none;
+    }
+
+    .rank-cell {
+        font-size: 20px;
+    }
+
+    .content-container {
+        padding: 0 5px;
+    }
+}
