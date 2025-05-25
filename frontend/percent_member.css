@@ -1,0 +1,223 @@
+.search-container {
+    background-color: white;
+    padding: 20px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.search-bar {
+    display: flex;
+    max-width: 800px;
+    margin: 0 auto;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f2f7ff;
+}
+
+.search-filter {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.search-filter select {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    padding: 10px 5px;
+    width: 120px;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0px center;
+    background-size: 1em;
+    cursor: pointer;
+}
+
+.search-filter select:focus {
+    outline: none;
+}
+
+.search-input {
+    flex-grow: 1;
+    display: flex;
+}
+
+.search-input input {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    font-size: 16px;
+    background-color: #f2f7ff;
+}
+
+.search-input input:focus {
+    outline: none;
+}
+
+.search-button {
+    padding: 0 20px;
+    background-color: #f2f7ff;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-button:hover {
+    background-color: #e8f2ff;
+}
+
+.search-button svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* 국회의원 프로필필 */
+.member-profile {
+    display: flex;
+    margin: 30px auto;
+    max-width: 1000px;
+    background-color: white;
+    gap: 30px;
+}
+
+.member-left-column {
+    width: 250px;
+    flex-shrink: 0;
+}
+
+.member-photo {
+    width: 250px;
+    height: 330px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    font-size: 14px;
+}
+
+.member-name-card {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.member-name {
+    font-size: 35px;
+    font-weight: 700;
+    color: #333;
+}
+
+.member-party {
+    font-size: 20px;
+    color: #666;
+}
+
+.home-icon {
+    text-align: center;
+}
+
+.home-icon a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.home-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--example);
+    cursor: pointer;
+    transition: color 0.2s;
+    vertical-align: middle;
+    position: relative;
+    top: 2px;
+}
+
+.home-icon a:hover svg {
+    color: var(--light-blue);
+}
+
+.member-right-column {
+    flex-grow: 1;
+}
+
+.ranking {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.ranking strong {
+    color: #69c7ee;
+    font-weight: 700;
+}
+
+.stat-item {
+    margin-bottom: 15px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-filter {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        justify-content: center;
+    }
+    
+    .member-profile {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .member-left-column {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .member-photo {
+        width: 200px;
+        height: 260px;
+    }
+    
+    .member-name-card {
+        justify-content: center;
+    }
+    
+    .member-right-column {
+        width: 100%;
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 567px) {    
+    .member-name {
+        font-size: 28px;
+    }
+    
+    .member-party {
+        font-size: 18px;
+    }
+}
