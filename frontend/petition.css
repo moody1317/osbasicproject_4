@@ -227,11 +227,12 @@
         padding: 10px 5px;
     }
     
-    /* 모바일에서 일부 컬럼 숨기기 */
+    .petition-table th:nth-child(3),
+    .petition-table td:nth-child(3),
+    .petition-table th:nth-child(4),
+    .petition-table td:nth-child(4),
     .petition-table th:nth-child(5),
-    .petition-table td:nth-child(5),
-    .petition-table th:nth-child(7),
-    .petition-table td:nth-child(7) {
+    .petition-table td:nth-child(5) {
         display: none;
     }
     
@@ -258,10 +259,15 @@
     .page-title {
         font-size: 24px;
     }
-    
-    /* 모바일에서 추가 컬럼 숨기기 */
+
+    .petition-table th:nth-child(3),
+    .petition-table td:nth-child(3),
     .petition-table th:nth-child(4),
-    .petition-table td:nth-child(4) {
+    .petition-table td:nth-child(4),
+    .petition-table th:nth-child(5),
+    .petition-table td:nth-child(5),
+    .petition-table th:nth-child(7),
+    .petition-table td:nth-child(7) {
         display: none;
     }
     
