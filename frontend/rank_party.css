@@ -137,11 +137,11 @@
 
 /* 반응형 디자인 */
 @media screen and (max-width: 768px) {
-    .party-table th:nth-child(3),
-    .party-table td:nth-child(3) {
+    .party-table th:nth-child(4),
+    .party-table td:nth-child(4) {
         display: none;
     }
-    
+
     .settings-btn {
         padding: 3px 10px;
         font-size: 14px;
