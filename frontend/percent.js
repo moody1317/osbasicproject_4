@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
         '본회의 가결': 40,
         '위원장': 5,
         '청원 소개': 8,
-        '청원 결과': 23,
+        '청원 결과': 23 ,
         '출석': -10,
         '투표 결과 일치': 7.5,
         '투표 결과 불일치': 4
@@ -221,11 +221,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+
             // 현재 커서 위치 저장
             const cursorPosition = this.selectionStart;
             
             // % 기호와 숫자 외의 문자 제거
             let value = this.value.replace('%', '').replace(/[^\d.-]/g, '');
+            
+            // 음수 필드 처리
+            if (isNegativeField) {
+                // 음수 기호 제거 후 처리
+                value = value.replace(/-/g, '');
+                // 값이 있으면 음수로 만들기
+                if (value !== '' && value !== '0') {
+                    value = '-' + value;
+                }
+            }
             
             // 값이 있으면 % 추가
             if (value !== '') {
@@ -316,11 +329,27 @@ document.addEventListener('DOMContentLoaded', function() {
         input.addEventListener('blur', function() {
             if (this.disabled) return;
             
-            const value = this.value.replace('%', '').trim();
-            if (value === '') {
-                this.value = '0%';
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+            
+            let value = this.value.replace('%', '').trim();
+            
+            if (isNegativeField) {
+                // 음수 필드는 값이 없으면 0%, 있으면 음수로
+                if (value === '' || value === '0') {
+                    this.value = '0%';
+                } else {
+                    // 음수 기호가 없으면 추가
+                    value = value.replace(/-/g, '');
+                    this.value = '-' + value + '%';
+                }
             } else {
-                this.value = value + '%';
+                // 일반 필드
+                if (value === '') {
+                    this.value = '0%';
+                } else {
+                    this.value = value + '%';
+                }
             }
             
             // 합계 재계산
@@ -337,8 +366,19 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             e.preventDefault();
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+            
             const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-            const cleanedText = pastedText.replace(/[^\d.-]/g, '');
+            let cleanedText = pastedText.replace(/[^\d.-]/g, '');
+            
+            if (isNegativeField && cleanedText !== '') {
+                // 음수 필드는 음수 기호 제거 후 다시 추가
+                cleanedText = cleanedText.replace(/-/g, '');
+                if (cleanedText !== '0') {
+                    cleanedText = '-' + cleanedText;
+                }
+            }
             
             if (cleanedText !== '') {
                 this.value = cleanedText + '%';
