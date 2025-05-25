@@ -11,6 +11,7 @@
     font-weight: 600;
     margin-bottom: 40px;
     position: relative;
+    margin-top: 40px;
 }
 
 /* 초기화 버튼 */
@@ -159,10 +160,6 @@
 @media (max-width: 768px) {
     .checkbox-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .title {
-        font-size: 22px;
     }
     
     .percent-header-item {
