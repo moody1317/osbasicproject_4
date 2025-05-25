@@ -211,6 +211,11 @@
     .bill-table td {
         padding: 10px 5px;
     }
+
+    .bill-table th:nth-child(5),
+    .bill-table td:nth-child(5) {
+        display: none;
+    }
 }
 
 @media screen and (max-width: 576px) {
@@ -235,12 +240,16 @@
         font-size: 12px;
     }
     
-    /* 모바일에서 일부 열 숨기기 */
-    .bill-table th:nth-child(3),
-    .bill-table td:nth-child(3) {
+    .bill-table th:nth-child(2),
+    .bill-table td:nth-child(2) {
         display: none;
     }
     
+    .bill-table th:nth-child(5),
+    .bill-table td:nth-child(5) {
+        display: none;
+    }
+
     .status-badge {
         font-size: 11px;
         padding: 3px 8px;
