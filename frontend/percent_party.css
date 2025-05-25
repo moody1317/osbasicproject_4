@@ -145,7 +145,7 @@
 .party-selector {
     position: absolute;
     right: 0;
-    top: 5px;
+    top: 10px;
     z-index: 100;
 }
 
@@ -232,9 +232,13 @@
     .stats-item {
         font-size: 18px;
     }
+
+    .party-selector {
+    top: 20px;
+    }
     
     .dropdown-btn {
-        padding: 6px 12px;
+        padding: 8px 12px;
         font-size: 14px;
         min-width: 150px;
     }
