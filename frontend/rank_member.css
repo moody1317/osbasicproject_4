@@ -220,10 +220,6 @@
 }
 
 @media screen and (max-width: 768px) {
-    .page-title {
-        font-size: 24px;
-    }
-
     .member-table th:nth-child(4),
     .member-table td:nth-child(4) {
         display: none;
@@ -248,8 +244,8 @@
 }
 
 @media screen and (max-width: 576px) {
-    .member-table th:nth-child(3),
-    .member-table td:nth-child(3) {
+    .member-table th:nth-child(4),
+    .member-table td:nth-child(4) {
         display: none;
     }
 
