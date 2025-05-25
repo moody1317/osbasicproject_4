@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 case '백일하 서비스 사용법':
                     showUsageGuide();
                     break;
-                case '퍼센트 가져오는 기준':
-                    showPercentageGuide();
+                case '퍼센트 변경':
+                    window.location.href = 'percent.html';
                     break;
                 default:
                     alert('페이지 준비 중입니다.');
