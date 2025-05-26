@@ -79,16 +79,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // 페이지 로드 시 각 팝업 개별 확인 (타이밍 개선)
+    // 페이지 로드 시 각 팝업 개별 확인
     setTimeout(() => {
         if (shouldShowImagePopup()) {
             showImageSourcePopup(() => {
-                // 이미지 팝업이 끝난 후 퍼센트 팝업 확인 (딜레이 단축)
-                setTimeout(() => {
-                    if (shouldShowPercentPopup()) {
-                        showPercentGuidePopup();
-                    }
-                }, 200); // 500ms에서 200ms로 단축
+                // 이미지 팝업이 완전히 사라진 후 퍼센트 팝업 확인
+                if (shouldShowPercentPopup()) {
+                    showPercentGuidePopup();
+                }
             });
         } else if (shouldShowPercentPopup()) {
             // 이미지 팝업은 숨겨져 있지만 퍼센트 팝업은 표시해야 하는 경우
@@ -172,9 +170,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modal.popup);
     }
 
-    // 팝업 모달 생성 함수 (애니메이션 개선)
+    // 팝업 모달 생성 함수 (완전히 새로운 안정적인 방식)
     function createPopupModal(content, callback, showDontShowToday = false, storageKey = 'popupHiddenDate') {
         console.log('팝업 생성:', storageKey);
+        
+        // 애니메이션 중복 실행 방지
+        let isAnimating = false;
         
         // 배경 오버레이
         const backdrop = document.createElement('div');
@@ -184,10 +185,9 @@ document.addEventListener('DOMContentLoaded', function() {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0);
             z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.25s ease-in-out;
+            transition: background-color 0.3s ease;
         `;
 
         // 팝업 모달
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
+            transform: translate(-50%, -50%) scale(0.8);
             background: white;
             padding: 30px;
             border-radius: 15px;
@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
             max-height: 80vh;
             overflow-y: auto;
             opacity: 0;
-            transition: all 0.25s ease-in-out;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             scrollbar-width: none;
             -ms-overflow-style: none;
         `;
@@ -247,15 +247,17 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
 
-        // DOM에 추가 후 애니메이션 시작
+        // DOM에 추가
         document.body.appendChild(backdrop);
         document.body.appendChild(popup);
 
-        // 브라우저가 렌더링을 완료한 후 애니메이션 시작
+        // 팝업 열기 애니메이션 (다음 프레임에서 실행)
         requestAnimationFrame(() => {
-            backdrop.style.opacity = '1';
-            popup.style.opacity = '1';
-            popup.style.transform = 'translate(-50%, -50%) scale(1)';
+            requestAnimationFrame(() => {
+                backdrop.style.backgroundColor = 'rgba(0,0,0,0.6)';
+                popup.style.opacity = '1';
+                popup.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
         });
 
         // 확인 버튼 이벤트
@@ -263,8 +265,11 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.onmouseover = () => confirmBtn.style.transform = 'translateY(-2px)';
         confirmBtn.onmouseout = () => confirmBtn.style.transform = 'translateY(0)';
         
-        // 팝업 닫기 함수 (공통 로직)
+        // 팝업 닫기 함수 (안정적인 방식)
         function closePopup() {
+            if (isAnimating) return; // 애니메이션 중복 방지
+            isAnimating = true;
+            
             // "오늘 하루 그만보기" 체크 확인 및 개별 localStorage 저장
             if (showDontShowToday) {
                 const dontShowCheckbox = popup.querySelector('#dontShowToday');
@@ -279,17 +284,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            // 애니메이션으로 닫기
-            backdrop.style.opacity = '0';
+            // 닫기 애니메이션
+            backdrop.style.backgroundColor = 'rgba(0,0,0,0)';
             popup.style.opacity = '0';
-            popup.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            popup.style.transform = 'translate(-50%, -50%) scale(0.8)';
             
-            // 애니메이션 완료 후 DOM에서 제거하고 콜백 실행
+            // transitionend 이벤트로 애니메이션 완료 감지
+            function onTransitionEnd(e) {
+                if (e.target === popup && e.propertyName === 'opacity') {
+                    popup.removeEventListener('transitionend', onTransitionEnd);
+                    
+                    // DOM에서 안전하게 제거
+                    try {
+                        if (popup.parentNode) popup.remove();
+                        if (backdrop.parentNode) backdrop.remove();
+                        console.log('팝업 완전히 제거됨');
+                        
+                        // 콜백 실행
+                        if (callback) {
+                            setTimeout(callback, 50); // 약간의 딜레이 후 콜백
+                        }
+                    } catch (error) {
+                        console.error('팝업 제거 중 오류:', error);
+                    }
+                }
+            }
+            
+            popup.addEventListener('transitionend', onTransitionEnd);
+            
+            // 안전장치: 1초 후에도 제거되지 않았다면 강제 제거
             setTimeout(() => {
-                if (popup.parentNode) popup.remove();
-                if (backdrop.parentNode) backdrop.remove();
-                if (callback) callback();
-            }, 250); // 애니메이션 시간과 동일
+                if (popup.parentNode || backdrop.parentNode) {
+                    console.warn('애니메이션 타임아웃, 강제 제거');
+                    popup.removeEventListener('transitionend', onTransitionEnd);
+                    if (popup.parentNode) popup.remove();
+                    if (backdrop.parentNode) backdrop.remove();
+                    if (callback) callback();
+                }
+            }, 1000);
         }
         
         confirmBtn.onclick = closePopup;
