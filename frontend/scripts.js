@@ -1,4 +1,3 @@
-
 // 전역 퍼센트 설정 관리 함수들
 window.PercentManager = {
     // 퍼센트 설정 가져오기
@@ -230,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logo = document.querySelector('.logo');
     if(logo) {
         logo.addEventListener('click', function() {
-            window.location.href = 'index.html';
+            window.location.href = 'mainpage.html';
         });
     }
     
@@ -422,7 +421,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 공통 페이지네이션 생성 함수
+    // 공통 페이지네이션 생성 함수 (수정됨)
     window.createPagination = function(totalItems, currentPage, itemsPerPage, onPageChange) {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
         const pagination = document.getElementById('pagination');
@@ -431,21 +430,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         pagination.innerHTML = '';
 
-        // 페이지가 없는 경우
-        if (totalPages === 0) return;
+        // 페이지가 없거나 1개뿐인 경우 페이지네이션 숨김
+        if (totalPages <= 1) {
+            pagination.style.display = 'none';
+            return;
+        }
 
-        // 이전 버튼
-        const prevButton = document.createElement('a');
-        prevButton.href = '#';
-        prevButton.className = 'navigate';
-        prevButton.innerHTML = '&lt;';
-        prevButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (currentPage > 1) {
-                onPageChange(currentPage - 1);
-            }
-        });
-        pagination.appendChild(prevButton);
+        pagination.style.display = 'flex';
+
+        // 이전 버튼 (첫 페이지가 아닐 때만 생성)
+        if (currentPage > 1) {
+            const prevButton = document.createElement('a');
+            prevButton.href = '#';
+            prevButton.className = 'navigate';
+            prevButton.innerHTML = '&lt;';
+            prevButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    onPageChange(currentPage - 1);
+                }
+            });
+            pagination.appendChild(prevButton);
+        }
 
         // 페이지 번호 계산
         let startPage = Math.max(1, currentPage - 2);
@@ -482,18 +488,20 @@ document.addEventListener('DOMContentLoaded', function() {
             pagination.appendChild(createPageButton(totalPages, currentPage, onPageChange));
         }
 
-        // 다음 버튼
-        const nextButton = document.createElement('a');
-        nextButton.href = '#';
-        nextButton.className = 'navigate';
-        nextButton.innerHTML = '&gt;';
-        nextButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            if (currentPage < totalPages) {
-                onPageChange(currentPage + 1);
-            }
-        });
-        pagination.appendChild(nextButton);
+        // 다음 버튼 (마지막 페이지가 아닐 때만 생성)
+        if (currentPage < totalPages) {
+            const nextButton = document.createElement('a');
+            nextButton.href = '#';
+            nextButton.className = 'navigate';
+            nextButton.innerHTML = '&gt;';
+            nextButton.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    onPageChange(currentPage + 1);
+                }
+            });
+            pagination.appendChild(nextButton);
+        }
     };
 
     // 페이지 버튼 생성 헬퍼 함수
