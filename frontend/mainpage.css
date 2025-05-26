@@ -158,23 +158,236 @@
 }
 
 /* 반응형 디자인 */
-@media screen and (max-width: 768px) {
-    .card {
-        width: calc(50% - 10px);
-        min-width: 0;
-    }
 
+/* 1024px 이하 - 태블릿 가로 */
+@media screen and (max-width: 1024px) {
+    .container {
+        max-width: 960px;
+        padding: 0 15px;
+    }
+    
     .content-container {
-        flex-wrap: nowrap;
+        gap: 15px;
+        padding: 0 10px;
+    }
+    
+    .card {
+        padding: 18px;
+        min-height: 280px;
+    }
+    
+    .card-title {
+        font-size: 23px;
+        margin-bottom: 18px;
+    }
+    
+    .rank-number {
+        font-size: 32px;
+        width: 35px;
+        margin-right: 12px;
+    }
+    
+    .avatar {
+        width: 45px;
+        height: 45px;
+        margin-right: 12px;
+    }
+    
+    .name {
+        font-size: 18px;
+    }
+    
+    .party-name {
+        font-size: 14px;
+    }
+    
+    .percentage {
+        font-size: 22px;
+        width: 70px;
+    }
+    
+    .section-title {
+        font-size: 18px;
+    }
+    
+    .percentages-list li, .notices-list li {
+        font-size: 14px;
     }
 }
 
-@media screen and (max-width: 576px) {
-    .content-container {
-        flex-wrap: wrap;
+/* 768px 이하 - 태블릿 세로 */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 0 10px;
     }
+    
+    .content-container {
+        gap: 12px;
+        padding: 0 5px;
+        margin-top: 15px;
+    }
+    
+    .card {
+        width: calc(50% - 6px);
+        min-width: 0;
+        padding: 15px;
+        min-height: 250px;
+    }
+    
+    .card-title {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+    
+    .ranking-item {
+        margin-bottom: 12px;
+    }
+    
+    .rank-number {
+        font-size: 28px;
+        width: 30px;
+        margin-right: 10px;
+    }
+    
+    .avatar {
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+    }
+    
+    .name {
+        font-size: 16px;
+        margin-bottom: 3px;
+    }
+    
+    .party-name {
+        font-size: 13px;
+    }
+    
+    .percentage {
+        font-size: 20px;
+        width: 60px;
+    }
+    
+    .bottom-section {
+        margin-top: 15px;
+    }
+    
+    .section-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .percentages-list, .notices-list {
+        margin-left: 15px;
+    }
+    
+    .percentages-list li, .notices-list li {
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    
+    .show-more {
+        font-size: 11px;
+        padding: 6px;
+        padding-top: 12px;
+    }
+}
 
+/* 576px 이하 - 모바일 */
+@media screen and (max-width: 576px) {
+    .container {
+        padding: 0 5px;
+    }
+    
+    .content-container {
+        flex-direction: column;
+        gap: 15px;
+        padding: 0;
+        margin-top: 10px;
+    }
+    
     .card {
         width: 100%;
+        padding: 12px;
+        min-height: 220px;
+        margin-bottom: 15px;
+    }
+    
+    .card-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .ranking-item {
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .rank-number {
+        font-size: 24px;
+        width: 25px;
+        margin-right: 8px;
+    }
+    
+    .avatar {
+        width: 35px;
+        height: 35px;
+        margin-right: 8px;
+    }
+    
+    .info {
+        flex: 1;
+        min-width: 120px;
+    }
+    
+    .name {
+        font-size: 14px;
+        margin-bottom: 2px;
+        line-height: 1.2;
+    }
+    
+    .party-name {
+        font-size: 11px;
+        line-height: 1.2;
+    }
+    
+    .percentage {
+        font-size: 16px;
+        width: 50px;
+        text-align: center;
+    }
+    
+    .bottom-section {
+        margin-top: 10px;
+    }
+    
+    .percentages-container, .notices-container {
+        margin-bottom: 15px;
+    }
+    
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 6px;
+    }
+    
+    .percentages-list, .notices-list {
+        margin-left: 10px;
+    }
+    
+    .percentages-list li, .notices-list li {
+        font-size: 12px;
+        margin-bottom: 3px;
+        line-height: 1.4;
+    }
+    
+    .show-more {
+        font-size: 10px;
+        padding: 5px;
+        padding-top: 10px;
+    }
+    
+    .more-link {
+        margin-left: 5px;
     }
 }
