@@ -115,21 +115,238 @@ select.party-dropdown {
 }
 
 /* 반응형 스타일 */
-@media (max-width: 768px) {
+
+/* 1024px 이하 - 태블릿 가로 */
+@media screen and (max-width: 1024px) {
+    h1 {
+        font-size: 28px;
+        margin: 35px 0;
+    }
+    
+    .comparison-container {
+        gap: 18px;
+        margin-bottom: 35px;
+    }
+    
     .comparison-card {
-        min-width: 100%;
+        min-width: 280px;
+        padding: 18px;
+        border-radius: 6px;
+    }
+    
+    .comparison-title {
+        margin-bottom: 18px;
+    }
+    
+    select.party-dropdown {
+        padding: 8px;
+        margin-bottom: 18px;
+        font-size: 15px;
+    }
+    
+    .status-item {
+        margin-bottom: 18px;
+    }
+    
+    .status-label {
+        font-size: 13px;
+        margin-bottom: 4px;
+    }
+    
+    .status-value {
+        font-size: 18px;
+    }
+    
+    .info-icon {
+        width: 15px;
+        height: 15px;
+        font-size: 11px;
+    }
+    
+    .tooltip {
+        padding: 6px 10px;
+        font-size: 11px;
+        white-space: normal;
+        max-width: 200px;
+        text-align: center;
+    }
+    
+    .tooltip::after {
+        border-width: 4px;
     }
 }
 
-@media (max-width: 576px) {
-    .party-header {
+/* 768px 이하 - 태블릿 세로 */
+@media screen and (max-width: 768px) {
+    h1 {
         font-size: 24px;
-        margin-bottom: 60px;
+        margin: 30px 0;
     }
     
-    .party-selector {
-        top: 35px;
-        right: 50%;
-        transform: translateX(50%);
+    .comparison-container {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .comparison-card {
+        min-width: 100%;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    
+    .comparison-title {
+        margin-bottom: 15px;
+    }
+    
+    select.party-dropdown {
+        padding: 6px;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    
+    .status-item {
+        margin-bottom: 15px;
+    }
+    
+    .status-label {
+        font-size: 12px;
+        margin-bottom: 3px;
+    }
+    
+    .status-value {
+        font-size: 16px;
+    }
+    
+    .info-icon {
+        width: 14px;
+        height: 14px;
+        font-size: 10px;
+    }
+    
+    .tooltip {
+        padding: 5px 8px;
+        font-size: 10px;
+        max-width: 180px;
+        left: 0;
+        transform: none;
+        white-space: normal;
+    }
+    
+    .tooltip::after {
+        left: 20px;
+        transform: none;
+        border-width: 3px;
+    }
+}
+
+/* 576px 이하 - 모바일 */
+@media screen and (max-width: 576px) {
+    h1 {
+        font-size: 20px;
+        margin: 25px 0;
+        padding: 0 10px;
+    }
+    
+    .comparison-container {
+        margin: 0 5px 25px;
+        gap: 12px;
+    }
+    
+    .comparison-card {
+        padding: 12px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    }
+    
+    .comparison-title {
+        margin-bottom: 12px;
+    }
+    
+    select.party-dropdown {
+        padding: 5px;
+        margin-bottom: 12px;
+        font-size: 13px;
+        border-radius: 3px;
+    }
+    
+    .status-item {
+        margin-bottom: 12px;
+    }
+    
+    .status-label {
+        font-size: 11px;
+        margin-bottom: 2px;
+    }
+    
+    .status-value {
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+    
+    .info-icon {
+        width: 12px;
+        height: 12px;
+        font-size: 9px;
+        margin-left: 3px;
+    }
+    
+    .tooltip {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 8px 12px;
+        font-size: 11px;
+        max-width: 250px;
+        white-space: normal;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 9999;
+    }
+    
+    .tooltip::after {
+        display: none;
+    }
+    
+    /* 모바일에서 info-icon 터치 피드백 */
+    .info-icon:active {
+        background-color: #666;
+        transform: scale(0.9);
+    }
+    
+    /* 모바일에서 호버 효과 제거 */
+    .info-icon:hover {
+        background-color: #ccc;
+    }
+    
+    /* WIN/LOSE 텍스트 크기 조정 */
+    .win, .lose {
+        font-size: 13px;
+    }
+    
+    /* 드롭다운 화살표 크기 조정 */
+    select.party-dropdown {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 12px;
+        padding-right: 30px;
+    }
+    
+    /* 선택된 옵션 스타일 */
+    select.party-dropdown:focus {
+        outline: none;
+        border-color: var(--light-blue);
+        box-shadow: 0 0 0 2px rgba(112, 200, 233, 0.2);
+    }
+    
+    /* 터치 디바이스에서 더 큰 터치 영역 */
+    select.party-dropdown {
+        min-height: 40px;
     }
 }
