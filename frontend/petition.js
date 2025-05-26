@@ -1,388 +1,344 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 네비게이션 탭 선택 효과
-    const navItems = document.querySelectorAll('nav li');
-    const submenuWrappers = document.querySelectorAll('.submenu-wrapper');
-    
-    // 모든 서브메뉴 숨기기
-    function hideAllSubmenus() {
-        submenuWrappers.forEach(submenu => {
-            submenu.style.display = 'none';
-        });
-    }
-    
-    // 메뉴 클릭 이벤트
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
-            const submenuId = this.getAttribute('data-submenu');
-            const submenu = document.getElementById(submenuId);
-            
-            // 이미 활성화된 탭을 클릭한 경우
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-                hideAllSubmenus();
-                return;
-            }
-            
-            // 모든 탭에서 active 클래스 제거
-            navItems.forEach(i => i.classList.remove('active'));
-            
-            // 클릭한 탭에 active 클래스 추가
-            this.classList.add('active');
-            
-            // 서브메뉴가 있는 메뉴인 경우 서브메뉴 표시
-            if (submenuId && submenu) {
-                hideAllSubmenus();
-                submenu.style.display = 'block';
-            } else {
-                hideAllSubmenus();
-            }
-        });
-    });
-    
-    // 메뉴 호버 이벤트
-    navItems.forEach(item => {
-        const submenuId = item.getAttribute('data-submenu');
-        const submenu = document.getElementById(submenuId);
-        
-        if (submenuId && submenu) {
-            // 마우스 진입 시 서브메뉴 표시
-            item.addEventListener('mouseenter', function() {
-                hideAllSubmenus();
-                submenu.style.display = 'block';
-            });
-            
-            // 마우스 이탈 시 서브메뉴 숨기기 (활성화된 탭이 없을 경우)
-            item.addEventListener('mouseleave', function(e) {
-                if (!item.classList.contains('active')) {
-                    // 마우스가 서브메뉴로 이동했는지 확인
-                    const rect = submenu.getBoundingClientRect();
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    
-                    // 마우스가 서브메뉴 영역을 향해 이동하는 경우
-                    if (y >= rect.top && y <= rect.bottom) {
-                        return;
-                    }
-                    
-                    submenu.style.display = 'none';
-                }
-            });
+    // 청원 더미 데이터
+    const petitionData = [
+        {
+            id: 1,
+            title: '청년 주택 구입 지원을 위한 특별법 제정 청원',
+            introducerMember: '김영호',
+            introduceDate: '2025.05.20',
+            referralDate: '2025.05.22',
+            status: 'committee',
+            committee: '국토교통위원회'
+        },
+        {
+            id: 2,
+            title: '반려동물 의료비 부담 완화를 위한 건강보험 적용 청원',
+            introducerMember: '박민정',
+            introduceDate: '2025.05.18',
+            referralDate: '2025.05.21',
+            status: 'review',
+            committee: '보건복지위원회'
+        },
+        {
+            id: 3,
+            title: '대학생 등록금 부담 경감을 위한 정책 개선 청원',
+            introducerMember: '이준석',
+            introduceDate: '2025.05.15',
+            referralDate: '2025.05.18',
+            status: 'complete',
+            committee: '교육위원회'
+        },
+        {
+            id: 4,
+            title: '소상공인 임대료 지원 확대 방안 마련 청원',
+            introducerMember: '최수진',
+            introduceDate: '2025.05.12',
+            referralDate: '2025.05.15',
+            status: 'committee',
+            committee: '중소벤처기업위원회'
+        },
+        {
+            id: 5,
+            title: '육아휴직 급여 인상 및 기간 연장 청원',
+            introducerMember: '한민수',
+            introduceDate: '2025.05.10',
+            referralDate: '2025.05.13',
+            status: 'complete',
+            committee: '환경노동위원회'
+        },
+        {
+            id: 6,
+            title: '온라인 게임 셧다운제 개선 청원',
+            introducerMember: '정하늘',
+            introduceDate: '2025.05.08',
+            referralDate: '2025.05.11',
+            status: 'review',
+            committee: '과학기술정보방송통신위원회'
+        },
+        {
+            id: 7,
+            title: '택시 요금 현실화 및 승차거부 방지 청원',
+            introducerMember: '윤상호',
+            introduceDate: '2025.05.05',
+            referralDate: '2025.05.08',
+            status: 'committee',
+            committee: '국토교통위원회'
+        },
+        {
+            id: 8,
+            title: '농산물 가격 안정화를 위한 정책 수립 청원',
+            introducerMember: '강은미',
+            introduceDate: '2025.05.03',
+            referralDate: '2025.05.06',
+            status: 'pending',
+            committee: '농림축산식품해양수산위원회'
+        },
+        {
+            id: 9,
+            title: '치킨집 영업시간 규제 완화 청원',
+            introducerMember: '오세훈',
+            introduceDate: '2025.05.01',
+            referralDate: '2025.05.04',
+            status: 'rejected',
+            committee: '행정안전위원회'
+        },
+        {
+            id: 10,
+            title: '전기차 충전소 확대 설치 청원',
+            introducerMember: '임종석',
+            introduceDate: '2025.04.28',
+            referralDate: '2025.05.01',
+            status: 'complete',
+            committee: '산업통상자원중소벤처기업위원회'
+        },
+        {
+            id: 11,
+            title: '학교급식 친환경 식재료 의무 사용 청원',
+            introducerMember: '김희경',
+            introduceDate: '2025.04.25',
+            referralDate: '2025.04.28',
+            status: 'committee',
+            committee: '교육위원회'
+        },
+        {
+            id: 12,
+            title: '펜션 및 민박업 규제 개선 청원',
+            introducerMember: '박주민',
+            introduceDate: '2025.04.22',
+            referralDate: '2025.04.25',
+            status: 'review',
+            committee: '문화체육관광위원회'
+        },
+        {
+            id: 13,
+            title: '외국인 관광객 대상 의료관광 활성화 청원',
+            introducerMember: '안철수',
+            introduceDate: '2025.04.20',
+            referralDate: '2025.04.23',
+            status: 'complete',
+            committee: '보건복지위원회'
+        },
+        {
+            id: 14,
+            title: '공공병원 확충 및 의료 접근성 개선 청원',
+            introducerMember: '심상정',
+            introduceDate: '2025.04.18',
+            referralDate: '2025.04.21',
+            status: 'committee',
+            committee: '보건복지위원회'
+        },
+        {
+            id: 15,
+            title: '재택근무 확산을 위한 근로기준법 개정 청원',
+            introducerMember: '류호정',
+            introduceDate: '2025.04.15',
+            referralDate: '2025.04.18',
+            status: 'review',
+            committee: '환경노동위원회'
         }
-    });
-    
-    // 서브메뉴 호버 이벤트
-    submenuWrappers.forEach(submenu => {
-        submenu.addEventListener('mouseenter', function() {
-            // 서브메뉴에 마우스가 진입하면 표시 유지
-        });
-        
-        submenu.addEventListener('mouseleave', function() {
-            // 관련 메뉴가 활성화되어 있지 않으면 서브메뉴 숨기기
-            const relatedMenuId = submenu.id;
-            const relatedMenu = document.querySelector(`[data-submenu="${relatedMenuId}"]`);
-            
-            if (relatedMenu && !relatedMenu.classList.contains('active')) {
-                submenu.style.display = 'none';
-            }
-        });
-    });
-    
-    // 서브메뉴 아이템 클릭 이벤트
-    const submenuItems = document.querySelectorAll('.submenu-item');
-    submenuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const itemText = this.textContent.trim();
-            
-            // 페이지 이동 로직
-            switch(itemText) {
-                case '명예의 정당':
-                    window.location.href = 'rank_party.html';
-                    break;
-                case '정당 상세 퍼센트':
-                    window.location.href = 'percent_party.html';
-                    break;
-                case '정당 비교하기':
-                    window.location.href = 'compare_party.html';
-                    break;
-                case '국회의원 비교하기':
-                    window.location.href = 'compare_member.html';
-                    break;
-                case '국회의원 상세정보':
-                    window.location.href = 'percent_member.html';
-                    break;
-                case '명예의 의원':
-                    window.location.href = 'rank_member.html';
-                    break;
-                case '청원 현황':
-                    window.location.href = 'petition.html';
-                    break;
-                case '본회의 현황':
-                    window.location.href = 'meeting.html';
-                    break;
-                case '외부 사이트':
-                    // 추후 추가될 페이지
-                    alert('외부 사이트 페이지는 준비 중입니다.');
-                    break;
-                case '도움말':
-                    // 추후 추가될 페이지
-                    alert('도움말 페이지는 준비 중입니다.');
-                    break;
-                case '공지사항':
-                    // 추후 추가될 페이지
-                    alert('공지사항 페이지는 준비 중입니다.');
-                    break;
-                default:
-                    console.log('알 수 없는 메뉴 항목:', itemText);
-            }
-            
-            // 서브메뉴 숨기기
-            hideAllSubmenus();
-            navItems.forEach(nav => nav.classList.remove('active'));
-        });
-    });
+    ];
 
-    // 다른 곳 클릭 시 서브메뉴 닫기
-    document.addEventListener('click', function(e) {
-        const isMenu = e.target.closest('nav li');
-        const isSubmenu = e.target.closest('.submenu-wrapper');
-        
-        if (!isMenu && !isSubmenu) {
-            navItems.forEach(item => item.classList.remove('active'));
-            hideAllSubmenus();
-        }
-    });
+    // 페이지네이션 설정
+    const ITEMS_PER_PAGE = 10;
+    let currentPage = 1;
+    let filteredData = [...petitionData];
 
-    // 로고 클릿기 메인페이지로 이동
-    const logo = document.querySelector('.logo');
-    if(logo) {
-        logo.addEventListener('click', function() {
-            window.location.href = 'mainpage.html';
-        });
-    }
-    
-    // 페이지 로드 시 활성 탭 설정
-    function setActiveTab() {
-        // 기본적으로 아무 탭도 활성화하지 않음
-    }
-    
-    setActiveTab();
-    
-    // 챗봇 관련 코드
-    const chatbotIcon = document.querySelector('.robot-icon');
-    const chatbotModal = document.getElementById('chatbotModal');
-    const closeButton = document.querySelector('.close-button');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.querySelector('.send-button');
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const suggestionButtons = document.querySelectorAll('.suggestion-btn');
-    
-    // 현재 시간 가져오기
-    function getCurrentTime() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        
-        hours = hours % 12;
-        hours = hours ? hours : 12; // 0시는 12시로 표시
-        
-        return `${ampm} ${hours}:${minutes}`;
-    }
-    
-    // 사용자 메시지 추가
-    function addUserMessage(message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'user');
-        
-        const timestamp = document.createElement('div');
-        timestamp.classList.add('timestamp');
-        timestamp.textContent = getCurrentTime();
-        
-        messageElement.innerHTML = `${message}`;
-        messageElement.appendChild(timestamp);
-        
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-    
-    // 챗봇 메시지 추가
-    function addBotMessage(messages, buttons = []) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'bot');
-        
-        const botAvatar = document.createElement('div');
-        botAvatar.classList.add('bot-avatar');
-        botAvatar.innerHTML = '<img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아바타">';
-        
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message-content');
-        
-        // 메시지 내용 추가
-        if (typeof messages === 'string') {
-            messageContent.innerHTML = `<p>${messages}</p>`;
-        } else {
-            messages.forEach(msg => {
-                messageContent.innerHTML += `<p>${msg}</p>`;
-            });
-        }
-        
-        // 타임스탬프 추가
-        const timestamp = document.createElement('div');
-        timestamp.classList.add('timestamp');
-        timestamp.textContent = getCurrentTime();
-        messageContent.appendChild(timestamp);
-        
-        messageElement.appendChild(botAvatar);
-        messageElement.appendChild(messageContent);
-        
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-    
-    // 메시지 처리 함수
-    function handleMessage(message) {
-        addUserMessage(message);
-        
-        // 간단한 챗봇 응답 로직
-        setTimeout(() => {
-            if (message.includes('나경원') || message.includes('의원')) {
-                addBotMessage([
-                    '나경원 의원에 대한 정보입니다.',
-                    '현재 나경원 의원은 국민의힘 소속 의원으로 전체 00위',
-                    '국민의힘에서는 00위에 있습니다.',
-                    '나경원 의원에 대한 어떤 정보를 더 얻고싶은가요?'
-                ]);
-            } else if (message.includes('상세') || message.includes('퍼센트')) {
-                addBotMessage([
-                    '나경원 의원의 상세 퍼센트입니다.',
-                    '출석: 00%',
-                    '가결: 00%',
-                    '청원 소개: 00%',
-                    '..',
-                    '나경원 의원이 가장 높게 평가받는 부분은 청원 소개이고 가장 낮게 평가받는 부분은 가결입니다.'
-                ]);
-            } else if (message.includes('표결') || message.includes('정보')) {
-                addBotMessage([
-                    '나경원 의원의 표결 정보입니다.',
-                    '전체 표결 참여: 000회',
-                    '찬성: 000회',
-                    '반대: 000회',
-                    '기권: 000회'
-                ]);
-            } else if (message.includes('청원') || message.includes('소개')) {
-                addBotMessage([
-                    '나경원 의원의 청원 소개 내역입니다.',
-                    '전체 청원 소개: 00건',
-                    '가결: 00건',
-                    '부결: 00건',
-                    '진행중: 00건'
-                ]);
-            } else if (message.includes('경력')) {
-                addBotMessage([
-                    '나경원 의원의 경력입니다.',
-                    '20대 국회의원',
-                    '21대 국회의원',
-                    '국민의힘 원내대표 역임',
-                    '국회 외교통상통일위원회 위원'
-                ]);
-            } else {
-                addBotMessage([
-                    '죄송합니다. 질문을 이해하지 못했습니다.',
-                    '다음 중 어떤 정보를 원하시나요?'
-                ]);
-            }
-        }, 500);
-    }
-    
-    // 챗봇 아이콘 클릭 이벤트
-    if (chatbotIcon) {
-        chatbotIcon.addEventListener('click', function() {
-            chatbotModal.style.display = 'block';
-        });
-    }
-    
-    // 닫기 버튼 클릭 이벤트
-    if (closeButton) {
-        closeButton.addEventListener('click', function() {
-            chatbotModal.style.display = 'none';
-        });
-    }
-    
-    // 메시지 전송 이벤트
-    if (sendButton && messageInput) {
-        // 전송 버튼 클릭 이벤트
-        sendButton.addEventListener('click', function() {
-            const message = messageInput.value.trim();
-            if (message) {
-                handleMessage(message);
-                messageInput.value = '';
-            }
-        });
-        
-        // 엔터 키 이벤트
-        messageInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                const message = messageInput.value.trim();
-                if (message) {
-                    handleMessage(message);
-                    messageInput.value = '';
-                }
-            }
-        });
-    }
-    
-    // 제안 버튼 클릭 이벤트
-    if (suggestionButtons) {
-        suggestionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const message = this.textContent;
-                handleMessage(message);
-            });
-        });
-    }
-    
-    // ESC 키를 눌러 모달 닫기
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && chatbotModal.style.display === 'block') {
-            chatbotModal.style.display = 'none';
-        }
-    });
-
-    // 정당별 URL
-    const partyData = {
-        "국민의 힘": {
-            url: "https://www.peoplepowerparty.kr/",
-            cssPrefix: "ppp"
-        },
-        "더불어민주당": {
-            url: "https://theminjoo.kr/",
-            cssPrefix: "dp"
-        },
-        "조국혁신당": {
-            url: "https://rebuildingkoreaparty.kr",
-            cssPrefix: "rk"
-        },
-        "개혁신당": {
-            url: "https://www.reformparty.kr/",
-            cssPrefix: "reform"
-        },
-        "진보당": {
-            url: "https://jinboparty.com/",
-            cssPrefix: "jp"
-        },
-        "기본소득당": {
-            url: "https://basicincomeparty.kr/",
-            cssPrefix: "bip"
-        },
-        "사회민주당": {
-            url: "https://www.samindang.kr/",
-            cssPrefix: "sdp"
-        },
-        "무소속": {
-            url: "",
-            cssPrefix: "ind"
-        }
+    // 상태별 한국어 매핑
+    const statusMap = {
+        'pending': '접수',
+        'review': '심사중', 
+        'committee': '위원회 회부',
+        'complete': '처리완료',
+        'rejected': '폐기'
     };
+
+    // 상태별 CSS 클래스 매핑
+    const statusClassMap = {
+        'pending': 'status-pending',
+        'review': 'status-review',
+        'committee': 'status-committee', 
+        'complete': 'status-complete',
+        'rejected': 'status-rejected'
+    };
+
+    // 페이지 변경 함수 (전역으로 노출)
+    window.changePage = function(page) {
+        currentPage = page;
+        renderPetitionTable(filteredData, currentPage);
+        
+        // 페이지 상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // 청원 테이블 렌더링
+    function renderPetitionTable(data, page = 1) {
+        const tableBody = document.getElementById('petitionTableBody');
+        const totalCountElement = document.getElementById('totalCount');
+        
+        if (!tableBody) return;
+
+        // 페이지에 해당하는 데이터 추출
+        const startIndex = (page - 1) * ITEMS_PER_PAGE;
+        const endIndex = startIndex + ITEMS_PER_PAGE;
+        const pageData = data.slice(startIndex, endIndex);
+
+        // 전체 건수 업데이트
+        if (totalCountElement) {
+            totalCountElement.textContent = data.length.toLocaleString();
+        }
+
+        // 기존 내용 초기화
+        tableBody.innerHTML = '';
+
+        // 각 청원 데이터로 행 생성
+        pageData.forEach((petition, index) => {
+            const row = document.createElement('tr');
+            const globalIndex = startIndex + index + 1;
+            const statusText = statusMap[petition.status] || petition.status;
+            const statusClass = statusClassMap[petition.status] || '';
+
+            // 상태에 따른 행 클래스 추가
+            if (petition.status === 'complete') {
+                row.classList.add('status-complete');
+            } else if (petition.status === 'rejected') {
+                row.classList.add('status-rejected');
+            }
+
+            // 행 HTML 생성
+            row.innerHTML = `
+                <td>${globalIndex}</td>
+                <td>
+                    <a href="#" class="petition-title" onclick="showPetitionDetail(${petition.id})">
+                        ${petition.title}
+                    </a>
+                </td>
+                <td>
+                    <a href="#" class="member-link" onclick="showMemberDetail('${petition.introducerMember}')">
+                        ${petition.introducerMember}
+                    </a>
+                </td>
+                <td>${petition.introduceDate}</td>
+                <td>${petition.referralDate}</td>
+                <td>
+                    <span class="status-badge ${statusClass}">
+                        ${statusText}
+                    </span>
+                </td>
+                <td>
+                    <span class="committee-name" title="${petition.committee}">
+                        ${petition.committee}
+                    </span>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+
+        // 페이지네이션 업데이트 (scripts.js의 createPagination 사용)
+        if (window.createPagination) {
+            window.createPagination(data.length, page, ITEMS_PER_PAGE, window.changePage);
+        }
+    }
+
+    // 청원 상세 페이지로 이동 (전역 함수)
+    window.showPetitionDetail = function(petitionId) {
+        console.log(`청원 [${petitionId}] 상세 페이지로 이동`);
+        
+        // more_petition.html 페이지로 이동
+        window.location.href = `more_petition.html?petition_id=${petitionId}`;
+    };
+
+    // 의원 상세 링크 (전역 함수)
+    window.showMemberDetail = function(memberName) {
+        alert(`${memberName} 의원의 상세 정보 페이지로 이동합니다.\n(현재 개발 중)`);
+    };
+
+    // 검색 기능
+    const searchInput = document.getElementById('searchInput');
+    const searchButton = document.getElementById('searchButton');
+
+    function performSearch() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        
+        if (searchTerm === '') {
+            filteredData = [...petitionData];
+        } else {
+            filteredData = petitionData.filter(petition => 
+                petition.title.toLowerCase().includes(searchTerm) ||
+                petition.introducerMember.toLowerCase().includes(searchTerm) ||
+                petition.committee.toLowerCase().includes(searchTerm)
+            );
+        }
+        
+        currentPage = 1;
+        renderPetitionTable(filteredData, currentPage);
+    }
+
+    if (searchButton) {
+        searchButton.addEventListener('click', performSearch);
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    }
+
+    // 필터 기능
+    const statusFilter = document.getElementById('statusFilter');
+    const periodFilter = document.getElementById('periodFilter');
+
+    function applyFilters() {
+        let filtered = [...petitionData];
+
+        // 상태 필터
+        const selectedStatus = statusFilter?.value;
+        if (selectedStatus && selectedStatus !== 'all') {
+            filtered = filtered.filter(petition => petition.status === selectedStatus);
+        }
+
+        // 기간 필터 (간단한 예시)
+        const selectedPeriod = periodFilter?.value;
+        if (selectedPeriod && selectedPeriod !== 'all') {
+            const now = new Date();
+            const cutoffDate = new Date();
+            
+            switch(selectedPeriod) {
+                case 'month1':
+                    cutoffDate.setMonth(now.getMonth() - 1);
+                    break;
+                case 'month3':
+                    cutoffDate.setMonth(now.getMonth() - 3);
+                    break;
+                case 'month6':
+                    cutoffDate.setMonth(now.getMonth() - 6);
+                    break;
+                case 'year1':
+                    cutoffDate.setFullYear(now.getFullYear() - 1);
+                    break;
+            }
+            
+            filtered = filtered.filter(petition => {
+                const petitionDate = new Date(petition.introduceDate.replace(/\./g, '-'));
+                return petitionDate >= cutoffDate;
+            });
+        }
+
+        filteredData = filtered;
+        currentPage = 1;
+        renderPetitionTable(filteredData, currentPage);
+    }
+
+    if (statusFilter) {
+        statusFilter.addEventListener('change', applyFilters);
+    }
+
+    if (periodFilter) {
+        periodFilter.addEventListener('change', applyFilters);
+    }
+
+    // 초기 렌더링
+    renderPetitionTable(filteredData, currentPage);
 });
