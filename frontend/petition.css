@@ -1,8 +1,9 @@
 /* 청원 현황 페이지 스타일 */
 .content-container {
     width: 100%;
-    padding: 0 15px;
-    margin-top: 40px;
+    padding: 20px 0;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .page-title {
@@ -91,35 +92,64 @@
     color: var(--string);
 }
 
-/* 청원 테이블 */
-.petition-table {
+/* 청원 목록 (meeting.css 스타일 적용) */
+.bill-list {
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+/* 테이블 스타일 (meeting.css 스타일 적용) */
+.bill-table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 30px;
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.petition-table th {
-    background-color: var(--side);
+.bill-table thead {
+    background-color: var(--main1);
+}
+
+.bill-table th {
     padding: 15px 10px;
     text-align: left;
-    font-weight: 500;
-    border-bottom: 1px solid var(--side2);
-    font-size: 14px;
+    font-weight: 600;
+    color: var(--string);
+    border-bottom: 2px solid var(--side2);
 }
 
-.petition-table th:first-child {
+.bill-table th:first-child {
     text-align: center;
 }
 
-.petition-table td {
-    padding: 15px 10px;
-    border-bottom: 1px solid var(--side2);
-    font-size: 14px;
+.bill-table tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.petition-table td:first-child {
+.bill-table tbody tr:hover {
+    background-color: var(--main2);
+}
+
+.bill-table tbody tr.status-complete {
+    background-color: rgba(232, 245, 233, 0.3);
+    border-left: 4px solid #4caf50;
+}
+
+.bill-table tbody tr.status-rejected {
+    background-color: rgba(255, 235, 238, 0.3);
+    border-left: 4px solid #f44336;
+}
+
+.bill-table td {
+    padding: 15px 10px;
+    color: var(--string);
+}
+
+.bill-table td:first-child {
     text-align: center;
     font-weight: 500;
 }
@@ -130,16 +160,25 @@
     transition: color 0.2s;
     cursor: pointer;
     display: block;
-    max-width: 600px;
+    max-width: 380px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     line-height: 1.4;
+    font-weight: 500;
 }
 
 .petition-title:hover {
     color: var(--light-blue);
     text-decoration: underline;
+}
+
+.committee-name {
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
 }
 
 .member-link {
@@ -187,15 +226,6 @@
     color: #c62828;
 }
 
-/* 테이블 행 호버 효과 */
-.petition-table tbody tr {
-    transition: background-color 0.2s;
-}
-
-.petition-table tbody tr:hover {
-    background-color: var(--main2);
-}
-
 /* 반응형 디자인 */
 @media screen and (max-width: 1024px) {
     .search-filter-section {
@@ -218,21 +248,31 @@
         margin-bottom: 30px;
     }
     
-    .petition-table {
-        font-size: 12px;
+    .content-container {
+        padding: 20px 15px;
     }
     
-    .petition-table th,
-    .petition-table td {
+    .bill-list {
+        padding: 20px 15px;
+        border-radius: 0;
+        margin: 15px 0;
+    }
+    
+    .bill-table {
+        font-size: 14px;
+    }
+    
+    .bill-table th,
+    .bill-table td {
         padding: 10px 5px;
     }
     
-    .petition-table th:nth-child(3),
-    .petition-table td:nth-child(3),
-    .petition-table th:nth-child(4),
-    .petition-table td:nth-child(4),
-    .petition-table th:nth-child(5),
-    .petition-table td:nth-child(5) {
+    .bill-table th:nth-child(3),
+    .bill-table td:nth-child(3),
+    .bill-table th:nth-child(4),
+    .bill-table td:nth-child(4),
+    .bill-table th:nth-child(5),
+    .bill-table td:nth-child(5) {
         display: none;
     }
     
@@ -248,26 +288,31 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         line-height: 1.4;
+        max-width: none;
     }
 }
 
 @media screen and (max-width: 576px) {
     .content-container {
-        padding: 0 10px;
+        padding: 20px 10px;
     }
     
     .page-title {
         font-size: 24px;
     }
 
-    .petition-table th:nth-child(3),
-    .petition-table td:nth-child(3),
-    .petition-table th:nth-child(4),
-    .petition-table td:nth-child(4),
-    .petition-table th:nth-child(5),
-    .petition-table td:nth-child(5),
-    .petition-table th:nth-child(7),
-    .petition-table td:nth-child(7) {
+    .bill-table {
+        font-size: 12px;
+    }
+
+    .bill-table th:nth-child(3),
+    .bill-table td:nth-child(3),
+    .bill-table th:nth-child(4),
+    .bill-table td:nth-child(4),
+    .bill-table th:nth-child(5),
+    .bill-table td:nth-child(5),
+    .bill-table th:nth-child(7),
+    .bill-table td:nth-child(7) {
         display: none;
     }
     
@@ -278,5 +323,10 @@
     
     .filter-select {
         width: 100%;
+    }
+
+    .status-badge {
+        font-size: 11px;
+        padding: 3px 8px;
     }
 }
