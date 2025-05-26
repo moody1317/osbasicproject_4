@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>백일하 - 청원 현황황</title>
+    <title>백일하 - 청원 현황</title>
     <!-- 외부 스타일시트 연결 -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="petition.css">
+
 </head>
 <body>
     <!-- 헤더 시작 -->
@@ -107,27 +108,30 @@
             </div>
         </div>
 
-        <!-- 청원 테이블 -->
+        <!-- 청원 정보 -->
         <div class="petition-info">
             <p>전체 <span id="totalCount">1,234</span>건</p>
         </div>
         
-        <table class="petition-table">
-            <thead>
-                <tr>
-                    <th style="width: 80px;">번호</th>
-                    <th>청원명</th>
-                    <th style="width: 120px;">소개의원</th>
-                    <th style="width: 100px;">소개일</th>
-                    <th style="width: 100px;">회부일</th>
-                    <th style="width: 120px;">처리상태</th>
-                    <th style="width: 100px;">소관위원회</th>
-                </tr>
-            </thead>
-            <tbody id="petitionTableBody">
-                <!-- 데이터가 JavaScript로 생성됩니다 -->
-            </tbody>
-        </table>
+        <!-- 청원 목록 테이블 -->
+        <div class="bill-list">
+            <table class="bill-table">
+                <thead>
+                    <tr>
+                        <th>번호</th>
+                        <th>청원명</th>
+                        <th>소개의원</th>
+                        <th>소개일</th>
+                        <th>회부일</th>
+                        <th>처리상태</th>
+                        <th>소관위원회</th>
+                    </tr>
+                </thead>
+                <tbody id="petitionTableBody">
+                    <!-- 데이터가 JavaScript로 생성됩니다 -->
+                </tbody>
+            </table>
+        </div>
 
         <div class="pagination" id="pagination">
             <!-- 페이지네이션이 JavaScript로 생성됩니다 -->
@@ -186,7 +190,7 @@
     <footer style="margin-top: 40px; padding: 20px; font-size: 12px; color: gray; text-align: center; border-top: 1px solid #ddd; background-color: #f9f9f9;">
         본 웹사이트는 충북대학교의 오픈소스 기초 프로젝트 과제를 위해 제작된 비상업적 프로젝트입니다.<br>
         사용된 의원 정보 및 이미지는 열린국회정보 API를 통해 수집되었으며, 실제 정당 및 국회의원과 무관한 가상 시각화입니다.
-</footer>
+    </footer>
 
 </body>
 </html>
