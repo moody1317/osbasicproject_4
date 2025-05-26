@@ -1,44 +1,47 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // localStorage 기반 팝업 표시 제어
-    function shouldShowPopup() {
+    // 각 팝업별로 개별 localStorage 키 사용
+    function shouldShowImagePopup() {
         try {
-            const today = new Date().toDateString(); // "Mon May 26 2025"
-            const hiddenDate = localStorage.getItem('popupHiddenDate');
-            
-            console.log('오늘 날짜:', today);
-            console.log('저장된 숨김 날짜:', hiddenDate);
-            
-            // 저장된 날짜가 없거나 오늘과 다르면 팝업 표시
+            const today = new Date().toDateString();
+            const hiddenDate = localStorage.getItem('imagePopupHiddenDate'); // 이미지 팝업 전용
             return hiddenDate !== today;
         } catch (error) {
-            // localStorage를 사용할 수 없는 환경 (시크릿 모드 등)
             console.warn('localStorage 접근 불가:', error);
-            return true; // 기본적으로 팝업 표시
+            return true;
         }
     }
 
-    // 페이지 로드 시 팝업 표시 여부 확인
+    function shouldShowPercentPopup() {
+        try {
+            const today = new Date().toDateString();
+            const hiddenDate = localStorage.getItem('percentPopupHiddenDate'); // 퍼센트 팝업 전용
+            return hiddenDate !== today;
+        } catch (error) {
+            console.warn('localStorage 접근 불가:', error);
+            return true;
+        }
+    }
+
+    // 페이지 로드 시 각 팝업 개별 확인
     setTimeout(() => {
-        if (shouldShowPopup()) {
-            console.log('팝업 표시 조건 충족 - 팝업 실행');
-            showWelcomePopups();
-        } else {
-            console.log('오늘 하루 그만보기 설정됨 - 팝업 스킵');
+        if (shouldShowImagePopup()) {
+            showImageSourcePopup(() => {
+                // 이미지 팝업이 끝난 후 퍼센트 팝업 확인
+                setTimeout(() => {
+                    if (shouldShowPercentPopup()) {
+                        showPercentGuidePopup();
+                    }
+                }, 500);
+            });
+        } else if (shouldShowPercentPopup()) {
+            // 이미지 팝업은 숨겨져 있지만 퍼센트 팝업은 표시해야 하는 경우
+            showPercentGuidePopup();
         }
     }, 1000);
 
-    // 환영 팝업들 표시 함수
-    function showWelcomePopups() {
-        showImageSourcePopup(() => {
-            setTimeout(() => {
-                showPercentGuidePopup();
-            }, 500);
-        });
-    }
-
-    // 정당로고/국회의원 사진 출처 안내 팝업
+    // 이미지 출처 팝업 (개별 제어)
     function showImageSourcePopup(callback) {
-        const modal = createPopupModal('정당로고 및 국회의원 사진 출처 안내', `
+        const modal = createPopupModal(`
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 48px; margin-bottom: 10px;">📸</div>
                 <h3 style="color: #4facfe; margin-bottom: 20px;">이미지 출처 안내</h3>
@@ -68,15 +71,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 저희는 비상업적 교육 목적으로 제작되었으며,<br>
                 어떤 정당이나 의원에 대한 편견이 없음을 알려드립니다.
             </p>
-        `, callback, false);
+        `, callback, true, 'imagePopupHiddenDate'); // 이미지 팝업 전용 키
         
         document.body.appendChild(modal.backdrop);
         document.body.appendChild(modal.popup);
     }
 
-    // 상세 퍼센트 가이드 팝업 (오늘 하루 그만보기 포함)
+    // 상세 퍼센트 팝업 (개별 제어)
     function showPercentGuidePopup() {
-        const modal = createPopupModal('상세 퍼센트 기능 안내', `
+        const modal = createPopupModal(`
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 48px; margin-bottom: 10px;">📊</div>
                 <h3 style="color: #4facfe; margin-bottom: 20px;">상세 퍼센트 기능</h3>
@@ -106,14 +109,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     하단의 "상세 퍼센트" 메뉴에서 확인할 수 있습니다.
                 </p>
             </div>
-        `, null, true);
+        `, null, true, 'percentPopupHiddenDate'); // 퍼센트 팝업 전용 키
         
         document.body.appendChild(modal.backdrop);
         document.body.appendChild(modal.popup);
     }
 
-    // 팝업 모달 생성 함수
-    function createPopupModal(title, content, callback, showDontShowToday = false) {
+    // 팝업 모달 생성 함수 (개별 키 지원)
+    function createPopupModal(content, callback, showDontShowToday = false, storageKey = 'popupHiddenDate') {
         // 배경 오버레이
         const backdrop = document.createElement('div');
         backdrop.style.cssText = `
@@ -144,13 +147,10 @@ document.addEventListener('DOMContentLoaded', function() {
             max-height: 80vh;
             overflow-y: auto;
             animation: slideIn 0.4s ease;
-            
-            /* 스크롤바 숨기기 */
             scrollbar-width: none;
             -ms-overflow-style: none;
         `;
 
-        // 웹킷 브라우저 스크롤바 숨기기
         popup.style.setProperty('-webkit-scrollbar', 'display: none', 'important');
 
         // "오늘 하루 그만보기" 체크박스 HTML
@@ -192,24 +192,20 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.onmouseout = () => confirmBtn.style.transform = 'translateY(0)';
         
         confirmBtn.onclick = () => {
-            // "오늘 하루 그만보기" 체크 확인 및 localStorage 저장
+            // "오늘 하루 그만보기" 체크 확인 및 개별 localStorage 저장
             if (showDontShowToday) {
                 const dontShowCheckbox = popup.querySelector('#dontShowToday');
                 if (dontShowCheckbox && dontShowCheckbox.checked) {
                     try {
                         const today = new Date().toDateString();
-                        localStorage.setItem('popupHiddenDate', today);
-                        console.log('팝업 숨김 설정 저장:', today);
-                        
-                        // 사용자에게 피드백 (선택적)
-                        console.log('내일부터 팝업이 다시 표시됩니다.');
+                        localStorage.setItem(storageKey, today); // 개별 키로 저장
+                        console.log(`${storageKey} 숨김 설정 저장:`, today);
                     } catch (error) {
                         console.warn('localStorage 저장 실패:', error);
                     }
                 }
             }
             
-            // 팝업 닫기 애니메이션
             popup.style.animation = 'slideOut 0.3s ease';
             backdrop.style.animation = 'fadeOut 0.3s ease';
             
@@ -220,76 +216,66 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 300);
         };
 
-        // 배경 클릭 시 닫기
         backdrop.onclick = confirmBtn.onclick;
 
         return { backdrop, popup };
     }
 
-    // CSS 애니메이션 정의
+    // CSS 애니메이션
     if (!document.querySelector('#popupAnimations')) {
         const style = document.createElement('style');
         style.id = 'popupAnimations';
         style.textContent = `
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-            @keyframes fadeOut {
-                from { opacity: 1; }
-                to { opacity: 0; }
-            }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+            @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
             @keyframes slideIn {
-                from { 
-                    opacity: 0;
-                    transform: translate(-50%, -50%) scale(0.8);
-                }
-                to { 
-                    opacity: 1;
-                    transform: translate(-50%, -50%) scale(1);
-                }
+                from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
             }
             @keyframes slideOut {
-                from { 
-                    opacity: 1;
-                    transform: translate(-50%, -50%) scale(1);
-                }
-                to { 
-                    opacity: 0;
-                    transform: translate(-50%, -50%) scale(0.8);
-                }
+                from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                to { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
             }
         `;
         document.head.appendChild(style);
     }
 
-    // 개발자 도구용 디버깅 함수들
+    // 개별 팝업 디버깅 함수
     window.debugPopup = {
-        // 저장된 데이터 확인
-        checkSavedDate: () => {
-            const saved = localStorage.getItem('popupHiddenDate');
+        // 각 팝업 상태 확인
+        checkStatus: () => {
             const today = new Date().toDateString();
-            console.log('저장된 날짜:', saved);
+            const imageHidden = localStorage.getItem('imagePopupHiddenDate');
+            const percentHidden = localStorage.getItem('percentPopupHiddenDate');
+            
+            console.log('=== 팝업 상태 ===');
             console.log('오늘 날짜:', today);
-            console.log('팝업 표시 여부:', saved !== today);
+            console.log('이미지 팝업 숨김 날짜:', imageHidden);
+            console.log('퍼센트 팝업 숨김 날짜:', percentHidden);
+            console.log('이미지 팝업 표시 여부:', imageHidden !== today);
+            console.log('퍼센트 팝업 표시 여부:', percentHidden !== today);
         },
         
-        // 설정 초기화 (팝업 다시 보기)
-        resetPopup: () => {
-            localStorage.removeItem('popupHiddenDate');
-            console.log('팝업 설정이 초기화되었습니다. 페이지를 새로고침하면 팝업이 다시 표시됩니다.');
+        // 이미지 팝업만 초기화
+        resetImagePopup: () => {
+            localStorage.removeItem('imagePopupHiddenDate');
+            console.log('이미지 팝업 설정 초기화됨');
         },
         
-        // 강제로 오늘 숨김 설정
-        hideToday: () => {
-            const today = new Date().toDateString();
-            localStorage.setItem('popupHiddenDate', today);
-            console.log('오늘 팝업이 숨김 처리되었습니다:', today);
+        // 퍼센트 팝업만 초기화
+        resetPercentPopup: () => {
+            localStorage.removeItem('percentPopupHiddenDate');
+            console.log('퍼센트 팝업 설정 초기화됨');
+        },
+        
+        // 모든 팝업 초기화
+        resetAllPopups: () => {
+            localStorage.removeItem('imagePopupHiddenDate');
+            localStorage.removeItem('percentPopupHiddenDate');
+            console.log('모든 팝업 설정 초기화됨');
         }
     };
     
-    console.log('팝업 디버깅 함수 사용법:');
-    console.log('- window.debugPopup.checkSavedDate() : 현재 설정 확인');
-    console.log('- window.debugPopup.resetPopup() : 설정 초기화');
-    console.log('- window.debugPopup.hideToday() : 오늘 숨김 설정');
+    console.log('🎯 개별 팝업 제어 시스템 활성화!');
+    console.log('디버깅: window.debugPopup.checkStatus()');
 });
