@@ -1,344 +1,437 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 청원 더미 데이터
-    const petitionData = [
-        {
-            id: 1,
-            title: '청년 주택 구입 지원을 위한 특별법 제정 청원',
-            introducerMember: '김영호',
-            introduceDate: '2025.05.20',
-            referralDate: '2025.05.22',
-            status: 'committee',
-            committee: '국토교통위원회'
-        },
-        {
-            id: 2,
-            title: '반려동물 의료비 부담 완화를 위한 건강보험 적용 청원',
-            introducerMember: '박민정',
-            introduceDate: '2025.05.18',
-            referralDate: '2025.05.21',
-            status: 'review',
-            committee: '보건복지위원회'
-        },
-        {
-            id: 3,
-            title: '대학생 등록금 부담 경감을 위한 정책 개선 청원',
-            introducerMember: '이준석',
-            introduceDate: '2025.05.15',
-            referralDate: '2025.05.18',
-            status: 'complete',
-            committee: '교육위원회'
-        },
-        {
-            id: 4,
-            title: '소상공인 임대료 지원 확대 방안 마련 청원',
-            introducerMember: '최수진',
-            introduceDate: '2025.05.12',
-            referralDate: '2025.05.15',
-            status: 'committee',
-            committee: '중소벤처기업위원회'
-        },
-        {
-            id: 5,
-            title: '육아휴직 급여 인상 및 기간 연장 청원',
-            introducerMember: '한민수',
-            introduceDate: '2025.05.10',
-            referralDate: '2025.05.13',
-            status: 'complete',
-            committee: '환경노동위원회'
-        },
-        {
-            id: 6,
-            title: '온라인 게임 셧다운제 개선 청원',
-            introducerMember: '정하늘',
-            introduceDate: '2025.05.08',
-            referralDate: '2025.05.11',
-            status: 'review',
-            committee: '과학기술정보방송통신위원회'
-        },
-        {
-            id: 7,
-            title: '택시 요금 현실화 및 승차거부 방지 청원',
-            introducerMember: '윤상호',
-            introduceDate: '2025.05.05',
-            referralDate: '2025.05.08',
-            status: 'committee',
-            committee: '국토교통위원회'
-        },
-        {
-            id: 8,
-            title: '농산물 가격 안정화를 위한 정책 수립 청원',
-            introducerMember: '강은미',
-            introduceDate: '2025.05.03',
-            referralDate: '2025.05.06',
-            status: 'pending',
-            committee: '농림축산식품해양수산위원회'
-        },
-        {
-            id: 9,
-            title: '치킨집 영업시간 규제 완화 청원',
-            introducerMember: '오세훈',
-            introduceDate: '2025.05.01',
-            referralDate: '2025.05.04',
-            status: 'rejected',
-            committee: '행정안전위원회'
-        },
-        {
-            id: 10,
-            title: '전기차 충전소 확대 설치 청원',
-            introducerMember: '임종석',
-            introduceDate: '2025.04.28',
-            referralDate: '2025.05.01',
-            status: 'complete',
-            committee: '산업통상자원중소벤처기업위원회'
-        },
-        {
-            id: 11,
-            title: '학교급식 친환경 식재료 의무 사용 청원',
-            introducerMember: '김희경',
-            introduceDate: '2025.04.25',
-            referralDate: '2025.04.28',
-            status: 'committee',
-            committee: '교육위원회'
-        },
-        {
-            id: 12,
-            title: '펜션 및 민박업 규제 개선 청원',
-            introducerMember: '박주민',
-            introduceDate: '2025.04.22',
-            referralDate: '2025.04.25',
-            status: 'review',
-            committee: '문화체육관광위원회'
-        },
-        {
-            id: 13,
-            title: '외국인 관광객 대상 의료관광 활성화 청원',
-            introducerMember: '안철수',
-            introduceDate: '2025.04.20',
-            referralDate: '2025.04.23',
-            status: 'complete',
-            committee: '보건복지위원회'
-        },
-        {
-            id: 14,
-            title: '공공병원 확충 및 의료 접근성 개선 청원',
-            introducerMember: '심상정',
-            introduceDate: '2025.04.18',
-            referralDate: '2025.04.21',
-            status: 'committee',
-            committee: '보건복지위원회'
-        },
-        {
-            id: 15,
-            title: '재택근무 확산을 위한 근로기준법 개정 청원',
-            introducerMember: '류호정',
-            introduceDate: '2025.04.15',
-            referralDate: '2025.04.18',
-            status: 'review',
-            committee: '환경노동위원회'
-        }
-    ];
-
-    // 페이지네이션 설정
-    const ITEMS_PER_PAGE = 10;
-    let currentPage = 1;
-    let filteredData = [...petitionData];
-
-    // 상태별 한국어 매핑
-    const statusMap = {
-        'pending': '접수',
-        'review': '심사중', 
-        'committee': '위원회 회부',
-        'complete': '처리완료',
-        'rejected': '폐기'
+    // 초기값 설정
+    const defaultValues = {
+        '무효표 및 기권표': -2.5,
+        '본회의 가결': 40,
+        '위원장': 5,
+        '청원 소개': 8,
+        '청원 결과': 23 ,
+        '출석': -10,
+        '투표 결과 일치': 7.5,
+        '투표 결과 불일치': 4
     };
 
-    // 상태별 CSS 클래스 매핑
-    const statusClassMap = {
-        'pending': 'status-pending',
-        'review': 'status-review',
-        'committee': 'status-committee', 
-        'complete': 'status-complete',
-        'rejected': 'status-rejected'
+    // 체크박스와 퍼센트 입력 필드 연결
+    const checkboxItems = document.querySelectorAll('.checkbox-item');
+    const percentInputs = document.querySelectorAll('.percent-input');
+
+    // 초기화 버튼
+    const resetButton = document.querySelector('.reset-button');
+
+    // 체크박스와 입력 필드 매핑
+    const fieldMapping = {
+        '무효표 및 기권': '무효표 및 기권표',
+        '본회의 가결': '본회의 가결',
+        '위원장': '위원장',
+        '청원 소개': '청원 소개',
+        '청원 결과': '청원 결과',
+        '출석': '출석',
+        '투표 결과 일치': '투표 결과 일치',
+        '투표 결과 불일치': '투표 결과 불일치'
     };
 
-    // 페이지 변경 함수 (전역으로 노출)
-    window.changePage = function(page) {
-        currentPage = page;
-        renderPetitionTable(filteredData, currentPage);
+    // 퍼센트 값을 LocalStorage에 저장하는 함수
+    function savePercentValues() {
+        const percentData = {};
         
-        // 페이지 상단으로 스크롤
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    // 청원 테이블 렌더링
-    function renderPetitionTable(data, page = 1) {
-        const tableBody = document.getElementById('petitionTableBody');
-        const totalCountElement = document.getElementById('totalCount');
-        
-        if (!tableBody) return;
-
-        // 페이지에 해당하는 데이터 추출
-        const startIndex = (page - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        const pageData = data.slice(startIndex, endIndex);
-
-        // 전체 건수 업데이트
-        if (totalCountElement) {
-            totalCountElement.textContent = data.length.toLocaleString();
-        }
-
-        // 기존 내용 초기화
-        tableBody.innerHTML = '';
-
-        // 각 청원 데이터로 행 생성
-        pageData.forEach((petition, index) => {
-            const row = document.createElement('tr');
-            const globalIndex = startIndex + index + 1;
-            const statusText = statusMap[petition.status] || petition.status;
-            const statusClass = statusClassMap[petition.status] || '';
-
-            // 상태에 따른 행 클래스 추가
-            if (petition.status === 'complete') {
-                row.classList.add('status-complete');
-            } else if (petition.status === 'rejected') {
-                row.classList.add('status-rejected');
-            }
-
-            // 행 HTML 생성
-            row.innerHTML = `
-                <td>${globalIndex}</td>
-                <td>
-                    <a href="#" class="petition-title" onclick="showPetitionDetail(${petition.id})">
-                        ${petition.title}
-                    </a>
-                </td>
-                <td>
-                    <a href="#" class="member-link" onclick="showMemberDetail('${petition.introducerMember}')">
-                        ${petition.introducerMember}
-                    </a>
-                </td>
-                <td>${petition.introduceDate}</td>
-                <td>${petition.referralDate}</td>
-                <td>
-                    <span class="status-badge ${statusClass}">
-                        ${statusText}
-                    </span>
-                </td>
-                <td>
-                    <span class="committee-name" title="${petition.committee}">
-                        ${petition.committee}
-                    </span>
-                </td>
-            `;
-
-            tableBody.appendChild(row);
-        });
-
-        // 페이지네이션 업데이트 (scripts.js의 createPagination 사용)
-        if (window.createPagination) {
-            window.createPagination(data.length, page, ITEMS_PER_PAGE, window.changePage);
-        }
-    }
-
-    // 청원 상세 페이지로 이동 (전역 함수)
-    window.showPetitionDetail = function(petitionId) {
-        console.log(`청원 [${petitionId}] 상세 페이지로 이동`);
-        
-        // more_petition.html 페이지로 이동
-        window.location.href = `more_petition.html?petition_id=${petitionId}`;
-    };
-
-    // 의원 상세 링크 (전역 함수)
-    window.showMemberDetail = function(memberName) {
-        alert(`${memberName} 의원의 상세 정보 페이지로 이동합니다.\n(현재 개발 중)`);
-    };
-
-    // 검색 기능
-    const searchInput = document.getElementById('searchInput');
-    const searchButton = document.getElementById('searchButton');
-
-    function performSearch() {
-        const searchTerm = searchInput.value.trim().toLowerCase();
-        
-        if (searchTerm === '') {
-            filteredData = [...petitionData];
-        } else {
-            filteredData = petitionData.filter(petition => 
-                petition.title.toLowerCase().includes(searchTerm) ||
-                petition.introducerMember.toLowerCase().includes(searchTerm) ||
-                petition.committee.toLowerCase().includes(searchTerm)
-            );
-        }
-        
-        currentPage = 1;
-        renderPetitionTable(filteredData, currentPage);
-    }
-
-    if (searchButton) {
-        searchButton.addEventListener('click', performSearch);
-    }
-
-    if (searchInput) {
-        searchInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
-    }
-
-    // 필터 기능
-    const statusFilter = document.getElementById('statusFilter');
-    const periodFilter = document.getElementById('periodFilter');
-
-    function applyFilters() {
-        let filtered = [...petitionData];
-
-        // 상태 필터
-        const selectedStatus = statusFilter?.value;
-        if (selectedStatus && selectedStatus !== 'all') {
-            filtered = filtered.filter(petition => petition.status === selectedStatus);
-        }
-
-        // 기간 필터 (간단한 예시)
-        const selectedPeriod = periodFilter?.value;
-        if (selectedPeriod && selectedPeriod !== 'all') {
-            const now = new Date();
-            const cutoffDate = new Date();
+        percentInputs.forEach(input => {
+            const label = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const value = parseFloat(input.value.replace('%', '')) || 0;
+            const isEnabled = !input.disabled;
             
-            switch(selectedPeriod) {
-                case 'month1':
-                    cutoffDate.setMonth(now.getMonth() - 1);
-                    break;
-                case 'month3':
-                    cutoffDate.setMonth(now.getMonth() - 3);
-                    break;
-                case 'month6':
-                    cutoffDate.setMonth(now.getMonth() - 6);
-                    break;
-                case 'year1':
-                    cutoffDate.setFullYear(now.getFullYear() - 1);
-                    break;
-            }
+            percentData[label] = {
+                value: value,
+                enabled: isEnabled
+            };
+        });
+        
+        // LocalStorage에 저장
+        localStorage.setItem('percentSettings', JSON.stringify(percentData));
+        console.log('설정이 저장되었습니다:', percentData);
+    }
+
+    // 저장된 값을 불러오는 함수
+    function loadPercentValues() {
+        const savedData = localStorage.getItem('percentSettings');
+        
+        if (savedData) {
+            const percentData = JSON.parse(savedData);
             
-            filtered = filtered.filter(petition => {
-                const petitionDate = new Date(petition.introduceDate.replace(/\./g, '-'));
-                return petitionDate >= cutoffDate;
+            // 체크박스와 입력값 복원
+            Object.keys(percentData).forEach(label => {
+                const data = percentData[label];
+                
+                // 체크박스 상태 복원
+                checkboxItems.forEach(item => {
+                    const checkboxLabel = item.querySelector('.checkbox-label').textContent.trim();
+                    if (fieldMapping[checkboxLabel] === label) {
+                        const checkbox = item.querySelector('.checkbox-input');
+                        checkbox.checked = data.enabled;
+                    }
+                });
+                
+                // 입력값 복원
+                percentInputs.forEach(input => {
+                    const inputLabel = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+                    if (inputLabel === label) {
+                        input.value = data.value + '%';
+                        input.disabled = !data.enabled;
+                        // 스타일 업데이트
+                        if (data.enabled) {
+                            input.style.opacity = '1';
+                            input.style.backgroundColor = '#f9f9f9';
+                            input.style.cursor = 'text';
+                        } else {
+                            input.style.opacity = '0.3';
+                            input.style.backgroundColor = '#e0e0e0';
+                            input.style.cursor = 'not-allowed';
+                        }
+                    }
+                });
             });
+            
+            calculateAndDisplayTotal();
+            return true; // 저장된 값이 있음
         }
-
-        filteredData = filtered;
-        currentPage = 1;
-        renderPetitionTable(filteredData, currentPage);
+        return false; // 저장된 값이 없음
     }
 
-    if (statusFilter) {
-        statusFilter.addEventListener('change', applyFilters);
+    // 체크박스 상태에 따라 퍼센트 입력 필드 활성화/비활성화
+    function updatePercentField(checkboxLabel, isChecked) {
+        const mappedLabel = fieldMapping[checkboxLabel];
+        
+        percentInputs.forEach(input => {
+            const inputLabel = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            
+            if (inputLabel === mappedLabel) {
+                if (isChecked) {
+                    input.disabled = false;
+                    input.style.opacity = '1';
+                    input.style.backgroundColor = '#f9f9f9';
+                    input.style.cursor = 'text';
+                } else {
+                    input.disabled = true;
+                    input.style.opacity = '0.3';
+                    input.style.backgroundColor = '#e0e0e0';
+                    input.style.cursor = 'not-allowed';
+                    input.value = '0%';
+                }
+            }
+        });
+        
+        // 합계 재계산
+        calculateAndDisplayTotal();
+        // 변경사항 저장
+        savePercentValues();
     }
 
-    if (periodFilter) {
-        periodFilter.addEventListener('change', applyFilters);
+    // 초기화 함수
+    function resetToDefaults() {
+        // 모든 체크박스 체크
+        checkboxItems.forEach(item => {
+            const checkbox = item.querySelector('.checkbox-input');
+            checkbox.checked = true;
+        });
+
+        // 모든 입력 필드 활성화 및 초기값 설정
+        percentInputs.forEach(input => {
+            const label = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const defaultValue = defaultValues[label];
+            
+            if (defaultValue !== undefined) {
+                input.value = defaultValue + '%';
+                input.disabled = false;
+                input.style.opacity = '1';
+                input.style.backgroundColor = '#f9f9f9';
+                input.style.cursor = 'text';
+            }
+        });
+
+        // 합계 재계산
+        calculateAndDisplayTotal();
+        // 초기값으로 저장
+        savePercentValues();
     }
 
-    // 초기 렌더링
-    renderPetitionTable(filteredData, currentPage);
+    // 전체 퍼센트 합계 계산 및 표시
+    function calculateAndDisplayTotal() {
+        let total = 0;
+        let activeCount = 0;
+
+        percentInputs.forEach(input => {
+            if (!input.disabled) {
+                const value = parseFloat(input.value.replace('%', '')) || 0;
+                total += value;
+                activeCount++;
+            }
+        });
+
+        // 합계 표시 (콘솔 및 UI)
+        console.log('활성화된 항목 수:', activeCount);
+        console.log('전체 합계:', total.toFixed(1) + '%');
+
+        // 합계 표시 UI 추가 (선택사항)
+        let totalDisplay = document.querySelector('.total-display');
+        if (!totalDisplay) {
+            totalDisplay = document.createElement('div');
+            totalDisplay.className = 'total-display';
+            totalDisplay.style.cssText = `
+                text-align: center;
+                margin-top: 20px;
+                padding: 15px;
+                background-color: var(--main1);
+                border-radius: 5px;
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--string);
+            `;
+            document.querySelector('.percent-grid').after(totalDisplay);
+        }
+        
+        totalDisplay.innerHTML = `
+            <span>활성 항목: ${activeCount}개</span> | 
+            <span>전체 합계: <span style="color: ${total === 100 ? 'var(--light-blue)' : 'var(--example)'}">${total.toFixed(1)}%</span></span>
+        `;
+    }
+
+    // 체크박스 이벤트 리스너
+    checkboxItems.forEach(item => {
+        const checkbox = item.querySelector('.checkbox-input');
+        const label = item.querySelector('.checkbox-label').textContent.trim();
+        
+        checkbox.addEventListener('change', function() {
+            updatePercentField(label, this.checked);
+        });
+    });
+
+    // 초기화 버튼 이벤트
+    resetButton.addEventListener('click', function() {
+        if (confirm('모든 값을 초기값으로 되돌리시겠습니까?')) {
+            resetToDefaults();
+        }
+    });
+
+    // 퍼센트 입력 필드 포맷팅
+    percentInputs.forEach(input => {
+        // 입력 이벤트
+        input.addEventListener('input', function(e) {
+            // 비활성화된 경우 입력 방지
+            if (this.disabled) {
+                e.preventDefault();
+                return;
+            }
+
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+
+            // 현재 커서 위치 저장
+            const cursorPosition = this.selectionStart;
+            
+            // % 기호와 숫자 외의 문자 제거
+            let value = this.value.replace('%', '').replace(/[^\d.-]/g, '');
+            
+            // 음수 필드 처리
+            if (isNegativeField) {
+                // 음수 기호 제거 후 처리
+                value = value.replace(/-/g, '');
+                // 값이 있으면 음수로 만들기
+                if (value !== '' && value !== '0') {
+                    value = '-' + value;
+                }
+            }
+            
+            // 값이 있으면 % 추가
+            if (value !== '') {
+                this.value = value + '%';
+            } else {
+                this.value = '0%';
+            }
+            
+            // 커서를 % 기호 앞으로 이동
+            const newCursorPosition = this.value.length - 1;
+            this.setSelectionRange(newCursorPosition, newCursorPosition);
+            
+            // 합계 재계산
+            calculateAndDisplayTotal();
+            // 변경사항 저장
+            savePercentValues();
+        });
+
+        // 키 다운 이벤트로 % 기호 삭제 방지
+        input.addEventListener('keydown', function(e) {
+            if (this.disabled) {
+                e.preventDefault();
+                return;
+            }
+
+            const cursorPosition = this.selectionStart;
+            const valueLength = this.value.length;
+            
+            // Delete 키나 Backspace 키를 눌렀을 때
+            if (e.key === 'Delete' || e.key === 'Backspace') {
+                // 커서가 % 기호 앞이나 뒤에 있을 때 삭제 방지
+                if (cursorPosition >= valueLength - 1) {
+                    e.preventDefault();
+                    
+                    // % 앞의 숫자만 삭제
+                    if (e.key === 'Backspace' && cursorPosition === valueLength - 1) {
+                        const newValue = this.value.slice(0, -2) + '%';
+                        this.value = newValue.length > 1 ? newValue : '0%';
+                        const newPosition = Math.max(0, this.value.length - 1);
+                        this.setSelectionRange(newPosition, newPosition);
+                        
+                        // 합계 재계산
+                        calculateAndDisplayTotal();
+                        // 변경사항 저장
+                        savePercentValues();
+                    }
+                }
+            }
+            
+            // 화살표 키로 % 기호를 넘어가지 못하도록
+            if (e.key === 'ArrowRight' && cursorPosition >= valueLength - 1) {
+                e.preventDefault();
+            }
+        });
+
+        // 클릭 시 커서 위치 조정
+        input.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            // 0%인 경우 0을 지워줌
+            if (this.value === '0%') {
+                this.value = '%';
+            }
+            
+            const valueLength = this.value.length;
+            if (this.selectionStart >= valueLength - 1) {
+                this.setSelectionRange(valueLength - 1, valueLength - 1);
+            }
+        });
+
+        // 포커스 시 커서를 % 앞으로 이동
+        input.addEventListener('focus', function() {
+            if (this.disabled) {
+                this.blur();
+                return;
+            }
+            
+            // 0%인 경우 0을 지워줌
+            if (this.value === '0%') {
+                this.value = '%';
+            }
+            
+            const valueLength = this.value.length;
+            this.setSelectionRange(valueLength - 1, valueLength - 1);
+        });
+
+        // 블러(포커스 잃음) 시 빈 값 처리
+        input.addEventListener('blur', function() {
+            if (this.disabled) return;
+            
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+            
+            let value = this.value.replace('%', '').trim();
+            
+            if (isNegativeField) {
+                // 음수 필드는 값이 없으면 0%, 있으면 음수로
+                if (value === '' || value === '0') {
+                    this.value = '0%';
+                } else {
+                    // 음수 기호가 없으면 추가
+                    value = value.replace(/-/g, '');
+                    this.value = '-' + value + '%';
+                }
+            } else {
+                // 일반 필드
+                if (value === '') {
+                    this.value = '0%';
+                } else {
+                    this.value = value + '%';
+                }
+            }
+            
+            // 합계 재계산
+            calculateAndDisplayTotal();
+            // 변경사항 저장
+            savePercentValues();
+        });
+
+        // 붙여넣기 이벤트 처리
+        input.addEventListener('paste', function(e) {
+            if (this.disabled) {
+                e.preventDefault();
+                return;
+            }
+            
+            e.preventDefault();
+            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+            
+            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+            let cleanedText = pastedText.replace(/[^\d.-]/g, '');
+            
+            if (isNegativeField && cleanedText !== '') {
+                // 음수 필드는 음수 기호 제거 후 다시 추가
+                cleanedText = cleanedText.replace(/-/g, '');
+                if (cleanedText !== '0') {
+                    cleanedText = '-' + cleanedText;
+                }
+            }
+            
+            if (cleanedText !== '') {
+                this.value = cleanedText + '%';
+            }
+            
+            // 커서를 % 앞으로 이동
+            const newPosition = this.value.length - 1;
+            this.setSelectionRange(newPosition, newPosition);
+            
+            // 합계 재계산
+            calculateAndDisplayTotal();
+            // 변경사항 저장
+            savePercentValues();
+        });
+    });
+
+    // 페이지 로드 시 애니메이션
+    const checkboxGrid = document.querySelector('.checkbox-grid');
+    const percentGrid = document.querySelector('.percent-grid');
+
+    if (checkboxGrid) {
+        checkboxGrid.style.opacity = '0';
+        checkboxGrid.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            checkboxGrid.style.transition = 'all 0.5s ease';
+            checkboxGrid.style.opacity = '1';
+            checkboxGrid.style.transform = 'translateY(0)';
+        }, 100);
+    }
+
+    if (percentGrid) {
+        percentGrid.style.opacity = '0';
+        percentGrid.style.transform = 'translateY(20px)';
+        
+        setTimeout(() => {
+            percentGrid.style.transition = 'all 0.5s ease';
+            percentGrid.style.opacity = '1';
+            percentGrid.style.transform = 'translateY(0)';
+        }, 300);
+    }
+
+    // 초기 설정: 저장된 값이 있으면 불러오고, 없으면 초기값 사용
+    if (!loadPercentValues()) {
+        resetToDefaults();
+    }
 });
+
+// 다른 페이지에서 사용할 수 있는 헬퍼 함수 (전역 함수로 노출)
+window.getPercentSettings = function() {
+    const savedData = localStorage.getItem('percentSettings');
+    if (savedData) {
+        return JSON.parse(savedData);
+    }
+    return null;
+};
