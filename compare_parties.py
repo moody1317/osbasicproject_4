@@ -49,7 +49,7 @@ def compare_parties():
         elif p1_val < p2_val:
             better = party2
         else:
-            better = "동일"
+            better = "동점"
 
         comparison[field] = {
             party1: p1_val,
