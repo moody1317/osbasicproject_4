@@ -182,32 +182,36 @@
     margin-bottom: 8px;
 }
 
-/* 뉴스 기사 스타일 */
-.news-section {
-    margin-top: 20px;
-}
-
-.news-item {
-    margin: 15px 0;
-    padding: 15px;
-    background-color: var(--main1);
-    border-radius: 8px;
-    border-left: 4px solid var(--light-blue);
-}
-
-.news-link {
-    color: var(--string);
-    text-decoration: none;
-    line-height: 1.5;
-    transition: color 0.2s;
-}
-
-.news-link:hover {
-    color: var(--light-blue);
-    text-decoration: underline;
-}
-
 /* 반응형 디자인 */
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 15px;
+    }
+
+    .content {
+        padding: 25px 20px;
+        margin: 15px 0;
+    }
+
+    .petition-title h1 {
+        font-size: 22px;
+    }
+
+    .progress-container {
+        padding: 35px 25px 25px;
+    }
+
+    .step {
+        min-width: 100px;
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+
+    .info-title {
+        font-size: 17px;
+    }
+}
+
 @media screen and (max-width: 768px) {
     .container {
         padding: 10px;
@@ -237,6 +241,12 @@
         padding: 30px 15px 20px;
     }
     
+    .progress-title {
+        font-size: 14px;
+        top: 10px;
+        left: 15px;
+    }
+
     .progress-steps {
         flex-direction: column;
         gap: 15px;
@@ -245,6 +255,7 @@
     .step {
         min-width: auto;
         width: 100%;
+        font-size: 13px;
     }
     
     .arrow {
@@ -261,7 +272,11 @@
         border-right: none;
         border-bottom: 1px solid var(--side2);
     }
-    
+
+    .table-cell {
+        padding: 10px 15px;
+    }
+
     .back-button {
         font-size: 12px;
         padding: 8px 15px;
@@ -269,25 +284,63 @@
 }
 
 @media screen and (max-width: 576px) {
+    .container {
+        padding: 5px;
+    }
+
+    .content {
+        padding: 15px 10px;
+        border-radius: 0;
+        margin: 5px 0;
+    }
+
     .petition-title h1 {
         font-size: 18px;
     }
     
-    .info-title {
-        font-size: 16px;
+    .home-button {
+        padding: 3px;
     }
-    
-    .table-cell {
-        padding: 12px 15px;
+
+    .progress-container {
+        padding: 25px 10px 15px;
     }
-    
+
     .progress-title {
-        font-size: 14px;
+        font-size: 13px;
+        top: 8px;
+        left: 10px;
         position: static;
         margin-bottom: 15px;
     }
+
+    .step {
+        padding: 10px 5px;
+        font-size: 12px;
+    }
+
+    .info-title {
+        font-size: 15px;
+        margin-bottom: 15px;
+    }
     
-    .progress-container {
-        padding: 20px 15px;
+    .table-cell {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .status-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+    }
+
+    .petition-content {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .news-itemm {
+        padding: 10px;
+        margin: 10px 0;
     }
 }
