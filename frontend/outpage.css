@@ -108,9 +108,7 @@
         padding: 12px 15px;
     }
     
-    /* 모바일에서 설명 컬럼 숨기기 */
-    .data-table th:nth-child(3),
-    .data-table td:nth-child(3) {
+    .description-column {
         display: none;
     }
     
@@ -137,5 +135,9 @@
     
     .category-cell {
         font-size: 11px;
+    }
+    
+    .description-column {
+        display: none;
     }
 }
