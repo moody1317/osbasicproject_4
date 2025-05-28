@@ -292,41 +292,69 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 뉴스 링크 클릭 이벤트
-    function setupNewsLinks() {
-        const newsLinks = document.querySelectorAll('.news-link');
-        newsLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                alert('뉴스 기사 링크 기능은 현재 개발 중입니다.');
-            });
-        });
-    }
-
-    // 진행 단계 클릭 이벤트 (정보 표시)
-    function setupProgressSteps() {
-        const steps = document.querySelectorAll('.step');
-        steps.forEach((step, index) => {
-            step.addEventListener('click', function() {
-                showStepInfo(index + 1, step.textContent);
-            });
-        });
-    }
-
-    // 단계별 정보 모달 표시
-    function showStepInfo(stepNumber, stepName) {
-        const stepDescriptions = {
-            1: '청원이 국회에 정식으로 접수된 단계입니다.',
-            2: '해당 상임위원회에서 청원을 검토하고 심사하는 단계입니다.',
-            3: '상임위원회 심사를 거쳐 본회의에서 심의하는 단계입니다.',
-            4: '본회의 의결 후 정부로 이송되어 처리되는 단계입니다.',
-            5: '정부에서 처리 결과를 국회로 통지하는 최종 단계입니다.'
-        };
-
-        const description = stepDescriptions[stepNumber] || '해당 단계에 대한 정보가 없습니다.';
+    // 진행 단계 툴팁 추가
+    const steps = document.querySelectorAll('.step');
+    const stepDescriptions = {
+        '접수': '청원이 국회에 정식으로 접수된 상태입니다.',
+        '위원회 심사': '해당 상임위원회에서 청원을 검토하고 심사 중입니다.',
+        '본회의 심의': '상임위원회 심사를 거쳐 본회의에서 심의 중입니다.',
+        '정부 이송': '본회의 의결 후 정부로 이송되어 처리 중입니다.',
+        '처리 통지': '정부에서 처리 결과를 국회로 통지된 상태입니다.'
+    };
+    
+    steps.forEach(step => {
+        const stepName = step.textContent.trim();
         
-        alert(`${stepName}\n\n${description}`);
-    }
+        // 툴팁 요소 생성
+        const tooltip = document.createElement('div');
+        tooltip.className = 'step-tooltip';
+        tooltip.textContent = stepDescriptions[stepName] || '';
+        tooltip.style.cssText = `
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            width: 200px;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            margin-bottom: 10px;
+            z-index: 10;
+        `;
+        
+        // 화살표 추가
+        const arrow = document.createElement('div');
+        arrow.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid rgba(0, 0, 0, 0.8);
+        `;
+        tooltip.appendChild(arrow);
+        
+        step.style.position = 'relative';
+        step.appendChild(tooltip);
+        
+        // 호버 이벤트
+        step.addEventListener('mouseenter', function() {
+            tooltip.style.opacity = '1';
+        });
+        
+        step.addEventListener('mouseleave', function() {
+            tooltip.style.opacity = '0';
+        });
+    });
 
     // 챗봇 메시지 처리 (청원 관련)
     function handlePetitionChatbot() {
