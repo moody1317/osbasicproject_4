@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 초기값 설정
     const defaultValues = {
-        '무효표 및 기권표': -2.5,
+        '간사': 3,
+        '무효표 및 기권': -2,
         '본회의 가결': 40,
         '위원장': 5,
         '청원 소개': 8,
         '청원 결과': 23 ,
-        '출석': -10,
-        '투표 결과 일치': 7.5,
+        '출석': -8,
+        '투표 결과 일치': 7,
         '투표 결과 불일치': 4
     };
 
@@ -20,7 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 체크박스와 입력 필드 매핑
     const fieldMapping = {
-        '무효표 및 기권': '무효표 및 기권표',
+        '간사': '간사',
+        '무효표 및 기권': '무효표 및 기권',
         '본회의 가결': '본회의 가결',
         '위원장': '위원장',
         '청원 소개': '청원 소개',
