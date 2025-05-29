@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: compare-members
+    env: python
+    buildCommand: ""
+    startCommand: gunicorn compare_members.wsgi:application
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: compare_members.settings
+      - key: PYTHON_VERSION
+        value: "3.10"
