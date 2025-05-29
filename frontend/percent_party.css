@@ -274,7 +274,6 @@
     .chart-container {
         flex-direction: column;
         gap: 30px;
-        margin-bottom: 35px;
     }
 
     .chart-section {
