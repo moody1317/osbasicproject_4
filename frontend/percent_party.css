@@ -208,20 +208,62 @@
 
 /* 반응형 디자인 */
 @media screen and (max-width: 1024px) {
+    .content-container {
+        padding: 0 10px;
+        margin-top: 35px;
+    }
+
+    .party-header {
+        font-size: 32px;
+        margin-bottom: 35px;
+    }
+
+    .party-header svg {
+        width: 32px;
+        height: 32px;
+    }
+
     .chart-container {
-        flex-direction: column;
-        gap: 30px;
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .chart-section {
+        max-width: 350px;
+    }
+
+    .statistics-section {
+        max-width: 450px;
+        padding: 18px;
+    }
+
+    .statistics-section h3 {
+        font-size: 22px;
+    }
+
+    .stats-item {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .party-selector {
+        top: 8px;
+    }
+
+    .dropdown-btn {
+        min-width: 160px;
+        font-size: 15px;
     }
 }
 
 @media screen and (max-width: 768px) {
-    .chart-container {
-        flex-direction: column;
-        gap: 30px;
+    .content-container {
+        margin-top: 30px;
     }
 
     .party-header {
         font-size: 28px;
+        margin-bottom: 30px;
     }
 
     .party-header svg {
@@ -229,16 +271,38 @@
         height: 28px;
     }
 
+    .chart-container {
+        flex-direction: column;
+        gap: 30px;
+        margin-bottom: 35px;
+    }
+
+    .chart-section {
+        max-width: 300px;
+    }
+
+    .statistics-section {
+        max-width: 400px;
+        padding: 15px;
+    }
+
+    .statistics-section h3 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
     .stats-item {
-        font-size: 18px;
+        font-size: 16px;
+        margin-bottom: 10px;
+        padding: 4px 12px;
     }
 
     .party-selector {
-    top: 20px;
+        top: 20px;
     }
     
     .dropdown-btn {
-        padding: 8px 12px;
+        padding: 6px 12px;
         font-size: 14px;
         min-width: 150px;
     }
@@ -246,17 +310,87 @@
     .dropdown-content {
         min-width: 150px;
     }
+
+    .dropdown-content a {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+
+    .tooltip {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
 }
 
 @media screen and (max-width: 576px) {
+    .content-container {
+        padding: 0 5px;
+        margin-top: 25px;
+    }
+    
     .party-header {
         font-size: 24px;
-        margin-bottom: 60px;
+        margin-bottom: 50px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .party-header svg {
+        width: 24px;
+        height: 24px;
+        margin-left: 0;
     }
 
     .party-selector {
         top: 35px;
         right: 50%;
         transform: translateX(50%);
+        position: static;
+        margin-top: 10px;
+    }
+    
+    .dropdown-btn {
+        min-width: 140px;
+        font-size: 13px;
+        padding: 5px 10px;
+    }
+    
+    .dropdown-content {
+        min-width: 140px;
+    }
+    
+    .dropdown-content a {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+    
+    .chart-container {
+        gap: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .chart-section {
+        max-width: 280px;
+    }
+    
+    .statistics-section {
+        max-width: 350px;
+        padding: 12px;
+    }
+    
+    .statistics-section h3 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .stats-item {
+        font-size: 14px;
+        margin-bottom: 8px;
+        padding: 3px 10px;
+    }
+    
+    .tooltip {
+        font-size: 11px;
+        padding: 5px 8px;
     }
 }
