@@ -219,49 +219,199 @@
     pointer-events: none;
 }
 
+/* 반응형 디자인 */
+@media screen and (max-width: 1024px) {
+    .content-container {
+        padding: 0 10px;
+        margin-top: 35px;
+    }
+    
+    .page-title {
+        font-size: 32px;
+        margin-bottom: 35px;
+    }
+    
+    .settings-btn {
+        top: 35px;
+    }
+    
+    .dropdown {
+        top: 62px;
+        min-width: 140px;
+    }
+    
+    .member-table th,
+    .member-table td {
+        padding: 15px 12px;
+    }
+    
+    .rank-cell {
+        font-size: 22px;
+    }
+    
+    .pagination {
+        margin-top: 40px;
+        margin-bottom: 60px;
+    }
+}
+
 @media screen and (max-width: 768px) {
+    .content-container {
+        padding: 0 5px;
+        margin-top: 25px;
+    }
+    
+    .page-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .settings-btn {
+        padding: 2px 6px;
+        font-size: 12px;
+        top: 28px;
+    }
+    
+    .dropdown {
+        top: 55px;
+        min-width: 100px;
+        font-size: 12px;
+    }
+    
+    .dropdown-item {
+        padding: 5px 8px;
+    }
+
     .member-table th:nth-child(4),
     .member-table td:nth-child(4) {
         display: none;
     }
 
-    .settings-btn {
-        padding: 3px 10px;
-        font-size: 14px;
+    .member-table th,
+    .member-table td {
+        padding: 10px 5px;
+        font-size: 13px;
+    }
+    
+    .rank-cell {
+        font-size: 18px;
     }
 
-    nav li {
-        font-size: 16px;
+    .member-table td:nth-child(2) {
+        max-width: 120px;
+    }
+    
+    .member-name,
+    .member-name-clickable {
+        font-size: 13px;
+    }
+    
+    .party-name {
+        font-size: 12px;
+    }
+    
+    .phone-number {
+        font-size: 12px;
+        letter-spacing: 0.3px;
+    }
+    
+    .home-icon svg {
+        width: 18px;
+        height: 18px;
     }
 
     .pagination {
         flex-wrap: wrap;
+        gap: 3px;
+        margin-top: 35px;
+        margin-bottom: 50px;
     }
 
     .pagination a {
-        margin-bottom: 5px;
+        margin: 1px;
+        padding: 6px 10px;
+        font-size: 13px;
     }
 }
 
 @media screen and (max-width: 576px) {
+    .content-container {
+        padding: 0 5px;
+        margin-top: 25px;
+    }
+    
+    .page-title {
+        font-size: 24px;
+        margin-bottom: 25px;
+    }
+    
+    .settings-btn {
+        padding: 2px 6px;
+        font-size: 12px;
+        top: 28px;
+    }
+    
+    .dropdown {
+        top: 55px;
+        min-width: 100px;
+        font-size: 12px;
+    }
+    
+    .dropdown-item {
+        padding: 5px 8px;
+    }
+
     .member-table th:nth-child(4),
     .member-table td:nth-child(4) {
         display: none;
     }
 
-    .rank-cell {
-        font-size: 20px;
+    .member-table th,
+    .member-table td {
+        padding: 10px 5px;
+        font-size: 13px;
     }
-
-    .content-container {
-        padding: 0 5px;
+    
+    .rank-cell {
+        font-size: 18px;
     }
 
     .member-table td:nth-child(2) {
-        max-width: 140px;
+        max-width: 120px;
     }
 
-    .member-name {
-        font-size: 14px;
+    .member-name,
+    .member-name-clickable {
+        font-size: 13px;
+    }
+    
+    .party-name {
+        font-size: 12px;
+    }
+    
+    .phone-number {
+        font-size: 12px;
+        letter-spacing: 0.3px;
+    }
+    
+    .home-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .pagination {
+        margin-top: 30px;
+        margin-bottom: 40px;
+        gap: 2px;
+    }
+    
+    .pagination a {
+        padding: 5px 8px;
+        font-size: 12px;
+        margin: 1px;
+    }
+    
+    .pagination .ellipsis {
+        padding: 5px 3px;
     }
 }
