@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: compare-members
+    name: baekilha
     env: python
     buildCommand: ""
     startCommand: gunicorn compare_members.wsgi:application
@@ -8,4 +8,4 @@ services:
       - key: DJANGO_SETTINGS_MODULE
         value: compare_members.settings
       - key: PYTHON_VERSION
-        value: "3.10"
+        value: 3.11
