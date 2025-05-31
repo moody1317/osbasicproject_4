@@ -134,13 +134,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // more_meeting.html 페이지로 이동
         window.location.href = `more_meeting.html?${params.toString()}`;
     }
+
+     // 상태에 따른 클래스명 반환
+    function getStatusClass(status) {
+        switch(status) {
+            case '가결': return 'passed';
+            case '부결': return 'rejected';
+            case '심의중': return 'pending';
+            default: return '';
+        }
+    }
     
     // 법안 목록 테이블 생성 함수
     function renderBillTable(page = 1) {
+        console.log('Rendering bill table, page:', page, 'filteredData length:', filteredData.length);
+        
         const tableBody = document.getElementById('billTableBody');
+        const totalBillCountElement = document.getElementById('totalBillCount');
+        
         if (!tableBody) {
-            console.error('billTableBody element not found');
+            console.error('billTableBody element not found!');
             return;
+        }
+
+        // 전체 건수 업데이트
+        if (totalBillCountElement) {
+            totalBillCountElement.textContent = filteredData.length.toLocaleString();
+            console.log('Updated total count to:', filteredData.length);
+        } else {
+            console.error('totalBillCount element not found!');
         }
 
         // 기존 내용 초기화
@@ -151,6 +173,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const noDataRow = document.createElement('tr');
             noDataRow.innerHTML = '<td colspan="6" style="text-align: center; padding: 40px;">표시할 법안이 없습니다.</td>';
             tableBody.appendChild(noDataRow);
+
+            if (totalBillCountElement) {
+                totalBillCountElement.textContent = '0';
+            }
             
             // 페이지네이션 업데이트 (데이터가 없어도 호출)
             if (window.createPagination) {
@@ -226,35 +252,36 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchButton = document.getElementById('searchButton');
         
         if (!searchInput || !searchButton) {
-            console.error('Search elements not found');
+            console.error('Search elements not found!');
             return;
         }
+
+        console.log('Search setup completed');
 
         // 검색 실행 함수
         function performSearch() {
             const searchTerm = searchInput.value.toLowerCase().trim();
+            console.log('Performing search for:', searchTerm);
             
             if (!searchTerm) {
                 filteredData = [...billData];
+                console.log('Search cleared, showing all data');
             } else {
-                // 검색 결과 필터링
                 filteredData = billData.filter(bill => 
                     bill.title.toLowerCase().includes(searchTerm) ||
                     bill.proposer.toLowerCase().includes(searchTerm) ||
                     bill.committee.toLowerCase().includes(searchTerm) ||
                     bill.billNumber.toLowerCase().includes(searchTerm)
                 );
+                console.log('Search results:', filteredData.length, 'bills found');
             }
 
-            // 첫 페이지로 리셋
             currentPage = 1;
             renderBillTable(currentPage);
         }
 
-        // 검색 버튼 클릭 이벤트
+        // 이벤트 리스너 추가
         searchButton.addEventListener('click', performSearch);
-
-        // 엔터키 입력 이벤트
         searchInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 performSearch();
@@ -265,9 +292,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // 필터 기능 설정
     function setupFilters() {
         const filterButtons = document.querySelectorAll('.filter-btn');
+        console.log('Found filter buttons:', filterButtons.length);
         
-        filterButtons.forEach(button => {
+        filterButtons.forEach((button, index) => {
+            console.log('Setting up filter button', index, ':', button.textContent);
+            
             button.addEventListener('click', function() {
+                console.log('Filter clicked:', this.getAttribute('data-filter'));
+                
                 // 활성 버튼 변경
                 filterButtons.forEach(btn => btn.classList.remove('active'));
                 this.classList.add('active');
@@ -280,6 +312,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 필터 적용
     function applyFilter(filterType) {
+        console.log('Applying filter:', filterType);
+        
         switch(filterType) {
             case 'all':
                 filteredData = [...billData];
@@ -297,14 +331,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 filteredData = [...billData];
         }
 
-        // 첫 페이지로 리셋
+        console.log('Filter applied, showing', filteredData.length, 'bills');
+        
         currentPage = 1;
         renderBillTable(currentPage);
     }
 
     // 초기화 함수
     function init() {
-        console.log('Initializing meeting.js...');
+        console.log('Initializing meeting page...');
+        
+        // 요소 존재 확인
+        const tableBody = document.getElementById('billTableBody');
+        const totalCount = document.getElementById('totalBillCount');
+        const searchInput = document.getElementById('searchInput');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        console.log('Elements check:');
+        console.log('- billTableBody:', !!tableBody);
+        console.log('- totalBillCount:', !!totalCount);
+        console.log('- searchInput:', !!searchInput);
+        console.log('- filter buttons:', filterButtons.length);
         
         // 테이블 렌더링
         renderBillTable(currentPage);
@@ -315,9 +362,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // 필터 기능 설정
         setupFilters();
         
-        console.log('Meeting.js initialized successfully');
+        console.log('Meeting page initialization completed!');
     }
 
     // 페이지 로드 시 초기화
-    init();
+    setTimeout(init, 100); // 약간의 지연 후 초기화
 });
