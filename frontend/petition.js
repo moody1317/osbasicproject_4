@@ -208,14 +208,14 @@ document.addEventListener('DOMContentLoaded', function() {
             row.innerHTML = `
                 <td>${globalIndex}</td>
                 <td>
-                    <a href="#" class="petition-title" onclick="showPetitionDetail(${petition.id})">
+                    <span class="petition-title" title="${petition.title}">
                         ${petition.title}
-                    </a>
+                    </span>
                 </td>
                 <td>
-                    <a href="#" class="member-link" onclick="showMemberDetail('${petition.introducerMember}')">
+                    <span class="member-name">
                         ${petition.introducerMember}
-                    </a>
+                    </span>
                 </td>
                 <td>${petition.introduceDate}</td>
                 <td>${petition.referralDate}</td>
@@ -230,6 +230,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     </span>
                 </td>
             `;
+
+            // 행 전체에 클릭 이벤트 추가
+            row.addEventListener('click', function() {
+                showPetitionDetail(petition.id);
+            });
+
+            // 호버 효과를 위한 스타일 추가
+            row.style.cursor = 'pointer';
 
             tableBody.appendChild(row);
         });
@@ -246,11 +254,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // more_petition.html 페이지로 이동
         window.location.href = `more_petition.html?petition_id=${petitionId}`;
-    };
-
-    // 의원 상세 링크 (전역 함수)
-    window.showMemberDetail = function(memberName) {
-        alert(`${memberName} 의원의 상세 정보 페이지로 이동합니다.\n(현재 개발 중)`);
     };
 
     // 검색 기능
