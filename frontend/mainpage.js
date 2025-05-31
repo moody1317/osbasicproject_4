@@ -405,14 +405,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 break;
 
-            case '국회의원 사진 및 정당 로고 출처 안내':
+            case '국회의원 사진 출처 안내':
                 content = `
                     <p style="margin-bottom: 15px;">안녕하세요, 백일하 서비스를 이용해 주시는 여러분께 감사드립니다.</p>
                     <p style="margin-bottom: 15px;">저희가 사용하는 사진들은 각 주소에서 가져왔음을 명시합니다.</p>
                     <p style="margin-bottom: 15px;">저희는 어느 정당에 대한 악의가 없으며 비상업적 교육 목적으로 제작되었음을 알립니다.</p>
                     
-                    <h4 style="color: var(--string); margin: 20px 0 10px;">정당 로고</h4>
-                    <p style="margin-bottom: 15px;">각 정당의 홈페이지 및 PI 매뉴얼에 근거하여 준수하였습니다.</p>
                     <h4 style="color: var(--string); margin: 20px 0 10px;">국회의원 사진</h4>
                     <p style="margin-bottom: 15px;">열린국회정보 OpenAPI에서 제공하는 국회의원 사진을 사용하였습니다.</p>
                 `; 
