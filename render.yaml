@@ -9,3 +9,4 @@ services:
         value: compare_members.settings
       - key: PYTHON_VERSION
         value: 3.11
+    autoDeploy: true
