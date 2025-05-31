@@ -292,7 +292,18 @@ function onPartyChange(selectedParty) {
 }
 
 // DOM이 완전히 로드된 후 스크립트 실행
+// DOM이 완전히 로드된 후 스크립트 실행
 document.addEventListener('DOMContentLoaded', function() {  
+    // URL 파라미터에서 정당명 가져오기
+    const urlParams = new URLSearchParams(window.location.search);
+    const selectedPartyFromUrl = urlParams.get('party');
+    
+    // 초기 정당 설정 (URL 파라미터가 있으면 그것을 사용, 없으면 기본값)
+    const initialParty = selectedPartyFromUrl || '국민의힘';
+    
+    // partyData 전역 변수 설정 (scripts.js에서 가져오기)
+    window.partyData = getPartyData();
+    
     // 드롭다운 메뉴 토글
     const dropdownBtn = document.querySelector('.dropdown-btn');
     const dropdown = document.querySelector('.dropdown');
@@ -326,6 +337,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // 초기 정당 데이터 로드
-    fetchPartyData('국민의힘');
+    // 초기 정당 데이터 로드 (URL 파라미터 고려)
+    console.log('초기 정당 설정:', initialParty);
+    onPartyChange(initialParty);
 });
