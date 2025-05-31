@@ -25,9 +25,10 @@
 .search-box {
     display: flex;
     border: 1px solid var(--side2);
-    border-radius: 25px;
+    border-radius: 50px;
     overflow: hidden;
-    background-color: white;
+    background-color: var(--main2);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     flex: 1;
     max-width: 500px;
 }
@@ -39,6 +40,7 @@
     outline: none;
     font-size: 14px;
     font-family: 'Blinker', sans-serif;
+    background-color: transparent;
 }
 
 .search-button {
@@ -46,15 +48,18 @@
     border: none;
     padding: 0 20px;
     cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: transparent;
+    color: var(--string);
     display: flex;
     align-items: center;
-    transition: opacity 0.2s;
 }
 
 .search-button:hover {
-    opacity: 0.7;
+    background-color: #e8f2ff;
 }
 
+/* 필터 버튼 */
 .filter-options {
     display: flex;
     gap: 10px;
@@ -93,6 +98,12 @@
 }
 
 /* 청원 목록 */
+.content-container {
+    padding: 20px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .bill-list {
     background-color: white;
     border-radius: 10px;
@@ -168,11 +179,6 @@
     font-weight: 500;
 }
 
-.petition-title:hover {
-    color: var(--light-blue);
-    text-decoration: underline;
-}
-
 .committee-name {
     max-width: 160px;
     overflow: hidden;
@@ -186,11 +192,6 @@
     text-decoration: none;
     transition: color 0.2s;
     cursor: pointer;
-}
-
-.member-link:hover {
-    color: var(--light-blue);
-    text-decoration: underline;
 }
 
 .status-badge {
