@@ -19,6 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('compare.urls')),  # compare.urls로 연결
+    path('compare/', include('compare.urls')),  # compare.urls로 연결
 ]
 
