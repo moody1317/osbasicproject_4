@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
             date: '2025.05.25',
             title: '제21대 대통령선거 출마 의원 제외 안내'
         },
-        '국회의원 사진 및 정당 로고 출처 안내': {
+        '국회의원 사진 출처 안내': {
             date: '2025.05.25',
             title: '국회의원 사진 및 정당 로고 출처 안내'
         },
@@ -144,9 +144,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 <div style="margin: 15px 0;">
                     <p style="margin-bottom: 10px;"><strong>✅ 출석률</strong> - 국회 본회의 참석 현황</p>
-                    <p style="margin-bottom: 10px;"><strong>📋 청원</strong> - 청원 소개 및 결과</p>
-                    <p style="margin-bottom: 10px;"><strong>🗳️ 투표</strong> - 투표 결과 일치 여부</p>
-                    <p style="margin-bottom: 10px;"><strong>👑 위원회 경력</strong> - 위원회 활동 여부</p>
+                    <p style="margin-bottom: 10px;"><strong>📋 법안 발의율</strong> - 의원별 법안 제출 활동</p>
+                    <p style="margin-bottom: 10px;"><strong>🗳️ 투표 참여율</strong> - 안건별 투표 참여도</p>
+                    <p style="margin-bottom: 10px;"><strong>💬 질의 활동</strong> - 국정감사 및 질의 횟수</p>
+                    <p style="margin-bottom: 10px;"><strong>👑 위원장 경력</strong> - 상임위원회 위원장 활동 비율</p>
                 </div>
             </div>
             
@@ -164,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modal.popup);
     }
 
-    // 팝업 모달 생성 함수
+    // 팝업 모달 생성 함수 (완전히 새로운 안정적인 방식)
     function createPopupModal(content, callback, showDontShowToday = false, storageKey = 'popupHiddenDate') {
         console.log('팝업 생성:', storageKey);
         
@@ -259,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.onmouseover = () => confirmBtn.style.transform = 'translateY(-2px)';
         confirmBtn.onmouseout = () => confirmBtn.style.transform = 'translateY(0)';
         
-        // 팝업 닫기 함수
+        // 팝업 닫기 함수 (안정적인 방식)
         function closePopup() {
             if (isAnimating) return; // 애니메이션 중복 방지
             isAnimating = true;
