@@ -152,8 +152,6 @@
 }
 
 /* 반응형 디자인 */
-
-/* 1024px 이하 - 태블릿 가로 */
 @media screen and (max-width: 1024px) {
     .container {
         max-width: 960px;
@@ -203,7 +201,6 @@
     }
 }
 
-/* 768px 이하 - 태블릿 세로 */
 @media screen and (max-width: 768px) {
     .container {
         padding: 0 10px;
@@ -276,23 +273,22 @@
     }
 }
 
-/* 576px 이하 - 모바일 */
 @media screen and (max-width: 576px) {
     .container {
         padding: 0 5px;
     }
     
     .content-container {
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 8px;
         padding: 0;
         margin-top: 10px;
     }
     
     .card {
-        width: 100%;
-        padding: 12px;
-        min-height: 220px;
+        width: calc(50% - 4px);
+        padding: 10px;
+        min-height: 200px;
         margin-bottom: 15px;
     }
     
