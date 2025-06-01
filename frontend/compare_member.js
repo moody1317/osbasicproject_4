@@ -1,38 +1,53 @@
-// 정당별 색상 데이터
-const partyData = {
-    "더불어민주당": {
-        color: "#152484",
-        lightColor: "#15248480" // 50% 투명도
-    },
-    "국민의힘": {
-        color: "#E61E2B",
-        lightColor: "#E61E2B80" // 50% 투명도
-    },
-    "조국혁신당": {
-        color: "#06275E",
-        lightColor: "#0073CF"
-    },
-    "개혁신당": {
-        color: "#FF7210", 
-        lightColor: "#FF721080" // 50% 투명도
-    },
-    "진보당": {
-        color: "#D6001C",
-        lightColor: "#D6001C80" // 50% 투명도
-    },
-    "기본소득당": {
-        color: "#091E3A",
-        lightColor: "#00D2C3"
-    },
-    "사회민주당": {
-        color: "#43A213",
-        lightColor: "#F58400"
-    },
-    "무소속": {
-        color: "#4B5563",
-        lightColor: "#9CA3AF"
-    }
-};
+function getPartyColors() {
+    const root = document.documentElement;
+    const computedStyle = getComputedStyle(root);
+    
+    return {
+        "더불어민주당": {
+            color: computedStyle.getPropertyValue('--party-dp-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-dp-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-dp-bg').trim()
+        },
+        "국민의힘": {
+            color: computedStyle.getPropertyValue('--party-ppp-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-ppp-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-ppp-bg').trim()
+        },
+        "조국혁신당": {
+            color: computedStyle.getPropertyValue('--party-rk-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-rk-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-rk-bg').trim()
+        },
+        "개혁신당": {
+            color: computedStyle.getPropertyValue('--party-reform-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-reform-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-reform-bg').trim()
+        },
+        "진보당": {
+            color: computedStyle.getPropertyValue('--party-jp-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-jp-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-jp-bg').trim()
+        },
+        "기본소득당": {
+            color: computedStyle.getPropertyValue('--party-bip-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-bip-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-bip-bg').trim()
+        },
+        "사회민주당": {
+            color: computedStyle.getPropertyValue('--party-sdp-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-sdp-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-sdp-bg').trim()
+        },
+        "무소속": {
+            color: computedStyle.getPropertyValue('--party-ind-main').trim(),
+            lightColor: computedStyle.getPropertyValue('--party-ind-secondary').trim(),
+            bgColor: computedStyle.getPropertyValue('--party-ind-bg').trim()
+        }
+    };
+}
+
+// 정당별 색상 데이터 (DOM 로드 후 초기화됨)
+let partyData = {};
 
 // 국회의원 가상 데이터 (실제 구현 시에는 API에서 가져와야 함)
 const mpData = [
@@ -83,18 +98,53 @@ const mpData = [
             partyVoteMatch: 96,
             petitionResponse: 5
         }
+    },
+    {
+        id: 4,
+        name: "이재명",
+        party: "더불어민주당",
+        district: "경기 계양구갑",
+        stats: {
+            attendance: 95,
+            billProposed: 68,
+            billPassRate: 41,
+            mainProposer: 23,
+            speeches: 52,
+            committeeAttendance: 91,
+            partyVoteMatch: 98,
+            petitionResponse: 15
+        }
+    },
+    {
+        id: 5,
+        name: "한동훈",
+        party: "국민의힘",
+        district: "서울 강남구을",
+        stats: {
+            attendance: 89,
+            billProposed: 45,
+            billPassRate: 38,
+            mainProposer: 12,
+            speeches: 31,
+            committeeAttendance: 87,
+            partyVoteMatch: 93,
+            petitionResponse: 7
+        }
     }
 ];
 
 // DOM이 완전히 로드된 후 스크립트 실행
 document.addEventListener('DOMContentLoaded', function() {
     
+    // CSS에서 정당별 색상 데이터 초기화
+    partyData = getPartyColors();
+    
     // 검색 필터 태그 선택 효과
     const filterTags = document.querySelectorAll('.filter-tag');
     
     filterTags.forEach(tag => {
         tag.addEventListener('click', function() {
-            if (this.textContent === '전체') {
+            if (this.textContent === '정당별 필터') {
                 filterTags.forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
             } else {
@@ -111,7 +161,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     searchInputs.forEach((input, index) => {
         input.addEventListener('focus', function() {
-            searchResults[index].classList.add('show');
+            if (this.value.length > 0) {
+                searchResults[index].classList.add('show');
+            }
         });
         
         input.addEventListener('blur', function() {
@@ -121,56 +173,51 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         input.addEventListener('input', function() {
-            const searchValue = this.value.toLowerCase();
+            const searchValue = this.value.toLowerCase().trim();
             
-            // 실제 구현 시에는 여기서 검색 결과를 동적으로 가져와야 함
-            // 예시 코드만 작성
             if (searchValue.length > 0) {
                 searchResults[index].innerHTML = '';
                 
-                // 간단한 필터링 예시
+                // 검색어로 필터링
                 const filteredMPs = mpData.filter(mp => 
                     mp.name.toLowerCase().includes(searchValue) || 
                     mp.district.toLowerCase().includes(searchValue) ||
                     mp.party.toLowerCase().includes(searchValue)
                 );
                 
-                filteredMPs.forEach(mp => {
-                    const item = document.createElement('div');
-                    item.className = 'mp-search-item';
-                    
-                    // 정당 색상 가져오기
-                    const partyStyle = partyData[mp.party] ? 
-                        `background-color: ${partyData[mp.party].color};` : 
-                        'background-color: #999;';
-                    
-                    item.innerHTML = `
-                        <img src="/api/placeholder/50/50" alt="${mp.name} 의원 사진">
-                        <span>${mp.name}</span>
-                        <span class="mp-party-tag" style="${partyStyle}">${mp.party}</span>
-                    `;
-                    
-                    item.addEventListener('click', function() {
-                        // 선택된 국회의원 정보 업데이트
-                        const mpSelected = document.querySelectorAll('.mp-selected')[index];
-                        const mpImage = mpSelected.querySelector('img');
+                if (filteredMPs.length > 0) {
+                    filteredMPs.forEach(mp => {
+                        const item = document.createElement('div');
+                        item.className = 'mp-search-item';
                         
-                        // 실제 의원 사진으로 변경 (현재는 placeholder 사용)
-                        mpImage.src = '/api/placeholder/50/50';
-                        mpSelected.querySelector('.mp-selected-name').textContent = mp.name;
-                        mpSelected.querySelector('.mp-selected-party').textContent = `${mp.party} · ${mp.district}`;
+                        // 정당 색상 가져오기
+                        const partyStyle = partyData[mp.party] ? 
+                            `background-color: ${partyData[mp.party].color};` : 
+                            'background-color: #999;';
                         
-                        // 통계 정보 업데이트
-                        const card = input.closest('.comparison-card');
-                        updateMPStats(card, mp);
+                        item.innerHTML = `
+                            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png" alt="${mp.name} 의원 사진">
+                            <span>${mp.name}</span>
+                            <span class="mp-party-tag" style="${partyStyle}">${mp.party}</span>
+                        `;
                         
-                        // 검색창 비우기
-                        input.value = '';
-                        searchResults[index].classList.remove('show');
+                        item.addEventListener('click', function() {
+                            selectMP(mp, index);
+                            input.value = '';
+                            searchResults[index].classList.remove('show');
+                        });
+                        
+                        searchResults[index].appendChild(item);
                     });
-                    
-                    searchResults[index].appendChild(item);
-                });
+                } else {
+                    // 검색 결과가 없을 때
+                    const noResult = document.createElement('div');
+                    noResult.className = 'mp-search-item';
+                    noResult.innerHTML = '<span>검색 결과가 없습니다.</span>';
+                    noResult.style.color = '#999';
+                    noResult.style.cursor = 'default';
+                    searchResults[index].appendChild(noResult);
+                }
                 
                 searchResults[index].classList.add('show');
             } else {
@@ -182,70 +229,106 @@ document.addEventListener('DOMContentLoaded', function() {
     // 국회의원 제거 버튼
     const removeButtons = document.querySelectorAll('.mp-remove');
     
-    removeButtons.forEach(button => {
+    removeButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
-            const mpSelected = this.closest('.mp-selected');
-            mpSelected.querySelector('.mp-selected-name').textContent = '국회의원을 검색하세요';
-            mpSelected.querySelector('.mp-selected-party').textContent = '';
-            
-            // 통계 정보 초기화
-            const card = button.closest('.comparison-card');
-            resetMPStats(card);
+            resetMP(index);
         });
     });
     
     // 초기 필터 태그 설정
-    document.querySelector('.filter-tag:first-child').classList.add('active');
+    if (filterTags.length > 0) {
+        filterTags[0].classList.add('active');
+    }
 });
+
+// 국회의원 선택 함수
+function selectMP(mp, cardIndex) {
+    const comparisonCards = document.querySelectorAll('.comparison-card');
+    const card = comparisonCards[cardIndex];
+    
+    if (card) {
+        // 선택된 국회의원 정보 업데이트
+        const mpSelected = card.querySelector('.mp-selected');
+        const mpImage = mpSelected.querySelector('img');
+        const mpName = mpSelected.querySelector('.mp-selected-name');
+        const mpParty = mpSelected.querySelector('.mp-selected-party');
+        
+        // 의원 정보 업데이트
+        mpImage.src = 'https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png';
+        mpName.textContent = mp.name;
+        mpParty.textContent = `${mp.party} · ${mp.district}`;
+        
+        // 통계 정보 업데이트
+        updateMPStats(card, mp);
+    }
+}
+
+// 국회의원 초기화 함수
+function resetMP(cardIndex) {
+    const comparisonCards = document.querySelectorAll('.comparison-card');
+    const card = comparisonCards[cardIndex];
+    
+    if (card) {
+        const mpSelected = card.querySelector('.mp-selected');
+        const mpName = mpSelected.querySelector('.mp-selected-name');
+        const mpParty = mpSelected.querySelector('.mp-selected-party');
+        
+        mpName.textContent = '국회의원을 검색하세요';
+        mpParty.textContent = '';
+        
+        // 통계 정보 초기화
+        resetMPStats(card);
+    }
+}
 
 // 국회의원 통계 정보 업데이트 함수
 function updateMPStats(card, mp) {
-    // 출석률
-    const attendance = card.querySelector('.status-item:nth-child(2) .status-value');
-    attendance.textContent = mp.stats.attendance + '%';
-    attendance.className = 'status-value ' + (mp.stats.attendance > 95 ? 'win' : 'lose');
+    const statusItems = card.querySelectorAll('.status-item');
     
-    // 법안 발의
-    const billProposed = card.querySelector('.status-item:nth-child(3) .status-value');
-    billProposed.textContent = mp.stats.billProposed + '건';
-    billProposed.className = 'status-value ' + (mp.stats.billProposed > 60 ? 'win' : 'lose');
+    // 첫 번째 status-item은 "국회의원 선택"이므로 제외하고 두 번째부터 시작
+    const statsMapping = [
+        { key: 'attendance', suffix: '%', threshold: 95 },
+        { key: 'billProposed', suffix: '건', threshold: 60 },
+        { key: 'billPassRate', suffix: '%', threshold: 40 },
+        { key: 'mainProposer', suffix: '건', threshold: 18 },
+        { key: 'speeches', suffix: '회', threshold: 40 },
+        { key: 'committeeAttendance', suffix: '%', threshold: 90 },
+        { key: 'partyVoteMatch', suffix: '%', threshold: 95 },
+        { key: 'petitionResponse', suffix: '건', threshold: 10 }
+    ];
     
-    // 법안 가결률
-    const billPassRate = card.querySelector('.status-item:nth-child(4) .status-value');
-    billPassRate.textContent = mp.stats.billPassRate + '%';
-    billPassRate.className = 'status-value ' + (mp.stats.billPassRate > 40 ? 'win' : 'lose');
-    
-    // 대표 발의
-    const mainProposer = card.querySelector('.status-item:nth-child(5) .status-value');
-    mainProposer.textContent = mp.stats.mainProposer + '건';
-    mainProposer.className = 'status-value ' + (mp.stats.mainProposer > 18 ? 'win' : 'lose');
-    
-    // 본회의 발언
-    const speeches = card.querySelector('.status-item:nth-child(6) .status-value');
-    speeches.textContent = mp.stats.speeches + '회';
-    
-    // 상임위 출석률
-    const committeeAttendance = card.querySelector('.status-item:nth-child(7) .status-value');
-    committeeAttendance.textContent = mp.stats.committeeAttendance + '%';
-    committeeAttendance.className = 'status-value ' + (mp.stats.committeeAttendance > 90 ? 'win' : 'lose');
-    
-    // 정당 투표 일치도
-    const partyVoteMatch = card.querySelector('.status-item:nth-child(8) .status-value');
-    partyVoteMatch.textContent = mp.stats.partyVoteMatch + '%';
-    partyVoteMatch.className = 'status-value ' + (mp.stats.partyVoteMatch > 95 ? 'win' : 'lose');
-    
-    // 국민청원 답변
-    const petitionResponse = card.querySelector('.status-item:nth-child(9) .status-value');
-    petitionResponse.textContent = mp.stats.petitionResponse + '건';
-    petitionResponse.className = 'status-value ' + (mp.stats.petitionResponse > 10 ? 'win' : 'lose');
+    statusItems.forEach((item, index) => {
+        // 첫 번째 아이템(국회의원 선택)은 건너뛰기
+        if (index === 0) return;
+        
+        const statIndex = index - 1;
+        if (statIndex < statsMapping.length) {
+            const stat = statsMapping[statIndex];
+            const valueElement = item.querySelector('.status-value');
+            
+            if (valueElement && mp.stats[stat.key] !== undefined) {
+                const value = mp.stats[stat.key];
+                valueElement.textContent = value + stat.suffix;
+                
+                // 성과에 따른 색상 적용
+                valueElement.className = 'status-value ' + (value > stat.threshold ? 'win' : 'lose');
+            }
+        }
+    });
 }
 
 // 국회의원 통계 정보 초기화 함수
 function resetMPStats(card) {
-    const statusValues = card.querySelectorAll('.status-value');
+    const statusItems = card.querySelectorAll('.status-item');
     
-    statusValues.forEach(value => {
-        value.textContent = '-';
-        value.className = 'status-value';
+    statusItems.forEach((item, index) => {
+        // 첫 번째 아이템(국회의원 선택)은 건너뛰기
+        if (index === 0) return;
+        
+        const valueElement = item.querySelector('.status-value');
+        if (valueElement) {
+            valueElement.textContent = '-';
+            valueElement.className = 'status-value';
+        }
     });
 }
