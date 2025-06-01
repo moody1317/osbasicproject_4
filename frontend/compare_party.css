@@ -252,10 +252,20 @@ select.party-dropdown {
     }
     
     .tooltip {
-        font-size: 10px;
-        padding: 5px 8px;
-        max-width: 180px;
+        font-size: 12px;
+        padding: 8px 12px;
+        max-width: 250px;
+        min-width: 150px;
         white-space: normal;
+        line-height: 1.4;
+        text-align: center;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .tooltip::after {
+        border-width: 6px;
+        border-top-color: #333;
     }
     
     .party-header {
