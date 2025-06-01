@@ -221,24 +221,22 @@
     }
 
     .search-bar {
-        flex-direction: column;
-        margin: 0 10px;
+        margin: 0 15px;
     }
     
     .search-filter {
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-        justify-content: center;
-        padding: 10px 15px;
+        border-right: 1px solid #e0e0e0;
+        padding: 0px 12px;
     }
 
     .search-filter select {
         font-size: 14px;
         width: 100px;
+        padding: 8px 5px;
     }
 
     .search-input input {
-        padding: 10px 15px;
+        padding: 10px 12px;
         font-size: 14px;
     }
 
@@ -307,31 +305,46 @@
     }    
 
     .search-bar {
-        margin: 0 5px;
+        margin: 0 10px;
+        min-height: 44px;
+        align-items: stretch;
     }
 
     .search-filter {
-        padding: 8px 10px;
+        padding: 0px 10px;
+        min-width: 90px;
+        flex-shrink: 0;
     }
 
     .search-filter select {
-        font-size: 13px;
-        width: 90px;
-        padding: 5px 2px;
+        font-size: 14px;
+        width: 100%;
+        padding: 12px 5px;
+        min-width: 70px;
+    }
+
+    .search-input {
+        flex: 1;
     }
 
     .search-input input {
-        padding: 8px 10px;
-        font-size: 13px;
+        padding: 12px 10px;
+        font-size: 14px;
+        height: 100%;
+        box-sizing: border-box;
     }
 
     .search-button {
-        padding: 0 12px;
+        padding: 0 15px;
+        min-width: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .search-button svg {
-        width: 16px;
-        height: 16px;
+        width: 18px;
+        height: 18px;
     }
 
     .member-profile {
