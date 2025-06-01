@@ -281,7 +281,7 @@
         font-size: 30px;
     }
 
-    .membr-party {
+    .member-party {
         font-size: 17px;
     }
     
@@ -301,7 +301,7 @@
     }
 }
 
-@media screen and (max-width: 567px) {
+@media screen and (max-width: 576px) {
     .search-container {
         padding: 12px 0;
     }    
@@ -314,7 +314,7 @@
         padding: 8px 10px;
     }
 
-    .serach-filter select {
+    .search-filter select {
         font-size: 13px;
         width: 90px;
         padding: 5px 2px;
