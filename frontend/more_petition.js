@@ -178,14 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
             committee: '국방위원회',
             petitionNumber: '2200055',
             sessionInfo: '제22대 (2024~2028) 제418회',
-            currentStep: 2,
-            content: '채 상병 사망 사건과 관련하여 수사 과정에서의 방해 행위 및 사건 은폐 의혹에 대한 철저한 진상규명을 위한 국정조사가 필요합니다.',
-            details: [
-                '채 상병 사망 사건의 진상 규명',
-                '수사 과정에서의 방해 행위 조사',
-                '사건 은폐 의혹에 대한 철저한 조사',
-                '관련 책임자 처벌 및 재발 방지 대책 마련'
-            ]
+            currentStep: 2
         };
     }
 
@@ -206,74 +199,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'complete': 5,
             'rejected': 2
         };
-
-        const contentMap = {
-            1: {
-                content: '청년층의 주거 안정을 위한 특별법 제정을 요구하는 청원입니다. 현재 청년들이 직면한 주택 구입의 어려움을 해결하기 위한 정책적 지원이 필요합니다.',
-                details: ['청년 주택 구입 자금 지원 확대', '청년 전용 주택 공급 확대', '주택 대출 금리 우대 혜택 강화', '청년 주거 정책 통합 관리 체계 구축']
-            },
-            2: {
-                content: '반려동물의 의료비 부담을 줄이기 위해 건강보험 적용을 요구하는 청원입니다.',
-                details: ['반려동물 의료비 건강보험 적용', '반려동물 병원 의료비 투명화', '응급 의료 지원 체계 구축', '예방 접종 비용 지원 확대']
-            },
-            3: {
-                content: '대학생들의 등록금 부담을 줄이기 위한 정책 개선을 요구하는 청원입니다.',
-                details: ['국가장학금 지원 확대', '대학 등록금 인상률 제한', '저금리 학자금 대출 확대', '대학 재정 투명성 강화']
-            },
-            4: {
-                content: '소상공인들의 임대료 부담 완화를 위한 지원 확대 방안을 요구하는 청원입니다.',
-                details: ['소상공인 임대료 지원금 확대', '상가건물 임대차 보호법 강화', '임대료 인상률 제한 강화', '소상공인 경영 안정화 지원']
-            },
-            5: {
-                content: '육아휴직 급여 인상 및 기간 연장을 통한 육아 지원 확대를 요구하는 청원입니다.',
-                details: ['육아휴직 급여 인상', '육아휴직 기간 연장', '아버지 육아휴직 활성화', '육아휴직 복귀 지원 강화']
-            },
-            6: {
-                content: '온라인 게임 셧다운제의 개선과 합리적 운영을 요구하는 청원입니다.',
-                details: ['셧다운제 운영 개선', '게임 이용 시간 자율 규제 강화', '부모 동의 시스템 개선', '게임 중독 예방 교육 확대']
-            },
-            7: {
-                content: '택시 요금 현실화와 승차거부 방지를 위한 제도 개선을 요구하는 청원입니다.',
-                details: ['택시 요금 현실화', '승차거부 신고 시스템 강화', '택시 서비스 품질 개선', '택시 기사 처우 개선']
-            },
-            8: {
-                content: '농산물 가격 안정화를 위한 정책 수립을 요구하는 청원입니다.',
-                details: ['농산물 가격 안정화 정책 수립', '농업인 소득 보장 강화', '농산물 유통 구조 개선', '농업 재해 지원 확대']
-            },
-            9: {
-                content: '치킨집 영업시간 규제 완화를 요구하는 청원입니다.',
-                details: ['영업시간 규제 완화', '소상공인 영업 자유 확대', '지역별 규제 차별화', '소음 방지 대책 마련']
-            },
-            10: {
-                content: '전기차 충전소 확대 설치를 요구하는 청원입니다.',
-                details: ['전기차 충전소 확대 설치', '충전 인프라 표준화', '충전 요금 투명화', '충전소 접근성 개선']
-            },
-            11: {
-                content: '학교급식에 친환경 식재료 의무 사용을 요구하는 청원입니다.',
-                details: ['친환경 식재료 의무 사용', '급식 품질 향상', '지역 농산물 우선 구매', '급식비 지원 확대']
-            },
-            12: {
-                content: '펜션 및 민박업 규제 개선을 요구하는 청원입니다.',
-                details: ['펜션 민박업 규제 개선', '관광업 활성화 지원', '지역 경제 활성화', '관광 인프라 개선']
-            },
-            13: {
-                content: '외국인 관광객 대상 의료관광 활성화를 요구하는 청원입니다.',
-                details: ['의료관광 활성화 정책', '의료 서비스 품질 향상', '관광 수입 증대', '의료진 전문성 강화']
-            },
-            14: {
-                content: '공공병원 확충 및 의료 접근성 개선을 요구하는 청원입니다.',
-                details: ['공공병원 확충', '의료 접근성 개선', '의료비 부담 완화', '지역 의료 격차 해소']
-            },
-            15: {
-                content: '재택근무 확산을 위한 근로기준법 개정을 요구하는 청원입니다.',
-                details: ['재택근무 제도 개선', '근로자 권익 보호', '일과 삶의 균형', '유연 근무제 확산']
-            }
-        };
-
-        const contentInfo = contentMap[basePetition.id] || {
-            content: `${basePetition.title}에 관한 청원입니다.`,
-            details: ['관련 정책 개선', '제도 정비', '지원 확대', '문제 해결']
-        };
         
         return {
             id: basePetition.id,
@@ -286,9 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
             committee: basePetition.committee,
             petitionNumber: `22000${55 + basePetition.id}`,
             sessionInfo: '제22대 (2024~2028) 제419회',
-            currentStep: stepMap[basePetition.status] || 1,
-            content: contentInfo.content,
-            details: contentInfo.details
+            currentStep: stepMap[basePetition.status] || 1
         };
     }
 
@@ -318,9 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 진행 단계 업데이트
             updateProgressSteps(petition.currentStep);
             
-            // 청원 내용 업데이트
-            updatePetitionContent(petition);
-            
             console.log('청원 정보 로드 완료:', petition.title);
             
             // 상태 알림 표시
@@ -343,20 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 step.classList.remove('active');
             }
         });
-    }
-
-    // 청원 내용 업데이트
-    function updatePetitionContent(petition) {
-        const contentSection = document.querySelector('.petition-content');
-        if (contentSection) {
-            contentSection.innerHTML = `
-                <p>${petition.content}</p>
-                <p>본 청원은 다음과 같은 사항에 대한 조사를 요구합니다:</p>
-                <ul>
-                    ${petition.details.map(detail => `<li>${detail}</li>`).join('')}
-                </ul>
-            `;
-        }
     }
 
     // 홈 아이콘 클릭 이벤트

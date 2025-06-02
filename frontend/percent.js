@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Django API 서버 설정
+    const API_BASE_URL = 'http://localhost:8000/api'; // Django 서버 주소로 변경
+    const API_ENDPOINTS = {
+        getSettings: '/percent-settings/',
+        saveSettings: '/percent-settings/',
+    };
+
     // 초기값 설정
     const defaultValues = {
         '간사': 3,
-        '무효표 및 기권': -2,
+        '무효표 및 기권': 2,
         '본회의 가결': 40,
         '위원장': 5,
         '청원 소개': 8,
-        '청원 결과': 23 ,
-        '출석': -8,
+        '청원 결과': 23,
+        '출석': 8,
         '투표 결과 일치': 7,
         '투표 결과 불일치': 4
     };
@@ -15,8 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // 체크박스와 퍼센트 입력 필드 연결
     const checkboxItems = document.querySelectorAll('.checkbox-item');
     const percentInputs = document.querySelectorAll('.percent-input');
-
-    // 초기화 버튼
     const resetButton = document.querySelector('.reset-button');
 
     // 체크박스와 입력 필드 매핑
@@ -32,8 +37,73 @@ document.addEventListener('DOMContentLoaded', function() {
         '투표 결과 불일치': '투표 결과 불일치'
     };
 
-    // 퍼센트 값을 LocalStorage에 저장하는 함수
-    function savePercentValues() {
+    // API 요청 헬퍼 함수
+    async function apiRequest(endpoint, method = 'GET', data = null) {
+        const url = API_BASE_URL + endpoint;
+        const options = {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                // CSRF 토큰이 필요한 경우
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        };
+
+        if (data) {
+            options.body = JSON.stringify(data);
+        }
+
+        try {
+            const response = await fetch(url, options);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            return await response.json();
+        } catch (error) {
+            console.error('API 요청 오류:', error);
+            throw error;
+        }
+    }
+
+    // CSRF 토큰 가져오기 함수
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // 숫자 값을 정리하는 함수 (음수 처리 제거)
+    function cleanNumericValue(value) {
+        let cleanValue = value.replace('%', '').trim();
+        cleanValue = cleanValue.replace(/[^\d.]/g, ''); // 숫자와 소수점만 허용
+        
+        if (cleanValue === '') {
+            return '0';
+        }
+        
+        // 불필요한 앞의 0 제거 (소수점 앞 제외)
+        if (cleanValue.length > 1) {
+            if (cleanValue.startsWith('0') && cleanValue[1] !== '.') {
+                cleanValue = cleanValue.replace(/^0+/, '') || '0';
+            }
+        }
+        
+        return cleanValue;
+    }
+
+    // 퍼센트 값을 서버에 저장하는 함수
+    async function savePercentValues() {
         const percentData = {};
         
         percentInputs.forEach(input => {
@@ -46,56 +116,88 @@ document.addEventListener('DOMContentLoaded', function() {
                 enabled: isEnabled
             };
         });
-        
-        // LocalStorage에 저장
-        localStorage.setItem('percentSettings', JSON.stringify(percentData));
-        console.log('설정이 저장되었습니다:', percentData);
+
+        try {
+            // 서버에 저장
+            await apiRequest(API_ENDPOINTS.saveSettings, 'POST', percentData);
+            console.log('설정이 서버에 저장되었습니다:', percentData);
+            
+            // 로컬스토리지에도 백업 저장
+            localStorage.setItem('percentSettings', JSON.stringify(percentData));
+        } catch (error) {
+            console.error('서버 저장 실패:', error);
+            alert('설정 저장에 실패했습니다. 다시 시도해주세요.');
+            
+            // 서버 저장 실패시 로컬스토리지에만 저장
+            localStorage.setItem('percentSettings', JSON.stringify(percentData));
+        }
     }
 
-    // 저장된 값을 불러오는 함수
-    function loadPercentValues() {
-        const savedData = localStorage.getItem('percentSettings');
-        
-        if (savedData) {
-            const percentData = JSON.parse(savedData);
+    // 서버에서 설정값을 불러오는 함수
+    async function loadPercentValues() {
+        try {
+            // 서버에서 데이터 로드 시도
+            const percentData = await apiRequest(API_ENDPOINTS.getSettings);
             
-            // 체크박스와 입력값 복원
-            Object.keys(percentData).forEach(label => {
-                const data = percentData[label];
-                
-                // 체크박스 상태 복원
-                checkboxItems.forEach(item => {
-                    const checkboxLabel = item.querySelector('.checkbox-label').textContent.trim();
-                    if (fieldMapping[checkboxLabel] === label) {
-                        const checkbox = item.querySelector('.checkbox-input');
-                        checkbox.checked = data.enabled;
-                    }
-                });
-                
-                // 입력값 복원
-                percentInputs.forEach(input => {
-                    const inputLabel = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
-                    if (inputLabel === label) {
-                        input.value = data.value + '%';
-                        input.disabled = !data.enabled;
-                        // 스타일 업데이트
-                        if (data.enabled) {
-                            input.style.opacity = '1';
-                            input.style.backgroundColor = '#f9f9f9';
-                            input.style.cursor = 'text';
-                        } else {
-                            input.style.opacity = '0.3';
-                            input.style.backgroundColor = '#e0e0e0';
-                            input.style.cursor = 'not-allowed';
-                        }
-                    }
-                });
+            if (percentData && Object.keys(percentData).length > 0) {
+                applySettings(percentData);
+                return true;
+            }
+        } catch (error) {
+            console.warn('서버에서 설정 로드 실패:', error);
+            console.log('로컬 저장소에서 데이터를 불러옵니다.');
+        }
+
+        // 서버 로드 실패시 로컬스토리지에서 시도
+        const savedData = localStorage.getItem('percentSettings');
+        if (savedData) {
+            try {
+                const percentData = JSON.parse(savedData);
+                applySettings(percentData);
+                return true;
+            } catch (error) {
+                console.error('로컬 데이터 파싱 오류:', error);
+            }
+        }
+        
+        return false;
+    }
+
+    // 설정값을 UI에 적용하는 함수
+    function applySettings(percentData) {
+        Object.keys(percentData).forEach(label => {
+            const data = percentData[label];
+            
+            // 체크박스 상태 복원
+            checkboxItems.forEach(item => {
+                const checkboxLabel = item.querySelector('.checkbox-label').textContent.trim();
+                if (fieldMapping[checkboxLabel] === label) {
+                    const checkbox = item.querySelector('.checkbox-input');
+                    checkbox.checked = data.enabled;
+                }
             });
             
-            calculateAndDisplayTotal();
-            return true; // 저장된 값이 있음
-        }
-        return false; // 저장된 값이 없음
+            // 입력값 복원
+            percentInputs.forEach(input => {
+                const inputLabel = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
+                if (inputLabel === label) {
+                    input.value = data.value + '%';
+                    input.disabled = !data.enabled;
+                    // 스타일 업데이트
+                    if (data.enabled) {
+                        input.style.opacity = '1';
+                        input.style.backgroundColor = '#f9f9f9';
+                        input.style.cursor = 'text';
+                    } else {
+                        input.style.opacity = '0.3';
+                        input.style.backgroundColor = '#e0e0e0';
+                        input.style.cursor = 'not-allowed';
+                    }
+                }
+            });
+        });
+        
+        calculateAndDisplayTotal();
     }
 
     // 체크박스 상태에 따라 퍼센트 입력 필드 활성화/비활성화
@@ -121,21 +223,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         
-        // 합계 재계산
         calculateAndDisplayTotal();
-        // 변경사항 저장
-        savePercentValues();
+        savePercentValues(); // 자동 저장
     }
 
     // 초기화 함수
-    function resetToDefaults() {
-        // 모든 체크박스 체크
+    async function resetToDefaults() {
         checkboxItems.forEach(item => {
             const checkbox = item.querySelector('.checkbox-input');
             checkbox.checked = true;
         });
 
-        // 모든 입력 필드 활성화 및 초기값 설정
         percentInputs.forEach(input => {
             const label = input.closest('.percent-item').querySelector('.percent-label').textContent.trim();
             const defaultValue = defaultValues[label];
@@ -149,10 +247,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 합계 재계산
         calculateAndDisplayTotal();
-        // 초기값으로 저장
-        savePercentValues();
+        await savePercentValues(); // 서버에 초기값 저장
     }
 
     // 전체 퍼센트 합계 계산 및 표시
@@ -168,11 +264,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 합계 표시 (콘솔 및 UI)
         console.log('활성화된 항목 수:', activeCount);
         console.log('전체 합계:', total.toFixed(1) + '%');
 
-        // 합계 표시 UI 추가 (선택사항)
         let totalDisplay = document.querySelector('.total-display');
         if (!totalDisplay) {
             totalDisplay = document.createElement('div');
@@ -196,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 
-    // 체크박스 이벤트 리스너
+    // 이벤트 리스너 설정
     checkboxItems.forEach(item => {
         const checkbox = item.querySelector('.checkbox-input');
         const label = item.querySelector('.checkbox-label').textContent.trim();
@@ -206,60 +300,39 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 초기화 버튼 이벤트
-    resetButton.addEventListener('click', function() {
+    resetButton.addEventListener('click', async function() {
         if (confirm('모든 값을 초기값으로 되돌리시겠습니까?')) {
-            resetToDefaults();
+            await resetToDefaults();
         }
     });
 
-    // 퍼센트 입력 필드 포맷팅
+    // 퍼센트 입력 필드 이벤트 리스너
     percentInputs.forEach(input => {
-        // 입력 이벤트
+        let saveTimeout;
+
         input.addEventListener('input', function(e) {
-            // 비활성화된 경우 입력 방지
             if (this.disabled) {
                 e.preventDefault();
                 return;
             }
 
-            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
-            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
-
-            // 현재 커서 위치 저장
             const cursorPosition = this.selectionStart;
             
-            // % 기호와 숫자 외의 문자 제거
-            let value = this.value.replace('%', '').replace(/[^\d.-]/g, '');
+            const cleanedValue = cleanNumericValue(this.value);
+            this.value = cleanedValue + '%';
             
-            // 음수 필드 처리
-            if (isNegativeField) {
-                // 음수 기호 제거 후 처리
-                value = value.replace(/-/g, '');
-                // 값이 있으면 음수로 만들기
-                if (value !== '' && value !== '0') {
-                    value = '-' + value;
-                }
-            }
-            
-            // 값이 있으면 % 추가
-            if (value !== '') {
-                this.value = value + '%';
-            } else {
-                this.value = '0%';
-            }
-            
-            // 커서를 % 기호 앞으로 이동
-            const newCursorPosition = this.value.length - 1;
+            const newCursorPosition = Math.min(cursorPosition, this.value.length - 1);
             this.setSelectionRange(newCursorPosition, newCursorPosition);
             
-            // 합계 재계산
             calculateAndDisplayTotal();
-            // 변경사항 저장
-            savePercentValues();
+            
+            // 자동 저장 (디바운싱 적용)
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                savePercentValues();
+            }, 1000); // 1초 후 저장
         });
 
-        // 키 다운 이벤트로 % 기호 삭제 방지
         input.addEventListener('keydown', function(e) {
             if (this.disabled) {
                 e.preventDefault();
@@ -269,38 +342,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const cursorPosition = this.selectionStart;
             const valueLength = this.value.length;
             
-            // Delete 키나 Backspace 키를 눌렀을 때
             if (e.key === 'Delete' || e.key === 'Backspace') {
-                // 커서가 % 기호 앞이나 뒤에 있을 때 삭제 방지
                 if (cursorPosition >= valueLength - 1) {
                     e.preventDefault();
                     
-                    // % 앞의 숫자만 삭제
                     if (e.key === 'Backspace' && cursorPosition === valueLength - 1) {
                         const newValue = this.value.slice(0, -2) + '%';
                         this.value = newValue.length > 1 ? newValue : '0%';
                         const newPosition = Math.max(0, this.value.length - 1);
                         this.setSelectionRange(newPosition, newPosition);
                         
-                        // 합계 재계산
                         calculateAndDisplayTotal();
-                        // 변경사항 저장
-                        savePercentValues();
+                        clearTimeout(saveTimeout);
+                        saveTimeout = setTimeout(() => {
+                            savePercentValues();
+                        }, 1000);
                     }
                 }
             }
             
-            // 화살표 키로 % 기호를 넘어가지 못하도록
             if (e.key === 'ArrowRight' && cursorPosition >= valueLength - 1) {
                 e.preventDefault();
             }
         });
 
-        // 클릭 시 커서 위치 조정
         input.addEventListener('click', function() {
             if (this.disabled) return;
             
-            // 0%인 경우 0을 지워줌
             if (this.value === '0%') {
                 this.value = '%';
             }
@@ -311,14 +379,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 포커스 시 커서를 % 앞으로 이동
         input.addEventListener('focus', function() {
             if (this.disabled) {
                 this.blur();
                 return;
             }
             
-            // 0%인 경우 0을 지워줌
             if (this.value === '0%') {
                 this.value = '%';
             }
@@ -327,73 +393,19 @@ document.addEventListener('DOMContentLoaded', function() {
             this.setSelectionRange(valueLength - 1, valueLength - 1);
         });
 
-        // 블러(포커스 잃음) 시 빈 값 처리
         input.addEventListener('blur', function() {
             if (this.disabled) return;
             
-            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
-            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
+            let cleanedValue = cleanNumericValue(this.value);
             
-            let value = this.value.replace('%', '').trim();
-            
-            if (isNegativeField) {
-                // 음수 필드는 값이 없으면 0%, 있으면 음수로
-                if (value === '' || value === '0') {
-                    this.value = '0%';
-                } else {
-                    // 음수 기호가 없으면 추가
-                    value = value.replace(/-/g, '');
-                    this.value = '-' + value + '%';
-                }
-            } else {
-                // 일반 필드
-                if (value === '') {
-                    this.value = '0%';
-                } else {
-                    this.value = value + '%';
-                }
+            if (cleanedValue === '') {
+                cleanedValue = '0';
             }
             
-            // 합계 재계산
+            this.value = cleanedValue + '%';
+            
             calculateAndDisplayTotal();
-            // 변경사항 저장
-            savePercentValues();
-        });
-
-        // 붙여넣기 이벤트 처리
-        input.addEventListener('paste', function(e) {
-            if (this.disabled) {
-                e.preventDefault();
-                return;
-            }
-            
-            e.preventDefault();
-            const label = this.closest('.percent-item').querySelector('.percent-label').textContent.trim();
-            const isNegativeField = label === '무효표 및 기권표' || label === '출석';
-            
-            const pastedText = (e.clipboardData || window.clipboardData).getData('text');
-            let cleanedText = pastedText.replace(/[^\d.-]/g, '');
-            
-            if (isNegativeField && cleanedText !== '') {
-                // 음수 필드는 음수 기호 제거 후 다시 추가
-                cleanedText = cleanedText.replace(/-/g, '');
-                if (cleanedText !== '0') {
-                    cleanedText = '-' + cleanedText;
-                }
-            }
-            
-            if (cleanedText !== '') {
-                this.value = cleanedText + '%';
-            }
-            
-            // 커서를 % 앞으로 이동
-            const newPosition = this.value.length - 1;
-            this.setSelectionRange(newPosition, newPosition);
-            
-            // 합계 재계산
-            calculateAndDisplayTotal();
-            // 변경사항 저장
-            savePercentValues();
+            savePercentValues(); // 포커스 잃을 때 즉시 저장
         });
     });
 
@@ -423,17 +435,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 300);
     }
 
-    // 초기 설정: 저장된 값이 있으면 불러오고, 없으면 초기값 사용
-    if (!loadPercentValues()) {
-        resetToDefaults();
-    }
+    // 초기 설정 로드
+    loadPercentValues().then(hasData => {
+        if (!hasData) {
+            resetToDefaults();
+        }
+    });
 });
 
-// 다른 페이지에서 사용할 수 있는 헬퍼 함수 (전역 함수로 노출)
-window.getPercentSettings = function() {
-    const savedData = localStorage.getItem('percentSettings');
-    if (savedData) {
-        return JSON.parse(savedData);
+// 전역 함수
+window.getPercentSettings = async function() {
+    try {
+        return await apiRequest('/percent-settings/');
+    } catch (error) {
+        const savedData = localStorage.getItem('percentSettings');
+        return savedData ? JSON.parse(savedData) : null;
     }
-    return null;
 };
