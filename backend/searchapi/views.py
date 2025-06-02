@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import sqlite3
 
-DB_PATH = "performance.db"
+DB_PATH = "performance.db"  # DB 위치는 필요에 따라 조정
 
 def search_members(request):
     name = request.GET.get('name', '')
@@ -22,8 +22,8 @@ def search_members(request):
         conditions.append("HG_NM LIKE ?")
         params.append(f"%{name}%")
     if party:
-        conditions.append("POLY_NM = ?")
-        params.append(party)
+        conditions.append("POLY_NM LIKE ?")
+        params.append(f"%{party}%")  # 부분검색 가능하게 변경
     if attend:
         conditions.append("출석 >= ?")
         params.append(attend)
@@ -34,11 +34,11 @@ def search_members(request):
         conditions.append("청원제시 >= ?")
         params.append(petition)
     if absent:
-        conditions.append("기권_무효 <= ?")
+        conditions.append("기권_무효 >= ?")
         params.append(absent)
     if committee:
-        conditions.append("위원회 >= ?")
-        params.append(committee)
+        conditions.append("위원회 LIKE ?")
+        params.append(f"%{committee}%")  # 부분검색 가능하게 변경
 
     query = "SELECT * FROM performance_score"
     if conditions:
