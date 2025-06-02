@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         '국회의원 사진 출처 안내': {
             date: '2025.05.25',
-            title: '국회의원 사진 및 정당 로고 출처 안내'
+            title: '국회의원 사진 출처 안내'
         },
         '서버 점검 안내 (1월 20일 02:00 ~ 06:00)': {
             date: '2025.01.15',
