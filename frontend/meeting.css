@@ -17,11 +17,11 @@
 
 .search-box {
     display: flex;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--side2);
     border-radius: 50px;
     overflow: hidden;
     width: 100%;
-    background-color: #f2f7ff;
+    background-color: var(--main2);
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
@@ -85,6 +85,18 @@
     background-color: var(--light-blue);
     color: white;
     border-color: var(--light-blue);
+}
+
+/* 법안 정보 */
+.bill-info {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: var(--example);
+}
+
+.bill-info span {
+    font-weight: 600;
+    color: var(--string);
 }
 
 /* 법안 목록 */
@@ -221,6 +233,10 @@
         font-size: 13px;
         padding: 6px 15px;
     }
+
+    .bill-info {
+        font-size: 14px;
+    }
     
     .bill-list {
         padding: 20px 15px;
@@ -292,6 +308,11 @@
         padding: 15px 10px;
         border-radius: 0;
         margin: 10px 0;
+    }
+
+    .bill-info {
+        font-size: 13px;
+        margin-bottom: 15px;
     }
     
     .bill-table {
