@@ -184,7 +184,6 @@ h1 {
 
 /* 반응형 스타일 */
 
-/* 1024px 이하 - 태블릿 가로 */
 @media screen and (max-width: 1024px) {
     h1 {
         font-size: 28px;
@@ -278,7 +277,6 @@ h1 {
     }
 }
 
-/* 768px 이하 - 태블릿 세로 */
 @media screen and (max-width: 768px) {
     h1 {
         font-size: 24px;
@@ -384,7 +382,6 @@ h1 {
     }
 }
 
-/* 576px 이하 - 모바일 */
 @media screen and (max-width: 576px) {
     h1 {
         font-size: 20px;
