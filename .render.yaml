@@ -2,6 +2,7 @@ services:
   - type: web
     name: osbasic-backend
     env: python
+    rootDir: . 
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     envVars:
