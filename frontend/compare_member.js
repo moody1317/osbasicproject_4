@@ -49,95 +49,158 @@ function getPartyColors() {
 // 정당별 색상 데이터 (DOM 로드 후 초기화됨)
 let partyData = {};
 
-// 국회의원 가상 데이터 (실제 구현 시에는 API에서 가져와야 함)
-const mpData = [
-    {
-        id: 1,
-        name: "김민석",
-        party: "더불어민주당",
-        district: "서울 영등포구갑",
-        stats: {
-            attendance: 98,
-            billProposed: 75,
-            billPassRate: 32,
-            mainProposer: 21,
-            speeches: 43,
-            committeeAttendance: 95,
-            partyVoteMatch: 97,
-            petitionResponse: 8
+// 국회의원 데이터 저장 변수 (Django API에서 로드)
+let mpData = [];
+
+// Django API에서 국회의원 데이터 가져오기
+async function fetchMemberData() {
+    try {
+        console.log('국회의원 데이터를 가져오는 중...');
+        
+        // Django API 호출
+        const data = await APIService.getMembers();
+        
+        if (data && Array.isArray(data)) {
+            mpData = data.map(member => ({
+                id: member.id,
+                name: member.name,
+                party: member.party,
+                district: member.district,
+                photo: member.photo || 'https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png',
+                stats: {
+                    attendance: member.attendance || 0,
+                    billProposed: member.bill_proposed || 0,
+                    billPassRate: member.bill_pass_rate || 0,
+                    mainProposer: member.main_proposer || 0,
+                    speeches: member.speeches || 0,
+                    committeeAttendance: member.committee_attendance || 0,
+                    partyVoteMatch: member.party_vote_match || 0,
+                    petitionResponse: member.petition_response || 0
+                }
+            }));
+            
+            console.log('국회의원 데이터 로드 완료:', mpData.length, '명');
+            
+        } else {
+            throw new Error('잘못된 데이터 형식');
         }
-    },
-    {
-        id: 2,
-        name: "김병욱",
-        party: "국민의힘",
-        district: "경북 포항시남구울릉군",
-        stats: {
-            attendance: 92,
-            billProposed: 52,
-            billPassRate: 45,
-            mainProposer: 15,
-            speeches: 36,
-            committeeAttendance: 89,
-            partyVoteMatch: 94,
-            petitionResponse: 12
-        }
-    },
-    {
-        id: 3,
-        name: "김상훈",
-        party: "국민의힘",
-        district: "대구 서구",
-        stats: {
-            attendance: 94,
-            billProposed: 63,
-            billPassRate: 39,
-            mainProposer: 18,
-            speeches: 29,
-            committeeAttendance: 92,
-            partyVoteMatch: 96,
-            petitionResponse: 5
-        }
-    },
-    {
-        id: 4,
-        name: "이재명",
-        party: "더불어민주당",
-        district: "경기 계양구갑",
-        stats: {
-            attendance: 95,
-            billProposed: 68,
-            billPassRate: 41,
-            mainProposer: 23,
-            speeches: 52,
-            committeeAttendance: 91,
-            partyVoteMatch: 98,
-            petitionResponse: 15
-        }
-    },
-    {
-        id: 5,
-        name: "한동훈",
-        party: "국민의힘",
-        district: "서울 강남구을",
-        stats: {
-            attendance: 89,
-            billProposed: 45,
-            billPassRate: 38,
-            mainProposer: 12,
-            speeches: 31,
-            committeeAttendance: 87,
-            partyVoteMatch: 93,
-            petitionResponse: 7
-        }
+        
+    } catch (error) {
+        console.error('국회의원 데이터 로드 실패:', error);
+        
+        // API 실패 시 기본 데이터 사용
+        mpData = getDefaultMemberData();
+        showError('국회의원 데이터를 불러오는데 실패했습니다. 기본 데이터를 사용합니다.');
     }
-];
+}
+
+// 기본 국회의원 데이터 (API 실패 시 사용)
+function getDefaultMemberData() {
+    return [
+        {
+            id: 1,
+            name: "김민석",
+            party: "더불어민주당",
+            district: "서울 영등포구갑",
+            photo: "https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png",
+            stats: {
+                attendance: 98,
+                billProposed: 75,
+                billPassRate: 32,
+                mainProposer: 21,
+                speeches: 43,
+                committeeAttendance: 95,
+                partyVoteMatch: 97,
+                petitionResponse: 8
+            }
+        },
+        {
+            id: 2,
+            name: "김병욱",
+            party: "국민의힘",
+            district: "경북 포항시남구울릉군",
+            photo: "https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png",
+            stats: {
+                attendance: 92,
+                billProposed: 52,
+                billPassRate: 45,
+                mainProposer: 15,
+                speeches: 36,
+                committeeAttendance: 89,
+                partyVoteMatch: 94,
+                petitionResponse: 12
+            }
+        },
+        {
+            id: 3,
+            name: "김상훈",
+            party: "국민의힘",
+            district: "대구 서구",
+            photo: "https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png",
+            stats: {
+                attendance: 94,
+                billProposed: 63,
+                billPassRate: 39,
+                mainProposer: 18,
+                speeches: 29,
+                committeeAttendance: 92,
+                partyVoteMatch: 96,
+                petitionResponse: 5
+            }
+        },
+        {
+            id: 4,
+            name: "한동훈",
+            party: "국민의힘",
+            district: "서울 강남구을",
+            photo: "https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png",
+            stats: {
+                attendance: 89,
+                billProposed: 45,
+                billPassRate: 38,
+                mainProposer: 12,
+                speeches: 31,
+                committeeAttendance: 87,
+                partyVoteMatch: 93,
+                petitionResponse: 7
+            }
+        }
+    ];
+}
+
+// 에러 메시지 표시
+function showError(message) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: #f44336;
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        z-index: 1000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    `;
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+        }
+    }, 5000);
+}
 
 // DOM이 완전히 로드된 후 스크립트 실행
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     
     // CSS에서 정당별 색상 데이터 초기화
     partyData = getPartyColors();
+    
+    // Django API에서 국회의원 데이터 로드
+    await fetchMemberData();
     
     // 검색 필터 태그 선택 효과
     const filterTags = document.querySelectorAll('.filter-tag');
@@ -186,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
                 
                 if (filteredMPs.length > 0) {
-                    filteredMPs.forEach(mp => {
+                    filteredMPs.slice(0, 10).forEach(mp => { // 최대 10개만 표시
                         const item = document.createElement('div');
                         item.className = 'mp-search-item';
                         
@@ -196,7 +259,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             'background-color: #999;';
                         
                         item.innerHTML = `
-                            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png" alt="${mp.name} 의원 사진">
+                            <img src="${mp.photo}" alt="${mp.name} 의원 사진" 
+                                 onerror="this.src='https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png'">
                             <span>${mp.name}</span>
                             <span class="mp-party-tag" style="${partyStyle}">${mp.party}</span>
                         `;
@@ -239,6 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (filterTags.length > 0) {
         filterTags[0].classList.add('active');
     }
+
+    console.log('국회의원 비교 페이지 초기화 완료');
 });
 
 // 국회의원 선택 함수
@@ -254,7 +320,10 @@ function selectMP(mp, cardIndex) {
         const mpParty = mpSelected.querySelector('.mp-selected-party');
         
         // 의원 정보 업데이트
-        mpImage.src = 'https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png';
+        mpImage.src = mp.photo;
+        mpImage.onerror = function() {
+            this.src = 'https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/chat.png';
+        };
         mpName.textContent = mp.name;
         mpParty.textContent = `${mp.party} · ${mp.district}`;
         
