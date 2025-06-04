@@ -65,17 +65,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 공지사항 항목별 데이터 매핑
     const noticeDataMap = {
+        '제21대 대통령선거 당선으로 인한 의원 안내': {
+            date: '2025.06.04',
+            title: '제21대 대통령선거 당선으로 인한 의원 안내'
+        },
         '제21대 대통령선거 출마 의원 제외 안내': {
-            date: '2025.05.25',
+            date: '2025.05.26',
             title: '제21대 대통령선거 출마 의원 제외 안내'
         },
         '국회의원 사진 출처 안내': {
             date: '2025.05.25',
             title: '국회의원 사진 출처 안내'
-        },
-        '서버 점검 안내 (1월 20일 02:00 ~ 06:00)': {
-            date: '2025.01.15',
-            title: '서버 점검 안내 (1월 20일 02:00 ~ 06:00)'
         }
     };
 
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modal.popup);
     }
 
-    // 팝업 모달 생성 함수 (완전히 새로운 안정적인 방식)
+    // 팝업 모달 생성 함수
     function createPopupModal(content, callback, showDontShowToday = false, storageKey = 'popupHiddenDate') {
         console.log('팝업 생성:', storageKey);
         
@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(backdrop);
         document.body.appendChild(popup);
 
-        // 팝업 열기 애니메이션 (다음 프레임에서 실행)
+        // 팝업 열기 애니메이션
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 backdrop.style.backgroundColor = 'rgba(0,0,0,0.6)';
@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmBtn.onmouseover = () => confirmBtn.style.transform = 'translateY(-2px)';
         confirmBtn.onmouseout = () => confirmBtn.style.transform = 'translateY(0)';
         
-        // 팝업 닫기 함수 (안정적인 방식)
+        // 팝업 닫기 함수
         function closePopup() {
             if (isAnimating) return; // 애니메이션 중복 방지
             isAnimating = true;
@@ -393,6 +393,22 @@ document.addEventListener('DOMContentLoaded', function() {
         let content = '';
         
         switch(title) {
+            case '제21대 대통령선거 당선으로 인한 의원 안내':
+                content = `
+                    <p style="margin-bottom: 15px;">안녕하세요, 백일하 서비스를 이용해 주시는 여러분께 감사드립니다.</p>
+                    <p style="margin-bottom: 15px;">2025년 06월 03일에 실시하는 제21대 대통령선거 당선을 진심으로 축하드립니다.</p>
+
+                    <h4 style="color: var(--string); margin: 20px 0 10px;">더불어민주당</h4>
+                    <p style="margin-bottom: 15px;">이재명</p>
+
+                    <p style="margin-bottom: 15px;">다음 의원의 데이터가 추가되었습니다.</p>
+                    <h4 style="color: var(--string); margin: 20px 0 10px;">개혁신당</h4>
+                    <p style="margin-bottom: 15px;">이준석</p>
+
+                    <p style="margin-bottom: 15px;">이재명 대통령 당선으로 현재 총 국회의원석은 299명입니다.</p>
+                `;
+                break;
+
             case '제21대 대통령선거 출마 의원 제외 안내':
                 content = `
                     <p style="margin-bottom: 15px;">안녕하세요, 백일하 서비스를 이용해 주시는 여러분께 감사드립니다.</p>
@@ -414,26 +430,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h4 style="color: var(--string); margin: 20px 0 10px;">국회의원 사진</h4>
                     <p style="margin-bottom: 15px;">열린국회정보 OpenAPI에서 제공하는 국회의원 사진을 사용하였습니다.</p>
                 `; 
-                break;
-
-            case '서버 점검 안내 (1월 20일 02:00 ~ 06:00)':
-                content = `
-                    <p style="margin-bottom: 15px;">안녕하세요, 백일하 서비스를 이용해 주시는 여러분께 감사드립니다.</p>
-                    <p style="margin-bottom: 15px;">더 나은 서비스 제공을 위한 서버 점검이 예정되어 있어 안내드립니다.</p>
-                    
-                    <h4 style="color: var(--light-blue); margin: 20px 0 10px;">점검 일시</h4>
-                    <p style="margin-bottom: 15px;">2025년 1월 20일 (월) 02:00 ~ 06:00 (약 4시간)</p>
-                    
-                    <h4 style="color: var(--light-blue); margin: 20px 0 10px;">점검 내용</h4>
-                    <ul style="margin-left: 20px; margin-bottom: 15px; line-height: 1.8;">
-                        <li>서버 안정성 개선</li>
-                        <li>데이터베이스 최적화</li>
-                        <li>보안 업데이트</li>
-                    </ul>
-                    
-                    <h4 style="color: var(--light-blue); margin: 20px 0 10px;">참고사항</h4>
-                    <p>점검 시간 동안은 서비스 이용이 불가능합니다. 불편을 드려 죄송합니다.</p>
-                `;
                 break;
                 
             default:
