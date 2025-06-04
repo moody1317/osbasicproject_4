@@ -11,9 +11,11 @@
 <body>
     <!-- 헤더 시작 -->
     <header>
-        <div class="logo">
-            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/becd83e08d855316b8bdb8dc4e9336582b35615b/logo.png" alt="백일하 로고">
-        </div>
+        <a href="index.html" style="text-decoration: none; color: inherit;">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/logo.png" alt="백일하 로고">
+            </div>
+        </a>
     </header>
     
     <div class="sticky-nav-container">
@@ -37,35 +39,35 @@
         <!-- 정당 서브메뉴 -->
         <div class="submenu-wrapper" id="party-submenu">
             <div class="submenu-container">
-                <a href="#" class="submenu-item">명예의 정당</a>
-                <a href="#" class="submenu-item">정당 상세 퍼센트</a>
-                <a href="#" class="submenu-item">정당 비교하기</a>
+                <a href="rank_party.html" class="submenu-item">명예의 정당</a>
+                <a href="percent_party.html" class="submenu-item">정당 상세 퍼센트</a>
+                <a href="compare_party.html" class="submenu-item">정당 비교하기</a>
             </div>
         </div>
         
         <!-- 국회의원 서브메뉴 -->
         <div class="submenu-wrapper" id="member-submenu">
             <div class="submenu-container">
-                <a href="#" class="submenu-item">국회의원 비교하기</a>
-                <a href="#" class="submenu-item">국회의원 상세정보</a>
-                <a href="#" class="submenu-item">명예의 의원</a>
+                <a href="compare_member.html" class="submenu-item">국회의원 비교하기</a>
+                <a href="percent_member.html" class="submenu-item">국회의원 상세정보</a>
+                <a href="rank_member.html" class="submenu-item">명예의 의원</a>
             </div>
         </div>
         
         <!-- 의정 활동 서브메뉴 -->
         <div class="submenu-wrapper" id="activity-submenu">
             <div class="submenu-container">
-                <a href="#" class="submenu-item">청원 현황</a>
-                <a href="#" class="submenu-item">본회의 현황</a>
+                <a href="petition.html" class="submenu-item">청원 현황</a>
+                <a href="meeting.html" class="submenu-item">본회의 현황</a>
             </div>
         </div>
         
         <!-- 기타 서브메뉴 -->
         <div class="submenu-wrapper" id="etc-submenu">
             <div class="submenu-container">
-                <a href="#" class="submenu-item">외부 사이트</a>
-                <a href="#" class="submenu-item">도움말</a>
-                <a href="#" class="submenu-item">공지사항</a>
+                <a href="outpage.html" class="submenu-item">외부 사이트</a>
+                <a href="inquiry.html" class="submenu-item">도움말</a>
+                <a href="announcements.html" class="submenu-item">공지사항</a>
             </div>
         </div>
     </nav>
@@ -122,7 +124,7 @@
             
             <!-- 페이지네이션 -->
             <div class="pagination" id="pagination">
-                <!-- 페이지네이션이 JavaScript로 생성됩니다 -->
+                <!-- 페이지네이션이 JavaScript로 생성 -->
             </div>
         </div>
     </main>
@@ -173,6 +175,7 @@
     </div>
     
     <!-- 외부 스크립트 연결 -->
+    <script src="global_sync.js"></script>
     <script src="scripts.js"></script>
     <script src="meeting.js"></script>
 
