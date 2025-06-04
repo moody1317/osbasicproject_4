@@ -97,7 +97,6 @@
 
 /* 반응형 디자인 */
 
-/* 1024px 이하 - 태블릿 가로 */
 @media screen and (max-width: 1024px) {
     .content-container {
         max-width: 960px;
@@ -142,7 +141,6 @@
     }
 }
 
-/* 768px 이하 - 태블릿 세로 */
 @media screen and (max-width: 768px) {
     .content-container {
         padding: 25px 10px;
@@ -192,7 +190,6 @@
     }
 }
 
-/* 576px 이하 - 모바일 */
 @media screen and (max-width: 576px) {
     .content-container {
         padding: 20px 5px;
