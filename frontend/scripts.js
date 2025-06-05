@@ -1,557 +1,868 @@
-// 전역 퍼센트 설정 관리 함수들
-window.PercentManager = {
-    // 퍼센트 설정 가져오기
-    getSettings: function() {
-        const savedData = localStorage.getItem('percentSettings');
-        if (savedData) {
-            return JSON.parse(savedData);
-        }
-        return null;
-    },
+// ===== 전역 변수 및 설정 =====
+
+// 정당 데이터 정의
+const partyData = {
+    "국민의힘": { cssPrefix: "ppp", url: "https://www.peoplepowerparty.kr/" },
+    "더불어민주당": { cssPrefix: "dp", url: "https://theminjoo.kr/" },
+    "조국혁신당": { cssPrefix: "rk", url: "https://rebuildingkoreaparty.kr" },
+    "개혁신당": { cssPrefix: "reform", url: "https://www.reformparty.kr/" },
+    "진보당": { cssPrefix: "jp", url: "https://jinboparty.com/" },
+    "기본소득당": { cssPrefix: "bip", url: "https://basicincomeparty.kr/" },
+    "사회민주당": { cssPrefix: "sdp", url: "https://www.samindang.kr/" },
+    "무소속": { cssPrefix: "ind", url: "" }
+};
+
+// 전역 변수로 설정
+window.partyData = partyData;
+
+// ===== 환경 감지 함수 =====
+
+// 배포 환경 감지 
+function isVercelEnvironment() {
+    const hostname = window.location.hostname;
     
-    // 특정 항목의 퍼센트 값 가져오기
-    getValue: function(itemName) {
-        const settings = this.getSettings();
-        if (settings && settings[itemName]) {
-            return settings[itemName].enabled ? settings[itemName].value : 0;
-        }
-        return 0;
-    },
+    if (hostname.includes('vercel.app')) return true;
+    if (hostname.includes('.vercel.app')) return true;
     
-    // 특정 항목이 활성화되어 있는지 확인
-    isEnabled: function(itemName) {
-        const settings = this.getSettings();
-        if (settings && settings[itemName]) {
-            return settings[itemName].enabled;
-        }
-        return false;
-    },
+    if (hostname !== 'localhost' && 
+        hostname !== '127.0.0.1' && 
+        !hostname.includes('github.io') && 
+        !hostname.includes('netlify.app')) {
+        return true;
+    }
     
-    // 백엔드로 전송할 퍼센트 설정 포맷 변환
-    getSettingsForBackend: function() {
-        const settings = this.getSettings();
-        if (!settings) return null;
-        
-        // 백엔드가 원하는 형식으로 변환
-        const backendFormat = {};
-        Object.keys(settings).forEach(key => {
-            if (settings[key].enabled) {
-                backendFormat[key] = settings[key].value;
-            }
-        });
-        
-        return backendFormat;
+    return false;
+}
+
+// ===== 퍼센트 관리자 (PercentManager) =====
+
+const PercentManager = {
+    // 기본 퍼센트 설정
+    defaultSettings: {
+        attendance: 25,
+        bills: 25,
+        questions: 20,
+        petitions: 15,
+        committees: 10,
+        parties: 5
     },
-    
-    // 백엔드 API로 설정 전송 (예시)
-    sendSettingsToBackend: async function(endpoint) {
-        const settings = this.getSettingsForBackend();
-        if (!settings) return null;
-        
+
+    // 🔧 설정 저장 (환경별 로깅)
+    async saveSettings(settings) {
         try {
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    percentSettings: settings
-                })
-            });
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.log(`[${envType}] 퍼센트 설정 저장 중:`, settings);
             
-            return await response.json();
+            if (window.APIService && window.APIService.savePercentSettings) {
+                await window.APIService.savePercentSettings(settings);
+                console.log(`[${envType}] 서버에 퍼센트 설정 저장 완료`);
+            }
+            
+            // 로컬 저장소에도 백업 저장
+            localStorage.setItem('percentSettings', JSON.stringify(settings));
+            
+            // 설정 변경 이벤트 발생
+            this.notifySettingsChange(settings);
+            
+            return true;
         } catch (error) {
-            console.error('백엔드 전송 실패:', error);
-            return null;
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.error(`[${envType}] 퍼센트 설정 저장 실패:`, error);
+            // 서버 저장 실패 시 로컬 저장소에만 저장
+            localStorage.setItem('percentSettings', JSON.stringify(settings));
+            this.notifySettingsChange(settings);
+            return false;
         }
     },
-    
-    // 설정이 있는지 확인
-    hasSettings: function() {
-        return localStorage.getItem('percentSettings') !== null;
+
+    // 🔧 설정 불러오기 (환경별 로깅)
+    async getSettings() {
+        try {
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.log(`[${envType}] 퍼센트 설정 불러오는 중...`);
+            
+            // 서버에서 설정 가져오기 시도
+            if (window.APIService && window.APIService.getPercentSettings) {
+                const serverSettings = await window.APIService.getPercentSettings();
+                if (serverSettings) {
+                    console.log(`[${envType}] 서버에서 퍼센트 설정 로드:`, serverSettings);
+                    return serverSettings;
+                }
+            }
+            
+            // 서버에서 실패 시 로컬 저장소에서 가져오기
+            const localSettings = localStorage.getItem('percentSettings');
+            if (localSettings) {
+                const settings = JSON.parse(localSettings);
+                console.log(`[${envType}] 로컬에서 퍼센트 설정 로드:`, settings);
+                return settings;
+            }
+            
+            console.log(`[${envType}] 기본 퍼센트 설정 사용`);
+            return this.defaultSettings;
+            
+        } catch (error) {
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.error(`[${envType}] 퍼센트 설정 불러오기 실패:`, error);
+            return this.defaultSettings;
+        }
+    },
+
+    // 설정 존재 여부 확인 
+    async hasSettings() {
+        try {
+            if (window.APIService && window.APIService.hasPercentSettings) {
+                return await window.APIService.hasPercentSettings();
+            }
+            
+            return localStorage.getItem('percentSettings') !== null;
+        } catch (error) {
+            console.error('설정 존재 확인 실패:', error);
+            return false;
+        }
+    },
+
+    // 백엔드용 설정 형식으로 변환 
+    async getSettingsForBackend() {
+        const settings = await this.getSettings();
+        return {
+            attendance_weight: settings.attendance,
+            bills_weight: settings.bills,
+            questions_weight: settings.questions,
+            petitions_weight: settings.petitions,
+            committees_weight: settings.committees,
+            parties_weight: settings.parties
+        };
+    },
+
+    // 🔧 설정 변경 알림 (환경별 로깅)
+    notifySettingsChange(newSettings) {
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.log(`[${envType}] 퍼센트 설정 변경 알림:`, newSettings);
+        
+        // 커스텀 이벤트 발생
+        const event = new CustomEvent('percentSettingsChanged', {
+            detail: newSettings
+        });
+        window.dispatchEvent(event);
+        
+        // 콜백 함수들 실행
+        if (this.changeCallbacks) {
+            this.changeCallbacks.forEach(callback => {
+                try {
+                    callback(newSettings);
+                } catch (error) {
+                    console.error('설정 변경 콜백 실행 오류:', error);
+                }
+            });
+        }
+    },
+
+    // 설정 변경 감지 콜백 등록
+    onChange(callback) {
+        if (!this.changeCallbacks) {
+            this.changeCallbacks = [];
+        }
+        this.changeCallbacks.push(callback);
+    },
+
+    // 🔧 실시간 동기화 시작 (환경별 최적화)
+    startSync() {
+        if (this.syncInterval) {
+            clearInterval(this.syncInterval);
+        }
+        
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        const syncInterval = isVercelEnvironment() ? 10000 : 5000; // Vercel에서는 더 긴 간격
+        
+        this.syncInterval = setInterval(async () => {
+            try {
+                const currentSettings = await this.getSettings();
+                this.notifySettingsChange(currentSettings);
+            } catch (error) {
+                console.error(`[${envType}] 설정 동기화 오류:`, error);
+            }
+        }, syncInterval);
+        
+        console.log(`[${envType}] 퍼센트 설정 실시간 동기화 시작 (${syncInterval}ms 간격)`);
+    },
+
+    // 동기화 중지 
+    stopSync() {
+        if (this.syncInterval) {
+            clearInterval(this.syncInterval);
+            this.syncInterval = null;
+        }
+        
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.log(`[${envType}] 퍼센트 설정 실시간 동기화 중지`);
     }
 };
 
-document.addEventListener('DOMContentLoaded', function() {
-    // 네비게이션 탭 선택 효과
-    const navItems = document.querySelectorAll('nav li');
-    const submenuWrappers = document.querySelectorAll('.submenu-wrapper');
-    
-    // 모든 서브메뉴 숨기기
-    function hideAllSubmenus() {
-        submenuWrappers.forEach(submenu => {
-            submenu.style.display = 'none';
-        });
+// 전역에서 접근 가능하도록 설정
+window.PercentManager = PercentManager;
+
+// ===== 퍼센트 설정 UI 관리 =====
+
+const PercentSettings = {
+    // 설정 UI 표시
+    show() {
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.log(`[${envType}] 퍼센트 설정 UI 표시`);
+        // 실제 설정 UI 구현 필요
+        alert('퍼센트 설정 기능은 추후 구현 예정입니다.');
+    },
+
+    // 설정 변경 감지
+    onChange(callback) {
+        PercentManager.onChange(callback);
     }
+};
+
+window.PercentSettings = PercentSettings;
+
+// ===== 네비게이션 관련 함수 ===== 
+
+function setupNavigation() {
+    // 서브메뉴 토글 기능
+    const menuItems = document.querySelectorAll('.has-submenu');
     
-    // 메뉴 클릭 이벤트
-    navItems.forEach(item => {
-        item.addEventListener('click', function() {
+    menuItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
             const submenuId = this.getAttribute('data-submenu');
-            const submenu = document.getElementById(submenuId);
-            
-            // 이미 활성화된 탭을 클릭한 경우
-            if (this.classList.contains('active')) {
-                this.classList.remove('active');
-                hideAllSubmenus();
-                return;
-            }
-            
-            // 모든 탭에서 active 클래스 제거
-            navItems.forEach(i => i.classList.remove('active'));
-            
-            // 클릭한 탭에 active 클래스 추가
-            this.classList.add('active');
-            
-            // 서브메뉴가 있는 메뉴인 경우 서브메뉴 표시
-            if (submenuId && submenu) {
-                hideAllSubmenus();
-                submenu.style.display = 'block';
-            } else {
-                hideAllSubmenus();
-            }
+            showSubmenu(submenuId);
+        });
+
+        item.addEventListener('mouseleave', function() {
+            const submenuId = this.getAttribute('data-submenu');
+            hideSubmenu(submenuId);
         });
     });
-    
-    // 메뉴 호버 이벤트
-    navItems.forEach(item => {
-        const submenuId = item.getAttribute('data-submenu');
-        const submenu = document.getElementById(submenuId);
-        
-        if (submenuId && submenu) {
-            // 마우스 진입 시 서브메뉴 표시
-            item.addEventListener('mouseenter', function() {
-                hideAllSubmenus();
-                submenu.style.display = 'block';
-            });
-            
-            // 마우스 이탈 시 서브메뉴 숨기기 (활성화된 탭이 없을 경우)
-            item.addEventListener('mouseleave', function(e) {
-                if (!item.classList.contains('active')) {
-                    // 마우스가 서브메뉴로 이동했는지 확인
-                    const rect = submenu.getBoundingClientRect();
-                    const x = e.clientX;
-                    const y = e.clientY;
-                    
-                    // 마우스가 서브메뉴 영역을 향해 이동하는 경우
-                    if (y >= rect.top && y <= rect.bottom) {
-                        return;
-                    }
-                    
-                    submenu.style.display = 'none';
-                }
-            });
-        }
-    });
-    
-    // 서브메뉴 호버 이벤트
-    submenuWrappers.forEach(submenu => {
+
+    // 서브메뉴도 hover 유지
+    const submenus = document.querySelectorAll('.submenu-wrapper');
+    submenus.forEach(submenu => {
         submenu.addEventListener('mouseenter', function() {
-            // 서브메뉴에 마우스가 진입하면 표시 유지
+            this.style.display = 'block';
         });
-        
+
         submenu.addEventListener('mouseleave', function() {
-            // 관련 메뉴가 활성화되어 있지 않으면 서브메뉴 숨기기
-            const relatedMenuId = submenu.id;
-            const relatedMenu = document.querySelector(`[data-submenu="${relatedMenuId}"]`);
-            
-            if (relatedMenu && !relatedMenu.classList.contains('active')) {
+            this.style.display = 'none';
+        });
+    });
+}
+
+function showSubmenu(submenuId) {
+    // 모든 서브메뉴 숨기기
+    hideAllSubmenus();
+    
+    // 해당 서브메뉴 표시
+    const submenu = document.getElementById(submenuId);
+    if (submenu) {
+        submenu.style.display = 'block';
+    }
+}
+
+function hideSubmenu(submenuId) {
+    const submenu = document.getElementById(submenuId);
+    if (submenu) {
+        setTimeout(() => {
+            const isHovered = submenu.matches(':hover');
+            if (!isHovered) {
                 submenu.style.display = 'none';
             }
-        });
+        }, 100);
+    }
+}
+
+function hideAllSubmenus() {
+    const submenus = document.querySelectorAll('.submenu-wrapper');
+    submenus.forEach(submenu => {
+        submenu.style.display = 'none';
     });
+}
+
+// ===== 모달 관련 함수 ===== 
+
+function setupModals() {
+    // 문의하기 모달
+    const inquiryModal = document.getElementById('inquiryModal');
+    const inquiryTrigger = document.querySelector('[data-modal="inquiry"]');
+    const inquiryClose = document.querySelector('.inquiry-modal .close-button');
     
-    // 서브메뉴 아이템 클릭 이벤트
-    const submenuItems = document.querySelectorAll('.submenu-item');
-    submenuItems.forEach(item => {
-        item.addEventListener('click', function(e) {
+    if (inquiryTrigger && inquiryModal) {
+        inquiryTrigger.addEventListener('click', function(e) {
             e.preventDefault();
-            
-            const itemText = this.textContent.trim();
-            
-            // 페이지 이동 로직
-            switch(itemText) {
-                case '명예의 정당':
-                    window.location.href = 'rank_party.html';
-                    break;
-                case '정당 상세 퍼센트':
-                    window.location.href = 'percent_party.html';
-                    break;
-                case '정당 비교하기':
-                    window.location.href = 'compare_party.html';
-                    break;
-                case '국회의원 비교하기':
-                    window.location.href = 'compare_member.html';
-                    break;
-                case '국회의원 상세정보':
-                    window.location.href = 'percent_member.html';
-                    break;
-                case '명예의 의원':
-                    window.location.href = 'rank_member.html';
-                    break;
-                case '청원 현황':
-                    window.location.href = 'petition.html';
-                    break;
-                case '본회의 현황':
-                    window.location.href = 'meeting.html';
-                    break;
-                case '외부 사이트':
-                    window.location.href = 'outpage.html';
-                    break;
-                case '도움말':
-                    window.location.href = 'inquiry.html';
-                    break;
-                case '공지사항':
-                    window.location.href = 'announcements.html';
-                    break;
-                default:
-                    console.log('알 수 없는 메뉴 항목:', itemText);
-            }
-            
-            // 서브메뉴 숨기기
-            hideAllSubmenus();
-            navItems.forEach(nav => nav.classList.remove('active'));
-        });
-    });
-
-    // 다른 곳 클릭 시 서브메뉴 닫기
-    document.addEventListener('click', function(e) {
-        const isMenu = e.target.closest('nav li');
-        const isSubmenu = e.target.closest('.submenu-wrapper');
-        
-        if (!isMenu && !isSubmenu) {
-            navItems.forEach(item => item.classList.remove('active'));
-            hideAllSubmenus();
-        }
-    });
-
-    // 로고 클릭시 메인페이지로 이동
-    const logo = document.querySelector('.logo');
-    if(logo) {
-        logo.addEventListener('click', function() {
-            window.location.href = 'index.html';
+            inquiryModal.classList.add('active');
         });
     }
     
-    // 페이지 로드 시 활성 탭 설정
-    function setActiveTab() {
-        // 기본적으로 아무 탭도 활성화하지 않음
+    if (inquiryClose && inquiryModal) {
+        inquiryClose.addEventListener('click', function() {
+            inquiryModal.classList.remove('active');
+        });
     }
     
-    setActiveTab();
+    // 도움말 모달
+    const helpModal = document.getElementById('helpModal');
+    const helpTrigger = document.querySelector('[data-modal="help"]');
+    const helpClose = document.querySelector('.help-modal .close-button');
     
-    // 챗봇 관련 코드
-    const chatbotIcon = document.querySelector('.robot-icon');
-    const chatbotModal = document.getElementById('chatbotModal');
-    const closeButton = document.querySelector('.close-button');
-    const messageInput = document.getElementById('messageInput');
-    const sendButton = document.querySelector('.send-button');
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const suggestionButtons = document.querySelectorAll('.suggestion-btn');
-    
-    // 현재 시간 가져오기
-    function getCurrentTime() {
-        const now = new Date();
-        let hours = now.getHours();
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        
-        hours = hours % 12;
-        hours = hours ? hours : 12; // 0시는 12시로 표시
-        
-        return `${ampm} ${hours}:${minutes}`;
+    if (helpTrigger && helpModal) {
+        helpTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            helpModal.classList.add('active');
+        });
     }
     
-    // 사용자 메시지 추가
-    function addUserMessage(message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'user');
-        
-        const timestamp = document.createElement('div');
-        timestamp.classList.add('timestamp');
-        timestamp.textContent = getCurrentTime();
-        
-        messageElement.innerHTML = `${message}`;
-        messageElement.appendChild(timestamp);
-        
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    if (helpClose && helpModal) {
+        helpClose.addEventListener('click', function() {
+            helpModal.classList.remove('active');
+        });
     }
     
-    // 챗봇 메시지 추가
-    function addBotMessage(messages, buttons = []) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', 'bot');
-        
-        const botAvatar = document.createElement('div');
-        botAvatar.classList.add('bot-avatar');
-        botAvatar.innerHTML = '<img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아바타">';
-        
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message-content');
-        
-        // 메시지 내용 추가
-        if (typeof messages === 'string') {
-            messageContent.innerHTML = `<p>${messages}</p>`;
-        } else {
-            messages.forEach(msg => {
-                messageContent.innerHTML += `<p>${msg}</p>`;
+    // 모달 외부 클릭 시 닫기
+    [inquiryModal, helpModal].forEach(modal => {
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
             });
         }
+    });
+}
+
+// ===== SpringAI 연동 챗봇 시스템 (환경별 최적화) =====
+
+// 챗봇 모달 토글
+function toggleChatbot() {
+    const modal = document.getElementById('chatbotModal');
+    if (modal) {
+        modal.classList.toggle('active');
         
-        // 타임스탬프 추가
-        const timestamp = document.createElement('div');
-        timestamp.classList.add('timestamp');
-        timestamp.textContent = getCurrentTime();
-        messageContent.appendChild(timestamp);
-        
-        messageElement.appendChild(botAvatar);
-        messageElement.appendChild(messageContent);
-        
-        chatbotMessages.appendChild(messageElement);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
-    
-    // 메시지 처리 함수
-    function handleMessage(message) {
-        addUserMessage(message);
-        
-        // 간단한 챗봇 응답 로직
-        setTimeout(() => {
-            if (message.includes('나경원') || message.includes('의원')) {
-                addBotMessage([
-                    '나경원 의원에 대한 정보입니다.',
-                    '현재 나경원 의원은 국민의힘 소속 의원으로 전체 00위',
-                    '국민의힘에서는 00위에 있습니다.',
-                    '나경원 의원에 대한 어떤 정보를 더 얻고싶은가요?'
-                ]);
-            } else if (message.includes('상세') || message.includes('퍼센트')) {
-                addBotMessage([
-                    '나경원 의원의 상세 퍼센트입니다.',
-                    '출석: 00%',
-                    '가결: 00%',
-                    '청원 소개: 00%',
-                    '..',
-                    '나경원 의원이 가장 높게 평가받는 부분은 청원 소개이고 가장 낮게 평가받는 부분은 가결입니다.'
-                ]);
-            } else if (message.includes('표결') || message.includes('정보')) {
-                addBotMessage([
-                    '나경원 의원의 표결 정보입니다.',
-                    '전체 표결 참여: 000회',
-                    '찬성: 000회',
-                    '반대: 000회',
-                    '기권: 000회'
-                ]);
-            } else if (message.includes('청원') || message.includes('소개')) {
-                addBotMessage([
-                    '나경원 의원의 청원 소개 내역입니다.',
-                    '전체 청원 소개: 00건',
-                    '가결: 00건',
-                    '부결: 00건',
-                    '진행중: 00건'
-                ]);
-            } else if (message.includes('경력')) {
-                addBotMessage([
-                    '나경원 의원의 경력입니다.',
-                    '20대 국회의원',
-                    '21대 국회의원',
-                    '국민의힘 원내대표 역임',
-                    '국회 외교통상통일위원회 위원'
-                ]);
-            } else {
-                addBotMessage([
-                    '죄송합니다. 질문을 이해하지 못했습니다.',
-                    '다음 중 어떤 정보를 원하시나요?'
-                ]);
+        if (modal.classList.contains('active')) {
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.focus();
             }
-        }, 500);
+        }
     }
+}
+
+// 메시지 추가 함수
+function addMessage(content, isBot = false) {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    if (!messagesContainer) return;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isBot ? 'bot' : 'user'}`;
+
+    if (isBot) {
+        messageDiv.innerHTML = `
+            <div class="bot-avatar">
+                <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아바타">
+            </div>
+            <div class="message-content">
+                <p>${content}</p>
+            </div>
+        `;
+    } else {
+        messageDiv.innerHTML = `
+            <div class="message-content">
+                <p>${content}</p>
+            </div>
+        `;
+    }
+
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// 타이핑 효과 표시
+function showTypingIndicator() {
+    const messagesContainer = document.getElementById('chatbotMessages');
+    if (!messagesContainer) return;
+
+    // 기존 타이핑 인디케이터 제거
+    hideTypingIndicator();
+
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message bot typing-indicator';
+    typingDiv.id = 'typing-indicator';
+    typingDiv.innerHTML = `
+        <div class="bot-avatar">
+            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아바타">
+        </div>
+        <div class="message-content">
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    `;
+
+    messagesContainer.appendChild(typingDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// 타이핑 효과 제거 (기존과 동일)
+function hideTypingIndicator() {
+    const typingIndicator = document.getElementById('typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.remove();
+    }
+}
+
+// 🔧 SpringAI API 호출 함수 (환경별 최적화)
+async function getChatbotResponse(message) {
+    try {
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.log(`[${envType}] SpringAI 챗봇 요청:`, message);
+        
+        // 환경별 챗봇 API 엔드포인트 설정
+        let apiUrl;
+        if (isVercelEnvironment()) {
+            // Vercel 배포 시: 프록시 경로 사용
+            apiUrl = '/api/chatbot/chat';
+        } else {
+            // 로컬 개발 시: 실제 SpringAI 서버 또는 폴백
+            apiUrl = '/api/chatbot/chat'; // 로컬에서도 프록시 경로 시도
+        }
+        
+        // SpringAI 엔드포인트 호출
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: message,
+                context: getCurrentPageContext() // 현재 페이지 컨텍스트 전달
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(`[${envType}] SpringAI 응답:`, data);
+        
+        return data.response || data.message || '응답을 받을 수 없습니다.';
+
+    } catch (error) {
+        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.error(`[${envType}] SpringAI 챗봇 API 오류:`, error);
+        
+        // 폴백: 환경별 기본 응답
+        return getFallbackResponse(message, envType);
+    }
+}
+
+// 현재 페이지 컨텍스트 정보 수집 (기존과 동일)
+function getCurrentPageContext() {
+    const currentPath = window.location.pathname;
+    const context = {
+        page: currentPath,
+        url: window.location.href,
+        timestamp: new Date().toISOString(),
+        environment: isVercelEnvironment() ? 'vercel' : 'local'
+    };
+
+    // 페이지별 특화 정보 추가
+    if (currentPath.includes('percent_party')) {
+        const partyName = document.getElementById('party-name')?.textContent;
+        if (partyName) {
+            context.party = partyName;
+            context.type = 'party_detail';
+        }
+    } else if (currentPath.includes('percent_member')) {
+        const memberName = document.querySelector('.member-name')?.textContent;
+        if (memberName) {
+            context.member = memberName;
+            context.type = 'member_detail';
+        }
+    } else if (currentPath.includes('rank_party')) {
+        context.type = 'party_ranking';
+    } else if (currentPath.includes('rank_member')) {
+        context.type = 'member_ranking';
+    } else if (currentPath.includes('compare_party')) {
+        context.type = 'party_comparison';
+    } else if (currentPath.includes('compare_member')) {
+        context.type = 'member_comparison';
+    } else if (currentPath.includes('meeting')) {
+        context.type = 'meeting';
+        if (currentPath.includes('more_meeting')) {
+            context.subtype = 'meeting_detail';
+        }
+    } else if (currentPath.includes('petition')) {
+        context.type = 'petition';
+        if (currentPath.includes('more_petition')) {
+            context.subtype = 'petition_detail';
+        }
+    } else if (currentPath.includes('announcements')) {
+        context.type = 'announcements';
+    } else if (currentPath.includes('inquiry')) {
+        context.type = 'inquiry';
+    }
+
+    return context;
+}
+
+// 🔧 폴백 응답 (환경별 메시지)
+function getFallbackResponse(message, envType = null) {
+    const env = envType || (isVercelEnvironment() ? 'VERCEL' : 'LOCAL');
     
+    const fallbackResponses = {
+        '정책': `죄송합니다. ${env} 환경에서 현재 정책 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '표결': `죄송합니다. ${env} 환경에서 현재 표결 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '참여율': `죄송합니다. ${env} 환경에서 현재 참여율 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '의원': `죄송합니다. ${env} 환경에서 현재 의원 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '비교': `죄송합니다. ${env} 환경에서 현재 비교 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '활동': `죄송합니다. ${env} 환경에서 현재 활동 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '법안': `죄송합니다. ${env} 환경에서 현재 법안 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '지역구': `죄송합니다. ${env} 환경에서 현재 지역구 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '안건': `죄송합니다. ${env} 환경에서 현재 안건 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`,
+        '결과': `죄송합니다. ${env} 환경에서 현재 결과 정보를 불러올 수 없습니다. 잠시 후 다시 시도해주세요.`
+    };
+
+    // 키워드 매칭
+    for (const [keyword, response] of Object.entries(fallbackResponses)) {
+        if (message.includes(keyword)) {
+            return response;
+        }
+    }
+
+    return `죄송합니다. ${env} 환경에서 현재 서비스에 일시적인 문제가 있습니다. 잠시 후 다시 시도해주세요.`;
+}
+
+// 🔧 메시지 전송 함수 (환경별 로깅)
+async function sendMessage() {
+    const input = document.getElementById('messageInput');
+    if (!input) return;
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+
+    // 사용자 메시지 추가
+    addMessage(message, false);
+    input.value = '';
+
+    // 타이핑 효과 표시
+    showTypingIndicator();
+
+    try {
+        // SpringAI로부터 응답 받기
+        const response = await getChatbotResponse(message);
+        
+        // 타이핑 효과 제거
+        hideTypingIndicator();
+        
+        // 봇 응답 추가
+        addMessage(response, true);
+
+        console.log(`[${envType}] 챗봇 응답 완료`);
+
+    } catch (error) {
+        console.error(`[${envType}] 메시지 전송 오류:`, error);
+        
+        // 타이핑 효과 제거
+        hideTypingIndicator();
+        
+        // 환경별 오류 메시지 표시
+        const errorMsg = `죄송합니다. ${envType} 환경에서 일시적인 오류가 발생했습니다. 다시 시도해주세요.`;
+        addMessage(errorMsg, true);
+    }
+}
+
+// 🔧 제안 버튼 클릭 처리 (환경별 로깅)
+function handleSuggestionClick(suggestion) {
+    const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+    console.log(`[${envType}] 제안 버튼 클릭:`, suggestion);
+    
+    addMessage(suggestion, false);
+    
+    // 타이핑 효과 표시
+    showTypingIndicator();
+    
+    // SpringAI 응답 요청
+    getChatbotResponse(suggestion).then(response => {
+        hideTypingIndicator();
+        addMessage(response, true);
+        console.log(`[${envType}] 제안 버튼 응답 완료`);
+    }).catch(error => {
+        console.error(`[${envType}] 제안 버튼 응답 오류:`, error);
+        hideTypingIndicator();
+        const errorMsg = `죄송합니다. ${envType} 환경에서 일시적인 오류가 발생했습니다.`;
+        addMessage(errorMsg, true);
+    });
+}
+
+// 🔧 챗봇 초기화 (환경별 로깅)
+function initializeChatbot() {
+    const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+    console.log(`[${envType}] SpringAI 챗봇 시스템 초기화 중...`);
+
     // 챗봇 아이콘 클릭 이벤트
-    if (chatbotIcon) {
-        chatbotIcon.addEventListener('click', function() {
-            chatbotModal.style.display = 'block';
-        });
+    const robotIcon = document.querySelector('.robot-icon');
+    if (robotIcon) {
+        robotIcon.addEventListener('click', toggleChatbot);
     }
-    
-    // 닫기 버튼 클릭 이벤트
+
+    // 닫기 버튼 이벤트
+    const closeButton = document.querySelector('.chatbot-modal .close-button');
     if (closeButton) {
-        closeButton.addEventListener('click', function() {
-            chatbotModal.style.display = 'none';
-        });
+        closeButton.addEventListener('click', toggleChatbot);
     }
-    
-    // 메시지 전송 이벤트
-    if (sendButton && messageInput) {
-        // 전송 버튼 클릭 이벤트
-        sendButton.addEventListener('click', function() {
-            const message = messageInput.value.trim();
-            if (message) {
-                handleMessage(message);
-                messageInput.value = '';
-            }
-        });
-        
-        // 엔터 키 이벤트
+
+    // 전송 버튼 이벤트
+    const sendButton = document.querySelector('.send-button');
+    if (sendButton) {
+        sendButton.addEventListener('click', sendMessage);
+    }
+
+    // Enter 키 이벤트
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput) {
         messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                const message = messageInput.value.trim();
-                if (message) {
-                    handleMessage(message);
-                    messageInput.value = '';
-                }
+                sendMessage();
             }
         });
     }
-    
-    // 제안 버튼 클릭 이벤트
-    if (suggestionButtons) {
-        suggestionButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const message = this.textContent;
-                handleMessage(message);
-            });
+
+    // 제안 버튼들 이벤트
+    const suggestionButtons = document.querySelectorAll('.suggestion-btn');
+    suggestionButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const suggestion = this.textContent.trim();
+            handleSuggestionClick(suggestion);
         });
-    }
-    
-    // ESC 키를 눌러 모달 닫기
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && chatbotModal.style.display === 'block') {
-            chatbotModal.style.display = 'none';
-        }
     });
 
-    // 공통 페이지네이션 생성 함수 (수정됨)
-    window.createPagination = function(totalItems, currentPage, itemsPerPage, onPageChange) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const pagination = document.getElementById('pagination');
-        
-        if (!pagination) return;
-
-        pagination.innerHTML = '';
-
-        // 페이지가 없거나 1개뿐인 경우 페이지네이션 숨김
-        if (totalPages <= 1) {
-            pagination.style.display = 'none';
-            return;
-        }
-
-        pagination.style.display = 'flex';
-
-        // 이전 버튼 (첫 페이지가 아닐 때만 생성)
-        if (currentPage > 1) {
-            const prevButton = document.createElement('a');
-            prevButton.href = '#';
-            prevButton.className = 'navigate';
-            prevButton.innerHTML = '&lt;';
-            prevButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage > 1) {
-                    onPageChange(currentPage - 1);
-                }
-            });
-            pagination.appendChild(prevButton);
-        }
-
-        // 페이지 번호 계산
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, startPage + 4);
-        
-        if (endPage - startPage < 4) {
-            startPage = Math.max(1, endPage - 4);
-        }
-
-        // 첫 페이지
-        if (startPage > 1) {
-            pagination.appendChild(createPageButton(1, currentPage, onPageChange));
-            
-            if (startPage > 2) {
-                const dots = document.createElement('span');
-                dots.textContent = '...';
-                pagination.appendChild(dots);
+    // 모달 외부 클릭 시 닫기
+    const modal = document.getElementById('chatbotModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                toggleChatbot();
             }
-        }
-
-        // 페이지 번호들
-        for (let i = startPage; i <= endPage; i++) {
-            pagination.appendChild(createPageButton(i, currentPage, onPageChange));
-        }
-
-        // 마지막 페이지
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                const dots = document.createElement('span');
-                dots.textContent = '...';
-                pagination.appendChild(dots);
-            }
-            
-            pagination.appendChild(createPageButton(totalPages, currentPage, onPageChange));
-        }
-
-        // 다음 버튼 (마지막 페이지가 아닐 때만 생성)
-        if (currentPage < totalPages) {
-            const nextButton = document.createElement('a');
-            nextButton.href = '#';
-            nextButton.className = 'navigate';
-            nextButton.innerHTML = '&gt;';
-            nextButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (currentPage < totalPages) {
-                    onPageChange(currentPage + 1);
-                }
-            });
-            pagination.appendChild(nextButton);
-        }
-    };
-
-    // 페이지 버튼 생성 헬퍼 함수
-    function createPageButton(pageNumber, currentPage, onPageChange) {
-        const button = document.createElement('a');
-        button.href = '#';
-        button.textContent = pageNumber;
-        if (pageNumber === currentPage) {
-            button.className = 'active';
-        }
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            onPageChange(pageNumber);
         });
-        return button;
     }
 
-    // 정당별 URL (전역으로 사용)
-    window.partyData = {
-        "국민의 힘": {
-            url: "https://www.peoplepowerparty.kr/",
-            cssPrefix: "ppp"
-        },
-        "더불어민주당": {
-            url: "https://theminjoo.kr/",
-            cssPrefix: "dp"
-        },
-        "조국혁신당": {
-            url: "https://rebuildingkoreaparty.kr",
-            cssPrefix: "rk"
-        },
-        "개혁신당": {
-            url: "https://www.reformparty.kr/",
-            cssPrefix: "reform"
-        },
-        "진보당": {
-            url: "https://jinboparty.com/",
-            cssPrefix: "jp"
-        },
-        "기본소득당": {
-            url: "https://basicincomeparty.kr/",
-            cssPrefix: "bip"
-        },
-        "사회민주당": {
-            url: "https://www.samindang.kr/",
-            cssPrefix: "sdp"
-        },
-        "무소속": {
-            url: "",
-            cssPrefix: "ind"
-        }
+    console.log(`[${envType}] SpringAI 챗봇 시스템 초기화 완료`);
+}
+
+// ===== 유틸리티 함수 =====
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function formatNumber(number) {
+    return number.toLocaleString('ko-KR');
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
     };
+}
+
+// ===== 페이지네이션 함수 =====
+
+// 페이지네이션 생성 함수
+function createPagination(totalItems, currentPage, itemsPerPage, onPageChange) {
+    const paginationContainer = document.getElementById('pagination');
+    if (!paginationContainer) {
+        console.error('pagination container not found!');
+        return;
+    }
+
+    // 총 페이지 수 계산
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // 페이지네이션 컨테이너 초기화
+    paginationContainer.innerHTML = '';
+    
+    // 페이지가 1페이지뿐이거나 데이터가 없으면 페이지네이션 숨김
+    if (totalPages <= 1) {
+        paginationContainer.style.display = 'none';
+        return;
+    }
+    
+    paginationContainer.style.display = 'flex';
+    
+    // 페이지네이션 래퍼 생성
+    const paginationWrapper = document.createElement('div');
+    paginationWrapper.className = 'pagination-wrapper';
+    
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+        const prevButton = createPaginationButton('‹', currentPage - 1, onPageChange);
+        prevButton.setAttribute('aria-label', '이전 페이지');
+        paginationWrapper.appendChild(prevButton);
+    }
+    
+    // 페이지 번호 계산 (최대 5개 표시)
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // 끝 페이지가 부족하면 시작 페이지 조정
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // 첫 페이지 (1)과 생략 표시
+    if (startPage > 1) {
+        paginationWrapper.appendChild(createPaginationButton('1', 1, onPageChange));
+        if (startPage > 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'pagination-ellipsis';
+            ellipsis.setAttribute('aria-hidden', 'true');
+            paginationWrapper.appendChild(ellipsis);
+        }
+    }
+    
+    // 중간 페이지 번호들
+    for (let i = startPage; i <= endPage; i++) {
+        const button = createPaginationButton(i.toString(), i, onPageChange);
+        if (i === currentPage) {
+            button.classList.add('active');
+            button.setAttribute('aria-current', 'page');
+        }
+        paginationWrapper.appendChild(button);
+    }
+    
+    // 마지막 페이지와 생략 표시
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'pagination-ellipsis';
+            ellipsis.setAttribute('aria-hidden', 'true');
+            paginationWrapper.appendChild(ellipsis);
+        }
+        paginationWrapper.appendChild(createPaginationButton(totalPages.toString(), totalPages, onPageChange));
+    }
+    
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+        const nextButton = createPaginationButton('›', currentPage + 1, onPageChange);
+        nextButton.setAttribute('aria-label', '다음 페이지');
+        paginationWrapper.appendChild(nextButton);
+    }
+    
+    paginationContainer.appendChild(paginationWrapper);
+    
+    console.log(`페이지네이션 생성 완료: ${currentPage}/${totalPages} (총 ${totalItems}개 항목)`);
+}
+
+// 페이지네이션 버튼 생성 헬퍼 함수
+function createPaginationButton(text, page, onPageChange) {
+    const button = document.createElement('button');
+    button.textContent = text;
+    button.className = 'pagination-btn';
+    button.setAttribute('type', 'button');
+    button.setAttribute('aria-label', `${page}페이지로 이동`);
+    
+    // 클릭 이벤트
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!this.classList.contains('active')) {
+            console.log(`페이지 변경: ${page}`);
+            onPageChange(page);
+            
+            // 포커스 관리 (접근성)
+            setTimeout(() => {
+                const newActiveButton = document.querySelector('.pagination-btn.active');
+                if (newActiveButton) {
+                    newActiveButton.focus();
+                }
+            }, 100);
+        }
+    });
+    
+    // 키보드 접근성
+    button.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+        }
+    });
+    
+    return button;
+}
+
+// 전역에서 접근 가능하도록 설정
+window.createPagination = createPagination;
+window.createPaginationButton = createPaginationButton;
+
+// ===== 페이지 초기화 (환경별 최적화) =====
+
+document.addEventListener('DOMContentLoaded', function() {
+    const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+    console.log(`🚀 [${envType}] scripts.js 초기화 시작...`);
+    
+    try {
+        // 네비게이션 설정
+        setupNavigation();
+        console.log(`✅ [${envType}] 네비게이션 초기화 완료`);
+        
+        // 모달 설정
+        setupModals();
+        console.log(`✅ [${envType}] 모달 초기화 완료`);
+        
+        // SpringAI 챗봇 초기화
+        initializeChatbot();
+        console.log(`✅ [${envType}] SpringAI 챗봇 초기화 완료`);
+        
+        // 퍼센트 관리자 실시간 동기화 시작
+        PercentManager.startSync();
+        console.log(`✅ [${envType}] 퍼센트 관리자 초기화 완료`);
+        
+        console.log(`🎉 [${envType}] scripts.js 초기화 완료!`);
+        
+    } catch (error) {
+        console.error(`❌ [${envType}] scripts.js 초기화 중 오류:`, error);
+    }
 });
+
+// 🔧 페이지 언로드 시 정리 (환경별 로깅)
+window.addEventListener('beforeunload', function() {
+    const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+    PercentManager.stopSync();
+    console.log(`[${envType}] 페이지 정리 완료`);
+});
+
+// 🆕 디버그 유틸리티
+window.scriptsDebug = {
+    env: () => isVercelEnvironment() ? 'VERCEL' : 'LOCAL',
+    testChatbot: (message) => {
+        return getChatbotResponse(message || '테스트 메시지');
+    },
+    showEnvInfo: () => {
+        const env = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+        console.log(`현재 환경: ${env}`);
+        console.log(`호스트명: ${window.location.hostname}`);
+        console.log(`챗봇 활성화: ${!!document.getElementById('chatbotModal')}`);
+        console.log(`PercentManager 활성화: ${!!window.PercentManager}`);
+    }
+};
