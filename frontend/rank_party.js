@@ -1,27 +1,18 @@
+// ===== 정당 순위 페이지 전용 스크립트 =====
+
 document.addEventListener('DOMContentLoaded', function() {
     let sortOrder = 'asc'; // 기본값은 오름차순 (1위부터)
     let partyData = []; // 실제 API에서 가져올 데이터
 
-    // ===== 환경별 대응 함수 =====
-
-    // 배포 환경 감지 
+    // ===== 환경 감지 =====
+    
     function isVercelEnvironment() {
-        const hostname = window.location.hostname;
-        
-        if (hostname.includes('vercel.app')) return true;
-        if (hostname.includes('.vercel.app')) return true;
-        
-        if (hostname !== 'localhost' && 
-            hostname !== '127.0.0.1' && 
-            !hostname.includes('github.io') && 
-            !hostname.includes('netlify.app')) {
-            return true;
-        }
-        
-        return false;
+        return window.percentSync ? window.percentSync.isVercelDeployment : false;
     }
 
-    // 🔧 실제 API에서 정당 순위 데이터 가져오기 (환경별 최적화)
+    // ===== API 데이터 처리 함수들 =====
+
+    // 실제 API에서 정당 순위 데이터 가져오기
     async function fetchPartyRanking() {
         try {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
@@ -29,13 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
             showLoading();
             console.log(`[${envType}] 정당 순위 데이터를 가져오는 중...`);
             
-            // API 서비스 확인
+            // global_sync.js API 서비스 확인
             if (!window.APIService) {
-                throw new Error('APIService가 로드되지 않음');
+                throw new Error('APIService가 로드되지 않음 - global_sync.js 먼저 로드 필요');
             }
             
-            // 실제 API 호출 - getPartyRanking() 사용
-            const data = await APIService.getPartyRanking();
+            // 실제 API 호출 - APIService.getPartyRanking() 사용
+            const data = await window.APIService.getPartyRanking();
             
             if (data && Array.isArray(data)) {
                 partyData = data.map((party, index) => ({
@@ -46,9 +37,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     totalScore: party.weighted_performance || party.total_score || party.score || 0,
                     memberCount: party.member_count || 0,
                     logo: party.logo || null,
-                    // 추가 데이터 (필요시 사용)
+                    // 추가 데이터
                     performance: party.performance || 0,
-                    weightedPerformance: party.weighted_performance || 0
+                    weightedPerformance: party.weighted_performance || 0,
+                    // API 원본 데이터 보존
+                    rawData: party
                 }));
                 
                 console.log(`[${envType}] 정당 순위 데이터 로드 완료:`, partyData.length, '개 정당');
@@ -68,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // API 실패 시 정당별 실적 통계 API 시도
             try {
                 console.log(`[${envType}] 대체 API로 정당별 실적 통계 데이터 시도...`);
-                const statsData = await APIService.getPartyPerformanceStats();
+                const statsData = await window.APIService.getPartyPerformanceStats();
                 
                 if (statsData && Array.isArray(statsData)) {
                     partyData = statsData.map((party, index) => ({
@@ -78,7 +71,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         homepage: party.homepage || getDefaultHomepage(party.party_name || party.name),
                         totalScore: party.total_performance || party.performance || party.score || 0,
                         memberCount: party.member_count || 0,
-                        logo: party.logo || null
+                        logo: party.logo || null,
+                        rawData: party
                     }));
                     
                     console.log(`[${envType}] 대체 API로 정당 데이터 로드 완료:`, partyData.length, '개 정당');
@@ -101,74 +95,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🆕 성공 메시지 표시
-    function showSuccessMessage(message) {
-        const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
-        
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            color: white; padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
-            font-size: 14px; max-width: 400px;
-        `;
-        notification.innerHTML = `
-            <div style="font-weight: 600; margin-bottom: 5px;">✅ ${envBadge} 데이터 로드 성공</div>
-            <div>${message}</div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
-        }, 4000);
-    }
-
-    // 🆕 경고 메시지 표시
-    function showWarningMessage(message) {
-        const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
-        
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            background: linear-gradient(135deg, #f39c12, #e67e22);
-            color: white; padding: 15px 20px; border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
-            font-size: 14px; max-width: 400px;
-        `;
-        notification.innerHTML = `
-            <div style="font-weight: 600; margin-bottom: 5px;">⚠️ ${envBadge} 부분 실패</div>
-            <div>${message}</div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
-        }, 6000);
-    }
-
-    // 🔧 퍼센트 설정을 적용한 정당 순위 재계산 (환경별 로깅)
+    // 퍼센트 설정을 적용한 정당 순위 재계산
     async function fetchPartyRankingWithSettings() {
         try {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             
+            // global_sync.js의 PercentSettings 사용
+            if (!window.PercentSettings) {
+                console.warn(`[${envType}] PercentSettings가 로드되지 않음`);
+                return;
+            }
+            
             // 퍼센트 설정 가져오기
-            const percentSettings = await PercentManager.getSettingsForBackend();
+            const percentSettings = await window.PercentSettings.get();
             console.log(`[${envType}] 퍼센트 설정 적용:`, percentSettings);
             
-            // 설정이 있다면 가중치 적용하여 순위 재계산
+            // 설정이 있다면 백엔드에 가중치 적용 요청
             if (percentSettings && partyData.length > 0) {
-                // 클라이언트 사이드에서 가중치 적용 로직
+                try {
+                    // 백엔드 형식으로 변환
+                    const backendSettings = convertToBackendFormat(percentSettings);
+                    
+                    // APIService를 통해 가중치 적용된 데이터 요청
+                    if (window.APIService.updateWeights) {
+                        await window.APIService.updateWeights(backendSettings);
+                        console.log(`[${envType}] 백엔드에 가중치 설정 전송 완료`);
+                        
+                        // 가중치 적용된 새 데이터 요청
+                        await fetchPartyRanking();
+                        return;
+                    }
+                } catch (backendError) {
+                    console.warn(`[${envType}] 백엔드 가중치 적용 실패, 클라이언트 사이드로 처리:`, backendError);
+                }
+                
+                // 백엔드 실패 시 클라이언트 사이드에서 간단 계산
                 partyData.forEach(party => {
-                    // 예시: 가중치 적용 계산 (실제 로직은 백엔드)
-                    if (percentSettings.legislation) {
-                        party.adjustedScore = party.totalScore * (percentSettings.legislation / 100);
+                    if (percentSettings.bills && party.totalScore) {
+                        party.adjustedScore = party.totalScore * (percentSettings.bills / 100);
+                    } else {
+                        party.adjustedScore = party.totalScore;
                     }
                 });
                 
@@ -181,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 renderTable();
-                console.log(`[${envType}] 퍼센트 설정 적용 완료`);
+                console.log(`[${envType}] 클라이언트 사이드 퍼센트 설정 적용 완료`);
             }
             
         } catch (error) {
@@ -189,6 +155,20 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error(`[${envType}] 퍼센트 설정 적용 실패:`, error);
         }
     }
+
+    // 백엔드 설정 형식으로 변환
+    function convertToBackendFormat(settings) {
+        return {
+            attendance_weight: settings.attendance || 25,
+            bills_weight: settings.bills || 25,
+            questions_weight: settings.questions || 20,
+            petitions_weight: settings.petitions || 15,
+            committees_weight: settings.committees || 10,
+            parties_weight: settings.parties || 5
+        };
+    }
+
+    // ===== 기본 데이터 및 매핑 함수들 =====
 
     // 기본 원내대표 정보
     function getDefaultLeader(partyName) {
@@ -208,6 +188,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 기본 홈페이지 정보
     function getDefaultHomepage(partyName) {
+        if (window.partyData && window.partyData[partyName]) {
+            return window.partyData[partyName].url;
+        }
+        
         const homepages = {
             "국민의힘": "https://www.peoplepowerparty.kr/",
             "더불어민주당": "https://theminjoo.kr/",
@@ -222,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return homepages[partyName] || "#";
     }
 
-    // 기본 정당 데이터
+    // 기본 정당 데이터 (API 실패 시 사용)
     function getDefaultPartyData() {
         return [
             {
@@ -292,13 +276,37 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
     }
 
-    // 🔧 로딩 표시 (환경별 메시지)
+    // ===== UI 피드백 함수들 =====
+
+    //  로딩 표시 (환경별 메시지)
     function showLoading() {
         const tableBody = document.getElementById('partyTableBody');
         const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
         
         if (tableBody) {
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 40px;">${envBadge} 데이터를 불러오는 중...</td></tr>`;
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                            <div style="width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                            <span>${envBadge} 데이터를 불러오는 중...</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            
+            // 로딩 애니메이션 CSS 추가
+            if (!document.getElementById('loading-style')) {
+                const style = document.createElement('style');
+                style.id = 'loading-style';
+                style.textContent = `
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
         }
     }
 
@@ -307,58 +315,113 @@ document.addEventListener('DOMContentLoaded', function() {
         // renderTable이 호출되면서 자동으로 로딩이 사라짐
     }
 
-    // 🔧 에러 메시지 표시 (환경별)
+    //  성공 메시지 표시
+    function showSuccessMessage(message) {
+        const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
+        
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white; padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+            font-size: 14px; max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        notification.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 5px;">✅ ${envBadge} 데이터 로드 성공</div>
+            <div>${message}</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // 슬라이드 인 애니메이션
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 4000);
+    }
+
+    //  경고 메시지 표시
+    function showWarningMessage(message) {
+        const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
+        
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white; padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+            font-size: 14px; max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        `;
+        notification.innerHTML = `
+            <div style="font-weight: 600; margin-bottom: 5px;">⚠️ ${envBadge} 부분 실패</div>
+            <div>${message}</div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
+        }, 6000);
+    }
+
+    // 에러 메시지 표시 (환경별)
     function showError(message) {
         const envBadge = isVercelEnvironment() ? '[VERCEL]' : '[LOCAL]';
         
         const notification = document.createElement('div');
         notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #f44336;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white; padding: 15px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+            font-size: 14px; max-width: 400px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
         `;
         notification.innerHTML = `
             <div style="font-weight: 600; margin-bottom: 5px;">❌ ${envBadge} 오류</div>
             <div>${message}</div>
         `;
+        
         document.body.appendChild(notification);
         
         setTimeout(() => {
-            if (document.body.contains(notification)) {
-                document.body.removeChild(notification);
-            }
+            notification.style.transform = 'translateX(0)';
+        }, 100);
+        
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 300);
         }, 7000);
     }
 
-    // 🔧 퍼센트 설정 확인 (환경별 로깅)
-    async function checkPercentSettings() {
-        try {
-            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-            
-            const hasSettings = await PercentManager.hasSettings();
-            
-            if (hasSettings) {
-                console.log(`[${envType}] 사용자 퍼센트 설정을 적용합니다.`);
-                const settings = await PercentManager.getSettings();
-                console.log(`[${envType}] 현재 퍼센트 설정:`, settings);
-                
-                // 설정이 있으면 가중치 적용하여 재계산
-                await fetchPartyRankingWithSettings();
-            } else {
-                console.log(`[${envType}] 기본 퍼센트 설정을 사용합니다.`);
-            }
-        } catch (error) {
-            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-            console.error(`[${envType}] 퍼센트 설정 확인 오류:`, error);
-        }
-    }
+    // ===== 페이지 내비게이션 함수 =====
 
     // 정당 상세 페이지로 이동하는 함수
     function navigateToPartyDetail(partyName) {
@@ -370,6 +433,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         window.location.href = `percent_party.html?${params.toString()}`;
     }
+
+    // ===== 테이블 렌더링 및 정렬 함수들 =====
 
     // 테이블 렌더링
     function renderTable() {
@@ -393,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td class="rank-cell">${party.rank}</td>
                 <td>
                     ${party.logo ? `<img src="${party.logo}" alt="${party.name} 로고" 
-                                        style="width: 40px; height: 40px; object-fit: contain;" 
+                                        style="width: 40px; height: 40px; object-fit: contain; border-radius: 4px;" 
                                         onerror="this.style.display='none'">` : ''}
                 </td>
                 <td class="party-name">${party.name}</td>
@@ -407,12 +472,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 </td>
             `;
             
+            // 행 클릭 이벤트 (홈페이지 아이콘 제외)
             row.addEventListener('click', function(e) {
                 if (!e.target.closest('.home-icon')) {
                     navigateToPartyDetail(party.name);
                 }
             });
             
+            // 호버 효과
             row.addEventListener('mouseenter', function() {
                 this.style.backgroundColor = 'var(--main2)';
                 this.style.cursor = 'pointer';
@@ -448,7 +515,25 @@ document.addEventListener('DOMContentLoaded', function() {
         renderTable();
     }
 
-    // 나머지 이벤트 핸들러들 
+    // 테이블 행 애니메이션
+    function addTableAnimation() {
+        const tableRows = document.querySelectorAll('#partyTableBody tr');
+        
+        tableRows.forEach((row, index) => {
+            row.style.opacity = '0';
+            row.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                row.style.transition = 'all 0.5s ease';
+                row.style.opacity = '1';
+                row.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+    }
+
+    // ===== 이벤트 핸들러들 =====
+
+    // 정렬 드롭다운 이벤트 핸들러
     const settingsBtn = document.getElementById('settingsBtn');
     const sortDropdown = document.getElementById('sortDropdown');
     
@@ -483,6 +568,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 홈페이지 링크 클릭 이벤트
     document.addEventListener('click', function(e) {
         if (e.target.closest('.home-icon a')) {
             e.preventDefault();
@@ -499,44 +585,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // ===== 퍼센트 설정 변경 감지 =====
+
     // 퍼센트 설정 변경 감지
     if (window.PercentSettings) {
         window.PercentSettings.onChange(async function(newSettings) {
-            console.log('퍼센트 설정이 변경되었습니다. 순위를 다시 계산합니다.');
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.log(`[${envType}] 퍼센트 설정이 변경되었습니다. 순위를 다시 계산합니다.`);
             await fetchPartyRankingWithSettings();
         });
     }
 
-    // 테이블 행 애니메이션
-    function addTableAnimation() {
-        const tableRows = document.querySelectorAll('#partyTableBody tr');
-        
-        tableRows.forEach((row, index) => {
-            row.style.opacity = '0';
-            row.style.transform = 'translateY(20px)';
+    // ===== 퍼센트 설정 확인 함수 =====
+
+    // 퍼센트 설정 확인 
+    async function checkPercentSettings() {
+        try {
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             
-            setTimeout(() => {
-                row.style.transition = 'all 0.5s ease';
-                row.style.opacity = '1';
-                row.style.transform = 'translateY(0)';
-            }, index * 100);
-        });
+            if (!window.PercentSettings) {
+                console.warn(`[${envType}] PercentSettings가 로드되지 않음`);
+                return;
+            }
+            
+            const settings = await window.PercentSettings.get();
+            
+            if (settings) {
+                console.log(`[${envType}] 사용자 퍼센트 설정을 적용합니다.`);
+                console.log(`[${envType}] 현재 퍼센트 설정:`, settings);
+                
+                // 설정이 있으면 가중치 적용하여 재계산
+                await fetchPartyRankingWithSettings();
+            } else {
+                console.log(`[${envType}] 기본 퍼센트 설정을 사용합니다.`);
+            }
+        } catch (error) {
+            const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
+            console.error(`[${envType}] 퍼센트 설정 확인 오류:`, error);
+        }
     }
 
-    // 🔧 페이지 초기화 (환경별 로깅 추가)
+    // ===== 페이지 초기화 함수 =====
+
+    // 페이지 초기화
     async function initializePage() {
         const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
         console.log(`🚀 [${envType}] 정당 순위 페이지 초기화 중...`);
         
-        // API 서비스 확인
-        if (!window.APIService) {
-            console.warn(`[${envType}] API 서비스가 로드되지 않았습니다. 기본 데이터를 사용합니다.`);
-            partyData = getDefaultPartyData();
-            renderTable();
-            showWarningMessage('APIService 없음으로 기본 데이터를 사용합니다.');
+        // global_sync.js 로딩 확인
+        if (!window.percentSync || !window.APIService) {
+            console.warn(`[${envType}] global_sync.js가 완전히 로드되지 않았습니다. 재시도 중...`);
+            setTimeout(initializePage, 500);
             return;
         }
         
+        console.log(`[${envType}] global_sync.js 확인 완료`);
+        
+        // scripts.js 로딩 확인
+        if (!window.PercentManager) {
+            console.warn(`[${envType}] scripts.js가 완전히 로드되지 않았습니다. 재시도 중...`);
+            setTimeout(initializePage, 500);
+            return;
+        }
+        
+        console.log(`[${envType}] scripts.js 확인 완료`);
         console.log(`[${envType}] APIService 확인 완료, API 데이터 로드 시작`);
         
         // 실제 API에서 데이터 로드
@@ -548,18 +660,29 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`✅ [${envType}] 정당 순위 페이지 초기화 완료`);
     }
 
+    // ===== 디버그 유틸리티 =====
+
     // 🆕 디버그 유틸리티
     window.partyRankDebug = {
         env: () => isVercelEnvironment() ? 'VERCEL' : 'LOCAL',
         partyCount: () => partyData.length,
         currentSort: () => sortOrder,
         reloadData: () => fetchPartyRanking(),
+        testAPI: () => {
+            if (window.vercelDebug) {
+                window.vercelDebug.testPerformance();
+            } else {
+                console.error('vercelDebug not available');
+            }
+        },
         showEnvInfo: () => {
             const env = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             console.log(`현재 환경: ${env}`);
             console.log(`호스트명: ${window.location.hostname}`);
             console.log(`정당 데이터: ${partyData.length}개`);
             console.log(`정렬 순서: ${sortOrder}`);
+            console.log(`global_sync 연동: ${!!(window.percentSync && window.APIService)}`);
+            console.log(`scripts.js 연동: ${!!window.PercentManager}`);
         }
     };
 
