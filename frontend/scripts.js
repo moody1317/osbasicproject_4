@@ -22,7 +22,7 @@ function isVercelEnvironment() {
     return window.percentSync ? window.percentSync.isVercelDeployment : false;
 }
 
-// ===== 퍼센트 관리자 =====
+// ===== 퍼센트 관리 =====
 
 const PercentManager = {
     // 기본 퍼센트 설정
@@ -35,7 +35,7 @@ const PercentManager = {
         parties: 5
     },
 
-    // 설정 저장
+    // 설정 저장=
     async saveSettings(settings) {
         try {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
@@ -118,7 +118,7 @@ const PercentManager = {
         }
     },
 
-    // 🔧 실시간 동기화 시작 
+    // 실시간 동기화 시작
     startSync() {
         if (window.PercentSettings) {
             window.PercentSettings.startSync();
@@ -139,7 +139,7 @@ const PercentManager = {
     }
 };
 
-// 전역에서 접근 가능하도록 설정
+// 전역에서 접근 가능하도록 설정 (기존 호환성 유지)
 window.PercentManager = PercentManager;
 
 // ===== 퍼센트 설정 UI 관리 =====
@@ -273,7 +273,7 @@ function setupModals() {
     });
 }
 
-// ===== Django 연동 챗봇 시스템 =====
+// ===== Django 연동 챗봇 시스템  =====
 
 // 챗봇 모달 토글
 function toggleChatbot() {
@@ -389,7 +389,7 @@ async function getChatbotResponse(message) {
     }
 }
 
-// 🔧 폴백 응답 (환경별 메시지)
+// 폴백 응답 (환경별 메시지)
 function getFallbackResponse(message, envType = null) {
     const env = envType || (isVercelEnvironment() ? 'VERCEL' : 'LOCAL');
     
@@ -416,7 +416,7 @@ function getFallbackResponse(message, envType = null) {
     return `죄송합니다. ${env} 환경에서 현재 서비스에 일시적인 문제가 있습니다. 잠시 후 다시 시도해주세요.`;
 }
 
-// 🔧 메시지 전송 함수 (환경별 로깅)
+// 메시지 전송 함수 (환경별 로깅)
 async function sendMessage() {
     const input = document.getElementById('messageInput');
     if (!input) return;
@@ -457,7 +457,7 @@ async function sendMessage() {
     }
 }
 
-// 🔧 제안 버튼 클릭 처리 (환경별 로깅)
+// 제안 버튼 클릭 처리 (환경별 로깅)
 function handleSuggestionClick(suggestion) {
     const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
     console.log(`[${envType}] 제안 버튼 클릭:`, suggestion);
@@ -480,7 +480,7 @@ function handleSuggestionClick(suggestion) {
     });
 }
 
-// 🔧 챗봇 초기화 (환경별 로깅)
+// 챗봇 초기화 (환경별 로깅)
 function initializeChatbot() {
     const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
     console.log(`[${envType}] Django 챗봇 시스템 초기화 중...`);
@@ -574,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 🔧 페이지 언로드 시 정리 (환경별 로깅)
+// 페이지 언로드 시 정리 (환경별 로깅)
 window.addEventListener('beforeunload', function() {
     const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
     PercentManager.stopSync();
