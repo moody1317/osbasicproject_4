@@ -1,4 +1,4 @@
-/* 정당 순위 페이지 전용 스타일 */
+/* 정당 순위 페이지 전용 스타일 (styles.css와 통합 버전) */
 
 /* 메인 콘텐츠 스타일 */
 .content-container {
@@ -264,7 +264,7 @@
     100% { background-position: -200% 0; }
 }
 
-/* 알림 메시지 스타일 */
+/* 알림 메시지 스타일 (JavaScript에서 사용) */
 .notification {
     position: fixed;
     top: 20px;
@@ -411,5 +411,79 @@
 
     .party-name {
         font-size: 14px;
+    }
+}
+
+/* 다크 모드 지원 (선택사항) */
+@media (prefers-color-scheme: dark) {
+    .party-table {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+    }
+    
+    .party-table th {
+        background: linear-gradient(135deg, #34495e, #2c3e50);
+        color: #ecf0f1;
+    }
+    
+    .dropdown {
+        background-color: #34495e;
+        color: #ecf0f1;
+        border-color: #2c3e50;
+    }
+    
+    .settings-btn {
+        background-color: #34495e;
+        color: #ecf0f1;
+        border-color: #2c3e50;
+    }
+}
+
+/* 접근성 개선 */
+.party-table tbody tr:focus {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}
+
+.settings-btn:focus,
+.dropdown-item:focus {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}
+
+/* 인쇄 스타일 */
+@media print {
+    .settings-btn,
+    .dropdown {
+        display: none;
+    }
+    
+    .party-table tbody tr:hover {
+        background-color: transparent;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .party-table {
+        box-shadow: none;
+    }
+}
+
+/* 성능 최적화 */
+.party-table tbody tr,
+.settings-btn,
+.dropdown,
+.rank-cell {
+    will-change: transform;
+}
+
+/* 스크롤 동작 개선 */
+@media (prefers-reduced-motion: reduce) {
+    .party-table tbody tr,
+    .settings-btn,
+    .dropdown,
+    .rank-cell {
+        transition: none;
+        animation: none;
     }
 }
