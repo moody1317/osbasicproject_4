@@ -4,147 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>백일하 - 제 22대 국회의원 RANK</title>
+    <meta name="description" content="제22대 국회의원들의 의정 활동 성과를 종합하여 순위를 매긴 명예의 의원 페이지입니다.">
+    <meta name="keywords" content="국회의원순위, 의원순위, 의정활동, 국회의원성과, 백일하">
+    
     <!-- 외부 스타일시트 연결 -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="rank_member.css">
+    
+    <!-- 파비콘 -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/logo.png">
 </head>
 <body>
     <!-- 헤더 시작 -->
     <header>
-        <div class="logo">
-            <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/logo.png" alt="백일하 로고">
-        </div>
+        <!-- 로고 링크 -->
+        <a href="mainpage.html" style="text-decoration: none; color: inherit;" aria-label="백일하 메인페이지로 이동">
+            <div class="logo">
+                <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/refs/heads/main/logo.png" alt="백일하 로고">
+            </div>
+        </a>
     </header>
     
+    <!-- 스티키 네비게이션 컨테이너 -->
     <div class="sticky-nav-container">
-    <!-- 네비게이션 메뉴 시작 -->
-    <nav>
-        <ul>
-            <li class="has-submenu" data-submenu="party-submenu">
-                정당
-            </li>
-            <li class="has-submenu" data-submenu="member-submenu">
-                국회의원
-            </li>
-            <li class="has-submenu" data-submenu="activity-submenu">
-                의정 활동
-            </li>
-            <li class="has-submenu" data-submenu="etc-submenu">
-                기타
-            </li>
-        </ul>
-        
-        <!-- 정당 서브메뉴 -->
-        <div class="submenu-wrapper" id="party-submenu">
-            <div class="submenu-container">
-                <a href="#" class="submenu-item">명예의 정당</a>
-                <a href="#" class="submenu-item">정당 상세 퍼센트</a>
-                <a href="#" class="submenu-item">정당 비교하기</a>
+        <!-- 네비게이션 메뉴 시작 -->
+        <nav role="navigation" aria-label="주 메뉴">
+            <ul>
+                <li class="has-submenu" data-submenu="party-submenu" aria-expanded="false">
+                    정당
+                </li>
+                <li class="has-submenu" data-submenu="member-submenu" aria-expanded="false">
+                    국회의원
+                </li>
+                <li class="has-submenu" data-submenu="activity-submenu" aria-expanded="false">
+                    의정 활동
+                </li>
+                <li class="has-submenu" data-submenu="etc-submenu" aria-expanded="false">
+                    기타
+                </li>
+            </ul>
+            
+            <!-- 정당 서브메뉴 -->
+            <div class="submenu-wrapper" id="party-submenu" role="menu">
+                <div class="submenu-container">
+                    <a href="rank_party.html" class="submenu-item" role="menuitem">명예의 정당</a>
+                    <a href="percent_party.html" class="submenu-item" role="menuitem">정당 상세 퍼센트</a>
+                    <a href="compare_party.html" class="submenu-item" role="menuitem">정당 비교하기</a>
+                </div>
             </div>
-        </div>
-        
-        <!-- 국회의원 서브메뉴 -->
-        <div class="submenu-wrapper" id="member-submenu">
-            <div class="submenu-container">
-                <a href="#" class="submenu-item">국회의원 비교하기</a>
-                <a href="#" class="submenu-item">국회의원 상세정보</a>
-                <a href="#" class="submenu-item">명예의 의원</a>
+            
+            <!-- 국회의원 서브메뉴 -->
+            <div class="submenu-wrapper" id="member-submenu" role="menu">
+                <div class="submenu-container">
+                    <a href="compare_member.html" class="submenu-item" role="menuitem">국회의원 비교하기</a>
+                    <a href="percent_member.html" class="submenu-item" role="menuitem">국회의원 상세정보</a>
+                    <a href="rank_member.html" class="submenu-item" role="menuitem" aria-current="page">명예의 의원</a>
+                </div>
             </div>
-        </div>
-        
-        <!-- 의정 활동 서브메뉴 -->
-        <div class="submenu-wrapper" id="activity-submenu">
-            <div class="submenu-container">
-                <a href="#" class="submenu-item">청원 현황</a>
-                <a href="#" class="submenu-item">본회의 현황</a>
+            
+            <!-- 의정 활동 서브메뉴 -->
+            <div class="submenu-wrapper" id="activity-submenu" role="menu">
+                <div class="submenu-container">
+                    <a href="petition.html" class="submenu-item" role="menuitem">청원 현황</a>
+                    <a href="meeting.html" class="submenu-item" role="menuitem">본회의 현황</a>
+                </div>
             </div>
-        </div>
-        
-        <!-- 기타 서브메뉴 -->
-        <div class="submenu-wrapper" id="etc-submenu">
-            <div class="submenu-container">
-                <a href="#" class="submenu-item">외부 사이트</a>
-                <a href="#" class="submenu-item">도움말</a>
-                <a href="#" class="submenu-item">공지사항</a>
+            
+            <!-- 기타 서브메뉴 -->
+            <div class="submenu-wrapper" id="etc-submenu" role="menu">
+                <div class="submenu-container">
+                    <a href="outpage.html" class="submenu-item" role="menuitem">외부 사이트</a>
+                    <a href="inquiry.html" class="submenu-item" role="menuitem">도움말</a>
+                    <a href="announcements.html" class="submenu-item" role="menuitem">공지사항</a>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     </div>
 
-    <!-- 국회의원 순위 -->
-    <div class="content-container">
-        <h1 class="page-title">
-            제 22대 국회의원 RANK
-            <button class="settings-btn" id="settingsBtn">
-                설정
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 17H21V15H3V17ZM3 13H21V11H3V13ZM3 9H21V7H3V9Z" fill="currentColor"/>
-                </svg>
-            </button>
-            <div class="dropdown" id="sortDropdown">
-                <div class="dropdown-item active" data-sort="desc">내림차순</div>
-                <div class="dropdown-item" data-sort="asc">오름차순</div>
+    <!-- 메인 콘텐츠 시작 -->
+    <main role="main">
+        <div class="content-container">
+            <!-- 페이지 제목 및 설정 -->
+            <h1 class="page-title">
+                제 22대 국회의원 RANK
+                <button class="settings-btn" id="settingsBtn" aria-label="정렬 설정" aria-expanded="false" aria-haspopup="true">
+                    설정
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M3 17H21V15H3V17ZM3 13H21V11H3V13ZM3 9H21V7H3V9Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                
+                <!-- 정렬 드롭다운 -->
+                <div class="dropdown" id="sortDropdown" role="menu" aria-labelledby="settingsBtn">
+                    <div class="dropdown-item active" data-sort="desc" role="menuitem" tabindex="0">내림차순 (1위부터)</div>
+                    <div class="dropdown-item" data-sort="asc" role="menuitem" tabindex="0">오름차순 (꼴찌부터)</div>
+                </div>
+            </h1>
+
+            <!-- 검색 영역 -->
+            <div class="search-container">
+                <div class="search-box">
+                    <label for="searchInput" class="sr-only">국회의원 검색</label>
+                    <input type="text" class="search-input" id="searchInput" placeholder="국회의원명, 정당명, 지역구로 검색" aria-label="국회의원 검색">
+                    <button class="search-button" id="searchButton" type="button" aria-label="검색 실행">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                            <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
-        </h1>
+            
+            <!-- 정당별 필터 버튼 -->
+            <div class="filter-buttons" role="group" aria-label="정당별 필터">
+                <button class="filter-btn active" data-filter="all" type="button" aria-pressed="true">전체</button>
+                <button class="filter-btn" data-filter="국민의힘" type="button" aria-pressed="false">국민의힘</button>
+                <button class="filter-btn" data-filter="더불어민주당" type="button" aria-pressed="false">더불어민주당</button>
+                <button class="filter-btn" data-filter="조국혁신당" type="button" aria-pressed="false">조국혁신당</button>
+                <button class="filter-btn" data-filter="개혁신당" type="button" aria-pressed="false">개혁신당</button>
+                <button class="filter-btn" data-filter="진보당" type="button" aria-pressed="false">진보당</button>
+                <button class="filter-btn" data-filter="기본소득당" type="button" aria-pressed="false">기본소득당</button>
+                <button class="filter-btn" data-filter="사회민주당" type="button" aria-pressed="false">사회민주당</button>
+                <button class="filter-btn" data-filter="무소속" type="button" aria-pressed="false">무소속</button>
+            </div>
 
-        <table class="member-table">
-            <thead>
-                <tr>
-                    <th>순위</th>
-                    <th>국회의원명</th>
-                    <th>정당명</th>
-                    <th>연락처</th>
-                    <th class="home-header">의원 홈페이지</th>
-                </tr>
-            </thead>
-            <tbody id="memberTableBody">
-                <!-- 데이터가 JavaScript로 생성됩니다 -->
-            </tbody>
-        </table>
+            <!-- 의원 정보 -->
+            <div class="member-info" role="status" aria-live="polite">
+                <p>전체 <span id="totalMemberCount" aria-label="총 의원 수">300</span> 명</p>
+            </div>
 
-        <!-- 페이지네이션 -->
-        <div class="pagination" id="pagination">
-            <!-- 페이지네이션이 JavaScript로 생성됩니다 -->
+            <!-- 국회의원 순위 테이블 -->
+            <table class="member-table" role="table" aria-label="국회의원 순위 표">
+                <thead>
+                    <tr role="row">
+                        <th scope="col" role="columnheader">순위</th>
+                        <th scope="col" role="columnheader">국회의원명</th>
+                        <th scope="col" role="columnheader">정당명</th>
+                        <th scope="col" role="columnheader">연락처</th>
+                        <th scope="col" role="columnheader" class="home-header">의원 홈페이지</th>
+                    </tr>
+                </thead>
+                <tbody id="memberTableBody" role="rowgroup">
+                    <!-- 초기 로딩 상태 -->
+                    <tr role="row">
+                        <td colspan="5" style="text-align: center; padding: 40px;">
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <div style="width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;" aria-hidden="true"></div>
+                                <span>국회의원 데이터를 불러오는 중...</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination" id="pagination" role="navigation" aria-label="페이지 네비게이션">
+                <!-- 페이지네이션이 JavaScript로 생성됩니다 -->
+            </div>
+            
+            <!-- 데이터 출처 및 업데이트 정보 -->
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; color: var(--example);">
+                <p>※ 국회의원 순위는 의정 활동 성과를 종합하여 산출되며, 실시간으로 업데이트됩니다.</p>
+                <p>※ 순위 산정 기준: 법안 발의, 출석률, 질의 활동, 청원 처리, 위원회 활동 등</p>
+                <p>※ 검색 기능: 의원명, 정당명, 지역구로 검색 가능</p>
+            </div>
         </div>
-    </div>
+    </main>
 
-        <!-- 챗봇 아이콘 -->
-    <div class="robot-icon">
+    <!-- 챗봇 아이콘 -->
+    <div class="robot-icon" role="button" aria-label="챗봇 열기" tabindex="0">
         <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아이콘">
     </div>
     
     <!-- 챗봇 모달 -->
-    <div class="chatbot-modal" id="chatbotModal">
+    <div class="chatbot-modal" id="chatbotModal" role="dialog" aria-modal="true" aria-labelledby="chatbot-title" aria-hidden="true">
         <div class="chatbot-container">
+            <!-- 챗봇 헤더 -->
             <div class="chatbot-header">
-                <div class="date">2025년 04월 12일 토요일</div>
-                <button class="close-button">&times;</button>
+                <div class="date" id="chatbot-title">2025년 04월 12일 토요일</div>
+                <button class="close-button" aria-label="챗봇 닫기">&times;</button>
             </div>
-            <div class="chatbot-messages" id="chatbotMessages">
-                <!-- 메시지가 여기에 추가됩니다 -->
+            
+            <!-- 챗봇 메시지 영역 -->
+            <div class="chatbot-messages" id="chatbotMessages" role="log" aria-live="polite" aria-label="챗봇 대화">
+                <!-- 초기 메시지 -->
                 <div class="message bot">
                     <div class="bot-avatar">
                         <img src="https://raw.githubusercontent.com/moody1317/osbasicproject_4/946d8f24f9c780853862670da370ad174c3def6c/chat.png" alt="챗봇 아바타">
                     </div>
                     <div class="message-content">
-                        <p>안녕하세요!</p>
-                        <p>무엇을 도와드릴까요?</p>
-                        <p class="small-text">궁금하신 내용을 선택하거나, 직접 입력해주세요</p>
+                        <p>안녕하세요! 국회의원 순위 챗봇입니다.</p>
+                        <p>국회의원별 의정 활동이나 순위에 대해 궁금한 점을 물어보세요!</p>
+                        <p class="small-text">아래 제안 버튼을 누르거나 직접 입력해주세요</p>
                     </div>
                 </div>
             </div>
             
+            <!-- 제안 버튼들 -->
             <div class="suggestion-buttons">
-                <button class="suggestion-btn">표결 정보</button>
-                <button class="suggestion-btn">청원 소개 내역</button>
-                <button class="suggestion-btn">경력</button>
-                <button class="suggestion-btn">상세 퍼센트</button>
+                <button class="suggestion-btn" type="button">1위 의원 정보</button>
+                <button class="suggestion-btn" type="button">순위 산정 기준</button>
+                <button class="suggestion-btn" type="button">의정 활동 비교</button>
+                <button class="suggestion-btn" type="button">정당별 현황</button>
             </div>
             
+            <!-- 챗봇 입력 영역 -->
             <div class="chatbot-input">
-                <input type="text" id="messageInput" placeholder="궁금하신 내용을 입력해주세요">
-                <button class="send-button">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <label for="messageInput" class="sr-only">메시지 입력</label>
+                <input type="text" id="messageInput" placeholder="국회의원 순위에 대해 궁금한 점을 입력해주세요" aria-label="메시지 입력">
+                <button class="send-button" type="button" aria-label="메시지 전송">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M22 2L11 13" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                         <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="#AAAAAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -153,14 +222,89 @@
         </div>
     </div>
 
+    <!-- 스크린 리더용 숨겨진 텍스트 -->
+    <div class="sr-only">
+        국회의원 순위 페이지입니다. 검색, 필터링, 페이지네이션 기능을 제공합니다. 
+        각 의원명을 클릭하면 상세 정보 페이지로 이동합니다.
+    </div>
+
     <!-- 외부 스크립트 연결 -->
+    <!-- 1. global_sync.js: API 서비스 및 퍼센트 설정 관리 -->
+    <script src="global_sync.js"></script>
+    
+    <!-- 2. scripts.js: 공통 UI 기능 및 챗봇, 페이지네이션 -->
     <script src="scripts.js"></script>
+    
+    <!-- 3. rank_member.js: 페이지별 기능 (위 스크립트들에 의존) -->
     <script src="rank_member.js"></script>
 
-    <footer style="margin-top: 40px; padding: 20px; font-size: 12px; color: gray; text-align: center; border-top: 1px solid #ddd; background-color: #f9f9f9;">
+    <!-- 로딩 스피너 CSS -->
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* 필터 버튼 접근성 개선 */
+        .filter-btn[aria-pressed="true"] {
+            background: linear-gradient(135deg, var(--light-blue), var(--main1));
+            color: white;
+            border-color: var(--light-blue);
+        }
+        
+        /* 키보드 포커스 스타일 */
+        .filter-btn:focus,
+        .search-button:focus,
+        .member-name:focus {
+            outline: 2px solid var(--light-blue);
+            outline-offset: 2px;
+        }
+    </style>
+
+    <!-- 푸터 -->
+    <footer>
         본 웹사이트는 충북대학교의 오픈소스 기초 프로젝트 과제를 위해 제작된 비상업적 프로젝트입니다.<br>
-        사용된 의원 정보 및 이미지는 열린국회정보 API를 통해 수집되었으며, 실제 정당 및 국회의원과 무관한 가상 시각화입니다.
+        사용된 의원 정보 및 이미지는 열린국회정보 API를 통해 수집되었으며, 실제 정당 및 국회의원과 무관한 가상 시각화입니다.<br>
     </footer>
 
+    <!-- 페이지 로드 완료 후 처리 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 마지막 업데이트 시간 설정
+            const lastUpdateElement = document.getElementById('lastUpdate');
+            if (lastUpdateElement) {
+                const now = new Date();
+                const dateString = now.toLocaleDateString('ko-KR', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                lastUpdateElement.textContent = dateString;
+            }
+            
+            // 필터 버튼 접근성 개선
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // 모든 버튼의 aria-pressed를 false로 설정
+                    filterButtons.forEach(btn => btn.setAttribute('aria-pressed', 'false'));
+                    // 클릭된 버튼만 true로 설정
+                    this.setAttribute('aria-pressed', 'true');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
