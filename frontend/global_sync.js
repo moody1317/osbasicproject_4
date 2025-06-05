@@ -9,7 +9,8 @@ class PercentSettingsSync {
             this.apiEndpoints = {
                 legislation: '/api/legislation',
                 attendance: '/api/attendance',
-                performance: '/api/performance'
+                performance: '/api/performance',
+                chatbot: '/api/chatbot'
             };
             console.log('🚀 Vercel 배포 환경 감지 - 프록시 API 사용');
         } else {
@@ -17,7 +18,8 @@ class PercentSettingsSync {
             this.apiEndpoints = {
                 legislation: 'https://osprojectapi.onrender.com/legislation',
                 attendance: 'https://osprojectapi.onrender.com/attendance',
-                performance: 'https://osprojectapi.onrender.com/performance'
+                performance: 'https://osprojectapi.onrender.com/performance',
+                chatbot: 'https://osprojectapi.onrender.com/chatbot'
             };
             
             // 로컬 개발용 CORS 프록시들
@@ -158,6 +160,9 @@ class PercentSettingsSync {
                     break;
                 case 'attendance':
                     testEndpoint = '/attendance/';
+                    break;
+                case 'chatbot':
+                    testEndpoint = '/health/';
                     break;
                 default:
                     testEndpoint = '/';
@@ -458,7 +463,7 @@ window.APIService = {
 
     // API 연결 상태 종합 체크
     async checkAllAPIs() {
-        const apis = ['performance', 'legislation', 'attendance'];
+        const apis = ['performance', 'legislation', 'attendance', 'chatbot'];
         const results = {};
         
         for (const api of apis) {
@@ -523,7 +528,6 @@ window.APIService = {
     }
 };
 
-// 기존 PercentSettings 객체 호환성 유지
 window.PercentSettings = {
     async get() {
         // 로컬 저장소에서 가져오기 (환경 무관)
@@ -639,6 +643,23 @@ window.vercelDebug = {
         }
     },
     
+    testChatbot: async (message = '테스트 메시지입니다') => {
+        console.log('🤖 Django 챗봇 API 테스트 시작...');
+        try {
+            const response = await window.APIService.sendChatMessage(message);
+            console.log('✅ Django 챗봇 API 테스트 성공:', response);
+            
+            // 헬스체크도 테스트
+            const health = await window.APIService.getChatbotHealth();
+            console.log('✅ Django 챗봇 헬스체크:', health);
+            
+            return { response, health };
+        } catch (error) {
+            console.error('❌ Django 챗봇 API 테스트 실패:', error);
+            return null;
+        }
+    },
+    
     forceLocal: () => {
         window.percentSync.isVercelDeployment = false;
         console.log('강제로 로컬 모드로 전환됨');
@@ -659,7 +680,171 @@ console.log('📋 입법 API 테스트: window.vercelDebug.testLegislation()');
 console.log('📊 성과 API 테스트: window.vercelDebug.testPerformance()');
 console.log('📅 출석 API 테스트: window.vercelDebug.testAttendance()');
 console.log('⚖️ 가중치 테스트: window.vercelDebug.testWeights()');
+console.log('🤖 Django 챗봇 테스트: window.vercelDebug.testChatbot()');
 console.log('⚙️ 강제 모드 변경: window.vercelDebug.forceLocal() / forceVercel()');
 
 // 기존 percentSync 호환성 보장
 window.percentSync = new PercentSettingsSync();
+
+// ===== 페이지네이션 유틸리티 함수들 =====
+
+// 페이지네이션 생성 함수
+function createPagination(totalItems, currentPage, itemsPerPage, onPageChange) {
+    const paginationContainer = document.getElementById('pagination');
+    if (!paginationContainer) {
+        console.error('pagination container not found!');
+        return;
+    }
+
+    // 총 페이지 수 계산
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // 페이지네이션 컨테이너 초기화
+    paginationContainer.innerHTML = '';
+    
+    // 페이지가 1페이지뿐이거나 데이터가 없으면 페이지네이션 숨김
+    if (totalPages <= 1) {
+        paginationContainer.style.display = 'none';
+        return;
+    }
+    
+    paginationContainer.style.display = 'flex';
+    
+    // 페이지네이션 래퍼 생성
+    const paginationWrapper = document.createElement('div');
+    paginationWrapper.className = 'pagination-wrapper';
+    
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+        const prevButton = createPaginationButton('‹', currentPage - 1, onPageChange);
+        prevButton.setAttribute('aria-label', '이전 페이지');
+        paginationWrapper.appendChild(prevButton);
+    }
+    
+    // 페이지 번호 계산 (최대 5개 표시)
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    
+    // 끝 페이지가 부족하면 시작 페이지 조정
+    if (endPage - startPage < maxVisiblePages - 1) {
+        startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+    
+    // 첫 페이지 (1)과 생략 표시
+    if (startPage > 1) {
+        paginationWrapper.appendChild(createPaginationButton('1', 1, onPageChange));
+        if (startPage > 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'pagination-ellipsis';
+            ellipsis.setAttribute('aria-hidden', 'true');
+            paginationWrapper.appendChild(ellipsis);
+        }
+    }
+    
+    // 중간 페이지 번호들
+    for (let i = startPage; i <= endPage; i++) {
+        const button = createPaginationButton(i.toString(), i, onPageChange);
+        if (i === currentPage) {
+            button.classList.add('active');
+            button.setAttribute('aria-current', 'page');
+        }
+        paginationWrapper.appendChild(button);
+    }
+    
+    // 마지막 페이지와 생략 표시
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'pagination-ellipsis';
+            ellipsis.setAttribute('aria-hidden', 'true');
+            paginationWrapper.appendChild(ellipsis);
+        }
+        paginationWrapper.appendChild(createPaginationButton(totalPages.toString(), totalPages, onPageChange));
+    }
+    
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+        const nextButton = createPaginationButton('›', currentPage + 1, onPageChange);
+        nextButton.setAttribute('aria-label', '다음 페이지');
+        paginationWrapper.appendChild(nextButton);
+    }
+    
+    paginationContainer.appendChild(paginationWrapper);
+    
+    console.log(`페이지네이션 생성 완료: ${currentPage}/${totalPages} (총 ${totalItems}개 항목)`);
+}
+
+// 페이지네이션 버튼 생성 헬퍼 함수
+function createPaginationButton(text, page, onPageChange) {
+    const button = document.createElement('button');
+    button.textContent = text;
+    button.className = 'pagination-btn';
+    button.setAttribute('type', 'button');
+    button.setAttribute('aria-label', `${page}페이지로 이동`);
+    
+    // 클릭 이벤트
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!this.classList.contains('active')) {
+            console.log(`페이지 변경: ${page}`);
+            onPageChange(page);
+            
+            // 포커스 관리 (접근성)
+            setTimeout(() => {
+                const newActiveButton = document.querySelector('.pagination-btn.active');
+                if (newActiveButton) {
+                    newActiveButton.focus();
+                }
+            }, 100);
+        }
+    });
+    
+    // 키보드 접근성
+    button.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+        }
+    });
+    
+    return button;
+}
+
+// 전역에서 접근 가능하도록 설정
+window.createPagination = createPagination;
+window.createPaginationButton = createPaginationButton;
+
+// ===== 유틸리티 함수들 =====
+
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+}
+
+function formatNumber(number) {
+    return number.toLocaleString('ko-KR');
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// 전역에서 접근 가능하도록 설정
+window.formatDate = formatDate;
+window.formatNumber = formatNumber;
+window.debounce = debounce;
