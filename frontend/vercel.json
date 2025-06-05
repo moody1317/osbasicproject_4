@@ -11,6 +11,10 @@
     {
       "source": "/api/performance/(.*)",
       "destination": "https://osprojectapi.onrender.com/performance/$1"
+    },
+    {
+      "source": "/api/chatbot/(.*)",
+      "destination": "https://osprojectapi.onrender.com/chatbot/$1"
     }
   ],
   "headers": [
