@@ -17,24 +17,12 @@ window.partyData = partyData;
 
 // ===== 환경 감지 함수 =====
 
-// 배포 환경 감지 
+// 배포 환경 감지
 function isVercelEnvironment() {
-    const hostname = window.location.hostname;
-    
-    if (hostname.includes('vercel.app')) return true;
-    if (hostname.includes('.vercel.app')) return true;
-    
-    if (hostname !== 'localhost' && 
-        hostname !== '127.0.0.1' && 
-        !hostname.includes('github.io') && 
-        !hostname.includes('netlify.app')) {
-        return true;
-    }
-    
-    return false;
+    return window.percentSync ? window.percentSync.isVercelDeployment : false;
 }
 
-// ===== 퍼센트 관리자 (PercentManager) =====
+// ===== 퍼센트 관리자 =====
 
 const PercentManager = {
     // 기본 퍼센트 설정
@@ -47,54 +35,46 @@ const PercentManager = {
         parties: 5
     },
 
-    // 🔧 설정 저장 (환경별 로깅)
+    // 설정 저장
     async saveSettings(settings) {
         try {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             console.log(`[${envType}] 퍼센트 설정 저장 중:`, settings);
             
-            if (window.APIService && window.APIService.savePercentSettings) {
-                await window.APIService.savePercentSettings(settings);
-                console.log(`[${envType}] 서버에 퍼센트 설정 저장 완료`);
+            // global_sync.js의 PercentSettings 사용
+            const result = await window.PercentSettings.save(settings);
+            
+            if (result) {
+                console.log(`[${envType}] 퍼센트 설정 저장 완료`);
+                
+                // 서버에도 저장 시도
+                try {
+                    const backendFormat = this.convertToBackendFormat(settings);
+                    await window.PercentSettings.saveToServer(backendFormat);
+                    console.log(`[${envType}] 서버에 퍼센트 설정 저장 완료`);
+                } catch (serverError) {
+                    console.warn(`[${envType}] 서버 저장 실패, 로컬만 저장됨:`, serverError);
+                }
             }
             
-            // 로컬 저장소에도 백업 저장
-            localStorage.setItem('percentSettings', JSON.stringify(settings));
-            
-            // 설정 변경 이벤트 발생
-            this.notifySettingsChange(settings);
-            
-            return true;
+            return result;
         } catch (error) {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             console.error(`[${envType}] 퍼센트 설정 저장 실패:`, error);
-            // 서버 저장 실패 시 로컬 저장소에만 저장
-            localStorage.setItem('percentSettings', JSON.stringify(settings));
-            this.notifySettingsChange(settings);
             return false;
         }
     },
 
-    // 🔧 설정 불러오기 (환경별 로깅)
+    // 설정 불러오기
     async getSettings() {
         try {
             const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
             console.log(`[${envType}] 퍼센트 설정 불러오는 중...`);
             
-            // 서버에서 설정 가져오기 시도
-            if (window.APIService && window.APIService.getPercentSettings) {
-                const serverSettings = await window.APIService.getPercentSettings();
-                if (serverSettings) {
-                    console.log(`[${envType}] 서버에서 퍼센트 설정 로드:`, serverSettings);
-                    return serverSettings;
-                }
-            }
+            const settings = await window.PercentSettings.get();
             
-            // 서버에서 실패 시 로컬 저장소에서 가져오기
-            const localSettings = localStorage.getItem('percentSettings');
-            if (localSettings) {
-                const settings = JSON.parse(localSettings);
-                console.log(`[${envType}] 로컬에서 퍼센트 설정 로드:`, settings);
+            if (settings) {
+                console.log(`[${envType}] 퍼센트 설정 로드:`, settings);
                 return settings;
             }
             
@@ -111,11 +91,8 @@ const PercentManager = {
     // 설정 존재 여부 확인 
     async hasSettings() {
         try {
-            if (window.APIService && window.APIService.hasPercentSettings) {
-                return await window.APIService.hasPercentSettings();
-            }
-            
-            return localStorage.getItem('percentSettings') !== null;
+            const settings = await window.PercentSettings.get();
+            return !!settings;
         } catch (error) {
             console.error('설정 존재 확인 실패:', error);
             return false;
@@ -123,8 +100,7 @@ const PercentManager = {
     },
 
     // 백엔드용 설정 형식으로 변환 
-    async getSettingsForBackend() {
-        const settings = await this.getSettings();
+    convertToBackendFormat(settings) {
         return {
             attendance_weight: settings.attendance,
             bills_weight: settings.bills,
@@ -135,63 +111,27 @@ const PercentManager = {
         };
     },
 
-    // 🔧 설정 변경 알림 (환경별 로깅)
-    notifySettingsChange(newSettings) {
-        const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-        console.log(`[${envType}] 퍼센트 설정 변경 알림:`, newSettings);
-        
-        // 커스텀 이벤트 발생
-        const event = new CustomEvent('percentSettingsChanged', {
-            detail: newSettings
-        });
-        window.dispatchEvent(event);
-        
-        // 콜백 함수들 실행
-        if (this.changeCallbacks) {
-            this.changeCallbacks.forEach(callback => {
-                try {
-                    callback(newSettings);
-                } catch (error) {
-                    console.error('설정 변경 콜백 실행 오류:', error);
-                }
-            });
-        }
-    },
-
     // 설정 변경 감지 콜백 등록
     onChange(callback) {
-        if (!this.changeCallbacks) {
-            this.changeCallbacks = [];
+        if (window.PercentSettings) {
+            window.PercentSettings.onChange(callback);
         }
-        this.changeCallbacks.push(callback);
     },
 
-    // 🔧 실시간 동기화 시작 (환경별 최적화)
+    // 🔧 실시간 동기화 시작 
     startSync() {
-        if (this.syncInterval) {
-            clearInterval(this.syncInterval);
+        if (window.PercentSettings) {
+            window.PercentSettings.startSync();
         }
         
         const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-        const syncInterval = isVercelEnvironment() ? 10000 : 5000; // Vercel에서는 더 긴 간격
-        
-        this.syncInterval = setInterval(async () => {
-            try {
-                const currentSettings = await this.getSettings();
-                this.notifySettingsChange(currentSettings);
-            } catch (error) {
-                console.error(`[${envType}] 설정 동기화 오류:`, error);
-            }
-        }, syncInterval);
-        
-        console.log(`[${envType}] 퍼센트 설정 실시간 동기화 시작 (${syncInterval}ms 간격)`);
+        console.log(`[${envType}] 퍼센트 설정 실시간 동기화 시작`);
     },
 
     // 동기화 중지 
     stopSync() {
-        if (this.syncInterval) {
-            clearInterval(this.syncInterval);
-            this.syncInterval = null;
+        if (window.PercentSettings) {
+            window.PercentSettings.stopSync();
         }
         
         const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
@@ -333,7 +273,7 @@ function setupModals() {
     });
 }
 
-// ===== SpringAI 연동 챗봇 시스템 (환경별 최적화) =====
+// ===== Django 연동 챗봇 시스템 =====
 
 // 챗봇 모달 토글
 function toggleChatbot() {
@@ -407,7 +347,7 @@ function showTypingIndicator() {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 }
 
-// 타이핑 효과 제거 (기존과 동일)
+// 타이핑 효과 제거
 function hideTypingIndicator() {
     const typingIndicator = document.getElementById('typing-indicator');
     if (typingIndicator) {
@@ -415,100 +355,38 @@ function hideTypingIndicator() {
     }
 }
 
-// 🔧 SpringAI API 호출 함수 (환경별 최적화)
+// Django 챗봇 API 호출 함수
 async function getChatbotResponse(message) {
     try {
         const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-        console.log(`[${envType}] SpringAI 챗봇 요청:`, message);
+        console.log(`[${envType}] Django 챗봇 요청:`, message);
         
-        // 환경별 챗봇 API 엔드포인트 설정
-        let apiUrl;
-        if (isVercelEnvironment()) {
-            // Vercel 배포 시: 프록시 경로 사용
-            apiUrl = '/api/chatbot/chat';
+        // global_sync.js의 APIService 사용
+        if (window.APIService && window.APIService.sendChatMessage) {
+            const response = await window.APIService.sendChatMessage(message);
+            console.log(`[${envType}] Django 응답:`, response);
+            
+            // Django API 응답 구조에 맞춰 처리
+            if (response && response.message) {
+                return response.message;
+            } else if (response && response.data && response.data.message) {
+                return response.data.message;
+            } else if (typeof response === 'string') {
+                return response;
+            } else {
+                throw new Error('Invalid response format');
+            }
         } else {
-            // 로컬 개발 시: 실제 SpringAI 서버 또는 폴백
-            apiUrl = '/api/chatbot/chat'; // 로컬에서도 프록시 경로 시도
+            throw new Error('APIService not available');
         }
-        
-        // SpringAI 엔드포인트 호출
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                message: message,
-                context: getCurrentPageContext() // 현재 페이지 컨텍스트 전달
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log(`[${envType}] SpringAI 응답:`, data);
-        
-        return data.response || data.message || '응답을 받을 수 없습니다.';
 
     } catch (error) {
         const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-        console.error(`[${envType}] SpringAI 챗봇 API 오류:`, error);
+        console.error(`[${envType}] Django 챗봇 API 오류:`, error);
         
         // 폴백: 환경별 기본 응답
         return getFallbackResponse(message, envType);
     }
-}
-
-// 현재 페이지 컨텍스트 정보 수집 (기존과 동일)
-function getCurrentPageContext() {
-    const currentPath = window.location.pathname;
-    const context = {
-        page: currentPath,
-        url: window.location.href,
-        timestamp: new Date().toISOString(),
-        environment: isVercelEnvironment() ? 'vercel' : 'local'
-    };
-
-    // 페이지별 특화 정보 추가
-    if (currentPath.includes('percent_party')) {
-        const partyName = document.getElementById('party-name')?.textContent;
-        if (partyName) {
-            context.party = partyName;
-            context.type = 'party_detail';
-        }
-    } else if (currentPath.includes('percent_member')) {
-        const memberName = document.querySelector('.member-name')?.textContent;
-        if (memberName) {
-            context.member = memberName;
-            context.type = 'member_detail';
-        }
-    } else if (currentPath.includes('rank_party')) {
-        context.type = 'party_ranking';
-    } else if (currentPath.includes('rank_member')) {
-        context.type = 'member_ranking';
-    } else if (currentPath.includes('compare_party')) {
-        context.type = 'party_comparison';
-    } else if (currentPath.includes('compare_member')) {
-        context.type = 'member_comparison';
-    } else if (currentPath.includes('meeting')) {
-        context.type = 'meeting';
-        if (currentPath.includes('more_meeting')) {
-            context.subtype = 'meeting_detail';
-        }
-    } else if (currentPath.includes('petition')) {
-        context.type = 'petition';
-        if (currentPath.includes('more_petition')) {
-            context.subtype = 'petition_detail';
-        }
-    } else if (currentPath.includes('announcements')) {
-        context.type = 'announcements';
-    } else if (currentPath.includes('inquiry')) {
-        context.type = 'inquiry';
-    }
-
-    return context;
 }
 
 // 🔧 폴백 응답 (환경별 메시지)
@@ -556,7 +434,7 @@ async function sendMessage() {
     showTypingIndicator();
 
     try {
-        // SpringAI로부터 응답 받기
+        // Django 챗봇으로부터 응답 받기
         const response = await getChatbotResponse(message);
         
         // 타이핑 효과 제거
@@ -589,7 +467,7 @@ function handleSuggestionClick(suggestion) {
     // 타이핑 효과 표시
     showTypingIndicator();
     
-    // SpringAI 응답 요청
+    // Django 챗봇 응답 요청
     getChatbotResponse(suggestion).then(response => {
         hideTypingIndicator();
         addMessage(response, true);
@@ -605,7 +483,7 @@ function handleSuggestionClick(suggestion) {
 // 🔧 챗봇 초기화 (환경별 로깅)
 function initializeChatbot() {
     const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
-    console.log(`[${envType}] SpringAI 챗봇 시스템 초기화 중...`);
+    console.log(`[${envType}] Django 챗봇 시스템 초기화 중...`);
 
     // 챗봇 아이콘 클릭 이벤트
     const robotIcon = document.querySelector('.robot-icon');
@@ -654,174 +532,25 @@ function initializeChatbot() {
         });
     }
 
-    console.log(`[${envType}] SpringAI 챗봇 시스템 초기화 완료`);
+    console.log(`[${envType}] Django 챗봇 시스템 초기화 완료`);
 }
 
-// ===== 유틸리티 함수 =====
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-}
-
-function formatNumber(number) {
-    return number.toLocaleString('ko-KR');
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// ===== 페이지네이션 함수 =====
-
-// 페이지네이션 생성 함수
-function createPagination(totalItems, currentPage, itemsPerPage, onPageChange) {
-    const paginationContainer = document.getElementById('pagination');
-    if (!paginationContainer) {
-        console.error('pagination container not found!');
-        return;
-    }
-
-    // 총 페이지 수 계산
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-    
-    // 페이지네이션 컨테이너 초기화
-    paginationContainer.innerHTML = '';
-    
-    // 페이지가 1페이지뿐이거나 데이터가 없으면 페이지네이션 숨김
-    if (totalPages <= 1) {
-        paginationContainer.style.display = 'none';
-        return;
-    }
-    
-    paginationContainer.style.display = 'flex';
-    
-    // 페이지네이션 래퍼 생성
-    const paginationWrapper = document.createElement('div');
-    paginationWrapper.className = 'pagination-wrapper';
-    
-    // 이전 페이지 버튼
-    if (currentPage > 1) {
-        const prevButton = createPaginationButton('‹', currentPage - 1, onPageChange);
-        prevButton.setAttribute('aria-label', '이전 페이지');
-        paginationWrapper.appendChild(prevButton);
-    }
-    
-    // 페이지 번호 계산 (최대 5개 표시)
-    const maxVisiblePages = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
-    
-    // 끝 페이지가 부족하면 시작 페이지 조정
-    if (endPage - startPage < maxVisiblePages - 1) {
-        startPage = Math.max(1, endPage - maxVisiblePages + 1);
-    }
-    
-    // 첫 페이지 (1)과 생략 표시
-    if (startPage > 1) {
-        paginationWrapper.appendChild(createPaginationButton('1', 1, onPageChange));
-        if (startPage > 2) {
-            const ellipsis = document.createElement('span');
-            ellipsis.textContent = '...';
-            ellipsis.className = 'pagination-ellipsis';
-            ellipsis.setAttribute('aria-hidden', 'true');
-            paginationWrapper.appendChild(ellipsis);
-        }
-    }
-    
-    // 중간 페이지 번호들
-    for (let i = startPage; i <= endPage; i++) {
-        const button = createPaginationButton(i.toString(), i, onPageChange);
-        if (i === currentPage) {
-            button.classList.add('active');
-            button.setAttribute('aria-current', 'page');
-        }
-        paginationWrapper.appendChild(button);
-    }
-    
-    // 마지막 페이지와 생략 표시
-    if (endPage < totalPages) {
-        if (endPage < totalPages - 1) {
-            const ellipsis = document.createElement('span');
-            ellipsis.textContent = '...';
-            ellipsis.className = 'pagination-ellipsis';
-            ellipsis.setAttribute('aria-hidden', 'true');
-            paginationWrapper.appendChild(ellipsis);
-        }
-        paginationWrapper.appendChild(createPaginationButton(totalPages.toString(), totalPages, onPageChange));
-    }
-    
-    // 다음 페이지 버튼
-    if (currentPage < totalPages) {
-        const nextButton = createPaginationButton('›', currentPage + 1, onPageChange);
-        nextButton.setAttribute('aria-label', '다음 페이지');
-        paginationWrapper.appendChild(nextButton);
-    }
-    
-    paginationContainer.appendChild(paginationWrapper);
-    
-    console.log(`페이지네이션 생성 완료: ${currentPage}/${totalPages} (총 ${totalItems}개 항목)`);
-}
-
-// 페이지네이션 버튼 생성 헬퍼 함수
-function createPaginationButton(text, page, onPageChange) {
-    const button = document.createElement('button');
-    button.textContent = text;
-    button.className = 'pagination-btn';
-    button.setAttribute('type', 'button');
-    button.setAttribute('aria-label', `${page}페이지로 이동`);
-    
-    // 클릭 이벤트
-    button.addEventListener('click', function(e) {
-        e.preventDefault();
-        if (!this.classList.contains('active')) {
-            console.log(`페이지 변경: ${page}`);
-            onPageChange(page);
-            
-            // 포커스 관리 (접근성)
-            setTimeout(() => {
-                const newActiveButton = document.querySelector('.pagination-btn.active');
-                if (newActiveButton) {
-                    newActiveButton.focus();
-                }
-            }, 100);
-        }
-    });
-    
-    // 키보드 접근성
-    button.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.click();
-        }
-    });
-    
-    return button;
-}
-
-// 전역에서 접근 가능하도록 설정
-window.createPagination = createPagination;
-window.createPaginationButton = createPaginationButton;
-
-// ===== 페이지 초기화 (환경별 최적화) =====
+// ===== 페이지 초기화 =====
 
 document.addEventListener('DOMContentLoaded', function() {
     const envType = isVercelEnvironment() ? 'VERCEL' : 'LOCAL';
     console.log(`🚀 [${envType}] scripts.js 초기화 시작...`);
     
     try {
+        // global_sync.js 로딩 대기
+        if (!window.percentSync || !window.APIService) {
+            console.log(`[${envType}] global_sync.js 로딩 대기 중...`);
+            setTimeout(() => {
+                document.dispatchEvent(new Event('DOMContentLoaded'));
+            }, 100);
+            return;
+        }
+        
         // 네비게이션 설정
         setupNavigation();
         console.log(`✅ [${envType}] 네비게이션 초기화 완료`);
@@ -830,9 +559,9 @@ document.addEventListener('DOMContentLoaded', function() {
         setupModals();
         console.log(`✅ [${envType}] 모달 초기화 완료`);
         
-        // SpringAI 챗봇 초기화
+        // Django 챗봇 초기화
         initializeChatbot();
-        console.log(`✅ [${envType}] SpringAI 챗봇 초기화 완료`);
+        console.log(`✅ [${envType}] Django 챗봇 초기화 완료`);
         
         // 퍼센트 관리자 실시간 동기화 시작
         PercentManager.startSync();
@@ -864,5 +593,16 @@ window.scriptsDebug = {
         console.log(`호스트명: ${window.location.hostname}`);
         console.log(`챗봇 활성화: ${!!document.getElementById('chatbotModal')}`);
         console.log(`PercentManager 활성화: ${!!window.PercentManager}`);
+        console.log(`global_sync 연동: ${!!(window.percentSync && window.APIService)}`);
+    },
+    testGlobalSync: () => {
+        if (window.vercelDebug) {
+            console.log('🔗 global_sync.js 연동 테스트');
+            window.vercelDebug.showEnvInfo();
+            return true;
+        } else {
+            console.error('❌ global_sync.js 연동 실패');
+            return false;
+        }
     }
 };
