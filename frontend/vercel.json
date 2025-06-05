@@ -1,0 +1,35 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/legislation/(.*)",
+      "destination": "https://osprojectapi.onrender.com/legislation/$1"
+    },
+    {
+      "source": "/api/attendance/(.*)",
+      "destination": "https://osprojectapi.onrender.com/attendance/$1"
+    },
+    {
+      "source": "/api/performance/(.*)",
+      "destination": "https://osprojectapi.onrender.com/performance/$1"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
+}
