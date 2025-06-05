@@ -1,3 +1,6 @@
+/* 국회의원 순위 페이지 전용 스타일 */
+
+/* 메인 콘텐츠 스타일 */
 .content-container {
     width: 100%;
     padding: 0 15px;
@@ -10,8 +13,10 @@
     font-weight: 600;
     margin-bottom: 40px;
     position: relative;
+    color: var(--string);
 }
 
+/* 설정 버튼 및 드롭다운 스타일 */
 .settings-btn {
     position: absolute;
     right: 0;
@@ -24,10 +29,23 @@
     align-items: center;
     cursor: pointer;
     font-size: 14px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.settings-btn:hover {
+    background-color: var(--main2);
+    border-color: var(--light-blue);
+    transform: translateY(-1px);
 }
 
 .settings-btn svg {
     margin-left: 5px;
+    transition: transform 0.2s ease;
+}
+
+.settings-btn:hover svg {
+    transform: rotate(90deg);
 }
 
 .dropdown {
@@ -37,23 +55,34 @@
     background-color: white;
     border: 1px solid var(--side2);
     border-radius: 5px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 100;
     display: none;
     min-width: 160px;
     font-size: 14px;
+    overflow: hidden;
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: all 0.3s ease;
 }
 
 .dropdown.active {
     display: block;
+    transform: translateY(0);
+    opacity: 1;
 }
 
 .dropdown-item {
-    padding: 8px 12px;
+    padding: 12px 16px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s ease;
     white-space: nowrap;
-    text-align: center;
+    text-align: left;
+    border-bottom: 1px solid var(--side2);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
 }
 
 .dropdown-item:hover {
@@ -63,22 +92,172 @@
 .dropdown-item.active {
     background-color: var(--main1);
     font-weight: 500;
+    color: var(--light-blue);
 }
 
-/* 테이블 스타일 */
+/* 검색 컨테이너 스타일 개선 */
+.search-container {
+    margin: 30px auto;
+    display: flex;
+    justify-content: center;
+    max-width: 600px;
+}
+
+.search-box {
+    display: flex;
+    border: 2px solid var(--side2);
+    border-radius: 50px;
+    overflow: hidden;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    border-color: var(--light-blue);
+    box-shadow: 0 4px 20px rgba(112, 200, 233, 0.3);
+    transform: translateY(-2px);
+}
+
+.search-input {
+    flex: 1;
+    padding: 15px 25px;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    background-color: transparent;
+    font-family: 'Blinker', sans-serif;
+    color: var(--string);
+}
+
+.search-input::placeholder {
+    color: #999;
+    transition: color 0.2s ease;
+}
+
+.search-input:focus::placeholder {
+    color: #bbb;
+}
+
+.search-button {
+    background: none;
+    border: none;
+    padding: 0 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: var(--string);
+    border-radius: 0 50px 50px 0;
+}
+
+.search-button:hover {
+    background: linear-gradient(135deg, var(--light-blue), var(--main1));
+    color: white;
+    transform: scale(1.05);
+}
+
+.search-button svg {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.2s ease;
+}
+
+.search-button:hover svg {
+    transform: scale(1.1);
+}
+
+/* 필터 버튼 스타일 개선 */
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 20px;
+    border: 2px solid var(--side2);
+    background-color: white;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-family: 'Blinker', sans-serif;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--light-blue), var(--main1));
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+.filter-btn:hover::before {
+    left: 0;
+}
+
+.filter-btn:hover {
+    color: white;
+    border-color: var(--light-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(112, 200, 233, 0.3);
+}
+
+.filter-btn.active {
+    background: linear-gradient(135deg, var(--light-blue), var(--main1));
+    color: white;
+    border-color: var(--light-blue);
+    box-shadow: 0 4px 12px rgba(112, 200, 233, 0.3);
+}
+
+/* 의원 정보 스타일 */
+.member-info {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: var(--example);
+    text-align: center;
+    padding: 10px;
+    background: linear-gradient(135deg, var(--main2), var(--main1));
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.member-info span {
+    font-weight: 600;
+    color: var(--string);
+    font-size: 18px;
+}
+
+/* 테이블 스타일 개선 */
 .member-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 50px;
     margin-top: 15px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .member-table th {
-    background-color: var(--side);
-    padding: 15px;
+    background: linear-gradient(135deg, var(--side), var(--main1));
+    padding: 18px 15px;
     text-align: left;
-    font-weight: 500;
-    border-bottom: 1px solid var(--side2);
+    font-weight: 600;
+    border-bottom: 2px solid var(--side2);
+    color: var(--string);
+    font-size: 15px;
 }
 
 .member-table th:first-child {
@@ -93,54 +272,120 @@
 .member-table td {
     padding: 20px 15px;
     border-bottom: 1px solid var(--side2);
+    vertical-align: middle;
 }
 
+.member-table tbody tr {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.member-table tbody tr:hover {
+    background: linear-gradient(135deg, var(--main2), var(--main1));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.member-table tbody tr:hover .rank-cell {
+    transform: scale(1.1);
+    color: var(--light-blue);
+}
+
+.member-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 순위 셀 스타일 강화 */
 .rank-cell {
     text-align: center;
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
+    color: var(--string);
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
 }
 
-.member-name {
-    font-weight: 500;
-    margin-top: 0;
-    text-align: left;
+/* 상위 3위 특별 스타일 */
+.member-table tbody tr:nth-child(1) .rank-cell {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    animation: pulse-gold 2s infinite;
+}
+
+.member-table tbody tr:nth-child(2) .rank-cell {
+    background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.member-table tbody tr:nth-child(3) .rank-cell {
+    background: linear-gradient(135deg, #CD7F32, #B8860B);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+@keyframes pulse-gold {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* 의원 정보 셀 스타일 */
+.member-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.member-name, .member-name-clickable {
+    font-weight: 600;
+    margin: 0;
     cursor: pointer;
     color: var(--string);
     text-decoration: none;
-    transition: color 0.2s, text-decoration 0.2s;
+    transition: all 0.3s ease;
     display: inline-block;
-    padding: 2px 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    position: relative;
 }
 
-.member-name:hover {
+.member-name:hover, .member-name-clickable:hover {
     color: var(--light-blue);
-    text-decoration: underline;
+    background-color: var(--main2);
+    transform: translateX(5px);
 }
 
-.member-name-clickable {
-    cursor: pointer;
-    color: var(--string);
-    text-decoration: none;
-    transition: color 0.2s, text-decoration 0.2s;
-    display: inline-block;
-    padding: 2px 0;
+.member-district {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
 }
 
-.member-name-clickable:hover {
-    color: var(--light-blue);
-    text-decoration: underline;
-}
 .party-name {
-    font-weight: 400;
+    font-weight: 500;
+    color: var(--string);
+    padding: 4px 8px;
+    background-color: var(--main2);
+    border-radius: 12px;
+    font-size: 14px;
 }
 
 .phone-number {
     font-family: 'Blinker', sans-serif;
     letter-spacing: 0.5px;
     color: var(--number);
+    font-weight: 500;
 }
 
+/* 홈페이지 아이콘 스타일 개선 */
 .home-icon {
     text-align: center;
 }
@@ -148,30 +393,75 @@
 .home-icon a {
     display: inline-block;
     text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 8px;
+    border-radius: 50%;
 }
 
 .home-icon svg {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     color: var(--example);
     cursor: pointer;
-    transition: color 0.2s;
-    vertical-align: middle;
-    position: relative;
-    top: 2px;
+    transition: all 0.3s ease;
+}
+
+.home-icon a:hover {
+    background-color: var(--main2);
+    transform: scale(1.2);
 }
 
 .home-icon a:hover svg {
     color: var(--light-blue);
+    filter: drop-shadow(0 2px 4px rgba(112, 200, 233, 0.3));
 }
 
-/* 테이블 행 호버 효과 */
+/* 의원 사진 스타일 */
+.member-photo-small {
+    border: 2px solid var(--side2);
+    transition: all 0.3s ease;
+}
+
+.member-table tbody tr:hover .member-photo-small {
+    border-color: var(--light-blue);
+    transform: scale(1.05);
+}
+
+/* 테이블 애니메이션 */
 .member-table tbody tr {
-    transition: background-color 0.2s;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
 }
 
-.member-table tbody tr:hover {
-    background-color: var(--main2);
+.member-table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+.member-table tbody tr:nth-child(2) { animation-delay: 0.15s; }
+.member-table tbody tr:nth-child(3) { animation-delay: 0.2s; }
+.member-table tbody tr:nth-child(4) { animation-delay: 0.25s; }
+.member-table tbody tr:nth-child(5) { animation-delay: 0.3s; }
+.member-table tbody tr:nth-child(6) { animation-delay: 0.35s; }
+.member-table tbody tr:nth-child(7) { animation-delay: 0.4s; }
+.member-table tbody tr:nth-child(8) { animation-delay: 0.45s; }
+.member-table tbody tr:nth-child(9) { animation-delay: 0.5s; }
+.member-table tbody tr:nth-child(10) { animation-delay: 0.55s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 로딩 상태 스타일 */
+.loading-row {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
 /* 페이지네이션 스타일 */
@@ -179,47 +469,45 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 50px;
-    margin-bottom: 80px;
-    font-size: 14px;
-    flex-wrap: wrap;
-    gap: 5px;
+    gap: 8px;
+    margin: 30px 0;
+    padding: 20px;
 }
 
-.pagination a {
-    display: inline-block;
+.pagination button {
     padding: 8px 12px;
-    margin: 2px;
-    text-decoration: none;
-    color: var(--string);
-    border-radius: 5px;
-    transition: background-color 0.2s, color 0.2s;
     border: 1px solid var(--side2);
+    background-color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    min-width: 40px;
 }
 
-.pagination a:hover, .pagination a.active {
+.pagination button:hover {
+    background-color: var(--main2);
+    border-color: var(--light-blue);
+}
+
+.pagination button.active {
     background-color: var(--light-blue);
     color: white;
     border-color: var(--light-blue);
 }
 
-.pagination .prev-next {
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination .page-info {
+    margin: 0 15px;
+    font-size: 14px;
     color: var(--example);
-    font-weight: 500;
 }
 
-.pagination .prev-next:hover {
-    color: white;
-}
-
-.pagination .ellipsis {
-    color: var(--example);
-    padding: 8px 5px;
-    border: none;
-    pointer-events: none;
-}
-
-/* 반응형 디자인 */
+/* 반응형 디자인 개선 */
 @media screen and (max-width: 1024px) {
     .content-container {
         padding: 0 10px;
@@ -239,6 +527,21 @@
         top: 62px;
         min-width: 140px;
     }
+
+    .search-container {
+        margin: 25px 15px;
+        max-width: 100%;
+    }
+
+    .filter-buttons {
+        gap: 8px;
+        margin: 15px 0;
+    }
+
+    .filter-btn {
+        font-size: 13px;
+        padding: 8px 16px;
+    }
     
     .member-table th,
     .member-table td {
@@ -246,12 +549,9 @@
     }
     
     .rank-cell {
-        font-size: 22px;
-    }
-    
-    .pagination {
-        margin-top: 40px;
-        margin-bottom: 60px;
+        font-size: 24px;
+        width: 45px;
+        height: 45px;
     }
 }
 
@@ -262,26 +562,51 @@
     }
     
     .page-title {
-        font-size: 24px;
+        font-size: 28px;
         margin-bottom: 25px;
     }
     
     .settings-btn {
-        padding: 2px 6px;
+        padding: 3px 8px;
         font-size: 12px;
-        top: 28px;
+        top: 30px;
     }
     
     .dropdown {
-        top: 55px;
-        min-width: 100px;
+        top: 58px;
+        min-width: 120px;
         font-size: 12px;
     }
     
     .dropdown-item {
-        padding: 5px 8px;
+        padding: 8px 12px;
     }
 
+    .search-container {
+        margin: 20px 10px;
+    }
+
+    .search-input {
+        font-size: 14px;
+        padding: 12px 18px;
+    }
+
+    .search-button {
+        padding: 0 18px;
+    }
+
+    .filter-buttons {
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 15px 0;
+    }
+
+    .filter-btn {
+        font-size: 12px;
+        padding: 6px 14px;
+    }
+
+    /* 테이블에서 연락처 열 숨기기 */
     .member-table th:nth-child(4),
     .member-table td:nth-child(4) {
         display: none;
@@ -289,16 +614,18 @@
 
     .member-table th,
     .member-table td {
-        padding: 10px 5px;
+        padding: 12px 8px;
         font-size: 13px;
     }
     
     .rank-cell {
-        font-size: 18px;
+        font-size: 20px;
+        width: 40px;
+        height: 40px;
     }
 
     .member-table td:nth-child(2) {
-        max-width: 120px;
+        max-width: 140px;
     }
     
     .member-name,
@@ -308,6 +635,7 @@
     
     .party-name {
         font-size: 12px;
+        padding: 2px 6px;
     }
     
     .phone-number {
@@ -316,64 +644,59 @@
     }
     
     .home-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 24px;
+        height: 24px;
     }
 
-    .pagination {
-        flex-wrap: wrap;
-        gap: 3px;
-        margin-top: 35px;
-        margin-bottom: 50px;
-    }
-
-    .pagination a {
-        margin: 1px;
-        padding: 6px 10px;
-        font-size: 13px;
+    .member-photo-small {
+        width: 35px !important;
+        height: 35px !important;
     }
 }
 
 @media screen and (max-width: 576px) {
-    .content-container {
-        padding: 0 5px;
-        margin-top: 25px;
-    }
-    
     .page-title {
         font-size: 24px;
-        margin-bottom: 25px;
-    }
-    
-    .settings-btn {
-        padding: 2px 6px;
-        font-size: 12px;
-        top: 28px;
-    }
-    
-    .dropdown {
-        top: 55px;
-        min-width: 100px;
-        font-size: 12px;
-    }
-    
-    .dropdown-item {
-        padding: 5px 8px;
+        margin-bottom: 20px;
     }
 
-    .member-table th:nth-child(4),
-    .member-table td:nth-child(4) {
-        display: none;
+    .search-container {
+        margin: 15px 5px;
+    }
+
+    .search-box {
+        border-radius: 25px;
+    }
+
+    .search-input {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+
+    .search-button {
+        padding: 0 15px;
+    }
+
+    .filter-buttons {
+        margin: 15px 0;
+        gap: 4px;
+    }
+
+    .filter-btn {
+        font-size: 11px;
+        padding: 5px 12px;
     }
 
     .member-table th,
     .member-table td {
         padding: 10px 5px;
-        font-size: 13px;
+        font-size: 12px;
     }
     
     .rank-cell {
         font-size: 18px;
+        width: 35px;
+        height: 35px;
     }
 
     .member-table td:nth-child(2) {
@@ -382,36 +705,139 @@
 
     .member-name,
     .member-name-clickable {
-        font-size: 13px;
+        font-size: 12px;
     }
     
     .party-name {
-        font-size: 12px;
-    }
-    
-    .phone-number {
-        font-size: 12px;
-        letter-spacing: 0.3px;
+        font-size: 11px;
+        padding: 2px 4px;
     }
     
     .home-icon svg {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
     }
-    
+
+    .member-photo-small {
+        width: 30px !important;
+        height: 30px !important;
+        margin-right: 5px !important;
+    }
+
+    .member-info-cell {
+        gap: 5px;
+    }
+
     .pagination {
-        margin-top: 30px;
-        margin-bottom: 40px;
-        gap: 2px;
+        gap: 4px;
+        margin: 20px 0;
+        padding: 10px;
     }
-    
-    .pagination a {
-        padding: 5px 8px;
+
+    .pagination button {
+        padding: 6px 8px;
         font-size: 12px;
-        margin: 1px;
+        min-width: 32px;
+    }
+}
+
+/* 다크 모드 지원 */
+@media (prefers-color-scheme: dark) {
+    .member-table {
+        background-color: #2c3e50;
+        color: #ecf0f1;
     }
     
-    .pagination .ellipsis {
-        padding: 5px 3px;
+    .member-table th {
+        background: linear-gradient(135deg, #34495e, #2c3e50);
+        color: #ecf0f1;
+    }
+    
+    .search-box {
+        background-color: #34495e;
+        border-color: #2c3e50;
+    }
+    
+    .search-input {
+        color: #ecf0f1;
+    }
+    
+    .filter-btn {
+        background-color: #34495e;
+        color: #ecf0f1;
+        border-color: #2c3e50;
+    }
+    
+    .dropdown {
+        background-color: #34495e;
+        color: #ecf0f1;
+        border-color: #2c3e50;
+    }
+    
+    .settings-btn {
+        background-color: #34495e;
+        color: #ecf0f1;
+        border-color: #2c3e50;
+    }
+}
+
+/* 접근성 개선 */
+.member-table tbody tr:focus {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}
+
+.settings-btn:focus,
+.dropdown-item:focus,
+.filter-btn:focus,
+.search-button:focus {
+    outline: 2px solid var(--light-blue);
+    outline-offset: 2px;
+}
+
+.search-input:focus {
+    outline: none; /* search-box의 focus-within이 처리 */
+}
+
+/* 인쇄 스타일 */
+@media print {
+    .settings-btn,
+    .dropdown,
+    .search-container,
+    .filter-buttons {
+        display: none;
+    }
+    
+    .member-table tbody tr:hover {
+        background-color: transparent;
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .member-table {
+        box-shadow: none;
+    }
+}
+
+/* 성능 최적화 */
+.member-table tbody tr,
+.settings-btn,
+.dropdown,
+.rank-cell,
+.filter-btn,
+.search-box {
+    will-change: transform;
+}
+
+/* 스크롤 동작 개선 */
+@media (prefers-reduced-motion: reduce) {
+    .member-table tbody tr,
+    .settings-btn,
+    .dropdown,
+    .rank-cell,
+    .filter-btn,
+    .search-box {
+        transition: none;
+        animation: none;
     }
 }
