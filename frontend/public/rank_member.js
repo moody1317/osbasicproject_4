@@ -562,7 +562,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // 퍼센트 가중치 업데이트 함수 (다른 페이지와 연동)
+    // 🆕 퍼센트 가중치 업데이트 함수 (다른 페이지와 연동)
     async function updatePerformanceWeights(weights) {
         try {
             if (window.APIService && window.APIService.updateWeights) {
@@ -593,11 +593,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 🆕 가중치 변경 감지 및 자동 새로고침
+    function setupWeightChangeListener() {
+        // localStorage 변경 감지
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'weight_change_event' && e.newValue) {
+                try {
+                    const event = JSON.parse(e.newValue);
+                    if (event.type === 'weights_updated' && event.source !== 'rank_member') {
+                        console.log('🔄 가중치 변경 감지됨, 데이터 새로고침 중...');
+                        
+                        // 새로고침 알림 표시
+                        if (window.APIService && window.APIService.showNotification) {
+                            window.APIService.showNotification('가중치 변경 감지 - 데이터 새로고침 중...', 'info');
+                        }
+                        
+                        // 1초 후 데이터 새로고침
+                        setTimeout(() => {
+                            loadMemberData();
+                        }, 1000);
+                    }
+                } catch (error) {
+                    console.warn('가중치 변경 이벤트 처리 실패:', error);
+                }
+            }
+        });
+
+        // 주기적으로 데이터 확인 (5분마다)
+        setInterval(async () => {
+            if (window.APIService && window.APIService._isReady) {
+                console.log('📊 정기 데이터 새로고침 (5분)');
+                try {
+                    await loadMemberData();
+                } catch (error) {
+                    console.warn('정기 새로고침 실패:', error);
+                }
+            }
+        }, 5 * 60 * 1000); // 5분
+    }
+
     // 전역 함수로 등록 (다른 페이지에서 호출 가능)
     window.updateMemberRankingWeights = updatePerformanceWeights;
 
     // 초기화 함수들 실행
     initializeControls();
+    setupWeightChangeListener(); // 🆕 가중치 변경 감지 설정
     loadMemberData();
 
     // 개발용 디버그 함수들
@@ -620,6 +660,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
             updateWeights: (weights) => updatePerformanceWeights(weights),
+            // 🆕 가중치 연동 디버그 함수들
+            triggerWeightChange: () => {
+                // 가중치 변경 이벤트 시뮬레이션
+                const event = {
+                    type: 'weights_updated',
+                    timestamp: new Date().toISOString(),
+                    source: 'debug_test'
+                };
+                localStorage.setItem('weight_change_event', JSON.stringify(event));
+                setTimeout(() => localStorage.removeItem('weight_change_event'), 100);
+            },
+            showWeightStatus: () => {
+                console.log('🔧 가중치 연동 상태:');
+                console.log('- localStorage 이벤트 리스너: 활성화됨');
+                console.log('- 정기 새로고침: 5분마다');
+                console.log('- API 연결 상태:', window.APIService?._isReady ? '연결됨' : '연결 안됨');
+            },
             apiTest: async () => {
                 if (window.APIService) {
                     try {
@@ -643,6 +700,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('  - filter(party): 정당 필터');
         console.log('  - page(num): 페이지 이동');
         console.log('  - updateWeights(weights): 가중치 업데이트');
+        console.log('  - triggerWeightChange(): 가중치 변경 이벤트 시뮬레이션');
+        console.log('  - showWeightStatus(): 가중치 연동 상태 확인');
         console.log('  - apiTest(): API 연결 테스트');
     }
 
@@ -651,5 +710,6 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('📊 데이터 스키마: lawmaker_name, party, total_score');
     console.log('🔍 검색 기능: 의원명, 정당명으로 검색 가능');
     console.log('🏷️ 필터 기능: 정당별 필터링 가능');
-    console.log('⚖️ 가중치 연동: 퍼센트 설정 페이지와 연동');
+    console.log('⚖️ 가중치 연동: 퍼센트 설정 페이지와 실시간 연동');
+    console.log('🔄 자동 새로고침: 가중치 변경 감지 및 5분마다 정기 새로고침');
 });
