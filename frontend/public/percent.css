@@ -1,0 +1,413 @@
+/* 메인 영역 */
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.title {
+    text-align: center;
+    font-size: 36px; 
+    font-weight: 600;
+    margin-bottom: 40px;
+    position: relative;
+    margin-top: 40px;
+}
+
+/* === API 연결 상태 표시 (숨김) === */
+.api-status-bar {
+    display: none; /* API 기능 숨김 */
+}
+
+/* === 컨트롤 영역 === */
+.control-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* 초기화 버튼 */
+.reset-wrapper {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.reset-button {
+    background-color: var(--main1);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Blinker', sans-serif;
+    color: var(--string);
+}
+
+.reset-button:hover {
+    background-color: var(--light-blue);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* 자동 저장 인디케이터 (숨김) */
+.auto-save-indicator {
+    display: none; /* API 기능 숨김 */
+}
+
+/* === 백업 및 복원 섹션 (숨김) === */
+.backup-section {
+    display: none; /* 백업 기능 숨김 */
+}
+
+/* === 체크박스 영역 === */
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.checkbox-item {
+    border: 1px solid var(--side2);
+    padding: 15px;
+    border-radius: 5px;
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.checkbox-item:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+.checkbox-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox-input {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--light-blue);
+}
+
+.checkbox-label {
+    font-weight: 500;
+    color: var(--string);
+    cursor: pointer;
+}
+
+.checkbox-description {
+    color: var(--example);
+    font-size: 14px;
+}
+
+/* === 퍼센트 그리드 === */
+.percent-grid {
+    width: 100%;
+    margin-top: 20px;
+    border-top: 1px solid var(--side2);
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.percent-header {
+    display: flex;
+    background-color: var(--main1);
+    border-bottom: 1px solid var(--side2);
+    font-weight: 600;
+}
+
+.percent-header-item {
+    flex: 1;
+    padding: 12px 10px;
+    text-align: center;
+    color: var(--string);
+    font-size: 15px;
+}
+
+.percent-row {
+    display: flex;
+    border-bottom: 1px solid var(--side2);
+    transition: background-color 0.2s ease;
+}
+
+.percent-row:last-child {
+    border-bottom: none;
+}
+
+.percent-row:hover {
+    background-color: var(--main2);
+}
+
+.percent-item {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 12px;
+    border-right: 1px solid var(--side2);
+}
+
+.percent-item:nth-child(2) {
+    border-right: none;
+}
+
+.percent-label {
+    font-size: 15px;
+    color: var(--string);
+    font-weight: 500;
+}
+
+.percent-input {
+    width: 70px;
+    padding: 6px 8px;
+    text-align: right;
+    border: 1px solid var(--side2);
+    border-radius: 4px;
+    color: var(--light-blue);
+    font-weight: 600;
+    font-size: 15px;
+    background: #f9f9f9;
+    font-family: 'Blinker', sans-serif;
+    transition: all 0.2s ease;
+}
+
+.percent-input:focus {
+    outline: none;
+    border-color: var(--light-blue);
+    background: white;
+    box-shadow: 0 0 0 2px rgba(112, 200, 233, 0.2);
+}
+
+.percent-input:disabled {
+    opacity: 0.3;
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+/* === 합계 표시 === */
+.total-display {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--main1);
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--string);
+    border: 1px solid var(--side2);
+}
+
+/* === 반응형 디자인 === */
+@media screen and (max-width: 1024px) {
+    .main {
+        padding: 0 15px;
+    }
+
+    .title {
+        font-size: 32px;
+        margin-bottom: 35px;
+        margin-top: 35px;
+    }
+
+    .checkbox-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .checkbox-item {
+        padding: 12px;
+    }
+
+    .percent-header-item,
+    .percent-label {
+        font-size: 14px;
+    }
+
+    .percent-input {
+        width: 60px;
+        font-size: 14px;
+        padding: 5px 6px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .main {
+        padding: 0 10px;
+    }
+
+    .title {
+        font-size: 28px;
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+
+    .checkbox-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .checkbox-item {
+        padding: 10px;
+    }
+
+    .checkbox-description {
+        font-size: 13px;
+    }
+
+    .reset-button {
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+    
+    .percent-header-item {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+    
+    .percent-label {
+        font-size: 13px;
+    }
+    
+    .percent-input {
+        width: 55px;
+        font-size: 13px;
+        padding: 4px 5px;
+    }
+
+    .percent-item {
+        padding: 12px 8px;
+    }
+
+    .total-display {
+        font-size: 16px;
+        padding: 12px;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .main {
+        padding: 0 5px;
+    }
+
+    .title {
+        font-size: 24px;
+        margin-bottom: 25px;
+        margin-top: 25px;
+    }
+
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .checkbox-item {
+        padding: 8px;
+    }
+
+    .checkbox-label {
+        font-size: 14px;
+    }
+
+    .checkbox-description {
+        font-size: 12px;
+    }
+
+    .control-wrapper {
+        gap: 10px;
+    }
+
+    .reset-button {
+        font-size: 12px;
+        padding: 5px 12px;
+    }
+    
+    .percent-grid {
+        font-size: 12px;
+    }
+
+    .percent-header-item {
+        font-size: 12px;
+        padding: 8px 5px;
+    }
+    
+    .percent-row {
+        flex-direction: column;
+    }
+    
+    .percent-item {
+        border-right: none;
+        border-bottom: 1px solid var(--side2);
+        padding: 10px 8px;
+    }
+    
+    .percent-item:last-child {
+        border-bottom: none;
+    }
+
+    .percent-label {
+        font-size: 12px;
+    }
+
+    .percent-input {
+        width: 50px;
+        font-size: 12px;
+        padding: 4px;
+    }
+
+    .total-display {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+/* === 애니메이션 및 상태 표시 === */
+.saving {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.save-success {
+    border-color: #4caf50 !important;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2) !important;
+}
+
+.save-error {
+    border-color: #f44336 !important;
+    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2) !important;
+}
+
+/* === 접근성 개선 === */
+@media (prefers-reduced-motion: reduce) {
+    .checkbox-item,
+    .reset-button,
+    .percent-input {
+        transition: none;
+        animation: none;
+        transform: none !important;
+    }
+}
+
+/* === 고대비 모드 지원 === */
+@media (prefers-contrast: high) {
+    .checkbox-item,
+    .percent-grid {
+        border-width: 2px;
+        border-color: var(--string);
+    }
+    
+    .reset-button {
+        border: 2px solid var(--string);
+        font-weight: 600;
+    }
+}
