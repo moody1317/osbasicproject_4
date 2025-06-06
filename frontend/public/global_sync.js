@@ -350,6 +350,17 @@
                     }
                 },
 
+                async getPartyStats() {
+                    try {
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PARTY_WEIGHTED_PERFORMANCE;
+                        const rawData = await apiCallWithRetry(url);
+                        return normalizeApiResponse(rawData, 'PARTY_STATS');
+                    } catch (error) {
+                        log('error', '정당 통계 조회 실패:', error.message);
+                        throw new Error(`정당 통계 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+                
                 async getPartyRanking() {
                     try {
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PARTY_WEIGHTED_PERFORMANCE;
