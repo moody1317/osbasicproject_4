@@ -48,7 +48,6 @@
             ATTENDANCE: '/attendance/attendance/',
             PERFORMANCE_DATA: '/performance/api/performance/', // 국회의원 실적
             PARTY_WEIGHTED_PERFORMANCE: '/performance/api/party_performance/',
-            PARTY_PERFORMANCE_STATS: '/api/party_stats/',
 
             // 퍼센트 변경 API
             SETTING: '/performance/api/update_weights/'
