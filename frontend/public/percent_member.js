@@ -6,6 +6,9 @@ let pageState = {
     memberList: [],
     photoList: [],
     performanceData: [],
+    attendanceData: [],
+    billCountData: [],
+    committeeData: [],
     isLoading: false,
     hasError: false,
     isSearching: false
@@ -17,7 +20,6 @@ const DEFAULT_MEMBER = {
     party: '국민의힘',
     mona_cd: 'DEFAULT_001',
     committees: ['행정안전위원회'],
-    phone: '',
     homepage: ''
 };
 
@@ -37,8 +39,8 @@ const elements = {
     billPassStat: null,
     petitionProposalStat: null,
     petitionResultStat: null,
-    abstentionStat: null,
     committeeStat: null,
+    abstentionStat: null,
     voteMatchStat: null,
     voteMismatchStat: null
 };
@@ -58,8 +60,8 @@ function initializeElements() {
     elements.billPassStat = document.getElementById('billPassStat');
     elements.petitionProposalStat = document.getElementById('petitionProposalStat');
     elements.petitionResultStat = document.getElementById('petitionResultStat');
-    elements.abstentionStat = document.getElementById('abstentionStat');
     elements.committeeStat = document.getElementById('committeeStat');
+    elements.abstentionStat = document.getElementById('abstentionStat');
     elements.voteMatchStat = document.getElementById('voteMatchStat');
     elements.voteMismatchStat = document.getElementById('voteMismatchStat');
 }
@@ -77,8 +79,8 @@ function toggleLoadingState(show) {
             elements.billPassStat,
             elements.petitionProposalStat,
             elements.petitionResultStat,
-            elements.abstentionStat,
             elements.committeeStat,
+            elements.abstentionStat,
             elements.voteMatchStat,
             elements.voteMismatchStat
         ];
@@ -150,7 +152,6 @@ async function fetchMemberList() {
             mona_cd: member.mona_cd || '',
             committees: Array.isArray(member.committees) ? member.committees : 
                        typeof member.committees === 'string' ? [member.committees] : ['위원회 정보 없음'],
-            phone: member.phone || '',
             homepage: member.homepage || ''
         }));
         
@@ -207,7 +208,7 @@ async function fetchPerformanceData() {
         
         // API 데이터 매핑
         pageState.performanceData = performanceData.map(perf => ({
-            name: perf.name || perf.member_name || '',
+            name: perf.lawmaker_name || '',
             party: perf.party || '',
             total_score: parseFloat(perf.total_score || 0),
             attendance_score: parseFloat(perf.attendance_score || 0),
@@ -216,7 +217,8 @@ async function fetchPerformanceData() {
             committee_score: parseFloat(perf.committee_score || 0),
             invalid_vote_ratio: parseFloat(perf.invalid_vote_ratio || 0),
             vote_match_ratio: parseFloat(perf.vote_match_ratio || 0),
-            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0)
+            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0),
+            lawmaker_id: perf.lawmaker || null
         }));
         
         console.log(`✅ 실적 데이터 로드 완료: ${pageState.performanceData.length}개`);
@@ -229,6 +231,103 @@ async function fetchPerformanceData() {
     }
 }
 
+// API에서 출석 데이터 가져오기
+async function fetchAttendanceData() {
+    try {
+        console.log('📅 출석 데이터 API 호출...');
+        
+        // global_sync.js의 fetchFromAPI 사용
+        const attendanceData = await window.APIService.fetchFromAPI('api', '/attendance/attendance/');
+        
+        if (!attendanceData || !Array.isArray(attendanceData)) {
+            throw new Error('출석 데이터 API 응답이 올바르지 않습니다.');
+        }
+        
+        // API 데이터 매핑
+        pageState.attendanceData = attendanceData.map(att => ({
+            member_name: att.member_name || '',
+            party: att.party || '',
+            total_meetings: parseInt(att.total_meetings || 0),
+            attendance: parseInt(att.attendance || 0),
+            absences: parseInt(att.absences || 0),
+            leaves: parseInt(att.leaves || 0),
+            business_trips: parseInt(att.business_trips || 0),
+            attendance_rate: parseFloat(att.attendance_rate || 0)
+        }));
+        
+        console.log(`✅ 출석 데이터 로드 완료: ${pageState.attendanceData.length}개`);
+        return pageState.attendanceData;
+        
+    } catch (error) {
+        console.error('❌ 출석 데이터 로드 실패:', error);
+        pageState.attendanceData = [];
+        throw error;
+    }
+}
+
+// API에서 본회의 제안 데이터 가져오기
+async function fetchBillCountData() {
+    try {
+        console.log('📋 본회의 제안 데이터 API 호출...');
+        
+        // global_sync.js의 fetchFromAPI 사용
+        const billData = await window.APIService.fetchFromAPI('api', '/legislation/bill-count');
+        
+        if (!billData || !Array.isArray(billData)) {
+            throw new Error('본회의 제안 데이터 API 응답이 올바르지 않습니다.');
+        }
+        
+        // API 데이터 매핑
+        pageState.billCountData = billData.map(bill => ({
+            id: bill.id || '',
+            proposer: bill.proposer || '',
+            total: parseInt(bill.total || 0),
+            approved: parseInt(bill.approved || 0),
+            discarded: parseInt(bill.discarded || 0),
+            rejected: parseInt(bill.rejected || 0),
+            other: parseInt(bill.other || 0)
+        }));
+        
+        console.log(`✅ 본회의 제안 데이터 로드 완료: ${pageState.billCountData.length}개`);
+        return pageState.billCountData;
+        
+    } catch (error) {
+        console.error('❌ 본회의 제안 데이터 로드 실패:', error);
+        pageState.billCountData = [];
+        throw error;
+    }
+}
+
+// API에서 위원회 정보 가져오기
+async function fetchCommitteeData() {
+    try {
+        console.log('🏛️ 위원회 정보 API 호출...');
+        
+        // global_sync.js의 fetchFromAPI 사용
+        const committeeData = await window.APIService.fetchFromAPI('api', '/legislation/committee-member/');
+        
+        if (!committeeData || !Array.isArray(committeeData)) {
+            throw new Error('위원회 정보 API 응답이 올바르지 않습니다.');
+        }
+        
+        // API 데이터 매핑
+        pageState.committeeData = committeeData.map(comm => ({
+            committee_name: comm.DEPT_NM || '',
+            position: comm.JOB_RES_NM || '',
+            member_name: comm.HG_NM || '',
+            party: comm.POLY_NM || ''
+        }));
+        
+        console.log(`✅ 위원회 정보 로드 완료: ${pageState.committeeData.length}개`);
+        return pageState.committeeData;
+        
+    } catch (error) {
+        console.error('❌ 위원회 정보 로드 실패:', error);
+        pageState.committeeData = [];
+        throw error;
+    }
+}
+
 // 폴백 국회의원 명단 (API 실패 시)
 function getFallbackMemberList() {
     return [
@@ -237,7 +336,6 @@ function getFallbackMemberList() {
             party: '국민의힘',
             mona_cd: 'MEMBER_001',
             committees: ['행정안전위원회'],
-            phone: '02-788-2001',
             homepage: 'https://www.assembly.go.kr'
         },
         {
@@ -245,7 +343,6 @@ function getFallbackMemberList() {
             party: '더불어민주당',
             mona_cd: 'MEMBER_002',
             committees: ['정무위원회'],
-            phone: '02-788-2002',
             homepage: 'https://www.assembly.go.kr'
         },
         {
@@ -253,7 +350,6 @@ function getFallbackMemberList() {
             party: '조국혁신당',
             mona_cd: 'MEMBER_003',
             committees: ['법제사법위원회'],
-            phone: '02-788-2003',
             homepage: 'https://www.assembly.go.kr'
         }
     ];
@@ -291,6 +387,53 @@ function findMemberPerformance(memberName) {
     return pageState.performanceData.find(perf => 
         perf.name === memberName
     );
+}
+
+// 국회의원 출석 정보 찾기
+function findMemberAttendance(memberName) {
+    if (!pageState.attendanceData || pageState.attendanceData.length === 0) {
+        return null;
+    }
+    
+    return pageState.attendanceData.find(att => 
+        att.member_name === memberName
+    );
+}
+
+// 국회의원 본회의 제안 정보 찾기
+function findMemberBillCount(memberPerformance) {
+    if (!pageState.billCountData || pageState.billCountData.length === 0 || !memberPerformance) {
+        return null;
+    }
+    
+    return pageState.billCountData.find(bill => 
+        bill.id === memberPerformance.lawmaker_id
+    );
+}
+
+// 국회의원 위원회 정보 찾기
+function findMemberCommitteeInfo(memberName) {
+    if (!pageState.committeeData || pageState.committeeData.length === 0) {
+        return null;
+    }
+    
+    return pageState.committeeData.find(comm => 
+        comm.member_name === memberName
+    );
+}
+
+// 위원회 직책 정보 생성
+function getMemberCommitteePosition(member) {
+    const committeeInfo = findMemberCommitteeInfo(member.name);
+    
+    if (!committeeInfo) {
+        return '위원회 정보 없음';
+    }
+    
+    const committee = committeeInfo.committee_name || '미상';
+    const position = committeeInfo.position || '일반위원';
+    
+    return `${committee} (${position})`;
 }
 
 // 국회의원 정보 업데이트
@@ -359,6 +502,8 @@ function updateHomepageLink(member) {
 // 실적 통계 업데이트
 function updatePerformanceStats(member) {
     const performance = findMemberPerformance(member.name);
+    const attendance = findMemberAttendance(member.name);
+    const billCount = findMemberBillCount(performance);
     
     if (!performance) {
         console.warn(`⚠️ ${member.name} 실적 데이터 없음`);
@@ -378,13 +523,19 @@ function updatePerformanceStats(member) {
         elements.partyRanking.innerHTML = `정당 내 순위: <strong>${partyRank}위</strong>`;
     }
     
+    // 위원회 직책 정보 가져오기
+    const committeePosition = getMemberCommitteePosition(member);
+    
     // 실적 통계 업데이트
-    updateStatElement(elements.attendanceStat, performance.attendance_score, '%');
-    updateStatElement(elements.billPassStat, performance.attendance_score, '%'); // API 매핑 확인 필요
+    updateStatElement(elements.attendanceStat, attendance ? attendance.attendance_rate : performance.attendance_score, '%');
+    updateStatElement(elements.billPassStat, billCount ? (billCount.approved / billCount.total * 100) : performance.attendance_score, '%');
     updateStatElement(elements.petitionProposalStat, performance.petition_score, '%');
     updateStatElement(elements.petitionResultStat, performance.petition_result_score, '%');
+    
+    // 위원회 직책 정보 업데이트
+    updateCommitteeElement(elements.committeeStat, committeePosition);
+    
     updateStatElement(elements.abstentionStat, performance.invalid_vote_ratio, '%');
-    updateStatElement(elements.committeeStat, performance.committee_score, '%');
     updateStatElement(elements.voteMatchStat, performance.vote_match_ratio, '%');
     updateStatElement(elements.voteMismatchStat, performance.vote_mismatch_ratio, '%');
 }
@@ -411,6 +562,26 @@ function updateStatElement(element, value, suffix = '') {
     }
 }
 
+// 위원회 직책 요소 업데이트
+function updateCommitteeElement(element, position) {
+    if (!element) return;
+    
+    element.textContent = position;
+    element.classList.remove('loading');
+    
+    // 직책에 따른 색상 클래스 적용
+    element.classList.remove('good', 'warning', 'bad');
+    
+    if (position.includes('위원장') || position.includes('의장')) {
+        element.classList.add('good');
+    } else if (position.includes('간사')) {
+        element.classList.add('warning');
+    } else if (position.includes('정보 없음')) {
+        element.classList.add('bad');
+    }
+    // 일반위원은 기본 색상
+}
+
 // 폴백 통계 업데이트
 function updateStatsWithFallback(member) {
     console.log(`🔄 ${member.name} 폴백 데이터 사용`);
@@ -425,12 +596,18 @@ function updateStatsWithFallback(member) {
         elements.partyRanking.innerHTML = `정당 내 순위: <strong>정보 없음</strong>`;
     }
     
+    // 위원회 직책 정보 가져오기
+    const committeePosition = getMemberCommitteePosition(member);
+    
     updateStatElement(elements.attendanceStat, fallbackStats.attendance, '%');
     updateStatElement(elements.billPassStat, fallbackStats.billPass, '%');
     updateStatElement(elements.petitionProposalStat, fallbackStats.petition, '%');
     updateStatElement(elements.petitionResultStat, fallbackStats.petitionResult, '%');
+    
+    // 위원회 직책 정보 업데이트
+    updateCommitteeElement(elements.committeeStat, committeePosition);
+    
     updateStatElement(elements.abstentionStat, fallbackStats.abstention, '%');
-    updateStatElement(elements.committeeStat, fallbackStats.committee, '%');
     updateStatElement(elements.voteMatchStat, fallbackStats.voteMatch, '%');
     updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
 }
@@ -444,7 +621,6 @@ function generateFallbackStats(member) {
         petition: 50 + Math.random() * 40,
         petitionResult: 40 + Math.random() * 50,
         abstention: Math.random() * 15,
-        committee: Math.random() * 25,
         voteMatch: 70 + Math.random() * 25,
         voteMismatch: Math.random() * 25
     };
@@ -677,11 +853,14 @@ async function loadAllData() {
         const results = await Promise.allSettled([
             fetchMemberList(),
             fetchPhotoList(),
-            fetchPerformanceData()
+            fetchPerformanceData(),
+            fetchAttendanceData(),
+            fetchBillCountData(),
+            fetchCommitteeData()
         ]);
         
         // 결과 확인
-        const [memberResult, photoResult, performanceResult] = results;
+        const [memberResult, photoResult, performanceResult, attendanceResult, billResult, committeeResult] = results;
         
         if (memberResult.status === 'rejected') {
             console.error('국회의원 명단 로드 실패:', memberResult.reason);
@@ -693,6 +872,18 @@ async function loadAllData() {
         
         if (performanceResult.status === 'rejected') {
             console.warn('실적 데이터 로드 실패:', performanceResult.reason);
+        }
+        
+        if (attendanceResult.status === 'rejected') {
+            console.warn('출석 데이터 로드 실패:', attendanceResult.reason);
+        }
+        
+        if (billResult.status === 'rejected') {
+            console.warn('본회의 제안 데이터 로드 실패:', billResult.reason);
+        }
+        
+        if (committeeResult.status === 'rejected') {
+            console.warn('위원회 정보 로드 실패:', committeeResult.reason);
         }
         
         console.log('✅ 전체 데이터 로드 완료');
@@ -787,6 +978,9 @@ window.memberPageDebug = {
         console.log(`- 의원 명단: ${pageState.memberList.length}명`);
         console.log(`- 사진 데이터: ${pageState.photoList.length}개`);
         console.log(`- 실적 데이터: ${pageState.performanceData.length}개`);
+        console.log(`- 출석 데이터: ${pageState.attendanceData.length}개`);
+        console.log(`- 본회의 제안: ${pageState.billCountData.length}개`);
+        console.log(`- 위원회 정보: ${pageState.committeeData.length}개`);
         console.log(`- API 서비스: ${!!window.APIService}`);
     }
 };
@@ -817,4 +1011,4 @@ document.addEventListener('DOMContentLoaded', function() {
     waitForAPI();
 });
 
-console.log('📦 percent_member.js 로드 완료 (API 연결 버전)');
+console.log('📦 percent_member.js 로드 완료 (global_sync.js API 연동 버전)');
