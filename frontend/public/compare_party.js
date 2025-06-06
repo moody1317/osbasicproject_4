@@ -591,21 +591,21 @@ document.addEventListener('DOMContentLoaded', function() {
             { // 본회의 가결
                 value: `${stats.billPassRate.toFixed(1)}%`,
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `가결 수: ${stats.billPassSum || Math.floor(stats.billPassRate * 2)}건<br>
+                tooltip: `본회의 가결 수 (bill_pass_sum): ${stats.billPassSum || 0}건<br>
                          가결률: ${stats.billPassRate.toFixed(1)}%`
             },
             { // 청원 제안
                 value: `${stats.petitionProposed}건`,
                 winLose: comparisons ? (comparisons.petitionProposed[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `제안 건수: ${stats.petitionProposed}건<br>
-                         채택률: ${((stats.petitionPassed / stats.petitionProposed) * 100).toFixed(1)}%`
+                tooltip: `청원 제안 수 (petition_sum): ${stats.petitionSum || stats.petitionProposed || 0}건<br>
+                         채택률: ${stats.petitionProposed > 0 ? ((stats.petitionPassed / stats.petitionProposed) * 100).toFixed(1) : '0.0'}%`
             },
             { // 청원 결과
                 value: `${stats.petitionPassed}건`,
                 winLose: comparisons ? (comparisons.petitionPassed[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `가결: ${stats.petitionPassed}건<br>
-                         부결: ${stats.petitionProposed - stats.petitionPassed}건<br>
-                         가결률: ${((stats.petitionPassed / stats.petitionProposed) * 100).toFixed(1)}%`
+                tooltip: `청원 결과 수 (petition_pass_sum): ${stats.petitionPassSum || stats.petitionPassed || 0}건<br>
+                         부결: ${(stats.petitionProposed || 0) - (stats.petitionPassed || 0)}건<br>
+                         가결률: ${stats.petitionProposed > 0 ? ((stats.petitionPassed / stats.petitionProposed) * 100).toFixed(1) : '0.0'}%`
             },
             { // 위원장
                 value: `${stats.chairmanCount}명`,
