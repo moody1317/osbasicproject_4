@@ -90,46 +90,24 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('📊 정당 순위 데이터 로드 중...');
 
-            const [partyPerformance, partyStats] = await Promise.all([
-                window.APIService.getPartyWeightedPerformanceData(),
-                window.APIService.getPartyPerformanceStatsData()
-            ]);
-
-            // 데이터 가공 및 정렬
-            let processedData = [];
-
-            if (Array.isArray(partyPerformance) && partyPerformance.length > 0) {
-                processedData = partyPerformance.map(party => ({
-                    name: normalizePartyName(party.party || party.party_name || party.political_party),
-                    score: calculatePartyScore(party),
-                    rawData: party
-                }));
-            } else if (Array.isArray(partyStats) && partyStats.length > 0) {
-                processedData = partyStats.map(party => ({
-                    name: normalizePartyName(party.party || party.party_name || party.political_party),
-                    score: calculatePartyScoreFromStats(party),
-                    rawData: party
-                }));
+            const partyData = await window.APIService.getPartyWeightedPerformanceData();
+            
+            if (!Array.isArray(partyData) || partyData.length === 0) {
+                console.warn('정당 데이터가 없습니다. 기본값 사용');
+                return getDefaultPartyRanking();
             }
 
-            // 중복 제거 및 정렬
-            const uniqueParties = processedData.reduce((acc, current) => {
-                const existingParty = acc.find(party => party.name === current.name);
-                if (!existingParty) {
-                    acc.push(current);
-                } else if (current.score > existingParty.score) {
-                    // 더 높은 점수의 데이터로 교체
-                    const index = acc.indexOf(existingParty);
-                    acc[index] = current;
-                }
-                return acc;
-            }, []);
+            // 점수순으로 정렬하고 상위 3개 선택
+            const sortedData = partyData
+                .filter(party => party.party && party.party !== '알 수 없음')
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3);
 
-            // 점수순으로 정렬
-            uniqueParties.sort((a, b) => b.score - a.score);
-
-            console.log('✅ 정당 순위 데이터 로드 완료:', uniqueParties.length, '개 정당');
-            return uniqueParties.slice(0, 3); // 상위 3개만 반환
+            console.log('✅ 정당 순위 데이터 로드 완료:', sortedData.length, '개 정당');
+            return sortedData.map(party => ({
+                name: party.party,
+                score: Math.round(party.score) || 0
+            }));
 
         } catch (error) {
             console.error('❌ 정당 순위 데이터 로드 실패:', error);
@@ -142,52 +120,25 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('👥 국회의원 순위 데이터 로드 중...');
 
-            const [memberPerformance, memberData] = await Promise.all([
-                window.APIService.getPerformanceData(),
-                window.APIService.getAllMembers()
-            ]);
-
-            // 데이터 가공 및 정렬
-            let processedData = [];
-
-            if (Array.isArray(memberPerformance) && memberPerformance.length > 0) {
-                processedData = memberPerformance.map(member => {
-                    // 해당 의원의 추가 정보 찾기
-                    const memberInfo = Array.isArray(memberData) ? 
-                        memberData.find(m => 
-                            (m.id && m.id === member.member_id) ||
-                            (m.name && m.name === member.member_name) ||
-                            (m.member_name && m.member_name === member.member_name)
-                        ) : null;
-
-                    return {
-                        name: member.member_name || member.name || '정보없음',
-                        party: normalizePartyName(
-                            memberInfo?.party || 
-                            memberInfo?.party_name || 
-                            member.party || 
-                            member.party_name || 
-                            '정보없음'
-                        ),
-                        score: calculateMemberScore(member),
-                        rawData: member
-                    };
-                });
-            } else if (Array.isArray(memberData) && memberData.length > 0) {
-                // Performance 데이터가 없으면 memberData로 대체
-                processedData = memberData.map(member => ({
-                    name: member.name || member.member_name || '정보없음',
-                    party: normalizePartyName(member.party || member.party_name || member.political_party),
-                    score: Math.random() * 100, // 임시 점수
-                    rawData: member
-                }));
+            const memberData = await window.APIService.getPerformanceData();
+            
+            if (!Array.isArray(memberData) || memberData.length === 0) {
+                console.warn('의원 데이터가 없습니다. 기본값 사용');
+                return getDefaultMemberRanking();
             }
 
-            // 점수순으로 정렬
-            processedData.sort((a, b) => b.score - a.score);
+            // 점수순으로 정렬하고 상위 3명 선택
+            const sortedData = memberData
+                .filter(member => member.name && member.name !== '알 수 없음')
+                .sort((a, b) => b.score - a.score)
+                .slice(0, 3);
 
-            console.log('✅ 국회의원 순위 데이터 로드 완료:', processedData.length, '명');
-            return processedData.slice(0, 3); // 상위 3명만 반환
+            console.log('✅ 국회의원 순위 데이터 로드 완료:', sortedData.length, '명');
+            return sortedData.map(member => ({
+                name: member.name,
+                party: member.party || '정보없음',
+                score: Math.round(member.score) || 0
+            }));
 
         } catch (error) {
             console.error('❌ 국회의원 순위 데이터 로드 실패:', error);
