@@ -532,7 +532,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // === ⚖️ 정당 비교 로직 ===
+    // === ⚖️ 정당 비교 로직 (수정된 버전) ===
     async function compareParties(party1Stats, party2Stats, party1Name, party2Name) {
         // 1차: API 직접 비교 시도
         try {
@@ -545,38 +545,91 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('API 비교 실패, 로컬 비교 로직 사용');
         }
         
-        // 2차: 로컬 비교 로직
+        // 2차: 로컬 비교 로직 (수정된 버전)
+        console.log(`🔄 로컬 비교 로직 사용: ${party1Name} vs ${party2Name}`);
+        console.log('Party1 Stats:', party1Stats);
+        console.log('Party2 Stats:', party2Stats);
+        
         const comparisons = {};
         
-        // 출석률 비교
-        comparisons.attendance = party1Stats.attendanceRate > party2Stats.attendanceRate ? [true, false] : [false, true];
+        // 🔧 비교 로직 수정: 명확한 승/패 결정
         
-        // 본회의 가결 비교
-        comparisons.billPass = party1Stats.billPassSum > party2Stats.billPassSum ? [true, false] : [false, true];
+        // 출석률 비교 (높을수록 좋음)
+        const attendanceDiff = party1Stats.attendanceRate - party2Stats.attendanceRate;
+        if (Math.abs(attendanceDiff) < 0.1) {
+            // 차이가 거의 없으면 둘 다 동등하게 처리
+            comparisons.attendance = [true, true];
+        } else {
+            comparisons.attendance = attendanceDiff > 0 ? [true, false] : [false, true];
+        }
         
-        // 청원 제안 비교
-        comparisons.petitionProposed = party1Stats.petitionProposed > party2Stats.petitionProposed ? [true, false] : [false, true];
+        // 본회의 가결 비교 (많을수록 좋음)
+        const billPassDiff = party1Stats.billPassSum - party2Stats.billPassSum;
+        if (Math.abs(billPassDiff) < 1) {
+            comparisons.billPass = [true, true];
+        } else {
+            comparisons.billPass = billPassDiff > 0 ? [true, false] : [false, true];
+        }
         
-        // 청원 결과 비교
-        comparisons.petitionPassed = party1Stats.petitionPassed > party2Stats.petitionPassed ? [true, false] : [false, true];
+        // 청원 제안 비교 (많을수록 좋음)
+        const petitionProposedDiff = party1Stats.petitionProposed - party2Stats.petitionProposed;
+        if (Math.abs(petitionProposedDiff) < 1) {
+            comparisons.petitionProposed = [true, true];
+        } else {
+            comparisons.petitionProposed = petitionProposedDiff > 0 ? [true, false] : [false, true];
+        }
         
-        // 위원장 수 비교
-        comparisons.chairman = party1Stats.chairmanCount > party2Stats.chairmanCount ? [true, false] : [false, true];
+        // 청원 결과 비교 (많을수록 좋음)
+        const petitionPassedDiff = party1Stats.petitionPassed - party2Stats.petitionPassed;
+        if (Math.abs(petitionPassedDiff) < 1) {
+            comparisons.petitionPassed = [true, true];
+        } else {
+            comparisons.petitionPassed = petitionPassedDiff > 0 ? [true, false] : [false, true];
+        }
         
-        // 간사 수 비교
-        comparisons.secretary = party1Stats.secretaryCount > party2Stats.secretaryCount ? [true, false] : [false, true];
+        // 위원장 수 비교 (많을수록 좋음)
+        const chairmanDiff = party1Stats.chairmanCount - party2Stats.chairmanCount;
+        if (Math.abs(chairmanDiff) < 1) {
+            comparisons.chairman = [true, true];
+        } else {
+            comparisons.chairman = chairmanDiff > 0 ? [true, false] : [false, true];
+        }
+        
+        // 간사 수 비교 (많을수록 좋음)
+        const secretaryDiff = party1Stats.secretaryCount - party2Stats.secretaryCount;
+        if (Math.abs(secretaryDiff) < 1) {
+            comparisons.secretary = [true, true];
+        } else {
+            comparisons.secretary = secretaryDiff > 0 ? [true, false] : [false, true];
+        }
         
         // 무효표/기권 비교 (적을수록 좋음)
         const party1InvalidTotal = party1Stats.invalidVotes + party1Stats.abstentions;
         const party2InvalidTotal = party2Stats.invalidVotes + party2Stats.abstentions;
-        comparisons.invalidVotes = party1InvalidTotal < party2InvalidTotal ? [true, false] : [false, true];
+        const invalidDiff = party1InvalidTotal - party2InvalidTotal;
+        if (Math.abs(invalidDiff) < 1) {
+            comparisons.invalidVotes = [true, true];
+        } else {
+            comparisons.invalidVotes = invalidDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
+        }
         
-        // 투표 일치 비교
-        comparisons.voteConsistency = party1Stats.voteConsistency > party2Stats.voteConsistency ? [true, false] : [false, true];
+        // 투표 일치 비교 (많을수록 좋음)
+        const voteConsistencyDiff = party1Stats.voteConsistency - party2Stats.voteConsistency;
+        if (Math.abs(voteConsistencyDiff) < 1) {
+            comparisons.voteConsistency = [true, true];
+        } else {
+            comparisons.voteConsistency = voteConsistencyDiff > 0 ? [true, false] : [false, true];
+        }
         
         // 투표 불일치 비교 (적을수록 좋음)
-        comparisons.voteInconsistency = party1Stats.voteInconsistency < party2Stats.voteInconsistency ? [true, false] : [false, true];
+        const voteInconsistencyDiff = party1Stats.voteInconsistency - party2Stats.voteInconsistency;
+        if (Math.abs(voteInconsistencyDiff) < 1) {
+            comparisons.voteInconsistency = [true, true];
+        } else {
+            comparisons.voteInconsistency = voteInconsistencyDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
+        }
 
+        console.log('🔍 비교 결과:', comparisons);
         return comparisons;
     }
 
@@ -596,9 +649,9 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // === 🎨 UI 업데이트 함수들 ===
+    // === 🎨 UI 업데이트 함수들 (수정된 버전) ===
 
-    // 정당 카드 업데이트 (HTML 순서와 정확히 매칭)
+    // 정당 카드 업데이트 (i 아이콘 보존)
     function updatePartyCard(cardIndex, partyName, stats, comparisons = null) {
         const cards = document.querySelectorAll('.comparison-card');
         if (cardIndex >= cards.length) return;
@@ -617,11 +670,13 @@ document.addEventListener('DOMContentLoaded', function() {
             { // 0. 현재 순위
                 value: rankDisplay,
                 winLose: null,
-                isHTML: true
+                isHTML: true,
+                tooltip: null
             },
             { // 1. 출석
                 value: `${stats.attendanceRate.toFixed(1)}%`,
                 winLose: comparisons ? (comparisons.attendance[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `출석 평균: ${stats.attendanceStats?.avg?.toFixed(1) || stats.attendanceRate.toFixed(1)}%<br>
                          출석 최대: ${stats.attendanceStats?.max?.toFixed(1) || (stats.attendanceRate + 5).toFixed(1)}%<br>
                          출석 최소: ${stats.attendanceStats?.min?.toFixed(1) || (stats.attendanceRate - 5).toFixed(1)}%<br>
@@ -630,34 +685,40 @@ document.addEventListener('DOMContentLoaded', function() {
             { // 2. 본회의 가결
                 value: `${stats.billPassSum}건`,
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>
                          가결률 추정: ${stats.billPassRate?.toFixed(1) || '0.0'}%`
             },
             { // 3. 청원 제안
                 value: `${stats.petitionProposed}건`,
                 winLose: comparisons ? (comparisons.petitionProposed[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `청원 제안 수: ${stats.petitionSum}건`
             },
             { // 4. 청원 결과
                 value: `${stats.petitionPassed}건`,
                 winLose: comparisons ? (comparisons.petitionPassed[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `청원 결과 수: ${stats.petitionPassSum}건`
             },
             { // 5. 위원장
                 value: `${stats.chairmanCount}명`,
                 winLose: comparisons ? (comparisons.chairman[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `위원장 수: ${stats.chairmanCount}명<br>
                          데이터 출처: ${stats.chairmanSource === 'api' ? '실시간 API' : '추정값'}`
             },
             { // 6. 간사
                 value: `${stats.secretaryCount}명`,
                 winLose: comparisons ? (comparisons.secretary[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `간사 수: ${stats.secretaryCount}명<br>
                          데이터 출처: ${stats.secretarySource === 'api' ? '실시간 API' : '추정값'}`
             },
             { // 7. 무효표 및 기권
                 value: `${(stats.invalidVotes + stats.abstentions)}건`,
                 winLose: comparisons ? (comparisons.invalidVotes[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `무효표/기권 평균: ${stats.invalidVoteStats?.avg?.toFixed(3) || '0.025'}%<br>
                          최대: ${stats.invalidVoteStats?.max?.toFixed(3) || '0.050'}%<br>
                          최소: ${stats.invalidVoteStats?.min?.toFixed(3) || '0.010'}%<br>
@@ -666,6 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { // 8. 투표 결과 일치
                 value: `${stats.voteConsistency}건`,
                 winLose: comparisons ? (comparisons.voteConsistency[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `일치 평균: ${stats.voteMatchStats?.avg?.toFixed(1) || '85.0'}%<br>
                          최대: ${stats.voteMatchStats?.max?.toFixed(1) || '95.0'}%<br>
                          최소: ${stats.voteMatchStats?.min?.toFixed(1) || '75.0'}%<br>
@@ -674,6 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { // 9. 투표 결과 불일치
                 value: `${stats.voteInconsistency}건`,
                 winLose: comparisons ? (comparisons.voteInconsistency[cardIndex] ? 'WIN' : 'LOSE') : null,
+                isHTML: false,
                 tooltip: `불일치 평균: ${stats.voteMismatchStats?.avg?.toFixed(1) || '15.0'}%<br>
                          최대: ${stats.voteMismatchStats?.max?.toFixed(1) || '25.0'}%<br>
                          최소: ${stats.voteMismatchStats?.min?.toFixed(1) || '5.0'}%<br>
@@ -689,20 +752,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tooltip = statusItem.querySelector('.tooltip');
 
                 if (statusValue) {
+                    // 🔧 i 아이콘 보존하면서 업데이트
+                    const existingInfoIcon = statusValue.querySelector('.info-icon');
+                    
                     // WIN/LOSE 표시
                     if (update.winLose) {
                         const percentage = update.value;
-                        if (update.isHTML) {
-                            statusValue.innerHTML = `${update.winLose}(${percentage})`;
+                        const newContent = `${update.winLose}(${percentage})`;
+                        
+                        if (existingInfoIcon) {
+                            // i 아이콘이 있으면 보존
+                            statusValue.innerHTML = newContent;
+                            statusValue.appendChild(existingInfoIcon);
                         } else {
-                            statusValue.innerHTML = `${update.winLose}(${percentage})`;
+                            statusValue.innerHTML = newContent;
                         }
+                        
                         statusValue.className = `status-value ${update.winLose.toLowerCase()}`;
                     } else {
-                        if (update.isHTML) {
+                        // WIN/LOSE가 없는 경우 (순위 등)
+                        if (existingInfoIcon) {
                             statusValue.innerHTML = update.value;
+                            statusValue.appendChild(existingInfoIcon);
                         } else {
-                            statusValue.innerHTML = update.value;
+                            if (update.isHTML) {
+                                statusValue.innerHTML = update.value;
+                            } else {
+                                statusValue.textContent = update.value;
+                            }
                         }
                         statusValue.className = 'status-value';
                     }
@@ -717,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
 
-                // 툴팁 업데이트
+                // 툴팁 업데이트 (기존 구조 보존)
                 if (tooltip && update.tooltip) {
                     tooltip.innerHTML = update.tooltip;
                 }
@@ -794,6 +871,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // 두 정당이 모두 선택되었으면 비교 수행
                         if (selectedParties[0] && selectedParties[1]) {
+                            console.log(`🆚 두 정당 비교 시작: ${selectedParties[0]} vs ${selectedParties[1]}`);
                             const comparisons = await compareParties(
                                 partyStats[selectedParties[0]], 
                                 partyStats[selectedParties[1]], 
@@ -867,9 +945,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (index < statusItems.length) {
                 const statusValue = statusItems[index].querySelector('.status-value');
                 if (statusValue) {
+                    const existingInfoIcon = statusValue.querySelector('.info-icon');
                     statusValue.textContent = resetValue;
                     statusValue.className = 'status-value';
                     statusValue.style.color = '';
+                    
+                    // i 아이콘 복원
+                    if (existingInfoIcon) {
+                        statusValue.appendChild(existingInfoIcon);
+                    }
                 }
             }
         });
@@ -1056,6 +1140,17 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('weight_change_event', JSON.stringify(changeData));
             localStorage.setItem('last_weight_update', Date.now().toString());
             setTimeout(() => localStorage.removeItem('weight_change_event'), 100);
+        },
+        testComparison: async (party1, party2) => {
+            if (!party1 || !party2) {
+                console.log('사용법: testComparison("더불어민주당", "국민의힘")');
+                return;
+            }
+            const stats1 = await calculatePartyStats(party1);
+            const stats2 = await calculatePartyStats(party2);
+            const comparison = await compareParties(stats1, stats2, party1, party2);
+            console.log(`🆚 ${party1} vs ${party2} 비교 결과:`, comparison);
+            return comparison;
         }
     };
 
@@ -1065,10 +1160,14 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (Django API 연동 + 가중치 감지 버전)');
     console.log('🔗 API 모드: Django API 직접 연동');
     console.log('📊 데이터 매핑: 새로운 필드 구조 적용');
+    console.log('🔧 수정 사항:');
+    console.log('  - 비교 로직 수정: 명확한 WIN/LOSE 결정');
+    console.log('  - i 아이콘 보존: 업데이트 시 툴팁 아이콘 유지');
+    console.log('  - 툴팁 데이터 업데이트: 실시간 API 데이터 반영');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
+    console.log('  - window.comparePartyDebug.testComparison("정당1", "정당2") : 비교 테스트');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
     console.log('  - window.comparePartyDebug.testAPIService() : APIService 연결 테스트');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
-    console.log('  - window.comparePartyDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
 });
