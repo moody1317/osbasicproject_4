@@ -1,7 +1,6 @@
 /**
- * weight_sync.js
+ * weight_sync.js (수정된 버전)
  * 가중치 변경 감지 및 자동 적용 시스템
- * 모든 페이지에서 import하여 사용
  */
 
 (function() {
@@ -9,15 +8,12 @@
 
     // === 📋 가중치 영향 받는 API 엔드포인트 매핑 ===
     const WEIGHT_AFFECTED_APIS = {
-        // 메인 서버 (osprojectapi.onrender.com)
         MAIN_SERVER: {
             memberPerformance: '/performance/api/performance/',
             attendance: '/attendance/attendance/',
-            partyPerformance: '/performance/api/party_performance/',
+            partyPerformance: '/performance/api/party_performance/', // ✅ 올바른 엔드포인트
             partyMemberPerformance: '/performance/api/performance/by-party/'
         },
-        
-        // 랭킹 서버 (baekilha.onrender.com)
         RANKING_SERVER: {
             memberRanking: '/ranking/members/',
             partyScoreRanking: '/ranking/parties/score/',
@@ -33,32 +29,32 @@
         'rank_member.html': {
             primaryAPIs: ['memberPerformance', 'memberRanking'],
             secondaryAPIs: ['attendance'],
-            refreshFunctions: ['refreshMemberRanking', 'loadMemberData', 'updateMemberRanking']
+            refreshFunctions: ['refreshMemberRankingData', 'loadMemberData', 'updateMemberRanking']
         },
         'rank_party.html': {
-            primaryAPIs: ['partyPerformance', 'partyScoreRanking', 'partyStatsRanking'],
+            primaryAPIs: ['partyPerformance', 'partyScoreRanking'],
             secondaryAPIs: [],
-            refreshFunctions: ['refreshPartyRanking', 'loadPartyData', 'updatePartyRanking']
+            refreshFunctions: ['refreshPartyRankingData', 'loadPartyData', 'updatePartyRanking']
         },
         'percent_member.html': {
-            primaryAPIs: ['memberPerformance', 'memberRanking'],
-            secondaryAPIs: ['attendance', 'partyMemberPerformance'],
+            primaryAPIs: ['memberPerformance'],
+            secondaryAPIs: ['attendance'],
             refreshFunctions: ['refreshMemberDetails', 'loadMemberDetailData']
         },
         'percent_party.html': {
-            primaryAPIs: ['partyPerformance', 'partyScoreRanking'],
+            primaryAPIs: ['partyPerformance'],
             secondaryAPIs: ['partyMemberPerformance'],
             refreshFunctions: ['refreshPartyDetails', 'loadPartyDetailData']
         },
         'compare_member.html': {
             primaryAPIs: ['compareMember', 'memberPerformance'],
             secondaryAPIs: ['memberRanking'],
-            refreshFunctions: ['refreshComparison', 'updateComparisonData', 'reloadComparison']
+            refreshFunctions: ['refreshCompareMemberData', 'fetchMemberData', 'updateCompareMemberData']
         },
         'compare_party.html': {
             primaryAPIs: ['compareParty', 'partyPerformance'],
             secondaryAPIs: ['partyScoreRanking'],
-            refreshFunctions: ['refreshPartyComparison', 'updatePartyComparisonData', 'reloadPartyComparison']
+            refreshFunctions: ['refreshPartyComparison', 'updatePartyComparisonData']
         },
         'meeting.html': {
             primaryAPIs: [],
@@ -121,21 +117,13 @@
                 
                 const notification = document.createElement('div');
                 notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 12px 20px;
+                    position: fixed; top: 20px; right: 20px; padding: 12px 20px;
                     background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : type === 'warning' ? '#ff9800' : '#2196f3'};
-                    color: white;
-                    border-radius: 8px;
-                    z-index: 10000;
-                    font-size: 13px;
-                    max-width: 300px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    color: white; border-radius: 8px; z-index: 10000; font-size: 13px;
+                    max-width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                     font-family: 'Blinker', sans-serif;
                 `;
                 notification.textContent = message;
-                
                 document.body.appendChild(notification);
                 
                 setTimeout(() => {
@@ -294,6 +282,7 @@
         try {
             let newData = null;
             
+            // 랭킹 서버 시도
             if (weightSyncState.connectedAPIs.ranking) {
                 try {
                     newData = await window.APIService.getMemberScoreRanking();
@@ -303,8 +292,9 @@
                 }
             }
             
+            // 메인 서버 폴백
             if (!newData && weightSyncState.connectedAPIs.main) {
-                newData = await window.APIService.getMemberPerformance();
+                newData = await window.APIService.getPerformanceData(); // ✅ 수정: 올바른 함수 호출
                 console.log('[WeightSync] ✅ 메인 서버에서 의원 성과 데이터 로드');
             }
             
@@ -326,16 +316,17 @@
         try {
             let newData = null;
             
+            // 랭킹 서버 시도
             if (weightSyncState.connectedAPIs.ranking) {
                 try {
-                    const [scoreRanking, statsRanking] = await Promise.all([
+                    const [scoreRanking, statsRanking] = await Promise.allSettled([
                         window.APIService.getPartyScoreRanking(),
                         window.APIService.getPartyStatsRanking()
                     ]);
                     
                     newData = {
-                        scoreRanking: scoreRanking,
-                        statsRanking: statsRanking,
+                        scoreRanking: scoreRanking.status === 'fulfilled' ? scoreRanking.value : null,
+                        statsRanking: statsRanking.status === 'fulfilled' ? statsRanking.value : null,
                         source: 'ranking_server'
                     };
                     
@@ -345,9 +336,10 @@
                 }
             }
             
+            // 메인 서버 폴백 (✅ 수정: 올바른 함수 호출)
             if (!newData && weightSyncState.connectedAPIs.main) {
-                newData = await window.APIService.getPartyRanking();
-                console.log('[WeightSync] ✅ 메인 서버에서 정당 성과 데이터 로드');
+                newData = await window.APIService.getPartyWeightedPerformanceData(); // ✅ 수정됨
+                console.log('[WeightSync] ✅ 메인 서버에서 정당 가중치 성과 데이터 로드');
             }
             
             if (!newData) {
@@ -366,7 +358,7 @@
         console.log('[WeightSync] 👤 의원 상세 정보 페이지 새로고침...');
         
         try {
-            const memberData = await window.APIService.getMemberPerformance();
+            const memberData = await window.APIService.getPerformanceData(); // ✅ 수정: 올바른 함수 호출
             console.log('[WeightSync] ✅ 의원 상세 데이터 로드 완료');
             
             await updatePageWithNewData('member_details', memberData);
@@ -381,7 +373,7 @@
         console.log('[WeightSync] 🏛️ 정당 상세 정보 페이지 새로고침...');
         
         try {
-            const partyData = await window.APIService.getPartyStats();
+            const partyData = await window.APIService.getPartyWeightedPerformanceData(); // ✅ 수정: 올바른 함수 호출
             console.log('[WeightSync] ✅ 정당 상세 데이터 로드 완료');
             
             await updatePageWithNewData('party_details', partyData);
@@ -401,6 +393,7 @@
             if (currentComparison && currentComparison.member1 && currentComparison.member2) {
                 let newData = null;
                 
+                // 랭킹 서버에서 고급 비교 시도
                 if (weightSyncState.connectedAPIs.ranking) {
                     try {
                         newData = await window.APIService.compareMembersAdvanced(
@@ -413,8 +406,9 @@
                     }
                 }
                 
+                // 메인 서버 폴백
                 if (!newData && weightSyncState.connectedAPIs.main) {
-                    const memberData = await window.APIService.getMemberPerformance();
+                    const memberData = await window.APIService.getPerformanceData();
                     newData = filterComparisonData(memberData, currentComparison);
                     console.log('[WeightSync] ✅ 메인 서버 데이터로 의원 비교 구성');
                 }
@@ -423,9 +417,10 @@
                     await updatePageWithNewData('member_comparison', newData);
                 }
             } else {
+                // 현재 비교 중인 의원이 없으면 전체 데이터 새로고침
                 console.log('[WeightSync] 현재 비교 중인 의원이 없어 전체 데이터를 새로고침합니다.');
-                const memberData = await window.APIService.getMemberPerformance();
-                await updatePageWithNewData('member_comparison', memberData);
+                const memberData = await window.APIService.getPerformanceData();
+                await updatePageWithNewData('member_comparison_all', memberData);
             }
             
         } catch (error) {
@@ -443,6 +438,7 @@
             if (currentComparison && currentComparison.party1 && currentComparison.party2) {
                 let newData = null;
                 
+                // 랭킹 서버에서 고급 비교 시도
                 if (weightSyncState.connectedAPIs.ranking) {
                     try {
                         newData = await window.APIService.comparePartiesAdvanced(
@@ -455,8 +451,9 @@
                     }
                 }
                 
+                // 메인 서버 폴백
                 if (!newData && weightSyncState.connectedAPIs.main) {
-                    const partyData = await window.APIService.getPartyStats();
+                    const partyData = await window.APIService.getPartyWeightedPerformanceData();
                     newData = filterComparisonData(partyData, currentComparison);
                     console.log('[WeightSync] ✅ 메인 서버 데이터로 정당 비교 구성');
                 }
@@ -465,9 +462,10 @@
                     await updatePageWithNewData('party_comparison', newData);
                 }
             } else {
+                // 현재 비교 중인 정당이 없으면 전체 데이터 새로고침
                 console.log('[WeightSync] 현재 비교 중인 정당이 없어 전체 데이터를 새로고침합니다.');
-                const partyData = await window.APIService.getPartyStats();
-                await updatePageWithNewData('party_comparison', partyData);
+                const partyData = await window.APIService.getPartyWeightedPerformanceData();
+                await updatePageWithNewData('party_comparison_all', partyData);
             }
             
         } catch (error) {
@@ -481,27 +479,41 @@
     function getCurrentComparisonData(type) {
         try {
             if (type === 'member') {
-                const member1Element = document.querySelector('[data-member1]');
-                const member2Element = document.querySelector('[data-member2]');
+                // DOM에서 현재 선택된 의원 정보 찾기
+                const member1Element = document.querySelector('[data-member1]') || 
+                                    document.querySelector('.mp-selected-name:first-of-type') ||
+                                    document.querySelector('.comparison-card:first-child .mp-selected-name');
+                
+                const member2Element = document.querySelector('[data-member2]') ||
+                                     document.querySelector('.mp-selected-name:last-of-type') ||
+                                     document.querySelector('.comparison-card:last-child .mp-selected-name');
                 
                 if (member1Element && member2Element) {
-                    return {
-                        member1: member1Element.dataset.member1 || member1Element.textContent?.trim(),
-                        member2: member2Element.dataset.member2 || member2Element.textContent?.trim()
-                    };
+                    const member1 = member1Element.dataset?.member1 || member1Element.textContent?.trim();
+                    const member2 = member2Element.dataset?.member2 || member2Element.textContent?.trim();
+                    
+                    if (member1 && member2 && member1 !== '국회의원을 검색하세요' && member2 !== '국회의원을 검색하세요') {
+                        return { member1, member2 };
+                    }
                 }
             } else if (type === 'party') {
-                const party1Element = document.querySelector('[data-party1]');
-                const party2Element = document.querySelector('[data-party2]');
+                // 정당 비교 데이터 찾기 (유사한 로직)
+                const party1Element = document.querySelector('[data-party1]') ||
+                                    document.querySelector('.party-selected:first-of-type');
+                const party2Element = document.querySelector('[data-party2]') ||
+                                    document.querySelector('.party-selected:last-of-type');
                 
                 if (party1Element && party2Element) {
-                    return {
-                        party1: party1Element.dataset.party1 || party1Element.textContent?.trim(),
-                        party2: party2Element.dataset.party2 || party2Element.textContent?.trim()
-                    };
+                    const party1 = party1Element.dataset?.party1 || party1Element.textContent?.trim();
+                    const party2 = party2Element.dataset?.party2 || party2Element.textContent?.trim();
+                    
+                    if (party1 && party2) {
+                        return { party1, party2 };
+                    }
                 }
             }
             
+            // localStorage에서 백업 데이터 시도
             const saved = localStorage.getItem(`current_${type}_comparison`);
             return saved ? JSON.parse(saved) : null;
             
@@ -519,7 +531,8 @@
             const values = Object.values(comparison);
             
             return allData.filter(item => {
-                const itemName = item.name || item.member_name || item.party_name || item.정당명 || item.의원명;
+                const itemName = item.name || item.member_name || item.party_name || 
+                               item.정당명 || item.의원명 || item.party;
                 return values.includes(itemName);
             });
             
@@ -531,15 +544,21 @@
     
     async function updatePageWithNewData(dataType, newData) {
         try {
-            const updateFunctions = [
-                `update${dataType.charAt(0).toUpperCase() + dataType.slice(1)}Data`,
-                `refresh${dataType.charAt(0).toUpperCase() + dataType.slice(1)}`,
+            // 페이지별 업데이트 함수들 (우선순위 순)
+            const updateFunctionNames = [
+                // 페이지별 특화 함수들
+                `update${dataType.charAt(0).toUpperCase() + dataType.slice(1).replace(/_/g, '')}Data`,
+                `refresh${dataType.charAt(0).toUpperCase() + dataType.slice(1).replace(/_/g, '')}`,
+                // 일반적인 함수들
                 'updatePageData',
                 'refreshData',
-                'reloadData'
+                'reloadData',
+                'loadData',
+                'fetchMemberData', // compare_member.html용
+                'loadPartyData'    // rank_party.html용
             ];
             
-            for (const funcName of updateFunctions) {
+            for (const funcName of updateFunctionNames) {
                 if (typeof window[funcName] === 'function') {
                     console.log(`[WeightSync] 📊 ${funcName} 함수로 데이터 업데이트`);
                     await window[funcName](newData);
@@ -547,8 +566,9 @@
                 }
             }
             
+            // 함수가 없으면 커스텀 이벤트 발생
             const event = new CustomEvent('weightDataUpdate', {
-                detail: { dataType, newData }
+                detail: { dataType, newData, timestamp: new Date().toISOString() }
             });
             document.dispatchEvent(event);
             
@@ -564,12 +584,9 @@
         console.log('[WeightSync] 🔄 기본 새로고침 수행...');
         
         const genericFunctions = [
-            'refreshPageData',
-            'reloadPageData', 
-            'updateAllData',
-            'init',
-            'initialize',
-            'loadData'
+            'refreshPageData', 'reloadPageData', 'updateAllData',
+            'init', 'initialize', 'loadData', 'fetchData',
+            'refreshData', 'updateData'
         ];
         
         for (const funcName of genericFunctions) {
@@ -593,21 +610,11 @@
             refreshBtn.id = 'weightRefreshBtn';
             refreshBtn.innerHTML = '🔄 가중치 새로고침';
             refreshBtn.style.cssText = `
-                position: fixed;
-                top: 80px;
-                right: 20px;
-                z-index: 1000;
-                padding: 8px 16px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                border: none;
-                border-radius: 25px;
-                font-size: 12px;
-                cursor: pointer;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                transition: all 0.3s ease;
-                font-family: 'Blinker', sans-serif;
-                font-weight: 500;
+                position: fixed; top: 80px; right: 20px; z-index: 1000;
+                padding: 8px 16px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white; border: none; border-radius: 25px; font-size: 12px;
+                cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                transition: all 0.3s ease; font-family: 'Blinker', sans-serif; font-weight: 500;
             `;
             
             refreshBtn.addEventListener('click', function() {
@@ -758,19 +765,22 @@
                 showWeightChangeNotification(message, type);
             },
             
-            testPageRefresh: (pageType) => {
+            testPageRefresh: async (pageType) => {
                 const functions = {
                     member: refreshMemberRankingPage,
                     party: refreshPartyRankingPage,
-                    comparison: refreshMemberComparisonPage
+                    comparison_member: refreshMemberComparisonPage,
+                    comparison_party: refreshPartyComparisonPage
                 };
                 
                 if (functions[pageType]) {
-                    return functions[pageType]();
+                    return await functions[pageType]();
                 } else {
-                    console.log('[WeightSync] 사용 가능한 타입: member, party, comparison');
+                    console.log('[WeightSync] 사용 가능한 타입: member, party, comparison_member, comparison_party');
                 }
             },
+            
+            getCurrentComparison: (type) => getCurrentComparisonData(type),
             
             help: () => {
                 console.log('[WeightSync] 🔧 가중치 동기화 디버그 함수:');
@@ -778,6 +788,7 @@
                 console.log('  - simulateWeightChange(): 가중치 변경 시뮬레이션');
                 console.log('  - testNotification(message, type): 알림 테스트');
                 console.log('  - testPageRefresh(type): 페이지별 새로고침 테스트');
+                console.log('  - getCurrentComparison(type): 현재 비교 데이터 확인');
                 console.log('  - checkConnections(): API 연결 상태 확인');
             }
         };
@@ -786,7 +797,6 @@
     }
 
     // === 🚀 자동 초기화 ===
-    // DOM 로드 후 초기화
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initializeWeightSync);
     } else {
@@ -798,9 +808,9 @@
         init: initializeWeightSync,
         refresh: () => handleWeightChange('수동 호출'),
         state: () => weightSyncState,
-        version: '1.0.0'
+        version: '1.0.1'
     };
 
-    console.log('[WeightSync] ✅ weight_sync.js 로드 완료');
+    console.log('[WeightSync] ✅ weight_sync.js 로드 완료 (수정된 버전)');
 
 })();
