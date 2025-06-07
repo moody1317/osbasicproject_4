@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 비교 페이지 로드 시작 (랭킹 API 통합 버전)');
+    console.log('🚀 정당 비교 페이지 로드 시작 (랭킹 API 통합 + 가중치 감지 버전)');
 
     // 선택된 정당을 저장할 변수
     let selectedParties = [];
@@ -730,8 +730,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 🆕 비교 API 데이터를 내부 형식으로 매핑
     function mapComparisonAPIData(apiData) {
-        // API 응답 구조에 따라 매핑 로직 구현
-        // 예상 구조에 따른 기본 매핑
+        // API 응답 구조에 따른 기본 매핑
         return {
             attendance: [apiData.party1_wins?.attendance || false, apiData.party2_wins?.attendance || false],
             billPass: [apiData.party1_wins?.bill_pass || false, apiData.party2_wins?.bill_pass || false],
@@ -1074,6 +1073,157 @@ document.addEventListener('DOMContentLoaded', function() {
         return await refreshPartyComparison();
     }
 
+    // === 🔄 가중치 변경 실시간 업데이트 시스템 ===
+    
+    // 가중치 변경 감지 및 자동 새로고침
+    function setupWeightChangeListener() {
+        try {
+            console.log('[CompareParty] 🔄 가중치 변경 감지 시스템 설정...');
+            
+            // 1. localStorage 이벤트 감지 (다른 페이지에서 가중치 변경 시)
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'weight_change_event' && event.newValue) {
+                    try {
+                        const changeData = JSON.parse(event.newValue);
+                        console.log('[CompareParty] 📢 가중치 변경 감지:', changeData);
+                        handleWeightUpdate(changeData, 'localStorage');
+                    } catch (e) {
+                        console.warn('[CompareParty] 가중치 변경 데이터 파싱 실패:', e);
+                    }
+                }
+            });
+            
+            // 2. BroadcastChannel 감지 (최신 브라우저)
+            if (typeof BroadcastChannel !== 'undefined') {
+                try {
+                    const weightChannel = new BroadcastChannel('weight_updates');
+                    weightChannel.addEventListener('message', function(event) {
+                        console.log('[CompareParty] 📡 BroadcastChannel 가중치 변경 감지:', event.data);
+                        handleWeightUpdate(event.data, 'BroadcastChannel');
+                    });
+                    
+                    // 페이지 언로드 시 채널 정리
+                    window.addEventListener('beforeunload', () => {
+                        weightChannel.close();
+                    });
+                    
+                    console.log('[CompareParty] ✅ BroadcastChannel 설정 완료');
+                } catch (e) {
+                    console.warn('[CompareParty] BroadcastChannel 설정 실패:', e);
+                }
+            }
+            
+            // 3. 커스텀 이벤트 감지 (같은 페이지 내)
+            document.addEventListener('weightSettingsChanged', function(event) {
+                console.log('[CompareParty] 🎯 커스텀 이벤트 가중치 변경 감지:', event.detail);
+                handleWeightUpdate(event.detail, 'customEvent');
+            });
+            
+            // 4. 주기적 체크 (폴백)
+            let lastWeightCheckTime = localStorage.getItem('last_weight_update') || '0';
+            setInterval(function() {
+                const currentCheckTime = localStorage.getItem('last_weight_update') || '0';
+                
+                if (currentCheckTime !== lastWeightCheckTime && currentCheckTime !== '0') {
+                    console.log('[CompareParty] ⏰ 주기적 체크로 가중치 변경 감지');
+                    lastWeightCheckTime = currentCheckTime;
+                    
+                    const changeData = {
+                        type: 'weights_updated',
+                        timestamp: new Date(parseInt(currentCheckTime)).toISOString(),
+                        source: 'periodic_check'
+                    };
+                    
+                    handleWeightUpdate(changeData, 'periodicCheck');
+                }
+            }, 5000);
+            
+            console.log('[CompareParty] ✅ 가중치 변경 감지 시스템 설정 완료');
+            
+        } catch (error) {
+            console.error('[CompareParty] ❌ 가중치 변경 감지 시스템 설정 실패:', error);
+        }
+    }
+    
+    // 가중치 업데이트 처리 함수
+    async function handleWeightUpdate(changeData, source) {
+        try {
+            if (isLoading) {
+                console.log('[CompareParty] 🔄 이미 로딩 중이므로 가중치 업데이트 스킵');
+                return;
+            }
+            
+            console.log(`[CompareParty] 🔄 가중치 업데이트 처리 시작 (${source})`);
+            
+            // 사용자에게 업데이트 알림
+            showNotification('가중치가 변경되었습니다. 정당 비교 데이터를 새로고침합니다...', 'info');
+            
+            // 현재 선택된 정당들 정보 백업
+            const currentSelections = selectedParties.map((partyName, index) => {
+                if (partyName) {
+                    return { partyName, cardIndex: index };
+                }
+                return null;
+            }).filter(selection => selection !== null);
+            
+            // 1초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
+            setTimeout(async () => {
+                try {
+                    // 새로운 데이터로 업데이트
+                    await refreshPartyComparison();
+                    
+                    console.log('[CompareParty] ✅ 가중치 업데이트 완료');
+                    showNotification('새로운 가중치가 정당 비교에 적용되었습니다! 🎉', 'success');
+                    
+                    // 응답 전송 (percent 페이지 모니터링용)
+                    try {
+                        const response = {
+                            page: 'compare_party.html',
+                            timestamp: new Date().toISOString(),
+                            success: true,
+                            source: source,
+                            restoredSelections: currentSelections.length
+                        };
+                        localStorage.setItem('weight_refresh_response', JSON.stringify(response));
+                        setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
+                    } catch (e) {
+                        console.warn('[CompareParty] 응답 전송 실패:', e);
+                    }
+                    
+                } catch (error) {
+                    console.error('[CompareParty] ❌ 가중치 업데이트 데이터 로드 실패:', error);
+                    showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
+                }
+            }, 1000);
+            
+        } catch (error) {
+            console.error('[CompareParty] ❌ 가중치 업데이트 처리 실패:', error);
+            showNotification('가중치 업데이트 처리에 실패했습니다.', 'error');
+        }
+    }
+    
+    // 수동 새로고침 함수들 (외부에서 호출 가능)
+    window.refreshPartyComparisonData = function() {
+        console.log('[CompareParty] 🔄 수동 새로고침 요청');
+        refreshPartyComparison();
+    };
+    
+    window.updatePartyComparisonData = function(newData) {
+        console.log('[CompareParty] 📊 외부 데이터로 업데이트:', newData);
+        
+        if (newData && Array.isArray(newData)) {
+            // 새로운 데이터로 정당 통계 재계산
+            selectedParties.forEach(async (partyName, index) => {
+                if (partyName) {
+                    const stats = await calculatePartyStats(partyName);
+                    partyStats[partyName] = stats;
+                    updatePartyCard(index, partyName, stats);
+                }
+            });
+            showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
+        }
+    };
+
     // 페이지 초기화
     async function initializePage() {
         console.log('🚀 정당 비교 페이지 초기화 중...');
@@ -1103,6 +1253,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 이벤트 핸들러 설정
             setupDropdownHandlers();
+            
+            // 🆕 가중치 변경 감지 시스템 설정
+            setupWeightChangeListener();
             
             showNotification('정당 비교 페이지 로드 완료', 'success');
             console.log('✅ 정당 비교 페이지 초기화 완료');
@@ -1155,13 +1308,23 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 랭킹 서버 상태:', Object.keys(partyRankings).length > 0 ? '연결됨' : '미연결'); // 🆕
             console.log('- 메인 서버 상태:', Object.keys(partyWeightedPerformance).length > 0 ? '연결됨' : '미연결'); // 🆕
             console.log('- 환경 정보:', window.APIService?.getEnvironmentInfo());
+        },
+        // 🆕 가중치 변경 시뮬레이션 테스트
+        simulateWeightChange: () => {
+            console.log('🔧 가중치 변경 시뮬레이션...');
+            const changeData = {
+                type: 'weights_updated',
+                timestamp: new Date().toISOString(),
+                source: 'debug_simulation'
+            };
+            handleWeightUpdate(changeData, 'debug');
         }
     };
 
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (멀티 API 통합 버전)');
+    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (멀티 API 통합 + 가중치 감지 버전)');
     console.log('🔗 API 모드: APIService + 랭킹 서버 + 메인 서버 통합 사용');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
@@ -1171,4 +1334,5 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('  - window.comparePartyDebug.testAPIService() : APIService 연결 테스트');
     console.log('  - window.comparePartyDebug.testPartyComparison("정당1", "정당2") : 비교 API 테스트');
     console.log('  - window.comparePartyDebug.testWeightedPerformance() : 가중치 성과 API 테스트');
+    console.log('  - window.comparePartyDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
 });
