@@ -414,18 +414,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // === 무효표 및 기권 관련 ===
                 invalidVoteRatio: performanceData.avg_invalid_vote_ratio * 100, // 퍼센트로 변환
-                invalidVotes: Math.floor(performanceData.avg_invalid_vote_ratio * 1000), // 건수로 추정
-                abstentions: Math.floor(performanceData.avg_invalid_vote_ratio * 500), // 기권 건수 추정
                 invalidVoteStats: {
-                    avg: performanceData.avg_invalid_vote_ratio,
-                    max: performanceData.max_invalid_vote_ratio,
-                    min: performanceData.min_invalid_vote_ratio,
-                    std: performanceData.std_invalid_vote_ratio
+                    avg: performanceData.avg_invalid_vote_ratio * 100,
+                    max: performanceData.max_invalid_vote_ratio * 100,
+                    min: performanceData.min_invalid_vote_ratio * 100,
+                    std: performanceData.std_invalid_vote_ratio * 100
                 },
                 
                 // === 투표 일치 관련 ===
                 voteMatchRatio: performanceData.avg_vote_match_ratio * 100, // 퍼센트로 변환
-                voteConsistency: Math.floor(performanceData.avg_vote_match_ratio * 200), // 건수로 추정
                 voteMatchStats: {
                     avg: performanceData.avg_vote_match_ratio * 100,
                     max: performanceData.max_vote_match_ratio * 100,
@@ -435,7 +432,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // === 투표 불일치 관련 ===
                 voteMismatchRatio: performanceData.avg_vote_mismatch_ratio * 100, // 퍼센트로 변환
-                voteInconsistency: Math.floor(performanceData.avg_vote_mismatch_ratio * 200), // 건수로 추정
                 voteMismatchStats: {
                     avg: performanceData.avg_vote_mismatch_ratio * 100,
                     max: performanceData.max_vote_mismatch_ratio * 100,
@@ -497,12 +493,8 @@ document.addEventListener('DOMContentLoaded', function() {
             chairmanSource: 'estimated',
             secretarySource: 'estimated',
             invalidVoteRatio: Math.random() * 3 + 1, // 1-4%
-            invalidVotes: Math.floor(Math.random() * 20) + 5,
-            abstentions: Math.floor(Math.random() * 30) + 10,
             voteMatchRatio: Math.random() * 20 + 70, // 70-90%
-            voteConsistency: voteConsistency,
             voteMismatchRatio: Math.random() * 15 + 10, // 10-25%
-            voteInconsistency: voteInconsistency,
             totalScore: Math.random() * 30 + 60, // 60-90%
             // 기본 통계 구조
             attendanceStats: {
@@ -512,10 +504,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 std: 2.5
             },
             invalidVoteStats: {
-                avg: 0.025,
-                max: 0.050,
-                min: 0.010,
-                std: 0.015
+                avg: 2.5,
+                max: 5.0,
+                min: 1.0,
+                std: 1.5
             },
             voteMatchStats: {
                 avg: 85.0,
@@ -604,29 +596,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         // 무효표/기권 비교 (적을수록 좋음)
-        const party1InvalidTotal = party1Stats.invalidVotes + party1Stats.abstentions;
-        const party2InvalidTotal = party2Stats.invalidVotes + party2Stats.abstentions;
-        const invalidDiff = party1InvalidTotal - party2InvalidTotal;
-        if (Math.abs(invalidDiff) < 1) {
+        const invalidDiff = party1Stats.invalidVoteRatio - party2Stats.invalidVoteRatio;
+        if (Math.abs(invalidDiff) < 0.1) {
             comparisons.invalidVotes = [true, true];
         } else {
             comparisons.invalidVotes = invalidDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
         }
         
         // 투표 일치 비교 (많을수록 좋음)
-        const voteConsistencyDiff = party1Stats.voteConsistency - party2Stats.voteConsistency;
-        if (Math.abs(voteConsistencyDiff) < 1) {
+        const voteMatchDiff = party1Stats.voteMatchRatio - party2Stats.voteMatchRatio;
+        if (Math.abs(voteMatchDiff) < 0.1) {
             comparisons.voteConsistency = [true, true];
         } else {
-            comparisons.voteConsistency = voteConsistencyDiff > 0 ? [true, false] : [false, true];
+            comparisons.voteConsistency = voteMatchDiff > 0 ? [true, false] : [false, true];
         }
         
         // 투표 불일치 비교 (적을수록 좋음)
-        const voteInconsistencyDiff = party1Stats.voteInconsistency - party2Stats.voteInconsistency;
-        if (Math.abs(voteInconsistencyDiff) < 1) {
+        const voteMismatchDiff = party1Stats.voteMismatchRatio - party2Stats.voteMismatchRatio;
+        if (Math.abs(voteMismatchDiff) < 0.1) {
             comparisons.voteInconsistency = [true, true];
         } else {
-            comparisons.voteInconsistency = voteInconsistencyDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
+            comparisons.voteInconsistency = voteMismatchDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
         }
 
         console.log('🔍 비교 결과:', comparisons);
@@ -716,16 +706,16 @@ document.addEventListener('DOMContentLoaded', function() {
                          데이터 출처: ${stats.secretarySource === 'api' ? '실시간 API' : '추정값'}`
             },
             { // 7. 무효표 및 기권
-                value: `${(stats.invalidVotes + stats.abstentions)}건`,
+                value: `${stats.invalidVoteRatio.toFixed(1)}%`,
                 winLose: comparisons ? (comparisons.invalidVotes[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
-                tooltip: `무효표/기권 평균: ${stats.invalidVoteStats?.avg?.toFixed(3) || '0.025'}%<br>
-                         최대: ${stats.invalidVoteStats?.max?.toFixed(3) || '0.050'}%<br>
-                         최소: ${stats.invalidVoteStats?.min?.toFixed(3) || '0.010'}%<br>
-                         표준편차: ${stats.invalidVoteStats?.std?.toFixed(3) || '0.015'}%`
+                tooltip: `무효표/기권 평균: ${stats.invalidVoteStats?.avg?.toFixed(1) || '2.5'}%<br>
+                         최대: ${stats.invalidVoteStats?.max?.toFixed(1) || '5.0'}%<br>
+                         최소: ${stats.invalidVoteStats?.min?.toFixed(1) || '1.0'}%<br>
+                         표준편차: ${stats.invalidVoteStats?.std?.toFixed(1) || '1.5'}%`
             },
             { // 8. 투표 결과 일치
-                value: `${stats.voteConsistency}건`,
+                value: `${stats.voteMatchRatio.toFixed(1)}%`,
                 winLose: comparisons ? (comparisons.voteConsistency[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
                 tooltip: `일치 평균: ${stats.voteMatchStats?.avg?.toFixed(1) || '85.0'}%<br>
@@ -734,7 +724,7 @@ document.addEventListener('DOMContentLoaded', function() {
                          표준편차: ${stats.voteMatchStats?.std?.toFixed(1) || '5.0'}%`
             },
             { // 9. 투표 결과 불일치
-                value: `${stats.voteInconsistency}건`,
+                value: `${stats.voteMismatchRatio.toFixed(1)}%`,
                 winLose: comparisons ? (comparisons.voteInconsistency[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
                 tooltip: `불일치 평균: ${stats.voteMismatchStats?.avg?.toFixed(1) || '15.0'}%<br>
@@ -936,9 +926,9 @@ document.addEventListener('DOMContentLoaded', function() {
             'LOSE(00건)', // 청원 결과
             '00명', // 위원장
             '00명', // 간사
-            'WIN(00건)', // 무효표 및 기권
-            'WIN(00건)', // 투표 결과 일치
-            'LOSE(00건)' // 투표 결과 불일치
+            'WIN(0.0%)', // 무효표 및 기권
+            'WIN(0.0%)', // 투표 결과 일치
+            'LOSE(0.0%)' // 투표 결과 불일치
         ];
 
         resetValues.forEach((resetValue, index) => {
@@ -1148,6 +1138,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const stats1 = await calculatePartyStats(party1);
             const stats2 = await calculatePartyStats(party2);
+            
+            console.log(`📊 ${party1} 통계:`, {
+                출석률: `${stats1.attendanceRate.toFixed(1)}%`,
+                본회의가결: `${stats1.billPassSum}건`,
+                청원제안: `${stats1.petitionProposed}건`,
+                청원결과: `${stats1.petitionPassed}건`,
+                위원장: `${stats1.chairmanCount}명`,
+                간사: `${stats1.secretaryCount}명`,
+                무효표기권: `${stats1.invalidVoteRatio.toFixed(1)}%`,
+                투표일치: `${stats1.voteMatchRatio.toFixed(1)}%`,
+                투표불일치: `${stats1.voteMismatchRatio.toFixed(1)}%`
+            });
+            
+            console.log(`📊 ${party2} 통계:`, {
+                출석률: `${stats2.attendanceRate.toFixed(1)}%`,
+                본회의가결: `${stats2.billPassSum}건`,
+                청원제안: `${stats2.petitionProposed}건`,
+                청원결과: `${stats2.petitionPassed}건`,
+                위원장: `${stats2.chairmanCount}명`,
+                간사: `${stats2.secretaryCount}명`,
+                무효표기권: `${stats2.invalidVoteRatio.toFixed(1)}%`,
+                투표일치: `${stats2.voteMatchRatio.toFixed(1)}%`,
+                투표불일치: `${stats2.voteMismatchRatio.toFixed(1)}%`
+            });
+            
             const comparison = await compareParties(stats1, stats2, party1, party2);
             console.log(`🆚 ${party1} vs ${party2} 비교 결과:`, comparison);
             return comparison;
