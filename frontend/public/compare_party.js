@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 비교 페이지 로드 시작 (Django API 연동 + 가중치 감지 버전)');
+    console.log('🚀 정당 비교 페이지 로드 시작 (로컬 비교 로직 버전)');
 
     // === 🔧 상태 관리 변수들 ===
     let selectedParties = [];
@@ -146,7 +146,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return nameMapping[partyName] || partyName;
     }
 
-    // === 📊 새로운 API 데이터 로드 함수들 ===
+    // 🔧 비율 데이터 정규화 (API에서 받은 값이 이미 퍼센트인지 확인)
+    function normalizePercentage(value) {
+        if (!value && value !== 0) return 0;
+        
+        const numValue = parseFloat(value);
+        if (isNaN(numValue)) return 0;
+        
+        // 값이 100보다 크면 이미 퍼센트 형식으로 가정 (그대로 사용)
+        // 값이 1보다 작으면 비율 형식으로 가정 (100 곱하기)
+        if (numValue > 100) {
+            return numValue; // 이미 퍼센트 (예: 2694.0 → 2694.0%)
+        } else if (numValue <= 1) {
+            return numValue * 100; // 비율을 퍼센트로 변환 (예: 0.85 → 85%)
+        } else {
+            return numValue; // 1~100 사이는 그대로 사용
+        }
+    }
+
+    // === 📊 API 데이터 로드 함수들 ===
 
     // 정당 성과 데이터 가져오기
     async function fetchPartyPerformanceData() {
@@ -154,23 +172,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('📊 정당 성과 데이터 조회...');
             
             const rawData = await window.APIService.getPartyPerformance();
-            
-            // API 응답 구조 디버깅
             console.log('🔍 정당 성과 API 원본 응답:', rawData);
-            console.log('🔍 응답 타입:', typeof rawData);
-            console.log('🔍 배열 여부:', Array.isArray(rawData));
             
             // 다양한 응답 형식 처리
             let processedData = null;
             
             if (Array.isArray(rawData)) {
-                // 직접 배열인 경우
                 processedData = rawData;
             } else if (rawData && rawData.data && Array.isArray(rawData.data)) {
-                // {data: [...]} 형식인 경우
                 processedData = rawData.data;
             } else if (rawData && typeof rawData === 'object') {
-                // 객체인 경우 값들을 배열로 변환
                 const values = Object.values(rawData);
                 if (values.length > 0 && Array.isArray(values[0])) {
                     processedData = values[0];
@@ -184,38 +195,47 @@ document.addEventListener('DOMContentLoaded', function() {
                 processedData = [];
             }
             
-            // 정당별 성과 데이터 매핑
+            // 정당별 성과 데이터 매핑 (비율 정규화 적용)
             const performanceData = {};
             processedData.forEach(party => {
                 const partyName = normalizePartyName(party.party);
                 if (partyName && partyName !== '정보없음') {
+                    
+                    // 🔧 원본 값들 로깅 (디버깅용)
+                    console.log(`📊 ${partyName} 원본 데이터:`, {
+                        avg_attendance: party.avg_attendance,
+                        avg_invalid_vote_ratio: party.avg_invalid_vote_ratio,
+                        avg_vote_match_ratio: party.avg_vote_match_ratio,
+                        avg_vote_mismatch_ratio: party.avg_vote_mismatch_ratio
+                    });
+                    
                     performanceData[partyName] = {
                         // === 기본 정보 ===
                         party: partyName,
                         
-                        // === 출석 관련 (데이터 매핑에 따름) ===
-                        avg_attendance: parseFloat(party.avg_attendance || 0),
-                        max_attendance: parseFloat(party.max_attendance || 0),
-                        min_attendance: parseFloat(party.min_attendance || 0),
-                        std_attendance: parseFloat(party.std_attendance || 0),
+                        // === 출석 관련 ===
+                        avg_attendance: normalizePercentage(party.avg_attendance),
+                        max_attendance: normalizePercentage(party.max_attendance),
+                        min_attendance: normalizePercentage(party.min_attendance),
+                        std_attendance: normalizePercentage(party.std_attendance),
                         
                         // === 무효표 및 기권 관련 ===
-                        avg_invalid_vote_ratio: parseFloat(party.avg_invalid_vote_ratio || 0),
-                        max_invalid_vote_ratio: parseFloat(party.max_invalid_vote_ratio || 0),
-                        min_invalid_vote_ratio: parseFloat(party.min_invalid_vote_ratio || 0),
-                        std_invalid_vote_ratio: parseFloat(party.std_invalid_vote_ratio || 0),
+                        avg_invalid_vote_ratio: normalizePercentage(party.avg_invalid_vote_ratio),
+                        max_invalid_vote_ratio: normalizePercentage(party.max_invalid_vote_ratio),
+                        min_invalid_vote_ratio: normalizePercentage(party.min_invalid_vote_ratio),
+                        std_invalid_vote_ratio: normalizePercentage(party.std_invalid_vote_ratio),
                         
                         // === 표결 일치 관련 ===
-                        avg_vote_match_ratio: parseFloat(party.avg_vote_match_ratio || 0),
-                        max_vote_match_ratio: parseFloat(party.max_vote_match_ratio || 0),
-                        min_vote_match_ratio: parseFloat(party.min_vote_match_ratio || 0),
-                        std_vote_match_ratio: parseFloat(party.std_vote_match_ratio || 0),
+                        avg_vote_match_ratio: normalizePercentage(party.avg_vote_match_ratio),
+                        max_vote_match_ratio: normalizePercentage(party.max_vote_match_ratio),
+                        min_vote_match_ratio: normalizePercentage(party.min_vote_match_ratio),
+                        std_vote_match_ratio: normalizePercentage(party.std_vote_match_ratio),
                         
                         // === 표결 불일치 관련 ===
-                        avg_vote_mismatch_ratio: parseFloat(party.avg_vote_mismatch_ratio || 0),
-                        max_vote_mismatch_ratio: parseFloat(party.max_vote_mismatch_ratio || 0),
-                        min_vote_mismatch_ratio: parseFloat(party.min_vote_mismatch_ratio || 0),
-                        std_vote_mismatch_ratio: parseFloat(party.std_vote_mismatch_ratio || 0),
+                        avg_vote_mismatch_ratio: normalizePercentage(party.avg_vote_mismatch_ratio),
+                        max_vote_mismatch_ratio: normalizePercentage(party.max_vote_mismatch_ratio),
+                        min_vote_mismatch_ratio: normalizePercentage(party.min_vote_mismatch_ratio),
+                        std_vote_mismatch_ratio: normalizePercentage(party.std_vote_mismatch_ratio),
                         
                         // === 본회의 및 청원 관련 ===
                         bill_pass_sum: parseInt(party.bill_pass_sum || 0),
@@ -232,6 +252,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         // === 원본 데이터 ===
                         _raw: party
                     };
+                    
+                    // 🔧 정규화된 값들 로깅 (디버깅용)
+                    console.log(`📊 ${partyName} 정규화된 데이터:`, {
+                        avg_attendance: performanceData[partyName].avg_attendance,
+                        avg_invalid_vote_ratio: performanceData[partyName].avg_invalid_vote_ratio,
+                        avg_vote_match_ratio: performanceData[partyName].avg_vote_match_ratio,
+                        avg_vote_mismatch_ratio: performanceData[partyName].avg_vote_mismatch_ratio
+                    });
                 }
             });
             
@@ -242,7 +270,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('❌ 정당 성과 데이터 로드 실패:', error);
             partyPerformanceData = {};
-            // 에러가 발생해도 빈 객체를 반환하여 페이지가 계속 작동하도록 함
             return {};
         }
     }
@@ -253,23 +280,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('🏆 정당 랭킹 데이터 조회...');
             
             const rawData = await window.APIService.getPartyScoreRanking();
-            
-            // API 응답 구조 디버깅
             console.log('🔍 정당 랭킹 API 원본 응답:', rawData);
-            console.log('🔍 응답 타입:', typeof rawData);
-            console.log('🔍 배열 여부:', Array.isArray(rawData));
             
             // 다양한 응답 형식 처리
             let processedData = null;
             
             if (Array.isArray(rawData)) {
-                // 직접 배열인 경우
                 processedData = rawData;
             } else if (rawData && rawData.data && Array.isArray(rawData.data)) {
-                // {data: [...]} 형식인 경우
                 processedData = rawData.data;
             } else if (rawData && typeof rawData === 'object') {
-                // 객체인 경우 값들을 배열로 변환
                 const values = Object.values(rawData);
                 if (values.length > 0 && Array.isArray(values[0])) {
                     processedData = values[0];
@@ -303,31 +323,7 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('❌ 정당 랭킹 데이터 로드 실패:', error);
             partyRankings = {};
-            // 에러가 발생해도 빈 객체를 반환하여 페이지가 계속 작동하도록 함
             return {};
-        }
-    }
-
-    // 두 정당 직접 비교 API 호출
-    async function fetchPartyDirectComparison(party1, party2) {
-        try {
-            console.log(`🆚 정당 직접 비교 API 호출: ${party1} vs ${party2}`);
-            
-            const comparisonData = await window.APIService.compareParties(party1, party2);
-            
-            // API 응답 구조 디버깅
-            console.log('🔍 정당 비교 API 원본 응답:', comparisonData);
-            
-            if (comparisonData) {
-                console.log(`✅ 정당 직접 비교 데이터 로드 완료: ${party1} vs ${party2}`);
-                return comparisonData;
-            }
-            
-            return null;
-            
-        } catch (error) {
-            console.warn(`⚠️ 정당 직접 비교 API 실패, 기본 비교 로직 사용:`, error);
-            return null;
         }
     }
 
@@ -378,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return generateDefaultStats(partyName, rankingData);
             }
 
-            // API 데이터를 UI에 맞는 형식으로 변환
+            // API 데이터를 UI에 맞는 형식으로 변환 (이미 정규화된 퍼센트 값 사용)
             const stats = {
                 // === 기본 정보 ===
                 partyName: partyName,
@@ -387,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 rank: rankingData ? rankingData.rank : 999,
                 rankSource: rankingData ? 'api' : 'estimated',
                 
-                // === 출석 관련 ===
+                // === 출석 관련 (이미 퍼센트) ===
                 attendanceRate: performanceData.avg_attendance,
                 attendanceStats: {
                     avg: performanceData.avg_attendance,
@@ -412,31 +408,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 chairmanSource: 'api',
                 secretarySource: 'api',
                 
-                // === 무효표 및 기권 관련 ===
-                invalidVoteRatio: performanceData.avg_invalid_vote_ratio * 100, // 퍼센트로 변환
+                // === 무효표 및 기권 관련 (이미 퍼센트) ===
+                invalidVoteRatio: performanceData.avg_invalid_vote_ratio,
                 invalidVoteStats: {
-                    avg: performanceData.avg_invalid_vote_ratio * 100,
-                    max: performanceData.max_invalid_vote_ratio * 100,
-                    min: performanceData.min_invalid_vote_ratio * 100,
-                    std: performanceData.std_invalid_vote_ratio * 100
+                    avg: performanceData.avg_invalid_vote_ratio,
+                    max: performanceData.max_invalid_vote_ratio,
+                    min: performanceData.min_invalid_vote_ratio,
+                    std: performanceData.std_invalid_vote_ratio
                 },
                 
-                // === 투표 일치 관련 ===
-                voteMatchRatio: performanceData.avg_vote_match_ratio * 100, // 퍼센트로 변환
+                // === 투표 일치 관련 (이미 퍼센트) ===
+                voteMatchRatio: performanceData.avg_vote_match_ratio,
                 voteMatchStats: {
-                    avg: performanceData.avg_vote_match_ratio * 100,
-                    max: performanceData.max_vote_match_ratio * 100,
-                    min: performanceData.min_vote_match_ratio * 100,
-                    std: performanceData.std_vote_match_ratio * 100
+                    avg: performanceData.avg_vote_match_ratio,
+                    max: performanceData.max_vote_match_ratio,
+                    min: performanceData.min_vote_match_ratio,
+                    std: performanceData.std_vote_match_ratio
                 },
                 
-                // === 투표 불일치 관련 ===
-                voteMismatchRatio: performanceData.avg_vote_mismatch_ratio * 100, // 퍼센트로 변환
+                // === 투표 불일치 관련 (이미 퍼센트) ===
+                voteMismatchRatio: performanceData.avg_vote_mismatch_ratio,
                 voteMismatchStats: {
-                    avg: performanceData.avg_vote_mismatch_ratio * 100,
-                    max: performanceData.max_vote_mismatch_ratio * 100,
-                    min: performanceData.min_vote_mismatch_ratio * 100,
-                    std: performanceData.std_vote_mismatch_ratio * 100
+                    avg: performanceData.avg_vote_mismatch_ratio,
+                    max: performanceData.max_vote_mismatch_ratio,
+                    min: performanceData.min_vote_mismatch_ratio,
+                    std: performanceData.std_vote_mismatch_ratio
                 },
                 
                 // === 총점 ===
@@ -474,8 +470,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const billPassRate = Math.random() * 30 + 40; // 40-70%
         const petitionProposed = Math.floor(Math.random() * 100) + 50;
         const petitionPassed = Math.floor(Math.random() * 50) + 20;
-        const voteConsistency = Math.floor(Math.random() * 50) + 150;
-        const voteInconsistency = Math.floor(Math.random() * 30) + 20;
         
         return {
             partyName: partyName,
@@ -524,122 +518,68 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // === ⚖️ 정당 비교 로직 (수정된 버전) ===
-    async function compareParties(party1Stats, party2Stats, party1Name, party2Name) {
-        // 1차: API 직접 비교 시도
-        try {
-            const apiComparison = await fetchPartyDirectComparison(party1Name, party2Name);
-            if (apiComparison) {
-                console.log(`✅ API 비교 데이터 사용: ${party1Name} vs ${party2Name}`);
-                return mapAPIComparisonData(apiComparison);
-            }
-        } catch (error) {
-            console.warn('API 비교 실패, 로컬 비교 로직 사용');
-        }
-        
-        // 2차: 로컬 비교 로직 (수정된 버전)
-        console.log(`🔄 로컬 비교 로직 사용: ${party1Name} vs ${party2Name}`);
-        console.log('Party1 Stats:', party1Stats);
-        console.log('Party2 Stats:', party2Stats);
+    // === ⚖️ 순수 로컬 비교 로직 (API 의존성 완전 제거) ===
+    function comparePartiesLocal(party1Stats, party2Stats) {
+        console.log(`🆚 로컬 비교 시작: ${party1Stats.partyName} vs ${party2Stats.partyName}`);
+        console.log('Party1 Stats:', {
+            출석률: `${party1Stats.attendanceRate.toFixed(1)}%`,
+            본회의가결: `${party1Stats.billPassSum}건`,
+            청원제안: `${party1Stats.petitionProposed}건`,
+            청원결과: `${party1Stats.petitionPassed}건`,
+            위원장: `${party1Stats.chairmanCount}명`,
+            간사: `${party1Stats.secretaryCount}명`,
+            무효표기권: `${party1Stats.invalidVoteRatio.toFixed(1)}%`,
+            투표일치: `${party1Stats.voteMatchRatio.toFixed(1)}%`,
+            투표불일치: `${party1Stats.voteMismatchRatio.toFixed(1)}%`
+        });
+        console.log('Party2 Stats:', {
+            출석률: `${party2Stats.attendanceRate.toFixed(1)}%`,
+            본회의가결: `${party2Stats.billPassSum}건`,
+            청원제안: `${party2Stats.petitionProposed}건`,
+            청원결과: `${party2Stats.petitionPassed}건`,
+            위원장: `${party2Stats.chairmanCount}명`,
+            간사: `${party2Stats.secretaryCount}명`,
+            무효표기권: `${party2Stats.invalidVoteRatio.toFixed(1)}%`,
+            투표일치: `${party2Stats.voteMatchRatio.toFixed(1)}%`,
+            투표불일치: `${party2Stats.voteMismatchRatio.toFixed(1)}%`
+        });
         
         const comparisons = {};
         
-        // 🔧 비교 로직 수정: 명확한 승/패 결정
+        // 🔧 단순하고 명확한 비교 로직
         
         // 출석률 비교 (높을수록 좋음)
-        const attendanceDiff = party1Stats.attendanceRate - party2Stats.attendanceRate;
-        if (Math.abs(attendanceDiff) < 0.1) {
-            // 차이가 거의 없으면 둘 다 동등하게 처리
-            comparisons.attendance = [true, true];
-        } else {
-            comparisons.attendance = attendanceDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.attendance = party1Stats.attendanceRate > party2Stats.attendanceRate ? [true, false] : [false, true];
         
         // 본회의 가결 비교 (많을수록 좋음)
-        const billPassDiff = party1Stats.billPassSum - party2Stats.billPassSum;
-        if (Math.abs(billPassDiff) < 1) {
-            comparisons.billPass = [true, true];
-        } else {
-            comparisons.billPass = billPassDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.billPass = party1Stats.billPassSum > party2Stats.billPassSum ? [true, false] : [false, true];
         
         // 청원 제안 비교 (많을수록 좋음)
-        const petitionProposedDiff = party1Stats.petitionProposed - party2Stats.petitionProposed;
-        if (Math.abs(petitionProposedDiff) < 1) {
-            comparisons.petitionProposed = [true, true];
-        } else {
-            comparisons.petitionProposed = petitionProposedDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.petitionProposed = party1Stats.petitionProposed > party2Stats.petitionProposed ? [true, false] : [false, true];
         
         // 청원 결과 비교 (많을수록 좋음)
-        const petitionPassedDiff = party1Stats.petitionPassed - party2Stats.petitionPassed;
-        if (Math.abs(petitionPassedDiff) < 1) {
-            comparisons.petitionPassed = [true, true];
-        } else {
-            comparisons.petitionPassed = petitionPassedDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.petitionPassed = party1Stats.petitionPassed > party2Stats.petitionPassed ? [true, false] : [false, true];
         
         // 위원장 수 비교 (많을수록 좋음)
-        const chairmanDiff = party1Stats.chairmanCount - party2Stats.chairmanCount;
-        if (Math.abs(chairmanDiff) < 1) {
-            comparisons.chairman = [true, true];
-        } else {
-            comparisons.chairman = chairmanDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.chairman = party1Stats.chairmanCount > party2Stats.chairmanCount ? [true, false] : [false, true];
         
         // 간사 수 비교 (많을수록 좋음)
-        const secretaryDiff = party1Stats.secretaryCount - party2Stats.secretaryCount;
-        if (Math.abs(secretaryDiff) < 1) {
-            comparisons.secretary = [true, true];
-        } else {
-            comparisons.secretary = secretaryDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.secretary = party1Stats.secretaryCount > party2Stats.secretaryCount ? [true, false] : [false, true];
         
         // 무효표/기권 비교 (적을수록 좋음)
-        const invalidDiff = party1Stats.invalidVoteRatio - party2Stats.invalidVoteRatio;
-        if (Math.abs(invalidDiff) < 0.1) {
-            comparisons.invalidVotes = [true, true];
-        } else {
-            comparisons.invalidVotes = invalidDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
-        }
+        comparisons.invalidVotes = party1Stats.invalidVoteRatio < party2Stats.invalidVoteRatio ? [true, false] : [false, true];
         
         // 투표 일치 비교 (많을수록 좋음)
-        const voteMatchDiff = party1Stats.voteMatchRatio - party2Stats.voteMatchRatio;
-        if (Math.abs(voteMatchDiff) < 0.1) {
-            comparisons.voteConsistency = [true, true];
-        } else {
-            comparisons.voteConsistency = voteMatchDiff > 0 ? [true, false] : [false, true];
-        }
+        comparisons.voteConsistency = party1Stats.voteMatchRatio > party2Stats.voteMatchRatio ? [true, false] : [false, true];
         
         // 투표 불일치 비교 (적을수록 좋음)
-        const voteMismatchDiff = party1Stats.voteMismatchRatio - party2Stats.voteMismatchRatio;
-        if (Math.abs(voteMismatchDiff) < 0.1) {
-            comparisons.voteInconsistency = [true, true];
-        } else {
-            comparisons.voteInconsistency = voteMismatchDiff < 0 ? [true, false] : [false, true]; // 적을수록 좋음
-        }
+        comparisons.voteInconsistency = party1Stats.voteMismatchRatio < party2Stats.voteMismatchRatio ? [true, false] : [false, true];
 
         console.log('🔍 비교 결과:', comparisons);
         return comparisons;
     }
 
-    // API 비교 데이터를 내부 형식으로 매핑
-    function mapAPIComparisonData(apiData) {
-        // API 응답 구조에 따른 매핑 (실제 API 응답 구조에 맞춰 조정 필요)
-        return {
-            attendance: [apiData.party1_better?.attendance || false, apiData.party2_better?.attendance || false],
-            billPass: [apiData.party1_better?.bill_pass || false, apiData.party2_better?.bill_pass || false],
-            petitionProposed: [apiData.party1_better?.petition_proposed || false, apiData.party2_better?.petition_proposed || false],
-            petitionPassed: [apiData.party1_better?.petition_passed || false, apiData.party2_better?.petition_passed || false],
-            chairman: [apiData.party1_better?.chairman || false, apiData.party2_better?.chairman || false],
-            secretary: [apiData.party1_better?.secretary || false, apiData.party2_better?.secretary || false],
-            invalidVotes: [apiData.party1_better?.invalid_votes || false, apiData.party2_better?.invalid_votes || false],
-            voteConsistency: [apiData.party1_better?.vote_consistency || false, apiData.party2_better?.vote_consistency || false],
-            voteInconsistency: [apiData.party1_better?.vote_inconsistency || false, apiData.party2_better?.vote_inconsistency || false]
-        };
-    }
-
-    // === 🎨 UI 업데이트 함수들 (수정된 버전) ===
+    // === 🎨 UI 업데이트 함수들 ===
 
     // 정당 카드 업데이트 (i 아이콘 보존)
     function updatePartyCard(cardIndex, partyName, stats, comparisons = null) {
@@ -655,7 +595,6 @@ document.addEventListener('DOMContentLoaded', function() {
             : `${stats.rank}위 <span style="font-size: 12px; color: #888;">(추정)</span>`;
 
         // HTML과 동일한 순서로 업데이트 배열 정의
-        // HTML 순서: 현재 순위, 출석, 본회의 가결, 청원 제안, 청원 결과, 위원장, 간사, 무효표 및 기권, 투표 결과 일치, 투표 결과 불일치
         const updates = [
             { // 0. 현재 순위
                 value: rankDisplay,
@@ -862,11 +801,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         // 두 정당이 모두 선택되었으면 비교 수행
                         if (selectedParties[0] && selectedParties[1]) {
                             console.log(`🆚 두 정당 비교 시작: ${selectedParties[0]} vs ${selectedParties[1]}`);
-                            const comparisons = await compareParties(
+                            const comparisons = comparePartiesLocal(
                                 partyStats[selectedParties[0]], 
-                                partyStats[selectedParties[1]], 
-                                selectedParties[0], 
-                                selectedParties[1]
+                                partyStats[selectedParties[1]]
                             );
                             updatePartyCard(0, selectedParties[0], partyStats[selectedParties[0]], comparisons);
                             updatePartyCard(1, selectedParties[1], partyStats[selectedParties[1]], comparisons);
@@ -977,11 +914,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 비교 데이터 업데이트
             if (selectedParties[0] && selectedParties[1]) {
-                const comparisons = await compareParties(
+                const comparisons = comparePartiesLocal(
                     partyStats[selectedParties[0]], 
-                    partyStats[selectedParties[1]], 
-                    selectedParties[0], 
-                    selectedParties[1]
+                    partyStats[selectedParties[1]]
                 );
                 
                 refreshedParties.forEach(({ partyName, stats, index }) => {
@@ -1085,7 +1020,6 @@ document.addEventListener('DOMContentLoaded', function() {
         reloadData: () => initializePage(),
         refreshData: () => refreshPartyComparison(),
         testPartyStats: (partyName) => calculatePartyStats(partyName),
-        testPartyComparison: (party1, party2) => fetchPartyDirectComparison(party1, party2),
         testPerformanceData: () => fetchPartyPerformanceData(),
         testRankingData: () => fetchPartyRankingData(),
         showPartyList: () => loadPartyList(),
@@ -1096,7 +1030,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 에러 상태:', window.APIService?._hasError);
             console.log('- 정당 성과 API:', !!window.APIService?.getPartyPerformance);
             console.log('- 정당 랭킹 API:', !!window.APIService?.getPartyScoreRanking);
-            console.log('- 정당 비교 API:', !!window.APIService?.compareParties);
             console.log('- 유효 정당 목록:', window.APIService?.getValidParties());
             return window.APIService;
         },
@@ -1163,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 투표불일치: `${stats2.voteMismatchRatio.toFixed(1)}%`
             });
             
-            const comparison = await compareParties(stats1, stats2, party1, party2);
+            const comparison = comparePartiesLocal(stats1, stats2);
             console.log(`🆚 ${party1} vs ${party2} 비교 결과:`, comparison);
             return comparison;
         }
@@ -1172,17 +1105,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (Django API 연동 + 가중치 감지 버전)');
-    console.log('🔗 API 모드: Django API 직접 연동');
-    console.log('📊 데이터 매핑: 새로운 필드 구조 적용');
-    console.log('🔧 수정 사항:');
-    console.log('  - 비교 로직 수정: 명확한 WIN/LOSE 결정');
-    console.log('  - i 아이콘 보존: 업데이트 시 툴팁 아이콘 유지');
-    console.log('  - 툴팁 데이터 업데이트: 실시간 API 데이터 반영');
+    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (로컬 비교 로직 버전)');
+    console.log('🔗 API 의존성: 완전 제거');
+    console.log('📊 데이터 정규화: 자동 퍼센트 형식 감지');
+    console.log('🔧 주요 변경사항:');
+    console.log('  - compare_parties API 호출 완전 제거');
+    console.log('  - 순수 로컬 비교 로직 사용');
+    console.log('  - 비율 데이터 자동 정규화 (26940% → 올바른 퍼센트)');
+    console.log('  - i 아이콘 보존 및 툴팁 업데이트');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.testComparison("정당1", "정당2") : 비교 테스트');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
-    console.log('  - window.comparePartyDebug.testAPIService() : APIService 연결 테스트');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
 });
