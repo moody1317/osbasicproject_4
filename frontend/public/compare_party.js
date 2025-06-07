@@ -155,13 +155,38 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const rawData = await window.APIService.getPartyPerformance();
             
-            if (!rawData || !Array.isArray(rawData)) {
-                throw new Error('정당 성과 API 응답이 올바르지 않습니다.');
+            // API 응답 구조 디버깅
+            console.log('🔍 정당 성과 API 원본 응답:', rawData);
+            console.log('🔍 응답 타입:', typeof rawData);
+            console.log('🔍 배열 여부:', Array.isArray(rawData));
+            
+            // 다양한 응답 형식 처리
+            let processedData = null;
+            
+            if (Array.isArray(rawData)) {
+                // 직접 배열인 경우
+                processedData = rawData;
+            } else if (rawData && rawData.data && Array.isArray(rawData.data)) {
+                // {data: [...]} 형식인 경우
+                processedData = rawData.data;
+            } else if (rawData && typeof rawData === 'object') {
+                // 객체인 경우 값들을 배열로 변환
+                const values = Object.values(rawData);
+                if (values.length > 0 && Array.isArray(values[0])) {
+                    processedData = values[0];
+                } else if (values.length > 0) {
+                    processedData = values;
+                }
+            }
+            
+            if (!processedData || !Array.isArray(processedData)) {
+                console.warn('⚠️ 정당 성과 데이터 형식이 예상과 다름, 빈 배열 사용');
+                processedData = [];
             }
             
             // 정당별 성과 데이터 매핑
             const performanceData = {};
-            rawData.forEach(party => {
+            processedData.forEach(party => {
                 const partyName = normalizePartyName(party.party);
                 if (partyName && partyName !== '정보없음') {
                     performanceData[partyName] = {
@@ -217,7 +242,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('❌ 정당 성과 데이터 로드 실패:', error);
             partyPerformanceData = {};
-            throw error;
+            // 에러가 발생해도 빈 객체를 반환하여 페이지가 계속 작동하도록 함
+            return {};
         }
     }
 
@@ -228,13 +254,38 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const rawData = await window.APIService.getPartyScoreRanking();
             
-            if (!rawData || !Array.isArray(rawData)) {
-                throw new Error('정당 랭킹 API 응답이 올바르지 않습니다.');
+            // API 응답 구조 디버깅
+            console.log('🔍 정당 랭킹 API 원본 응답:', rawData);
+            console.log('🔍 응답 타입:', typeof rawData);
+            console.log('🔍 배열 여부:', Array.isArray(rawData));
+            
+            // 다양한 응답 형식 처리
+            let processedData = null;
+            
+            if (Array.isArray(rawData)) {
+                // 직접 배열인 경우
+                processedData = rawData;
+            } else if (rawData && rawData.data && Array.isArray(rawData.data)) {
+                // {data: [...]} 형식인 경우
+                processedData = rawData.data;
+            } else if (rawData && typeof rawData === 'object') {
+                // 객체인 경우 값들을 배열로 변환
+                const values = Object.values(rawData);
+                if (values.length > 0 && Array.isArray(values[0])) {
+                    processedData = values[0];
+                } else if (values.length > 0) {
+                    processedData = values;
+                }
+            }
+            
+            if (!processedData || !Array.isArray(processedData)) {
+                console.warn('⚠️ 정당 랭킹 데이터 형식이 예상과 다름, 빈 배열 사용');
+                processedData = [];
             }
             
             // 정당별 랭킹 데이터 매핑
             const rankingData = {};
-            rawData.forEach(ranking => {
+            processedData.forEach(ranking => {
                 const partyName = normalizePartyName(ranking.POLY_NM);
                 if (partyName && partyName !== '정보없음') {
                     rankingData[partyName] = {
@@ -252,7 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             console.error('❌ 정당 랭킹 데이터 로드 실패:', error);
             partyRankings = {};
-            throw error;
+            // 에러가 발생해도 빈 객체를 반환하여 페이지가 계속 작동하도록 함
+            return {};
         }
     }
 
@@ -262,6 +314,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log(`🆚 정당 직접 비교 API 호출: ${party1} vs ${party2}`);
             
             const comparisonData = await window.APIService.compareParties(party1, party2);
+            
+            // API 응답 구조 디버깅
+            console.log('🔍 정당 비교 API 원본 응답:', comparisonData);
             
             if (comparisonData) {
                 console.log(`✅ 정당 직접 비교 데이터 로드 완료: ${party1} vs ${party2}`);
