@@ -609,6 +609,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
                 tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>
+                
+                `
             },
             { // 3. 청원 제안
                 value: `${stats.petitionProposed}건`,
