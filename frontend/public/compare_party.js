@@ -201,13 +201,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const partyName = normalizePartyName(party.party);
                 if (partyName && partyName !== '정보없음') {
                     
-                    // 🔧 원본 값들 로깅 (디버깅용)
-                    console.log(`📊 ${partyName} 원본 데이터:`, {
-                        avg_attendance: party.avg_attendance,
-                        avg_invalid_vote_ratio: party.avg_invalid_vote_ratio,
-                        avg_vote_match_ratio: party.avg_vote_match_ratio,
-                        avg_vote_mismatch_ratio: party.avg_vote_mismatch_ratio
-                    });
+                    // 🔧 원본 값들 로깅 (디버깅용 - 주요 정당만)
+                    if (['더불어민주당', '국민의힘'].includes(partyName)) {
+                        console.log(`📊 ${partyName} 원본 데이터:`, {
+                            avg_attendance: party.avg_attendance,
+                            avg_invalid_vote_ratio: party.avg_invalid_vote_ratio,
+                            avg_vote_match_ratio: party.avg_vote_match_ratio,
+                            avg_vote_mismatch_ratio: party.avg_vote_mismatch_ratio
+                        });
+                    }
                     
                     performanceData[partyName] = {
                         // === 기본 정보 ===
@@ -253,13 +255,15 @@ document.addEventListener('DOMContentLoaded', function() {
                         _raw: party
                     };
                     
-                    // 🔧 정규화된 값들 로깅 (디버깅용)
-                    console.log(`📊 ${partyName} 정규화된 데이터:`, {
-                        avg_attendance: performanceData[partyName].avg_attendance,
-                        avg_invalid_vote_ratio: performanceData[partyName].avg_invalid_vote_ratio,
-                        avg_vote_match_ratio: performanceData[partyName].avg_vote_match_ratio,
-                        avg_vote_mismatch_ratio: performanceData[partyName].avg_vote_mismatch_ratio
-                    });
+                    // 🔧 정규화된 값들 로깅 (디버깅용 - 주요 정당만)
+                    if (['더불어민주당', '국민의힘'].includes(partyName)) {
+                        console.log(`📊 ${partyName} 정규화된 데이터:`, {
+                            avg_attendance: performanceData[partyName].avg_attendance,
+                            avg_invalid_vote_ratio: performanceData[partyName].avg_invalid_vote_ratio,
+                            avg_vote_match_ratio: performanceData[partyName].avg_vote_match_ratio,
+                            avg_vote_mismatch_ratio: performanceData[partyName].avg_vote_mismatch_ratio
+                        });
+                    }
                 }
             });
             
@@ -681,18 +685,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tooltip = statusItem.querySelector('.tooltip');
 
                 if (statusValue) {
-                    // 🔧 i 아이콘 보존하면서 업데이트
+                    // 🔧 i 아이콘과 툴팁을 완전히 보존하면서 업데이트
                     const existingInfoIcon = statusValue.querySelector('.info-icon');
+                    let infoIconHTML = '';
+                    
+                    // 기존 i 아이콘의 전체 HTML 구조 보존 (툴팁 포함)
+                    if (existingInfoIcon) {
+                        infoIconHTML = existingInfoIcon.outerHTML;
+                    }
                     
                     // WIN/LOSE 표시
                     if (update.winLose) {
                         const percentage = update.value;
                         const newContent = `${update.winLose}(${percentage})`;
                         
-                        if (existingInfoIcon) {
-                            // i 아이콘이 있으면 보존
-                            statusValue.innerHTML = newContent;
-                            statusValue.appendChild(existingInfoIcon);
+                        if (infoIconHTML) {
+                            // i 아이콘 HTML을 텍스트와 함께 삽입
+                            statusValue.innerHTML = newContent + infoIconHTML;
                         } else {
                             statusValue.innerHTML = newContent;
                         }
@@ -700,9 +709,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         statusValue.className = `status-value ${update.winLose.toLowerCase()}`;
                     } else {
                         // WIN/LOSE가 없는 경우 (순위 등)
-                        if (existingInfoIcon) {
-                            statusValue.innerHTML = update.value;
-                            statusValue.appendChild(existingInfoIcon);
+                        if (infoIconHTML) {
+                            if (update.isHTML) {
+                                statusValue.innerHTML = update.value + infoIconHTML;
+                            } else {
+                                statusValue.innerHTML = update.value + infoIconHTML;
+                            }
                         } else {
                             if (update.isHTML) {
                                 statusValue.innerHTML = update.value;
@@ -721,9 +733,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             statusValue.style.color = partyData[partyName].loseColor;
                         }
                     }
+                    
+                    // 툴팁 내용 업데이트 (새로 생성된 아이콘에서)
+                    if (update.tooltip && infoIconHTML) {
+                        const newTooltip = statusValue.querySelector('.tooltip');
+                        if (newTooltip) {
+                            newTooltip.innerHTML = update.tooltip;
+                        }
+                    }
                 }
 
-                // 툴팁 업데이트 (기존 구조 보존)
+                // 기존 툴팁이 따로 있는 경우에도 업데이트
                 if (tooltip && update.tooltip) {
                     tooltip.innerHTML = update.tooltip;
                 }
@@ -873,14 +893,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 const statusValue = statusItems[index].querySelector('.status-value');
                 if (statusValue) {
                     const existingInfoIcon = statusValue.querySelector('.info-icon');
-                    statusValue.textContent = resetValue;
+                    let infoIconHTML = '';
+                    
+                    // 기존 i 아이콘의 전체 HTML 구조 보존 (툴팁 포함)
+                    if (existingInfoIcon) {
+                        infoIconHTML = existingInfoIcon.outerHTML;
+                    }
+                    
+                    // 리셋값과 i 아이콘 함께 설정
+                    if (infoIconHTML) {
+                        statusValue.innerHTML = resetValue + infoIconHTML;
+                    } else {
+                        statusValue.textContent = resetValue;
+                    }
+                    
                     statusValue.className = 'status-value';
                     statusValue.style.color = '';
-                    
-                    // i 아이콘 복원
-                    if (existingInfoIcon) {
-                        statusValue.appendChild(existingInfoIcon);
-                    }
                 }
             }
         });
@@ -1052,6 +1080,16 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 성과 데이터 상태:', Object.keys(partyPerformanceData).length > 0 ? '로드됨' : '미로드');
             console.log('- 랭킹 데이터 상태:', Object.keys(partyRankings).length > 0 ? '로드됨' : '미로드');
             console.log('- 환경 정보:', window.APIService?.getEnvironmentInfo());
+            
+            // 툴팁 상태 확인
+            const tooltips = document.querySelectorAll('.tooltip');
+            const infoIcons = document.querySelectorAll('.info-icon');
+            console.log(`- 툴팁 개수: ${tooltips.length}개`);
+            console.log(`- i 아이콘 개수: ${infoIcons.length}개`);
+            
+            if (tooltips.length > 0) {
+                console.log('- 첫 번째 툴팁 내용:', tooltips[0].innerHTML.substring(0, 50) + '...');
+            }
         },
         simulateWeightChange: () => {
             console.log('🔧 가중치 변경 시뮬레이션...');
@@ -1099,6 +1137,33 @@ document.addEventListener('DOMContentLoaded', function() {
             const comparison = comparePartiesLocal(stats1, stats2);
             console.log(`🆚 ${party1} vs ${party2} 비교 결과:`, comparison);
             return comparison;
+        },
+        
+        // 툴팁 테스트 함수
+        testTooltips: () => {
+            console.log('🔍 툴팁 상태 점검:');
+            
+            const statusItems = document.querySelectorAll('.status-item');
+            statusItems.forEach((item, index) => {
+                const label = item.querySelector('.status-label')?.textContent || `항목 ${index + 1}`;
+                const infoIcon = item.querySelector('.info-icon');
+                const tooltip = item.querySelector('.tooltip');
+                
+                console.log(`${index + 1}. ${label}:`);
+                console.log(`   - i 아이콘: ${infoIcon ? '✅ 있음' : '❌ 없음'}`);
+                console.log(`   - 툴팁: ${tooltip ? '✅ 있음' : '❌ 없음'}`);
+                
+                if (tooltip) {
+                    const content = tooltip.innerHTML.substring(0, 30) + '...';
+                    console.log(`   - 툴팁 내용: ${content}`);
+                }
+            });
+            
+            return {
+                총_상태_항목: statusItems.length,
+                i_아이콘_개수: document.querySelectorAll('.info-icon').length,
+                툴팁_개수: document.querySelectorAll('.tooltip').length
+            };
         }
     };
 
@@ -1112,10 +1177,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('  - compare_parties API 호출 완전 제거');
     console.log('  - 순수 로컬 비교 로직 사용');
     console.log('  - 비율 데이터 자동 정규화 (26940% → 올바른 퍼센트)');
-    console.log('  - i 아이콘 보존 및 툴팁 업데이트');
+    console.log('  - i 아이콘과 툴팁 완전 보존 (outerHTML 사용)');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.testComparison("정당1", "정당2") : 비교 테스트');
+    console.log('  - window.comparePartyDebug.testTooltips() : 툴팁 상태 점검');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
 });
