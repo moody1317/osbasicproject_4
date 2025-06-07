@@ -104,7 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 .slice(0, 3);
 
             console.log('✅ 정당 순위 데이터 로드 완료:', sortedData.length, '개 정당');
-            return sortedData.map(party => ({
+            return sortedData.map((party, index) => ({
+                rank: index + 1,
                 name: party.party,
                 score: Math.round(party.score) || 0
             }));
@@ -134,9 +135,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .slice(0, 3);
 
             console.log('✅ 국회의원 순위 데이터 로드 완료:', sortedData.length, '명');
-            return sortedData.map(member => ({
+            return sortedData.map((member, index) => ({
+                rank: index + 1,
                 name: member.name,
-                party: member.party || '정보없음',
+                party: normalizePartyName(member.party) || '정보없음',
                 score: Math.round(member.score) || 0
             }));
 
@@ -214,69 +216,89 @@ document.addEventListener('DOMContentLoaded', function() {
     // 기본 정당 순위 (API 실패 시)
     function getDefaultPartyRanking() {
         return [
-            { name: '더불어민주당', score: 87 },
-            { name: '국민의힘', score: 82 },
-            { name: '조국혁신당', score: 78 }
+            { rank: 1, name: '더불어민주당', score: 87 },
+            { rank: 2, name: '국민의힘', score: 82 },
+            { rank: 3, name: '조국혁신당', score: 78 }
         ];
     }
 
     // 기본 국회의원 순위 (API 실패 시)
     function getDefaultMemberRanking() {
         return [
-            { name: '김민석', party: '더불어민주당', score: 94 },
-            { name: '김상훈', party: '국민의힘', score: 91 },
-            { name: '이재명', party: '더불어민주당', score: 88 }
+            { rank: 1, name: '김민석', party: '더불어민주당', score: 94 },
+            { rank: 2, name: '김상훈', party: '국민의힘', score: 91 },
+            { rank: 3, name: '이재명', party: '더불어민주당', score: 88 }
         ];
     }
 
-    // 정당 순위 카드 업데이트
+    // 🔄 정당 순위 카드 업데이트 (HTML 순서와 정확히 매칭)
     function updatePartyRankingCard(partyData) {
         const partyCard = document.querySelector('.card:first-child');
         const rankingList = partyCard.querySelector('.ranking-list');
         
+        if (!rankingList) {
+            console.error('❌ 정당 순위 리스트를 찾을 수 없습니다');
+            return;
+        }
+        
+        // 기존 내용 비우기
         rankingList.innerHTML = '';
         
+        // HTML 구조와 정확히 매칭되는 순서로 생성
         partyData.forEach((party, index) => {
             const rankingItem = document.createElement('li');
             rankingItem.className = 'ranking-item';
+            
+            // HTML 구조: rank-number > info > name > percentage
             rankingItem.innerHTML = `
-                <div class="rank-number">${index + 1}</div>
+                <div class="rank-number">${party.rank || (index + 1)}</div>
                 <div class="info">
                     <div class="name">${party.name}</div>
                 </div>
                 <div class="percentage">${party.score}%</div>
             `;
+            
             rankingList.appendChild(rankingItem);
         });
         
-        console.log('✅ 정당 순위 카드 업데이트 완료');
+        console.log('✅ 정당 순위 카드 업데이트 완료 (HTML 순서 매칭)');
     }
 
-    // 국회의원 순위 카드 업데이트
+    // 🔄 국회의원 순위 카드 업데이트 (HTML 순서와 정확히 매칭)
     function updateMemberRankingCard(memberData) {
         const memberCard = document.querySelector('.card:last-child');
         const rankingList = memberCard.querySelector('.ranking-list');
         
+        if (!rankingList) {
+            console.error('❌ 국회의원 순위 리스트를 찾을 수 없습니다');
+            return;
+        }
+        
+        // 기존 내용 비우기
         rankingList.innerHTML = '';
         
+        // HTML 구조와 정확히 매칭되는 순서로 생성
         memberData.forEach((member, index) => {
             const rankingItem = document.createElement('li');
             rankingItem.className = 'ranking-item';
+            
+            // HTML 구조: rank-number > info > name + party-name > percentage
             rankingItem.innerHTML = `
-                <div class="rank-number">${index + 1}</div>
+                <div class="rank-number">${member.rank || (index + 1)}</div>
                 <div class="info">
                     <div class="name">${member.name}</div>
                     <div class="party-name">${member.party}</div>
                 </div>
                 <div class="percentage">${member.score}%</div>
             `;
+            
             rankingList.appendChild(rankingItem);
         });
         
-        console.log('✅ 국회의원 순위 카드 업데이트 완료');
+        console.log('✅ 국회의원 순위 카드 업데이트 완료 (HTML 순서 매칭)');
     }
 
-    // 메인 데이터 로드 함수
+    // 🔄 메인 데이터 로드 함수 (개선된 버전)
     async function loadMainPageData() {
         if (!window.APIService) {
             console.warn('⚠️ APIService 없음 - 기본 데이터 사용');
@@ -291,14 +313,26 @@ document.addEventListener('DOMContentLoaded', function() {
             showLoading(true);
             
             // 정당 순위와 국회의원 순위 동시 로드
-            const [partyRanking, memberRanking] = await Promise.all([
+            const [partyRanking, memberRanking] = await Promise.allSettled([
                 fetchPartyRankingData(),
                 fetchMemberRankingData()
             ]);
             
-            // 카드 업데이트
-            updatePartyRankingCard(partyRanking);
-            updateMemberRankingCard(memberRanking);
+            // 정당 순위 업데이트
+            if (partyRanking.status === 'fulfilled') {
+                updatePartyRankingCard(partyRanking.value);
+            } else {
+                console.warn('정당 순위 로드 실패, 기본값 사용');
+                updatePartyRankingCard(getDefaultPartyRanking());
+            }
+            
+            // 국회의원 순위 업데이트
+            if (memberRanking.status === 'fulfilled') {
+                updateMemberRankingCard(memberRanking.value);
+            } else {
+                console.warn('국회의원 순위 로드 실패, 기본값 사용');
+                updateMemberRankingCard(getDefaultMemberRanking());
+            }
             
             showNotification('메인페이지 데이터 로드 완료', 'success');
             console.log('✅ 메인페이지 데이터 로드 완료');
@@ -315,6 +349,132 @@ document.addEventListener('DOMContentLoaded', function() {
             showLoading(false);
         }
     }
+
+    // === 🔄 가중치 변경 실시간 업데이트 시스템 ===
+    
+    // 가중치 변경 감지 및 자동 새로고침
+    function setupWeightChangeListener() {
+        try {
+            console.log('[MainPage] 🔄 가중치 변경 감지 시스템 설정...');
+            
+            // 1. localStorage 이벤트 감지 (다른 페이지에서 가중치 변경 시)
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'weight_change_event' && event.newValue) {
+                    try {
+                        const changeData = JSON.parse(event.newValue);
+                        console.log('[MainPage] 📢 가중치 변경 감지:', changeData);
+                        handleWeightUpdate(changeData, 'localStorage');
+                    } catch (e) {
+                        console.warn('[MainPage] 가중치 변경 데이터 파싱 실패:', e);
+                    }
+                }
+            });
+            
+            // 2. BroadcastChannel 감지 (최신 브라우저)
+            if (typeof BroadcastChannel !== 'undefined') {
+                try {
+                    const weightChannel = new BroadcastChannel('weight_updates');
+                    weightChannel.addEventListener('message', function(event) {
+                        console.log('[MainPage] 📡 BroadcastChannel 가중치 변경 감지:', event.data);
+                        handleWeightUpdate(event.data, 'BroadcastChannel');
+                    });
+                    
+                    // 페이지 언로드 시 채널 정리
+                    window.addEventListener('beforeunload', () => {
+                        weightChannel.close();
+                    });
+                    
+                    console.log('[MainPage] ✅ BroadcastChannel 설정 완료');
+                } catch (e) {
+                    console.warn('[MainPage] BroadcastChannel 설정 실패:', e);
+                }
+            }
+            
+            // 3. 커스텀 이벤트 감지 (같은 페이지 내)
+            document.addEventListener('weightSettingsChanged', function(event) {
+                console.log('[MainPage] 🎯 커스텀 이벤트 가중치 변경 감지:', event.detail);
+                handleWeightUpdate(event.detail, 'customEvent');
+            });
+            
+            // 4. 주기적 체크 (폴백)
+            let lastWeightCheckTime = localStorage.getItem('last_weight_update') || '0';
+            setInterval(function() {
+                const currentCheckTime = localStorage.getItem('last_weight_update') || '0';
+                
+                if (currentCheckTime !== lastWeightCheckTime && currentCheckTime !== '0') {
+                    console.log('[MainPage] ⏰ 주기적 체크로 가중치 변경 감지');
+                    lastWeightCheckTime = currentCheckTime;
+                    
+                    const changeData = {
+                        type: 'weights_updated',
+                        timestamp: new Date(parseInt(currentCheckTime)).toISOString(),
+                        source: 'periodic_check'
+                    };
+                    
+                    handleWeightUpdate(changeData, 'periodicCheck');
+                }
+            }, 5000);
+            
+            console.log('[MainPage] ✅ 가중치 변경 감지 시스템 설정 완료');
+            
+        } catch (error) {
+            console.error('[MainPage] ❌ 가중치 변경 감지 시스템 설정 실패:', error);
+        }
+    }
+    
+    // 가중치 업데이트 처리 함수
+    async function handleWeightUpdate(changeData, source) {
+        try {
+            if (isLoading) {
+                console.log('[MainPage] 🔄 이미 로딩 중이므로 가중치 업데이트 스킵');
+                return;
+            }
+            
+            console.log(`[MainPage] 🔄 가중치 업데이트 처리 시작 (${source})`);
+            
+            // 사용자에게 업데이트 알림
+            showNotification('가중치가 변경되었습니다. 메인페이지 데이터를 새로고침합니다...', 'info');
+            
+            // 1초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
+            setTimeout(async () => {
+                try {
+                    // 새로운 데이터로 업데이트
+                    await loadMainPageData();
+                    
+                    console.log('[MainPage] ✅ 가중치 업데이트 완료');
+                    showNotification('새로운 가중치가 메인페이지에 적용되었습니다! 🎉', 'success');
+                    
+                    // 응답 전송 (percent 페이지 모니터링용)
+                    try {
+                        const response = {
+                            page: 'mainpage.html',
+                            timestamp: new Date().toISOString(),
+                            success: true,
+                            source: source
+                        };
+                        localStorage.setItem('weight_refresh_response', JSON.stringify(response));
+                        setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
+                    } catch (e) {
+                        console.warn('[MainPage] 응답 전송 실패:', e);
+                    }
+                    
+                } catch (error) {
+                    console.error('[MainPage] ❌ 가중치 업데이트 데이터 로드 실패:', error);
+                    showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
+                }
+            }, 1000);
+            
+        } catch (error) {
+            console.error('[MainPage] ❌ 가중치 업데이트 처리 실패:', error);
+            showNotification('가중치 업데이트 처리에 실패했습니다.', 'error');
+        }
+    }
+
+    // 수동 새로고침 함수들 (외부에서 호출 가능)
+    window.refreshMainPageData = function() {
+        console.log('[MainPage] 🔄 수동 새로고침 요청');
+        loadMainPageData();
+    };
 
     // === 기존 네비게이션 및 팝업 기능 유지 ===
 
@@ -412,6 +572,9 @@ document.addEventListener('DOMContentLoaded', function() {
             showPercentGuidePopup();
         }
     }, 1000);
+
+    // 가중치 변경 감지 시스템 설정
+    setupWeightChangeListener();
 
     // 이미지 출처 팝업 (개별 제어)
     function showImageSourcePopup(callback) {
@@ -832,17 +995,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // API 데이터 디버깅 함수
     window.mainPageDebug = {
         reloadData: () => loadMainPageData(),
+        refreshData: () => loadMainPageData(), // WeightSync 호환
         showPartyData: () => console.log('정당 데이터:', document.querySelector('.card:first-child')),
         showMemberData: () => console.log('의원 데이터:', document.querySelector('.card:last-child')),
         showInfo: () => {
             console.log('📊 메인페이지 정보:');
             console.log('- API 서비스:', !!window.APIService);
             console.log('- 로딩 상태:', isLoading);
+        },
+        testHTMLMapping: () => {
+            console.log('🔍 HTML 매핑 테스트...');
+            const partyCard = document.querySelector('.card:first-child .ranking-list');
+            const memberCard = document.querySelector('.card:last-child .ranking-list');
+            console.log('정당 카드 구조:', partyCard?.innerHTML);
+            console.log('의원 카드 구조:', memberCard?.innerHTML);
+        },
+        simulateWeightChange: () => {
+            console.log('🔧 가중치 변경 시뮬레이션...');
+            const changeData = {
+                type: 'weights_updated',
+                timestamp: new Date().toISOString(),
+                source: 'debug_simulation'
+            };
+            handleWeightUpdate(changeData, 'debug');
         }
     };
     
-    console.log('🎯 개별 팝업 제어 시스템 + API 연동 활성화!');
+    console.log('🎯 개별 팝업 제어 시스템 + API 연동 + 가중치 감지 활성화!');
     console.log('팝업 디버깅: window.debugPopup.checkStatus()');
     console.log('API 디버깅: window.mainPageDebug.showInfo()');
-    console.log('✅ 메인페이지 스크립트 로드 완료');
+    console.log('HTML 매핑 테스트: window.mainPageDebug.testHTMLMapping()');
+    console.log('✅ 메인페이지 스크립트 로드 완료 (HTML 순서 맞춤 + 가중치 감지 버전)');
 });
