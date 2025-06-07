@@ -76,10 +76,35 @@
     <main class="main">
         <h1 class="title">상세 퍼센트</h1>
         
-        <!-- 초기화 버튼 -->
+        <!-- API 연결 상태 표시 -->
+        <div class="api-status-bar" id="apiStatusBar">
+            <div class="api-status-item">
+                <span class="status-indicator" id="apiStatusIndicator"></span>
+                <span class="status-text" id="apiStatusText">API 연결 확인 중...</span>
+            </div>
+            <div class="api-actions">
+                <button class="api-test-btn" id="apiTestBtn">🔍 연결 테스트</button>
+                <button class="api-apply-btn" id="apiApplyBtn" disabled>🚀 서버 적용</button>
+            </div>
+        </div>
+        
+        <!-- 컨트롤 영역 -->
         <div class="control-wrapper">
             <div class="reset-wrapper">
-                <button class="reset-button" id="resetButton">초기화</button>
+                <button class="reset-button" id="resetButton">🔄 초기화</button>
+            </div>
+            <div class="auto-save-indicator" id="autoSaveIndicator">
+                <span class="save-status" id="saveStatus">💾 자동 저장됨</span>
+                <span class="last-updated" id="lastUpdated"></span>
+            </div>
+        </div>
+        
+        <!-- 백업 및 복원 섹션 -->
+        <div class="backup-section">
+            <div class="backup-controls">
+                <button class="backup-btn" id="exportBtn">📤 설정 내보내기</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+                <button class="backup-btn" id="importBtn">📥 설정 가져오기</button>
             </div>
         </div>
         
@@ -252,6 +277,7 @@
     
     <!-- 외부 스크립트 연결 -->
     <script src="global_sync.js"></script>
+    <script src="weight_sync.js"></script>
     <script src="scripts.js"></script>
     <script src="percent.js"></script>
 
