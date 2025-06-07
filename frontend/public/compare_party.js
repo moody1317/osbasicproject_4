@@ -685,44 +685,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tooltip = statusItem.querySelector('.tooltip');
 
                 if (statusValue) {
-                    // 🔧 i 아이콘과 툴팁을 완전히 보존하면서 업데이트
-                    const existingInfoIcon = statusValue.querySelector('.info-icon');
-                    let infoIconHTML = '';
-                    
-                    // 기존 i 아이콘의 전체 HTML 구조 보존 (툴팁 포함)
-                    if (existingInfoIcon) {
-                        infoIconHTML = existingInfoIcon.outerHTML;
-                    }
+                    // 🔧 i 아이콘과 툴팁을 강제로 재생성하여 확실히 보존
                     
                     // WIN/LOSE 표시
                     if (update.winLose) {
                         const percentage = update.value;
                         const newContent = `${update.winLose}(${percentage})`;
-                        
-                        if (infoIconHTML) {
-                            // i 아이콘 HTML을 텍스트와 함께 삽입
-                            statusValue.innerHTML = newContent + infoIconHTML;
-                        } else {
-                            statusValue.innerHTML = newContent;
-                        }
-                        
+                        statusValue.innerHTML = newContent;
                         statusValue.className = `status-value ${update.winLose.toLowerCase()}`;
                     } else {
                         // WIN/LOSE가 없는 경우 (순위 등)
-                        if (infoIconHTML) {
-                            if (update.isHTML) {
-                                statusValue.innerHTML = update.value + infoIconHTML;
-                            } else {
-                                statusValue.innerHTML = update.value + infoIconHTML;
-                            }
+                        if (update.isHTML) {
+                            statusValue.innerHTML = update.value;
                         } else {
-                            if (update.isHTML) {
-                                statusValue.innerHTML = update.value;
-                            } else {
-                                statusValue.textContent = update.value;
-                            }
+                            statusValue.textContent = update.value;
                         }
                         statusValue.className = 'status-value';
+                    }
+
+                    // 🎯 i 아이콘과 툴팁을 항상 새로 생성 (특정 항목들만)
+                    const needsTooltip = [1, 2, 3, 4, 7, 8, 9]; // 출석, 본회의가결, 청원제안, 청원결과, 무효표기권, 투표일치, 투표불일치
+                    if (needsTooltip.includes(index) && update.tooltip) {
+                        const infoIcon = document.createElement('span');
+                        infoIcon.className = 'info-icon';
+                        infoIcon.textContent = 'i';
+                        
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerHTML = update.tooltip;
+                        
+                        infoIcon.appendChild(tooltip);
+                        statusValue.appendChild(infoIcon);
+                        
+                        console.log(`✅ i 아이콘 재생성: ${index}번째 항목`);
                     }
 
                     // 정당 색상 적용
@@ -731,14 +726,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             statusValue.style.color = partyData[partyName].winColor;
                         } else if (update.winLose === 'LOSE') {
                             statusValue.style.color = partyData[partyName].loseColor;
-                        }
-                    }
-                    
-                    // 툴팁 내용 업데이트 (새로 생성된 아이콘에서)
-                    if (update.tooltip && infoIconHTML) {
-                        const newTooltip = statusValue.querySelector('.tooltip');
-                        if (newTooltip) {
-                            newTooltip.innerHTML = update.tooltip;
                         }
                     }
                 }
@@ -892,23 +879,27 @@ document.addEventListener('DOMContentLoaded', function() {
             if (index < statusItems.length) {
                 const statusValue = statusItems[index].querySelector('.status-value');
                 if (statusValue) {
-                    const existingInfoIcon = statusValue.querySelector('.info-icon');
-                    let infoIconHTML = '';
-                    
-                    // 기존 i 아이콘의 전체 HTML 구조 보존 (툴팁 포함)
-                    if (existingInfoIcon) {
-                        infoIconHTML = existingInfoIcon.outerHTML;
-                    }
-                    
-                    // 리셋값과 i 아이콘 함께 설정
-                    if (infoIconHTML) {
-                        statusValue.innerHTML = resetValue + infoIconHTML;
-                    } else {
-                        statusValue.textContent = resetValue;
-                    }
-                    
+                    // 기본값 설정
+                    statusValue.textContent = resetValue;
                     statusValue.className = 'status-value';
                     statusValue.style.color = '';
+                    
+                    // 🎯 필요한 항목에 i 아이콘 재생성
+                    const needsTooltip = [1, 2, 3, 4, 7, 8, 9]; // 출석, 본회의가결, 청원제안, 청원결과, 무효표기권, 투표일치, 투표불일치
+                    if (needsTooltip.includes(index)) {
+                        const infoIcon = document.createElement('span');
+                        infoIcon.className = 'info-icon';
+                        infoIcon.textContent = 'i';
+                        
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerHTML = '로딩 중...';
+                        
+                        infoIcon.appendChild(tooltip);
+                        statusValue.appendChild(infoIcon);
+                        
+                        console.log(`✅ 리셋 시 i 아이콘 생성: ${index}번째 항목`);
+                    }
                 }
             }
         });
@@ -1157,6 +1148,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     const content = tooltip.innerHTML.substring(0, 30) + '...';
                     console.log(`   - 툴팁 내용: ${content}`);
                 }
+                
+                if (infoIcon) {
+                    const styles = window.getComputedStyle(infoIcon);
+                    console.log(`   - display: ${styles.display}, visibility: ${styles.visibility}`);
+                }
             });
             
             return {
@@ -1164,6 +1160,96 @@ document.addEventListener('DOMContentLoaded', function() {
                 i_아이콘_개수: document.querySelectorAll('.info-icon').length,
                 툴팁_개수: document.querySelectorAll('.tooltip').length
             };
+        },
+        
+        // 🔧 i 아이콘 강제 재생성 함수
+        forceRecreateIcons: () => {
+            console.log('🔧 모든 i 아이콘 강제 재생성...');
+            
+            const statusItems = document.querySelectorAll('.status-item');
+            const needsTooltip = [1, 2, 3, 4, 7, 8, 9]; // 출석, 본회의가결, 청원제안, 청원결과, 무효표기권, 투표일치, 투표불일치
+            
+            statusItems.forEach((item, index) => {
+                if (needsTooltip.includes(index)) {
+                    const statusValue = item.querySelector('.status-value');
+                    if (statusValue) {
+                        // 기존 i 아이콘 제거
+                        const existingIcon = statusValue.querySelector('.info-icon');
+                        if (existingIcon) {
+                            existingIcon.remove();
+                        }
+                        
+                        // 새 i 아이콘 생성
+                        const infoIcon = document.createElement('span');
+                        infoIcon.className = 'info-icon';
+                        infoIcon.textContent = 'i';
+                        infoIcon.style.cssText = `
+                            display: inline-flex;
+                            align-items: center;
+                            justify-content: center;
+                            width: 18px;
+                            height: 18px;
+                            border-radius: 50%;
+                            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+                            color: white;
+                            font-size: 11px;
+                            font-weight: bold;
+                            cursor: help;
+                            position: relative;
+                            margin-left: 8px;
+                            transition: all 0.3s ease;
+                            border: 2px solid rgba(255, 255, 255, 0.2);
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+                        `;
+                        
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.innerHTML = '테스트 툴팁입니다.<br>i 아이콘이 보이시나요?';
+                        tooltip.style.cssText = `
+                            position: absolute;
+                            bottom: 100%;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                            color: white;
+                            padding: 12px 16px;
+                            border-radius: 8px;
+                            font-size: 13px;
+                            font-weight: 500;
+                            white-space: normal;
+                            opacity: 0;
+                            visibility: hidden;
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            z-index: 1000;
+                            margin-bottom: 8px;
+                            min-width: 180px;
+                            max-width: 280px;
+                            line-height: 1.5;
+                            text-align: left;
+                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+                            border: 1px solid rgba(255, 255, 255, 0.1);
+                        `;
+                        
+                        // 호버 이벤트 추가
+                        infoIcon.addEventListener('mouseenter', () => {
+                            tooltip.style.opacity = '1';
+                            tooltip.style.visibility = 'visible';
+                        });
+                        
+                        infoIcon.addEventListener('mouseleave', () => {
+                            tooltip.style.opacity = '0';
+                            tooltip.style.visibility = 'hidden';
+                        });
+                        
+                        infoIcon.appendChild(tooltip);
+                        statusValue.appendChild(infoIcon);
+                        
+                        console.log(`✅ ${index + 1}번째 항목에 i 아이콘 재생성 완료`);
+                    }
+                }
+            });
+            
+            console.log('🎉 모든 i 아이콘 재생성 완료!');
         }
     };
 
@@ -1182,6 +1268,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.testComparison("정당1", "정당2") : 비교 테스트');
     console.log('  - window.comparePartyDebug.testTooltips() : 툴팁 상태 점검');
+    console.log('  - window.comparePartyDebug.forceRecreateIcons() : i 아이콘 강제 재생성');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
 });
