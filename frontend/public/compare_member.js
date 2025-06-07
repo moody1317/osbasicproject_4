@@ -626,7 +626,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 국회의원 통계 정보 업데이트 함수
+    // 🔄 국회의원 통계 정보 업데이트 함수 (HTML 순서와 정확히 매칭)
     function updateMPStats(card, mp, cardIndex) {
         const statusItems = card.querySelectorAll('.status-item');
         
@@ -640,41 +640,87 @@ document.addEventListener('DOMContentLoaded', function() {
             isWinner = compareMemberStats(mp, otherMember, cardIndex);
         }
 
-        // 통계 항목 매핑 (HTML 순서에 맞게)
-        const statsMapping = [
-            { key: 'attendance', suffix: '%', label: '출석', threshold: 90 },
-            { key: 'billPassRate', suffix: '%', label: '본회의 가결', threshold: 40 },
-            { key: 'petitionProposed', suffix: '건', label: '청원 제안', threshold: 15 },
-            { key: 'petitionResult', suffix: '건', label: '청원 결과', threshold: 8 },
-            { key: 'committeePosition', suffix: '', label: '위원회', threshold: null, special: 'committee' },
-            { key: 'invalidVotes', suffix: '건', label: '무효표 및 기권', threshold: 5, reverse: true },
-            { key: 'voteConsistency', suffix: '%', label: '투표 결과 일치', threshold: 85 },
-            { key: 'voteInconsistency', suffix: '%', label: '투표 결과 불일치', threshold: 20, reverse: true }
+        // HTML과 동일한 순서로 업데이트 배열 정의
+        // HTML 순서: 국회의원 선택(skip), 출석, 본회의 가결, 청원 제안, 청원 결과, 위원회, 무효표 및 기권, 투표 결과 일치, 투표 결과 불일치
+        const updates = [
+            { // 0. 출석
+                key: 'attendance',
+                value: mp.stats.attendance,
+                suffix: '%',
+                threshold: 90,
+                reverse: false
+            },
+            { // 1. 본회의 가결
+                key: 'billPassRate',
+                value: mp.stats.billPassRate,
+                suffix: '%',
+                threshold: 40,
+                reverse: false
+            },
+            { // 2. 청원 제안
+                key: 'petitionProposed',
+                value: mp.stats.petitionProposed,
+                suffix: '건',
+                threshold: 15,
+                reverse: false
+            },
+            { // 3. 청원 결과
+                key: 'petitionResult',
+                value: mp.stats.petitionResult,
+                suffix: '건',
+                threshold: 8,
+                reverse: false
+            },
+            { // 4. 위원회
+                key: 'committeePosition',
+                value: mp.stats.committeePosition,
+                suffix: '',
+                threshold: null,
+                special: 'committee'
+            },
+            { // 5. 무효표 및 기권
+                key: 'invalidVotes',
+                value: mp.stats.invalidVotes,
+                suffix: '건',
+                threshold: 5,
+                reverse: true
+            },
+            { // 6. 투표 결과 일치
+                key: 'voteConsistency',
+                value: mp.stats.voteConsistency,
+                suffix: '%',
+                threshold: 85,
+                reverse: false
+            },
+            { // 7. 투표 결과 불일치
+                key: 'voteInconsistency',
+                value: mp.stats.voteInconsistency,
+                suffix: '%',
+                threshold: 20,
+                reverse: true
+            }
         ];
-        
-        statusItems.forEach((item, index) => {
-            // 첫 번째 아이템(국회의원 선택)은 건너뛰기
-            if (index === 0) return;
-            
-            const statIndex = index - 1;
-            if (statIndex < statsMapping.length) {
-                const stat = statsMapping[statIndex];
-                const valueElement = item.querySelector('.status-value');
+
+        // HTML의 status-item 순서와 정확히 매칭하여 업데이트
+        updates.forEach((update, index) => {
+            // index + 1은 HTML의 실제 status-item 인덱스 (0번은 국회의원 선택이므로)
+            if (index + 1 < statusItems.length) {
+                const statusItem = statusItems[index + 1];
+                const valueElement = statusItem.querySelector('.status-value');
                 
-                if (valueElement && mp.stats[stat.key] !== undefined) {
-                    let value = mp.stats[stat.key];
-                    let displayValue = value;
+                if (valueElement && update.value !== undefined) {
+                    let displayValue = update.value;
                     
                     // 특별 처리 (위원회)
-                    if (stat.special === 'committee') {
-                        displayValue = value;
+                    if (update.special === 'committee') {
+                        displayValue = update.value;
                     } else {
-                        displayValue = value + stat.suffix;
+                        displayValue = update.value + update.suffix;
                     }
                     
                     // WIN/LOSE 표시 (두 명 모두 선택된 경우)
-                    if (otherMember && stat.threshold !== null) {
-                        const won = isWinner[stat.key] || false;
+                    if (otherMember && update.threshold !== null) {
+                        const won = isWinner[update.key] || false;
                         valueElement.innerHTML = `${won ? 'WIN' : 'LOSE'}(${displayValue})`;
                         valueElement.className = `status-value ${won ? 'win' : 'lose'}`;
                         
@@ -688,13 +734,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         valueElement.textContent = displayValue;
                         
                         // 위원회 특별 처리
-                        if (stat.special === 'committee') {
+                        if (update.special === 'committee') {
                             const committeeRank = mp.stats.committeeRank || 1;
                             valueElement.className = 'status-value ' + (committeeRank > 1 ? 'win' : 'lose');
-                        } else if (stat.threshold !== null) {
-                            const isGood = stat.reverse ? 
-                                value < stat.threshold : 
-                                value > stat.threshold;
+                        } else if (update.threshold !== null) {
+                            const isGood = update.reverse ? 
+                                update.value < update.threshold : 
+                                update.value > update.threshold;
                             valueElement.className = 'status-value ' + (isGood ? 'win' : 'lose');
                         } else {
                             valueElement.className = 'status-value';
@@ -703,6 +749,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
+        
+        console.log(`✅ ${mp.name} 통계 업데이트 완료 (HTML 순서 매칭)`);
     }
 
     // 두 국회의원 비교 함수
@@ -750,19 +798,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 국회의원 통계 정보 초기화 함수
+    // 🔄 국회의원 통계 정보 초기화 함수 (HTML 순서와 정확히 매칭)
     function resetMPStats(card) {
         const statusItems = card.querySelectorAll('.status-item');
         
-        statusItems.forEach((item, index) => {
-            // 첫 번째 아이템(국회의원 선택)은 건너뛰기
-            if (index === 0) return;
-            
-            const valueElement = item.querySelector('.status-value');
-            if (valueElement) {
-                valueElement.textContent = '-';
-                valueElement.className = 'status-value';
-                valueElement.style.color = '';
+        // HTML 순서와 동일하게 리셋값 정의
+        const resetValues = [
+            '-', // 출석
+            '-', // 본회의 가결
+            '-', // 청원 제안
+            '-', // 청원 결과
+            '-', // 위원회
+            '-', // 무효표 및 기권
+            '-', // 투표 결과 일치
+            '-'  // 투표 결과 불일치
+        ];
+
+        resetValues.forEach((resetValue, index) => {
+            // index + 1은 HTML의 실제 status-item 인덱스 (0번은 국회의원 선택이므로)
+            if (index + 1 < statusItems.length) {
+                const statusItem = statusItems[index + 1];
+                const valueElement = statusItem.querySelector('.status-value');
+                if (valueElement) {
+                    valueElement.textContent = resetValue;
+                    valueElement.className = 'status-value';
+                    valueElement.style.color = '';
+                }
             }
         });
     }
@@ -1134,17 +1195,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 source: 'debug_simulation'
             };
             handleWeightUpdate(changeData, 'debug');
+        },
+        testHTMLMapping: () => {
+            console.log('🔍 HTML 매핑 테스트...');
+            const statusItems = document.querySelectorAll('.comparison-card:first-child .status-item');
+            statusItems.forEach((item, index) => {
+                const label = item.querySelector('.status-label')?.textContent?.trim() || 'Unknown';
+                console.log(`HTML Index ${index}: ${label}`);
+            });
         }
     };
 
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 국회의원 비교 페이지 스크립트 로드 완료 (APIService 활용 + 사진 API 연동)');
+    console.log('✅ 국회의원 비교 페이지 스크립트 로드 완료 (HTML 순서 맞춤 + APIService 활용 + 사진 API 연동)');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.compareMemberDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.compareMemberDebug.reloadData() : 데이터 새로고침');
     console.log('  - window.compareMemberDebug.clearSelection() : 선택 초기화');
     console.log('  - window.compareMemberDebug.testAPIService() : APIService 테스트');
     console.log('  - window.compareMemberDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
+    console.log('  - window.compareMemberDebug.testHTMLMapping() : HTML 매핑 순서 확인');
 });
