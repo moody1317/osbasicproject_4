@@ -1,5 +1,5 @@
 /**
- * 백일하(Baek-il-ha) - 안정성 개선된 버전
+ * 백일하(Baek-il-ha) - 안정성 개선된 버전 + 정당별 성과 조회 기능 추가
  */
 
 (function() {
@@ -26,35 +26,75 @@
 
     // API 설정
     const API_CONFIG = {
+        // 다중 서버 지원
+        SERVERS: {
+            MAIN: 'https://osprojectapi.onrender.com',     // 기존 서버
+            RANKING: 'https://baekilha.onrender.com'       // 새로운 랭킹/분석 서버
+        },
+        
+        // 하위호환성을 위한 기본 URL (기존 코드 동작 보장)
         BASE_URL: 'https://osprojectapi.onrender.com',
+        
         ENDPOINTS: {
-            // 본회의 현황용 API
-            ALL: '/legislation/all',
-            COSTLY: '/legislation/costly',
-            COST: '/legislation/cost',
-            ETC: '/legislation/etc',
-            LAW: '/legislation/law',
-            
-            // 퍼센트 계산 전용 API
-            BILL: '/legislation/bill',
-            BILL_COUNT: '/legislation/bill-count',
-            
-            // 기타 데이터 API
-            COMMITTEE_MEMBER: '/legislation/committee-member/',
-            MEMBER: '/legislation/member/',
-            PETITION: '/legislation/petition',
-            PETITION_INTRODUCER: '/legislation/petition-introducer/',
-            PHOTO: '/legislation/photo',
-            ATTENDANCE: '/attendance/attendance/',
-            PERFORMANCE_DATA: '/performance/api/performance/', // 국회의원 실적
-            PARTY_WEIGHTED_PERFORMANCE: '/performance/api/party_performance/',
+            // === 기존 서버 (osprojectapi.onrender.com) ===
+            MAIN_SERVER: {
+                // 본회의 현황용 API
+                ALL: '/legislation/all',
+                COSTLY: '/legislation/costly',
+                COST: '/legislation/cost',
+                ETC: '/legislation/etc',
+                LAW: '/legislation/law',
+                
+                // 퍼센트 계산 전용 API
+                BILL: '/legislation/bill',
+                BILL_COUNT: '/legislation/bill-count',
+                
+                // 기타 데이터 API
+                COMMITTEE_MEMBER: '/legislation/committee-member/',
+                MEMBER: '/legislation/member/',
+                PETITION: '/legislation/petition',
+                PETITION_INTRODUCER: '/legislation/petition-introducer/',
+                PHOTO: '/legislation/photo',
+                ATTENDANCE: '/attendance/attendance/',
+                    PERFORMANCE_DATA: '/performance/api/performance/',
+                    PARTY_WEIGHTED_PERFORMANCE: '/performance/api/party_performance/',
+                PARTY_MEMBER_PERFORMANCE: '/performance/api/performance/by-party/', // 뒤에 party 파라미터 붙여야함
+                
+                // 퍼센트 변경 API
+                SETTING: '/performance/api/update_weights/'
+            },
 
-            // 퍼센트 변경 API
-            SETTING: '/performance/api/update_weights/'
+                            // === 새로운 서버 (baekilha.onrender.com) ===
+            RANKING_SERVER: {
+                // 국회의원 랭킹 관련
+                MEMBER_SCORE_RANKING: '/ranking/members/',
+                // 정당 랭킹 관련
+                PARTY_SCORE_RANKING: '/ranking/parties/score/',
+                PARTY_STATS_RANKING: '/ranking/parties/stats/',
+                
+                // 챗봇 API
+                CHATBOT: '/api/chatbot/',
+                
+                // 비교 기능 (파라미터 포함)
+                COMPARE_MEMBERS: '/compare_members/', // ?member1=의원명1&member2=의원명2
+                COMPARE_PARTIES: '/compare_parties/' // ?party1=정당명1&party2=정당명2
+            }
         },
         TIMEOUT: 10000,  // 15초 → 10초로 단축
         MAX_RETRIES: 2   // 3번 → 2번으로 단축
     };
+
+    // 유효한 정당 목록 상수
+    const VALID_PARTIES = [
+        '더불어민주당',
+        '국민의힘', 
+        '조국혁신당',
+        '진보당',
+        '개혁신당',
+        '사회민주당',
+        '기본소득당',
+        '무소속'
+    ];
 
     // 디버그 모드 (환경에 따라 자동 설정)
     const DEBUG_MODE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
@@ -204,6 +244,16 @@
         }
     }
 
+    // 정당명 유효성 검사 함수
+    function validatePartyName(partyName) {
+        if (!partyName || typeof partyName !== 'string') {
+            return false;
+        }
+        
+        const trimmedParty = partyName.trim();
+        return VALID_PARTIES.includes(trimmedParty);
+    }
+
     // 안전한 알림 표시 함수
     function showNotification(message, type = 'info', duration = 3000) {
         try {
@@ -289,15 +339,73 @@
                 },
 
                 // === 📊 주요 API 함수들 ===
+
+                // 🏆 메인페이지용 실적 데이터 조회
+                async getPerformanceData() {
+                    try {
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PERFORMANCE_DATA;
+                        log('debug', '국회의원 실적 데이터 조회 시작');
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, 'MEMBER_PERFORMANCE');
+                        
+                        // 데이터 구조 확인 및 정규화
+                        const processedData = normalizedData.map(item => ({
+                            name: item.lawmaker_name || item.name || '알 수 없음',
+                            party: item.party || '정보없음',
+                            score: parseFloat(item.total_score || item.total_socre || 0), // 오타 대응
+                            rawData: item
+                        }));
+                        
+                        log('success', `국회의원 실적 데이터 ${processedData.length}건 로드 완료`);
+                        return processedData;
+                    } catch (error) {
+                        log('error', '국회의원 실적 데이터 조회 실패:', error.message);
+                        throw new Error(`국회의원 실적 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                async getPartyWeightedPerformanceData() {
+                    try {
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PARTY_WEIGHTED_PERFORMANCE;
+                        log('debug', '정당 실적 데이터 조회 시작');
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, 'PARTY_PERFORMANCE');
+                        
+                        // 데이터 구조 확인 및 정규화
+                        const processedData = normalizedData.map(item => ({
+                            party: item.party || item.party_name || '알 수 없음',
+                            score: parseFloat(item.avg_total_score || item.total_score || 0),
+                            rawData: item
+                        }));
+                        
+                        log('success', `정당 실적 데이터 ${processedData.length}건 로드 완료`);
+                        return processedData;
+                    } catch (error) {
+                        log('error', '정당 실적 데이터 조회 실패:', error.message);
+                        throw new Error(`정당 실적 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                // 호환성을 위한 별칭 함수들
+                async getPartyPerformanceStatsData() {
+                    return this.getPartyWeightedPerformanceData();
+                },
+
                 async getAllLegislation() {
-                    const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.ALL;
+                    const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.ALL;
+                    const rawData = await apiCallWithRetry(url);
+                    return normalizeApiResponse(rawData, 'ALL');
+                },
+                
+                async getAllLegislation() {
+                    const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.ALL;
                     const rawData = await apiCallWithRetry(url);
                     return normalizeApiResponse(rawData, 'ALL');
                 },
 
                 async getCostlyLegislation() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.COSTLY;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.COSTLY;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'COSTLY');
                     } catch (error) {
@@ -308,7 +416,7 @@
 
                 async getCostLegislation() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.COST;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.COST;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'COST');
                     } catch (error) {
@@ -319,7 +427,7 @@
 
                 async getEtcLegislation() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.ETC;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.ETC;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'ETC');
                     } catch (error) {
@@ -330,7 +438,7 @@
 
                 async getLawLegislation() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LAW;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.LAW;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'LAW');
                     } catch (error) {
@@ -341,7 +449,7 @@
 
                 async getPetitions() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PETITION;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PETITION;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'PETITIONS');
                     } catch (error) {
@@ -352,7 +460,7 @@
 
                 async getPartyStats() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PARTY_WEIGHTED_PERFORMANCE;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PARTY_WEIGHTED_PERFORMANCE;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'PARTY_STATS');
                     } catch (error) {
@@ -363,7 +471,7 @@
                 
                 async getPartyRanking() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PARTY_WEIGHTED_PERFORMANCE;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PARTY_WEIGHTED_PERFORMANCE;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'PARTY_RANKING');
                     } catch (error) {
@@ -374,7 +482,7 @@
 
                 async getMemberRanking() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PERFORMANCE_DATA;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PERFORMANCE_DATA;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'MEMBER_RANKING');
                     } catch (error) {
@@ -386,7 +494,7 @@
                 // === 👥 국회의원 관련 API ===
                 async getAllMembers() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MEMBER;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.MEMBER;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'MEMBERS');
                     } catch (error) {
@@ -397,7 +505,7 @@
 
                 async getMemberPhotos() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PHOTO;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PHOTO;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'PHOTOS');
                     } catch (error) {
@@ -408,7 +516,7 @@
 
                 async getMemberPerformance() {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.PERFORMANCE_DATA;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.PERFORMANCE_DATA;
                         const rawData = await apiCallWithRetry(url);
                         return normalizeApiResponse(rawData, 'PERFORMANCE');
                     } catch (error) {
@@ -417,9 +525,375 @@
                     }
                 },
 
+                // === 🎯 정당별 의원 성과 조회 API (NEW) ===
+                async getPartyMemberPerformance(partyName) {
+                    try {
+                        // 입력값 검증
+                        if (!validatePartyName(partyName)) {
+                            throw new Error(`유효하지 않은 정당명입니다. 가능한 정당: ${VALID_PARTIES.join(', ')}`);
+                        }
+
+                        const trimmedParty = partyName.trim();
+                        
+                        // URL 구성 (URL 인코딩 적용)
+                        const encodedParty = encodeURIComponent(trimmedParty);
+                        const url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.MAIN_SERVER.PARTY_MEMBER_PERFORMANCE}${encodedParty}`;
+                        
+                        log('debug', `정당별 의원 성과 조회: ${trimmedParty}`);
+                        
+                        // API 호출
+                        const rawData = await apiCallWithRetry(url);
+                        
+                        // 응답 데이터 정규화
+                        const normalizedData = normalizeApiResponse(rawData, `PARTY_PERFORMANCE_${trimmedParty}`);
+                        
+                        log('success', `${trimmedParty} 의원 성과 조회 완료: ${normalizedData.length}건`);
+                        
+                        return {
+                            party: trimmedParty,
+                            memberCount: normalizedData.length,
+                            data: normalizedData,
+                            timestamp: new Date().toISOString()
+                        };
+                        
+                    } catch (error) {
+                        log('error', `정당별 의원 성과 조회 실패 (${partyName}):`, error.message);
+                        throw new Error(`${partyName} 의원 성과 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                // 모든 정당의 의원 성과를 한번에 조회
+                async getAllPartiesMemberPerformance() {
+                    try {
+                        log('info', '모든 정당의 의원 성과 조회 시작');
+                        
+                        const results = {};
+                        const promises = VALID_PARTIES.map(async (party) => {
+                            try {
+                                const data = await this.getPartyMemberPerformance(party);
+                                results[party] = data;
+                            } catch (error) {
+                                log('warning', `${party} 조회 실패:`, error.message);
+                                results[party] = {
+                                    party: party,
+                                    memberCount: 0,
+                                    data: [],
+                                    error: error.message,
+                                    timestamp: new Date().toISOString()
+                                };
+                            }
+                        });
+                        
+                        await Promise.all(promises);
+                        
+                        const totalMembers = Object.values(results)
+                            .filter(result => !result.error)
+                            .reduce((sum, result) => sum + result.memberCount, 0);
+                            
+                        log('success', `모든 정당 의원 성과 조회 완료: 총 ${totalMembers}명`);
+                        
+                        return {
+                            summary: {
+                                totalParties: VALID_PARTIES.length,
+                                totalMembers: totalMembers,
+                                timestamp: new Date().toISOString()
+                            },
+                            parties: results
+                        };
+                        
+                    } catch (error) {
+                        log('error', '모든 정당 의원 성과 조회 실패:', error.message);
+                        throw new Error(`정당별 의원 성과 일괄 조회에 실패했습니다: ${error.message}`);
+                    }
+                },
+
+                // 정당별 성과 비교
+                async comparePartiesPerformance(partyNames = []) {
+                    try {
+                        // 파라미터가 없으면 모든 정당 비교
+                        const targetParties = partyNames.length > 0 ? partyNames : VALID_PARTIES;
+                        
+                        // 유효성 검사
+                        const invalidParties = targetParties.filter(party => !validatePartyName(party));
+                        if (invalidParties.length > 0) {
+                            throw new Error(`유효하지 않은 정당명: ${invalidParties.join(', ')}`);
+                        }
+                        
+                        log('info', `정당 성과 비교 시작: ${targetParties.join(', ')}`);
+                        
+                        const comparisonData = {};
+                        
+                        for (const party of targetParties) {
+                            try {
+                                const data = await this.getPartyMemberPerformance(party);
+                                comparisonData[party] = data;
+                            } catch (error) {
+                                log('warning', `${party} 비교 데이터 조회 실패:`, error.message);
+                                comparisonData[party] = {
+                                    party: party,
+                                    memberCount: 0,
+                                    data: [],
+                                    error: error.message
+                                };
+                            }
+                        }
+                        
+                        // 비교 결과 정리
+                        const comparison = {
+                            partiesCompared: targetParties,
+                            results: comparisonData,
+                            summary: {
+                                totalMembers: Object.values(comparisonData)
+                                    .filter(data => !data.error)
+                                    .reduce((sum, data) => sum + data.memberCount, 0),
+                                successfulQueries: Object.values(comparisonData)
+                                    .filter(data => !data.error).length,
+                                failedQueries: Object.values(comparisonData)
+                                    .filter(data => data.error).length,
+                                timestamp: new Date().toISOString()
+                            }
+                        };
+                        
+                        log('success', `정당 성과 비교 완료: ${comparison.summary.successfulQueries}/${targetParties.length} 성공`);
+                        
+                        return comparison;
+                        
+                    } catch (error) {
+                        log('error', '정당 성과 비교 실패:', error.message);
+                        throw new Error(`정당 성과 비교에 실패했습니다: ${error.message}`);
+                    }
+                },
+
+                // 유효한 정당 목록 반환
+                getValidParties() {
+                    return [...VALID_PARTIES]; // 복사본 반환
+                },
+
+                // 정당명 유효성 검사
+                validatePartyName(partyName) {
+                    return validatePartyName(partyName);
+                },
+
+                // === 🆚 새로운 서버 비교 기능 (baekilha.onrender.com) ===
+                async compareMembersAdvanced(member1, member2) {
+                    try {
+                        if (!member1 || !member2) {
+                            throw new Error('두 명의 의원명을 모두 입력해주세요');
+                        }
+                        
+                        if (typeof member1 !== 'string' || typeof member2 !== 'string') {
+                            throw new Error('의원명은 문자열이어야 합니다');
+                        }
+
+                        const trimmedMember1 = member1.trim();
+                        const trimmedMember2 = member2.trim();
+                        
+                        if (trimmedMember1 === trimmedMember2) {
+                            throw new Error('같은 의원을 비교할 수 없습니다');
+                        }
+
+                        // URL 파라미터 구성
+                        const params = new URLSearchParams({
+                            member1: trimmedMember1,
+                            member2: trimmedMember2
+                        });
+                        
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.COMPARE_MEMBERS}?${params}`;
+                        
+                        log('debug', `의원 비교 조회: ${trimmedMember1} vs ${trimmedMember2}`);
+                        
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, `MEMBER_COMPARE_${trimmedMember1}_${trimmedMember2}`);
+                        
+                        log('success', `의원 비교 완료: ${trimmedMember1} vs ${trimmedMember2}`);
+                        
+                        return {
+                            comparison: {
+                                member1: trimmedMember1,
+                                member2: trimmedMember2,
+                                timestamp: new Date().toISOString()
+                            },
+                            data: normalizedData
+                        };
+                        
+                    } catch (error) {
+                        log('error', `의원 비교 실패 (${member1} vs ${member2}):`, error.message);
+                        throw new Error(`의원 비교에 실패했습니다: ${error.message}`);
+                    }
+                },
+
+                async comparePartiesAdvanced(party1, party2) {
+                    try {
+                        // 입력값 검증
+                        if (!party1 || !party2) {
+                            throw new Error('두 개의 정당명을 모두 입력해주세요');
+                        }
+                        
+                        if (!validatePartyName(party1)) {
+                            throw new Error(`유효하지 않은 정당명: ${party1}. 가능한 정당: ${VALID_PARTIES.join(', ')}`);
+                        }
+                        
+                        if (!validatePartyName(party2)) {
+                            throw new Error(`유효하지 않은 정당명: ${party2}. 가능한 정당: ${VALID_PARTIES.join(', ')}`);
+                        }
+
+                        const trimmedParty1 = party1.trim();
+                        const trimmedParty2 = party2.trim();
+                        
+                        if (trimmedParty1 === trimmedParty2) {
+                            throw new Error('같은 정당을 비교할 수 없습니다');
+                        }
+
+                        // URL 파라미터 구성
+                        const params = new URLSearchParams({
+                            party1: trimmedParty1,
+                            party2: trimmedParty2
+                        });
+                        
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.COMPARE_PARTIES}?${params}`;
+                        
+                        log('debug', `정당 비교 조회: ${trimmedParty1} vs ${trimmedParty2}`);
+                        
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, `PARTY_COMPARE_${trimmedParty1}_${trimmedParty2}`);
+                        
+                        log('success', `정당 비교 완료: ${trimmedParty1} vs ${trimmedParty2}`);
+                        
+                        return {
+                            comparison: {
+                                party1: trimmedParty1,
+                                party2: trimmedParty2,
+                                timestamp: new Date().toISOString()
+                            },
+                            data: normalizedData
+                        };
+                        
+                    } catch (error) {
+                        log('error', `정당 비교 실패 (${party1} vs ${party2}):`, error.message);
+                        throw new Error(`정당 비교에 실패했습니다: ${error.message}`);
+                    }
+                },
+
+                // === 📊 새로운 서버 랭킹 기능 (baekilha.onrender.com) ===
+                async getMemberScoreRanking() {
+                    try {
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.MEMBER_SCORE_RANKING}`;
+                        
+                        log('debug', '의원 점수 랭킹 조회');
+                        
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, 'MEMBER_SCORE_RANKING');
+                        
+                        log('success', `의원 점수 랭킹 조회 완료: ${normalizedData.length}건`);
+                        
+                        return {
+                            totalMembers: normalizedData.length,
+                            data: normalizedData,
+                            timestamp: new Date().toISOString(),
+                            source: 'ranking_server'
+                        };
+                        
+                    } catch (error) {
+                        log('error', '의원 점수 랭킹 조회 실패:', error.message);
+                        throw new Error(`의원 점수 랭킹 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                async getPartyScoreRanking() {
+                    try {
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.PARTY_SCORE_RANKING}`;
+                        
+                        log('debug', '정당 점수 랭킹 조회');
+                        
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, 'PARTY_SCORE_RANKING');
+                        
+                        log('success', `정당 점수 랭킹 조회 완료: ${normalizedData.length}건`);
+                        
+                        return {
+                            totalParties: normalizedData.length,
+                            data: normalizedData,
+                            timestamp: new Date().toISOString(),
+                            source: 'ranking_server'
+                        };
+                        
+                    } catch (error) {
+                        log('error', '정당 점수 랭킹 조회 실패:', error.message);
+                        throw new Error(`정당 점수 랭킹 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                async getPartyStatsRanking() {
+                    try {
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.PARTY_STATS_RANKING}`;
+                        
+                        log('debug', '정당 통계 랭킹 조회');
+                        
+                        const rawData = await apiCallWithRetry(url);
+                        const normalizedData = normalizeApiResponse(rawData, 'PARTY_STATS_RANKING');
+                        
+                        log('success', `정당 통계 랭킹 조회 완료: ${normalizedData.length}건`);
+                        
+                        return {
+                            totalParties: normalizedData.length,
+                            data: normalizedData,
+                            timestamp: new Date().toISOString(),
+                            source: 'ranking_server'
+                        };
+                        
+                    } catch (error) {
+                        log('error', '정당 통계 랭킹 조회 실패:', error.message);
+                        throw new Error(`정당 통계 랭킹 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                // === 🤖 챗봇 API (baekilha.onrender.com) ===
+                async sendChatbotMessage(message, options = {}) {
+                    try {
+                        if (!message || typeof message !== 'string') {
+                            throw new Error('메시지를 입력해주세요');
+                        }
+
+                        const trimmedMessage = message.trim();
+                        if (trimmedMessage.length === 0) {
+                            throw new Error('빈 메시지는 전송할 수 없습니다');
+                        }
+
+                        const url = `${API_CONFIG.SERVERS.RANKING}${API_CONFIG.ENDPOINTS.RANKING_SERVER.CHATBOT}`;
+                        
+                        const requestBody = {
+                            message: trimmedMessage,
+                            ...options
+                        };
+                        
+                        log('debug', `챗봇 메시지 전송: ${trimmedMessage.substring(0, 50)}...`);
+                        
+                        const rawData = await apiCallWithRetry(url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestBody)
+                        });
+                        
+                        log('success', '챗봇 응답 수신 완료');
+                        
+                        return {
+                            userMessage: trimmedMessage,
+                            botResponse: rawData,
+                            timestamp: new Date().toISOString(),
+                            source: 'ranking_server'
+                        };
+                        
+                    } catch (error) {
+                        log('error', '챗봇 메시지 전송 실패:', error.message);
+                        throw new Error(`챗봇과의 통신에 실패했습니다: ${error.message}`);
+                    }
+                },
+
                 async updateWeights(weights) {
                     try {
-                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.SETTING;
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.MAIN_SERVER.SETTING;
                         const rawData = await apiCallWithRetry(url, {
                             method: 'POST',
                             headers: {
@@ -471,8 +945,12 @@
                 // === ⚙️ 설정 및 상태 ===
                 config: {
                     getBaseUrl: () => API_CONFIG.BASE_URL,
+                    getRankingServerUrl: () => API_CONFIG.SERVERS.RANKING,
                     getTimeout: () => API_CONFIG.TIMEOUT,
-                    isDebugMode: () => DEBUG_MODE
+                    isDebugMode: () => DEBUG_MODE,
+                    getValidParties: () => [...VALID_PARTIES],
+                    getServers: () => ({ ...API_CONFIG.SERVERS }),
+                    getEndpoints: () => ({ ...API_CONFIG.ENDPOINTS })
                 },
 
                 // API 서비스 상태
@@ -508,7 +986,7 @@
             window.APIService._isReady = true;
         }
 
-        log('success', '🚀 APIService 초기화 완료');
+        log('success', '🚀 APIService 초기화 완료 (정당별 성과 조회 + 비교/랭킹 기능 포함)');
 
     } catch (error) {
         log('error', '🚨 APIService 초기화 실패:', error);
@@ -554,7 +1032,9 @@
     function initializeAfterDOM() {
         try {
             log('info', `🌐 환경: ${window.APIService.getEnvironmentInfo().isVercel ? 'Vercel' : 'Local'}`);
-            log('info', `🔧 API 서버: ${API_CONFIG.BASE_URL}`);
+            log('info', `🔧 메인 서버: ${API_CONFIG.BASE_URL}`);
+            log('info', `🆚 랭킹 서버: ${API_CONFIG.SERVERS.RANKING}`);
+            log('info', `🏛️ 지원 정당: ${VALID_PARTIES.length}개`);
             
             // 네트워크 상태 모니터링 (중복 방지)
             if (!window._networkListenersAdded) {
@@ -582,6 +1062,6 @@
         setTimeout(initializeAfterDOM, 0);
     }
 
-    log('success', '✅ global_sync.js 로드 완료 (안정성 개선)');
+    log('success', '✅ global_sync.js 로드 완료 (정당별 성과 + 비교/랭킹 기능 추가)');
 
 })();
