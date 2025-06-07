@@ -1,10 +1,16 @@
-// 전역 퍼센트 설정 관리 함수들 (API 연결 개선)
+// === 🔧 전역 퍼센트 설정 관리 (Django API 연동 버전) ===
 window.PercentManager = {
     // 퍼센트 설정 가져오기 (로컬 + 서버 동기화)
     getSettings: function() {
         const savedData = localStorage.getItem('percentSettings');
         if (savedData) {
-            return JSON.parse(savedData);
+            try {
+                return JSON.parse(savedData);
+            } catch (error) {
+                console.error('[PercentManager] 설정 파싱 실패:', error);
+                localStorage.removeItem('percentSettings');
+                return null;
+            }
         }
         return null;
     },
@@ -32,51 +38,52 @@ window.PercentManager = {
         const settings = this.getSettings();
         if (!settings) return null;
         
-        // 백엔드가 원하는 형식으로 변환
+        // Django API가 원하는 형식으로 변환
         const backendFormat = {};
         Object.keys(settings).forEach(key => {
             if (settings[key].enabled) {
-                backendFormat[key] = settings[key].value;
+                backendFormat[key] = parseFloat(settings[key].value) || 0;
             }
         });
         
-        return backendFormat;
+        return Object.keys(backendFormat).length > 0 ? backendFormat : null;
     },
     
-    // API 서비스를 통한 설정 전송
+    // 새로운 API 서비스를 통한 설정 전송
     sendSettingsToBackend: async function() {
         const weights = this.getSettingsForBackend();
         if (!weights) {
-            console.warn('전송할 퍼센트 설정이 없습니다.');
+            console.warn('[PercentManager] 전송할 퍼센트 설정이 없습니다.');
             return null;
         }
         
         try {
-            console.log('퍼센트 설정을 서버에 전송 중...', weights);
+            console.log('[PercentManager] 퍼센트 설정을 서버에 전송 중...', weights);
             
-            // APIService가 있으면 사용, 없으면 직접 fetch
+            // 새로운 APIService 사용
             if (window.APIService && typeof window.APIService.updateWeights === 'function') {
                 const result = await window.APIService.updateWeights(weights);
-                console.log('퍼센트 설정 전송 성공:', result);
+                console.log('[PercentManager] 퍼센트 설정 전송 성공:', result);
                 
                 // 성공 알림 표시
                 if (window.APIService.showNotification) {
-                    window.APIService.showNotification('퍼센트 설정이 서버에 저장되었습니다', 'success');
+                    window.APIService.showNotification('퍼센트 설정이 서버에 저장되었습니다! 🎉', 'success');
                 }
                 
+                // 가중치 변경 이벤트는 updateWeights 함수 내에서 자동으로 발생됨
+                
                 return result;
+                
             } else {
-                // APIService가 없는 경우 기본 처리
-                console.warn('APIService를 사용할 수 없어 로컬에만 저장됩니다.');
-                return { status: 'local_only', weights };
+                throw new Error('APIService를 사용할 수 없습니다.');
             }
             
         } catch (error) {
-            console.error('퍼센트 설정 전송 실패:', error);
+            console.error('[PercentManager] 퍼센트 설정 전송 실패:', error);
             
             // 실패 알림 표시
             if (window.APIService && window.APIService.showNotification) {
-                window.APIService.showNotification('퍼센트 설정 저장에 실패했습니다', 'error');
+                window.APIService.showNotification(`퍼센트 설정 저장에 실패했습니다: ${error.message}`, 'error');
             }
             
             throw error;
@@ -93,24 +100,37 @@ window.PercentManager = {
         try {
             // 로컬 저장
             localStorage.setItem('percentSettings', JSON.stringify(settings));
-            console.log('로컬에 퍼센트 설정 저장 완료');
+            console.log('[PercentManager] 로컬에 퍼센트 설정 저장 완료');
             
             // 서버 전송 (선택적)
             try {
                 await this.sendSettingsToBackend();
+                return { success: true, savedToServer: true };
             } catch (serverError) {
-                console.warn('서버 전송 실패, 로컬에만 저장됨:', serverError.message);
+                console.warn('[PercentManager] 서버 전송 실패, 로컬에만 저장됨:', serverError.message);
+                return { success: true, savedToServer: false, error: serverError.message };
             }
             
-            return true;
         } catch (error) {
-            console.error('설정 저장 중 오류:', error);
-            return false;
+            console.error('[PercentManager] 설정 저장 중 오류:', error);
+            return { success: false, error: error.message };
+        }
+    },
+    
+    // 서버에서 설정 불러오기 (향후 확장용)
+    loadSettingsFromServer: async function() {
+        try {
+            // 향후 서버에서 가중치 설정을 불러오는 API가 추가되면 여기에 구현
+            console.log('[PercentManager] 서버에서 설정 불러오기는 아직 지원되지 않습니다.');
+            return null;
+        } catch (error) {
+            console.error('[PercentManager] 서버 설정 불러오기 실패:', error);
+            return null;
         }
     }
 };
 
-// 🚨 메뉴바 핵심 기능 - 최우선 실행 (API 독립적)
+// === 🚨 메뉴바 핵심 기능 - 최우선 실행 (API 독립적) ===
 function initializeMenuBar() {
     try {
         console.log('🎯 메뉴바 초기화 시작...');
@@ -251,7 +271,7 @@ function initializeMenuBar() {
     }
 }
 
-// 🔧 기타 UI 기능들
+// === 🔧 기타 UI 기능들 ===
 function initializeOtherFeatures() {
     try {
         // 로고 클릭시 메인페이지로 이동
@@ -276,7 +296,7 @@ function initializeOtherFeatures() {
     }
 }
 
-// 🤖 챗봇 관련 코드 (API 독립적으로 개선)
+// === 🤖 챗봇 관련 코드 (새로운 API 연동) ===
 function initializeChatbot() {
     try {
         const chatbotIcon = document.querySelector('.robot-icon');
@@ -296,7 +316,8 @@ function initializeChatbot() {
         // 챗봇 상태 관리
         let chatbotState = {
             isLoading: false,
-            conversationHistory: []
+            conversationHistory: [],
+            sessionId: `chatbot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
         };
         
         // 현재 시간 가져오기
@@ -391,7 +412,7 @@ function initializeChatbot() {
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
         }
         
-        // 메시지 처리 (API 독립적)
+        // 메시지 처리 (새로운 API 사용)
         async function handleMessage(message) {
             // 사용자 메시지 표시
             addUserMessage(message);
@@ -399,7 +420,8 @@ function initializeChatbot() {
             // 대화 기록에 추가
             chatbotState.conversationHistory.push({
                 role: 'user',
-                content: message
+                content: message,
+                timestamp: new Date().toISOString()
             });
             
             // 로딩 상태 설정
@@ -407,40 +429,55 @@ function initializeChatbot() {
             showLoadingMessage();
             
             try {
-                // API 서비스 사용 시도
-                if (window.APIService && typeof window.APIService.fetchFromAPI === 'function') {
-                    console.log('🤖 챗봇 API 호출 중...', message);
+                // 새로운 APIService 사용
+                if (window.APIService && typeof window.APIService.sendChatbotMessage === 'function') {
+                    console.log('[Chatbot] 새로운 API 호출 중...', message);
                     
-                    const response = await window.APIService.fetchFromAPI('chatbot', '/chat/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            message: message,
-                            conversation_history: chatbotState.conversationHistory
-                        })
-                    });
+                    const options = {
+                        sessionId: chatbotState.sessionId,
+                        conversationHistory: chatbotState.conversationHistory
+                    };
+                    
+                    const response = await window.APIService.sendChatbotMessage(message, options);
                     
                     removeLoadingMessage();
                     
-                    if (response && response.response) {
-                        addBotMessage(response.response);
+                    // 응답 처리
+                    if (response) {
+                        let botResponse = '';
+                        
+                        // 응답 구조에 따른 처리
+                        if (typeof response === 'string') {
+                            botResponse = response;
+                        } else if (response.response) {
+                            botResponse = response.response;
+                        } else if (response.userMessage && response.botResponse) {
+                            botResponse = response.botResponse;
+                        } else if (response.data && response.data.response) {
+                            botResponse = response.data.response;
+                        } else {
+                            botResponse = JSON.stringify(response);
+                        }
+                        
+                        addBotMessage(botResponse);
+                        
                         chatbotState.conversationHistory.push({
                             role: 'assistant',
-                            content: response.response
+                            content: botResponse,
+                            timestamp: new Date().toISOString()
                         });
-                        console.log('✅ 챗봇 응답 성공:', response);
+                        
+                        console.log('[Chatbot] ✅ 응답 성공:', response);
                     } else {
-                        throw new Error('응답 형식이 올바르지 않습니다.');
+                        throw new Error('빈 응답을 받았습니다.');
                     }
                     
                 } else {
-                    throw new Error('API 서비스를 사용할 수 없습니다.');
+                    throw new Error('APIService의 sendChatbotMessage 함수를 사용할 수 없습니다.');
                 }
                 
             } catch (error) {
-                console.warn('⚠️ 챗봇 API 연결 실패, 기본 응답 사용:', error.message);
+                console.warn('[Chatbot] ⚠️ API 연결 실패, 기본 응답 사용:', error.message);
                 
                 removeLoadingMessage();
                 
@@ -454,54 +491,62 @@ function initializeChatbot() {
         // 폴백 응답 처리 (API 실패 시)
         function handleFallbackResponse(message) {
             setTimeout(() => {
-                if (message.includes('나경원') || message.includes('의원')) {
+                const lowercaseMessage = message.toLowerCase();
+                
+                if (lowercaseMessage.includes('나경원') || lowercaseMessage.includes('의원')) {
                     addBotMessage([
                         '나경원 의원에 대한 정보입니다.',
-                        '현재 나경원 의원은 국민의힘 소속 의원으로 전체 00위',
-                        '국민의힘에서는 00위에 있습니다.',
+                        '현재 나경원 의원은 국민의힘 소속 의원으로 전체 순위를 확인하려면 랭킹 페이지를 방문해주세요.',
                         '나경원 의원에 대한 어떤 정보를 더 얻고싶은가요?'
                     ]);
-                } else if (message.includes('상세') || message.includes('퍼센트')) {
+                } else if (lowercaseMessage.includes('상세') || lowercaseMessage.includes('퍼센트')) {
                     addBotMessage([
-                        '나경원 의원의 상세 퍼센트입니다.',
-                        '출석: 00%',
-                        '가결: 00%',
-                        '청원 소개: 00%',
-                        '..',
-                        '나경원 의원이 가장 높게 평가받는 부분은 청원 소개이고 가장 낮게 평가받는 부분은 가결입니다.'
+                        '의원의 상세 퍼센트 정보를 확인하려면:',
+                        '1. 메뉴에서 "랭킹" → "국회의원" 을 선택하세요',
+                        '2. 원하는 의원의 "상세보기" 버튼을 클릭하세요',
+                        '3. 상세 페이지에서 각종 활동 지표를 확인할 수 있습니다'
                     ]);
-                } else if (message.includes('표결') || message.includes('정보')) {
+                } else if (lowercaseMessage.includes('표결') || lowercaseMessage.includes('정보')) {
                     addBotMessage([
-                        '나경원 의원의 표결 정보입니다.',
-                        '전체 표결 참여: 000회',
-                        '찬성: 000회',
-                        '반대: 000회',
-                        '기권: 000회'
+                        '표결 정보를 확인하려면:',
+                        '1. "본회의" 메뉴를 통해 각종 법안과 표결 현황을 확인할 수 있습니다',
+                        '2. 의원별 표결 참여율은 랭킹 페이지에서 확인 가능합니다'
                     ]);
-                } else if (message.includes('청원') || message.includes('소개')) {
+                } else if (lowercaseMessage.includes('청원') || lowercaseMessage.includes('소개')) {
                     addBotMessage([
-                        '나경원 의원의 청원 소개 내역입니다.',
-                        '전체 청원 소개: 00건',
-                        '가결: 00건',
-                        '부결: 00건',
-                        '진행중: 00건'
+                        '청원 관련 정보는:',
+                        '1. "청원" 메뉴에서 전체 청원 현황을 확인할 수 있습니다',
+                        '2. 의원별 청원 소개 현황은 랭킹 페이지에서 확인 가능합니다'
                     ]);
-                } else if (message.includes('경력')) {
+                } else if (lowercaseMessage.includes('정당') || lowercaseMessage.includes('비교')) {
                     addBotMessage([
-                        '나경원 의원의 경력입니다.',
-                        '20대 국회의원',
-                        '21대 국회의원',
-                        '국민의힘 원내대표 역임',
-                        '국회 외교통상통일위원회 위원'
+                        '정당 관련 기능:',
+                        '1. "랭킹" → "정당" 에서 정당별 순위를 확인할 수 있습니다',
+                        '2. "비교하기" → "정당 비교" 에서 두 정당을 비교할 수 있습니다',
+                        '3. 각 정당의 평균 점수와 상세 통계를 확인하세요'
+                    ]);
+                } else if (lowercaseMessage.includes('사용법') || lowercaseMessage.includes('도움말')) {
+                    addBotMessage([
+                        '백일하 사이트 사용법:',
+                        '🏆 랭킹: 국회의원과 정당의 활동 순위 확인',
+                        '⚖️ 비교하기: 의원 간, 정당 간 비교 분석',
+                        '📊 퍼센트: 개별 의원/정당의 상세 활동 지표',
+                        '🏛️ 본회의: 국회 본회의 관련 정보',
+                        '📝 청원: 국정감사 청원 현황',
+                        '',
+                        '궁금한 의원명이나 정당명을 입력해보세요!'
                     ]);
                 } else {
                     addBotMessage([
                         '죄송합니다. 질문을 이해하지 못했습니다.',
                         '다음 중 어떤 정보를 원하시나요?',
-                        '• 의원 정보 검색',
-                        '• 정당 순위 확인', 
-                        '• 청원 현황 조회',
-                        '• 본회의 정보'
+                        '',
+                        '🔍 의원명 또는 정당명을 입력해보세요',
+                        '📊 "사용법" - 사이트 이용 방법',
+                        '🏆 "랭킹" - 순위 확인 방법',
+                        '⚖️ "비교" - 비교 기능 안내',
+                        '📝 "청원" - 청원 정보 확인',
+                        '🏛️ "본회의" - 본회의 정보 확인'
                     ]);
                 }
             }, 500);
@@ -515,9 +560,15 @@ function initializeChatbot() {
                 if (chatbotMessages.children.length === 0) {
                     setTimeout(() => {
                         addBotMessage([
-                            '안녕하세요! 국회의원 정보 챗봇입니다.',
-                            '의원명, 정당명, 또는 궁금한 내용을 입력해 주세요.',
-                            '예: "나경원 의원 정보", "더불어민주당 순위", "청원 현황"'
+                            '안녕하세요! 백일하 국회의원 정보 챗봇입니다. 🏛️',
+                            '',
+                            '다음과 같은 정보를 제공해드릴 수 있습니다:',
+                            '• 국회의원 및 정당 정보 검색',
+                            '• 활동 순위 및 통계 확인',
+                            '• 사이트 이용 방법 안내',
+                            '',
+                            '의원명, 정당명, 또는 궁금한 내용을 입력해 주세요!',
+                            '예: "나경원 의원", "더불어민주당", "사용법"'
                         ]);
                     }, 300);
                 }
@@ -568,14 +619,14 @@ function initializeChatbot() {
             }
         });
         
-        console.log('✅ 챗봇 기능 초기화 완료');
+        console.log('✅ 챗봇 기능 초기화 완료 (Django API 연동)');
         
     } catch (error) {
         console.error('❌ 챗봇 초기화 실패:', error);
     }
 }
 
-// 🛠️ 공통 페이지네이션 생성 함수
+// === 🛠️ 공통 페이지네이션 생성 함수 ===
 window.createPagination = function(totalItems, currentPage, itemsPerPage, onPageChange) {
     try {
         const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -698,7 +749,7 @@ function createPageButton(pageNumber, currentPage, onPageChange) {
     return button;
 }
 
-// 정당별 URL (전역으로 사용)
+// === 🏛️ 정당별 데이터 (전역으로 사용) ===
 window.partyData = {
     "국민의힘": {
         url: "https://www.peoplepowerparty.kr/",
@@ -734,7 +785,7 @@ window.partyData = {
     }
 };
 
-// === 추가 유틸리티 함수들 ===
+// === 🎨 추가 유틸리티 함수들 ===
 
 // 정당별 색상 적용 함수
 window.applyPartyColors = function(partyName) {
@@ -761,19 +812,21 @@ window.applyPartyColors = function(partyName) {
     }
 };
 
-// 숫자 포맷팅 함수
+// 숫자 포맷팅 함수 (개선된 버전)
 window.formatNumber = function(number) {
     try {
+        if (number === null || number === undefined) return '0';
         if (typeof number !== 'number') {
             number = parseFloat(number);
         }
         return isNaN(number) ? '0' : number.toLocaleString('ko-KR');
     } catch (error) {
+        console.warn('숫자 포맷팅 실패:', error);
         return String(number || '0');
     }
 };
 
-// 날짜 포맷팅 함수
+// 날짜 포맷팅 함수 (개선된 버전)
 window.formatDate = function(dateString) {
     try {
         if (!dateString) return '';
@@ -787,18 +840,21 @@ window.formatDate = function(dateString) {
             day: 'numeric'
         });
     } catch (error) {
+        console.warn('날짜 포맷팅 실패:', error);
         return dateString || '';
     }
 };
 
-// 퍼센트 포맷팅 함수
+// 퍼센트 포맷팅 함수 (개선된 버전)
 window.formatPercent = function(value, decimals = 1) {
     try {
+        if (value === null || value === undefined) return '0.0%';
         if (typeof value !== 'number') {
             value = parseFloat(value);
         }
         return isNaN(value) ? '0.0%' : `${value.toFixed(decimals)}%`;
     } catch (error) {
+        console.warn('퍼센트 포맷팅 실패:', error);
         return '0.0%';
     }
 };
@@ -816,9 +872,34 @@ window.debounce = function(func, wait) {
     };
 };
 
-// 🚀 메인 초기화 함수
+// API 연결 상태 확인 함수
+window.checkAPIStatus = function() {
+    try {
+        if (typeof window.APIService === 'undefined') {
+            return { connected: false, error: 'APIService가 로드되지 않았습니다.' };
+        }
+        
+        if (window.APIService._hasError) {
+            return { connected: false, error: 'APIService에 오류가 있습니다.' };
+        }
+        
+        if (!window.APIService._isReady) {
+            return { connected: false, error: 'APIService가 준비되지 않았습니다.' };
+        }
+        
+        return { 
+            connected: true, 
+            version: window.APIService._version || 'unknown',
+            config: window.APIService.config ? window.APIService.config.getBaseUrl() : 'unknown'
+        };
+    } catch (error) {
+        return { connected: false, error: error.message };
+    }
+};
+
+// === 🚀 메인 초기화 함수 ===
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 scripts.js 초기화 시작...');
+    console.log('🚀 scripts.js 초기화 시작... (Django API 연동 버전)');
     
     // 1. 메뉴바 초기화 (최우선)
     const menuSuccess = initializeMenuBar();
@@ -831,25 +912,44 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 4. API 서비스 연결 상태 확인 (선택적)
     setTimeout(() => {
-        if (typeof window.APIService !== 'undefined' && window.APIService._isReady) {
+        const apiStatus = window.checkAPIStatus();
+        
+        if (apiStatus.connected) {
             console.log('✅ API 서비스 연결됨');
+            console.log(`📡 API 버전: ${apiStatus.version}`);
+            console.log(`🔗 서버 주소: ${apiStatus.config}`);
             
             const envInfo = window.APIService.getEnvironmentInfo();
             console.log(`🌍 환경: ${envInfo.isVercel ? 'Vercel 배포' : '로컬 개발'}`);
-        } else if (typeof window.APIService !== 'undefined' && window.APIService._hasError) {
-            console.warn('⚠️ API 서비스에 문제가 있지만 기본 기능은 작동합니다.');
+            
+            // 유효한 정당 목록 로그
+            if (window.APIService.getValidParties) {
+                const validParties = window.APIService.getValidParties();
+                console.log(`🏛️ 지원 정당: ${validParties.join(', ')}`);
+            }
+            
         } else {
-            console.log('ℹ️ API 서비스 없이 로컬 기능만 사용합니다.');
+            console.warn(`⚠️ API 서비스 연결 실패: ${apiStatus.error}`);
+            console.log('ℹ️ 로컬 기능만 사용됩니다.');
         }
+        
+        // 가중치 동기화 시스템 상태 확인
+        if (typeof window.WeightSync !== 'undefined') {
+            console.log('🔄 가중치 동기화 시스템 로드됨');
+            console.log(`📊 WeightSync 버전: ${window.WeightSync.version}`);
+        }
+        
     }, 1000);
     
     console.log('✅ scripts.js 초기화 완료');
     console.log(`🎯 메뉴바 상태: ${menuSuccess ? '✅ 성공' : '❌ 실패'}`);
     console.log('🔗 사용 가능한 전역 함수들:');
-    console.log('  - window.PercentManager: 퍼센트 설정 관리');
+    console.log('  - window.PercentManager: 퍼센트 설정 관리 (Django API 연동)');
     console.log('  - window.createPagination: 페이지네이션 생성');
     console.log('  - window.applyPartyColors: 정당별 색상 적용');
     console.log('  - window.formatNumber/Date/Percent: 포맷팅 함수들');
     console.log('  - window.partyData: 정당별 정보');
+    console.log('  - window.checkAPIStatus: API 연결 상태 확인');
     console.log('📌 서브메뉴: HTML href 속성으로 직접 이동');
+    console.log('🤖 챗봇: Django API 연동으로 실시간 응답');
 });
