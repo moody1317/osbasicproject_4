@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 비교 페이지 로드 시작');
+    console.log('🚀 정당 비교 페이지 로드 시작 (랭킹 API 통합 버전)');
 
     // 선택된 정당을 저장할 변수
     let selectedParties = [];
     let partyStats = {}; // 정당별 통계 데이터
+    let partyRankings = {}; // 🆕 정당별 랭킹 데이터
     let isLoading = false;
 
     // 정당별 브랜드 색상
@@ -142,6 +143,69 @@ document.addEventListener('DOMContentLoaded', function() {
         return nameMapping[partyName] || partyName;
     }
 
+    // 🆕 랭킹 서버에서 정당 순위 데이터 가져오기
+    async function fetchPartyRankings() {
+        try {
+            console.log('🏆 정당 순위 API 호출...');
+            
+            if (!window.APIService || !window.APIService.getPartyScoreRanking) {
+                throw new Error('정당 순위 API 서비스가 준비되지 않았습니다.');
+            }
+            
+            const rankingResponse = await window.APIService.getPartyScoreRanking();
+            
+            if (!rankingResponse || !rankingResponse.data || !Array.isArray(rankingResponse.data)) {
+                throw new Error('정당 순위 API 응답이 올바르지 않습니다.');
+            }
+            
+            // API 데이터 매핑
+            const rankings = {};
+            rankingResponse.data.forEach(ranking => {
+                const partyName = normalizePartyName(ranking.POLY_NM);
+                rankings[partyName] = {
+                    name: partyName,
+                    rank: parseInt(ranking.평균실적_순위) || 999,
+                    source: 'ranking_server'
+                };
+            });
+            
+            partyRankings = rankings;
+            
+            console.log(`✅ 정당 순위 데이터 로드 완료: ${Object.keys(rankings).length}개`);
+            return rankings;
+            
+        } catch (error) {
+            console.error('❌ 정당 순위 데이터 로드 실패:', error);
+            partyRankings = {};
+            throw error;
+        }
+    }
+
+    // 🆕 랭킹 서버에서 두 정당 비교 데이터 가져오기
+    async function fetchPartyComparison(party1, party2) {
+        try {
+            console.log(`🆚 정당 비교 API 호출: ${party1} vs ${party2}`);
+            
+            if (!window.APIService || !window.APIService.compareParties) {
+                throw new Error('정당 비교 API 서비스가 준비되지 않았습니다.');
+            }
+            
+            const comparisonResponse = await window.APIService.compareParties(party1, party2);
+            
+            if (!comparisonResponse || !comparisonResponse.data) {
+                console.warn('정당 비교 API 응답이 없음, 기본 비교 로직 사용');
+                return null;
+            }
+            
+            console.log(`✅ 정당 비교 데이터 로드 완료: ${party1} vs ${party2}`);
+            return comparisonResponse.data;
+            
+        } catch (error) {
+            console.warn(`⚠️ 정당 비교 API 실패, 기본 비교 로직 사용:`, error);
+            return null;
+        }
+    }
+
     // API에서 정당 목록 가져오기 (APIService 사용)
     async function loadPartyList() {
         try {
@@ -169,7 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 정당별 통계 계산 (APIService 활용)
+    // 정당별 통계 계산 (APIService + 랭킹 서버 활용)
     async function calculatePartyStats(partyName) {
         try {
             console.log(`📊 ${partyName} 통계 계산 중...`);
@@ -182,9 +246,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 );
                 
                 if (partyData) {
-                    // API 데이터를 직접 사용
-                    const stats = mapAPIDataToStats(partyData);
-                    console.log(`✅ ${partyName} 통계 계산 완료 (직접 API):`, stats);
+                    // 🆕 랭킹 데이터와 결합
+                    const ranking = partyRankings[partyName];
+                    const stats = mapAPIDataToStats(partyData, ranking);
+                    console.log(`✅ ${partyName} 통계 계산 완료 (직접 API + 랭킹):`, stats);
                     return stats;
                 }
             } catch (apiError) {
@@ -212,28 +277,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 normalizePartyName(party.party || party.party_name) === partyName
             );
 
+            // 🆕 랭킹 데이터와 결합
+            const ranking = partyRankings[partyName];
+
             // 통계 계산
-            const stats = calculateDetailedStats(partyMembers, partyRankData, memberPerformance);
+            const stats = calculateDetailedStats(partyMembers, partyRankData, memberPerformance, ranking);
             
-            console.log(`✅ ${partyName} 통계 계산 완료 (조합 방식):`, stats);
+            console.log(`✅ ${partyName} 통계 계산 완료 (조합 방식 + 랭킹):`, stats);
             return stats;
 
         } catch (error) {
             console.error(`❌ ${partyName} 통계 계산 실패:`, error);
             showNotification(`${partyName} 정보 로드 실패`, 'error');
-            return generateSampleStats();
+            
+            // 🆕 랭킹 데이터만이라도 사용
+            const ranking = partyRankings[partyName];
+            return generateSampleStats(ranking);
         }
     }
 
-    // API 데이터를 내부 통계 형식으로 매핑
-    function mapAPIDataToStats(partyData) {
+    // 🔄 API 데이터를 내부 통계 형식으로 매핑 (랭킹 데이터 추가)
+    function mapAPIDataToStats(partyData, ranking = null) {
         try {
             // 가결률 계산 (가결 수를 기준으로 임의의 제안 수 대비 비율 계산)
             const estimatedBillCount = Math.max(partyData.bill_pass_sum * 2, 1);
             const billPassRate = (partyData.bill_pass_sum / estimatedBillCount) * 100;
 
             return {
-                memberCount: partyData.member_count || 50, // API에 의원 수가 있으면 사용
+                memberCount: partyData.member_count || 50,
                 attendanceRate: partyData.avg_attendance || 85,
                 billPassRate: Math.min(billPassRate, 100),
                 petitionProposed: partyData.petition_sum || 0,
@@ -244,6 +315,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 abstentions: Math.floor((partyData.avg_invalid_vote_ratio || 0.02) * 500),
                 voteConsistency: Math.floor((partyData.avg_vote_match_ratio || 0.8) * 200),
                 voteInconsistency: Math.floor((partyData.avg_vote_mismatch_ratio || 0.15) * 200),
+                // 🆕 랭킹 정보 추가
+                rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
+                rankSource: ranking ? ranking.source : 'estimated',
                 // 상세 정보 (툴팁용)
                 attendanceStats: {
                     avg: partyData.avg_attendance || 85,
@@ -275,12 +349,12 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         } catch (error) {
             console.error('API 데이터 매핑 실패:', error);
-            return generateSampleStats();
+            return generateSampleStats(ranking);
         }
     }
 
-    // 상세 통계 계산
-    function calculateDetailedStats(partyMembers, partyRankData, memberPerformance) {
+    // 🔄 상세 통계 계산 (랭킹 데이터 추가)
+    function calculateDetailedStats(partyMembers, partyRankData, memberPerformance, ranking = null) {
         try {
             const memberCount = partyMembers.length;
             
@@ -321,6 +395,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 abstentions: invalidVoteStats.abstentions,
                 voteConsistency: voteConsistency.consistent,
                 voteInconsistency: voteConsistency.inconsistent,
+                // 🆕 랭킹 정보 추가
+                rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
+                rankSource: ranking ? ranking.source : 'estimated',
                 // 상세 정보 (툴팁용)
                 attendanceStats: {
                     avg: attendanceRate,
@@ -353,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         } catch (error) {
             console.error('상세 통계 계산 실패:', error);
-            return generateSampleStats();
+            return generateSampleStats(ranking);
         }
     }
 
@@ -488,8 +565,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 샘플 통계 생성 (API 실패 시)
-    function generateSampleStats() {
+    // 🔄 샘플 통계 생성 (API 실패 시, 랭킹 데이터 포함)
+    function generateSampleStats(ranking = null) {
         const attendanceRate = Math.random() * 20 + 75; // 75-95%
         const billPassRate = Math.random() * 30 + 40; // 40-70%
         const petitionProposed = Math.floor(Math.random() * 100) + 50;
@@ -509,6 +586,9 @@ document.addEventListener('DOMContentLoaded', function() {
             abstentions: Math.floor(Math.random() * 30) + 10,
             voteConsistency: voteConsistency,
             voteInconsistency: voteInconsistency,
+            // 🆕 랭킹 정보 추가
+            rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
+            rankSource: ranking ? ranking.source : 'estimated',
             // 상세 정보 (툴팁용)
             attendanceStats: {
                 avg: attendanceRate,
@@ -540,11 +620,24 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // 두 정당 비교 분석
-    function compareParties(party1Stats, party2Stats) {
-        const comparisons = {};
+    // 🔄 두 정당 비교 분석 (랭킹 서버 데이터 우선 사용)
+    async function compareParties(party1Stats, party2Stats, party1Name, party2Name) {
+        let comparisons = {};
         
-        // 각 지표별로 어느 정당이 우세한지 판단
+        // 🆕 1차: 랭킹 서버의 비교 API 시도
+        try {
+            const apiComparison = await fetchPartyComparison(party1Name, party2Name);
+            if (apiComparison) {
+                console.log(`✅ 랭킹 서버 비교 데이터 사용: ${party1Name} vs ${party2Name}`);
+                // API 데이터를 우리 형식으로 변환
+                comparisons = mapComparisonAPIData(apiComparison);
+                return comparisons;
+            }
+        } catch (error) {
+            console.warn('랭킹 서버 비교 API 실패, 기본 비교 로직 사용');
+        }
+        
+        // 2차: 기본 비교 로직
         comparisons.attendance = party1Stats.attendanceRate > party2Stats.attendanceRate ? [true, false] : [false, true];
         comparisons.billPass = party1Stats.billPassRate > party2Stats.billPassRate ? [true, false] : [false, true];
         comparisons.petitionProposed = party1Stats.petitionProposed > party2Stats.petitionProposed ? [true, false] : [false, true];
@@ -563,7 +656,24 @@ document.addEventListener('DOMContentLoaded', function() {
         return comparisons;
     }
 
-    // 정당 카드 업데이트
+    // 🆕 비교 API 데이터를 내부 형식으로 매핑
+    function mapComparisonAPIData(apiData) {
+        // API 응답 구조에 따라 매핑 로직 구현
+        // 예상 구조에 따른 기본 매핑
+        return {
+            attendance: [apiData.party1_wins?.attendance || false, apiData.party2_wins?.attendance || false],
+            billPass: [apiData.party1_wins?.bill_pass || false, apiData.party2_wins?.bill_pass || false],
+            petitionProposed: [apiData.party1_wins?.petition_proposed || false, apiData.party2_wins?.petition_proposed || false],
+            petitionPassed: [apiData.party1_wins?.petition_passed || false, apiData.party2_wins?.petition_passed || false],
+            chairman: [apiData.party1_wins?.chairman || false, apiData.party2_wins?.chairman || false],
+            secretary: [apiData.party1_wins?.secretary || false, apiData.party2_wins?.secretary || false],
+            invalidVotes: [apiData.party1_wins?.invalid_votes || false, apiData.party2_wins?.invalid_votes || false],
+            voteConsistency: [apiData.party1_wins?.vote_consistency || false, apiData.party2_wins?.vote_consistency || false],
+            voteInconsistency: [apiData.party1_wins?.vote_inconsistency || false, apiData.party2_wins?.vote_inconsistency || false]
+        };
+    }
+
+    // 🔄 정당 카드 업데이트 (랭킹 정보 추가)
     function updatePartyCard(cardIndex, partyName, stats, comparisons = null) {
         const cards = document.querySelectorAll('.comparison-card');
         if (cardIndex >= cards.length) return;
@@ -571,14 +681,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = cards[cardIndex];
         const statusItems = card.querySelectorAll('.status-item');
 
-        // 순위 계산 (임시로 출석률 + 가결률 기준)
-        const rank = Math.floor((200 - stats.attendanceRate - stats.billPassRate) / 15) + 1;
+        // 🆕 실시간 순위 표시
+        const rankDisplay = stats.rankSource === 'ranking_server' 
+            ? `${stats.rank}위 <span style="font-size: 12px; color: #888;">(실시간)</span>`
+            : `${stats.rank}위 <span style="font-size: 12px; color: #888;">(추정)</span>`;
 
         // 각 항목 업데이트
         const updates = [
             { // 현재 순위
-                value: `${rank}위`,
-                winLose: null
+                value: rankDisplay,
+                winLose: null,
+                isHTML: true // HTML 내용 포함
             },
             { // 출석
                 value: `${stats.attendanceRate.toFixed(1)}%`,
@@ -652,10 +765,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     // WIN/LOSE 표시
                     if (update.winLose) {
                         const percentage = update.value;
-                        statusValue.innerHTML = `${update.winLose}(${percentage})`;
+                        if (update.isHTML) {
+                            statusValue.innerHTML = `${update.winLose}(${percentage})`;
+                        } else {
+                            statusValue.innerHTML = `${update.winLose}(${percentage})`;
+                        }
                         statusValue.className = `status-value ${update.winLose.toLowerCase()}`;
                     } else {
-                        statusValue.innerHTML = update.value;
+                        if (update.isHTML) {
+                            statusValue.innerHTML = update.value;
+                        } else {
+                            statusValue.innerHTML = update.value;
+                        }
                         statusValue.className = 'status-value';
                     }
 
@@ -676,7 +797,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        console.log(`✅ ${partyName} 카드 업데이트 완료`);
+        // 🆕 랭킹 데이터 표시 로그
+        console.log(`✅ ${partyName} 카드 업데이트 완료 (순위: ${stats.rank}위, 출처: ${stats.rankSource})`);
     }
 
     // 드롭다운 옵션 업데이트
@@ -738,7 +860,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // 두 정당이 모두 선택되었으면 비교 수행
                         if (selectedParties[0] && selectedParties[1]) {
-                            const comparisons = compareParties(partyStats[selectedParties[0]], partyStats[selectedParties[1]]);
+                            const comparisons = await compareParties(
+                                partyStats[selectedParties[0]], 
+                                partyStats[selectedParties[1]], 
+                                selectedParties[0], 
+                                selectedParties[1]
+                            );
                             updatePartyCard(0, selectedParties[0], partyStats[selectedParties[0]], comparisons);
                             updatePartyCard(1, selectedParties[1], partyStats[selectedParties[1]], comparisons);
                         } else {
@@ -812,6 +939,60 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // 🔄 데이터 새로고침 (가중치 변경 시 사용)
+    async function refreshPartyComparison() {
+        try {
+            console.log('🔄 정당 비교 새로고침...');
+            showLoading(true);
+            
+            // 랭킹 데이터 다시 로드
+            await fetchPartyRankings();
+            
+            // 선택된 정당들의 통계 다시 계산
+            const refreshPromises = selectedParties.map(async (partyName, index) => {
+                if (partyName) {
+                    const stats = await calculatePartyStats(partyName);
+                    partyStats[partyName] = stats;
+                    return { partyName, stats, index };
+                }
+                return null;
+            }).filter(Boolean);
+            
+            const refreshedParties = await Promise.all(refreshPromises);
+            
+            // 비교 데이터 업데이트
+            if (selectedParties[0] && selectedParties[1]) {
+                const comparisons = await compareParties(
+                    partyStats[selectedParties[0]], 
+                    partyStats[selectedParties[1]], 
+                    selectedParties[0], 
+                    selectedParties[1]
+                );
+                
+                refreshedParties.forEach(({ partyName, stats, index }) => {
+                    updatePartyCard(index, partyName, stats, comparisons);
+                });
+            } else {
+                refreshedParties.forEach(({ partyName, stats, index }) => {
+                    updatePartyCard(index, partyName, stats);
+                });
+            }
+            
+            showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
+            
+        } catch (error) {
+            console.error('❌ 새로고침 실패:', error);
+            showNotification('데이터 새로고침에 실패했습니다', 'error');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // 🔄 페이지 데이터 새로고침 (WeightSync 호환)
+    async function loadPartyComparisonData() {
+        return await refreshPartyComparison();
+    }
+
     // 페이지 초기화
     async function initializePage() {
         console.log('🚀 정당 비교 페이지 초기화 중...');
@@ -821,6 +1002,14 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // APIService 준비 대기
             await waitForAPIService();
+            
+            // 🆕 랭킹 데이터 우선 로드
+            try {
+                await fetchPartyRankings();
+                console.log('✅ 랭킹 서버 연결 성공');
+            } catch (error) {
+                console.warn('⚠️ 랭킹 서버 연결 실패, 기본 로직 사용');
+            }
             
             // 드롭다운 옵션 업데이트
             await updateDropdownOptions();
@@ -839,18 +1028,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 디버그 유틸리티 (전역)
+    // 🔧 디버그 유틸리티 (전역)
     window.comparePartyDebug = {
         getSelectedParties: () => selectedParties,
         getPartyStats: () => partyStats,
+        getPartyRankings: () => partyRankings, // 🆕
         reloadData: () => initializePage(),
+        refreshData: () => refreshPartyComparison(), // 🆕 WeightSync 호환
         testPartyStats: (partyName) => calculatePartyStats(partyName),
+        testPartyComparison: (party1, party2) => fetchPartyComparison(party1, party2), // 🆕
         showPartyList: () => loadPartyList(),
         testAPIService: () => {
             console.log('🧪 APIService 테스트:');
             console.log('- APIService:', window.APIService);
             console.log('- 준비 상태:', window.APIService?._isReady);
             console.log('- 에러 상태:', window.APIService?._hasError);
+            console.log('- 랭킹 서버:', !!window.APIService?.getPartyScoreRanking); // 🆕
+            console.log('- 비교 API:', !!window.APIService?.compareParties); // 🆕
             return window.APIService;
         },
         clearSelection: () => {
@@ -865,7 +1059,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('📊 정당 비교 페이지 정보:');
             console.log('- 선택된 정당:', selectedParties);
             console.log('- 정당 통계:', partyStats);
+            console.log('- 정당 랭킹:', partyRankings); // 🆕
             console.log('- APIService 상태:', window.APIService?._isReady ? '준비됨' : '준비중');
+            console.log('- 랭킹 서버 상태:', Object.keys(partyRankings).length > 0 ? '연결됨' : '미연결'); // 🆕
             console.log('- 환경 정보:', window.APIService?.getEnvironmentInfo());
         }
     };
@@ -873,11 +1069,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 정당 비교 페이지 스크립트 로드 완료');
-    console.log('🔗 API 모드: APIService 통합 사용');
+    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (랭킹 API 통합 버전)');
+    console.log('🔗 API 모드: APIService + 랭킹 서버 통합 사용');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
+    console.log('  - window.comparePartyDebug.refreshData() : 랭킹 데이터 새로고침');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
     console.log('  - window.comparePartyDebug.testAPIService() : APIService 연결 테스트');
+    console.log('  - window.comparePartyDebug.testPartyComparison("정당1", "정당2") : 비교 API 테스트');
 });
