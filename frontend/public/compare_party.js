@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 비교 페이지 로드 시작 (랭킹 API 통합 + 가중치 감지 버전)');
+    console.log('🚀 정당 비교 페이지 로드 시작 (Django API 연동 + 가중치 감지 버전)');
 
-    // 선택된 정당을 저장할 변수
+    // === 🔧 상태 관리 변수들 ===
     let selectedParties = [];
     let partyStats = {}; // 정당별 통계 데이터
-    let partyRankings = {}; // 🆕 정당별 랭킹 데이터
-    let partyWeightedPerformance = {}; // 🆕 정당별 가중치 성과 데이터 (위원장/간사)
+    let partyRankings = {}; // 정당별 랭킹 데이터
+    let partyPerformanceData = {}; // 정당별 성과 데이터
     let isLoading = false;
 
-    // 정당별 브랜드 색상
+    // === 🎨 정당별 브랜드 색상 ===
     const partyData = {
         "더불어민주당": {
             winColor: "#152484",
@@ -52,11 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
+    // === 🔧 유틸리티 함수들 ===
+
     // APIService 준비 확인
     function waitForAPIService() {
         return new Promise((resolve) => {
             function checkAPIService() {
-                if (window.APIService && window.APIService._isReady) {
+                if (window.APIService && window.APIService._isReady && !window.APIService._hasError) {
                     console.log('✅ APIService 준비 완료');
                     resolve(true);
                 } else {
@@ -144,492 +146,279 @@ document.addEventListener('DOMContentLoaded', function() {
         return nameMapping[partyName] || partyName;
     }
 
-    // 🆕 랭킹 서버에서 정당 순위 데이터 가져오기
-    async function fetchPartyRankings() {
+    // === 📊 새로운 API 데이터 로드 함수들 ===
+
+    // 정당 성과 데이터 가져오기
+    async function fetchPartyPerformanceData() {
         try {
-            console.log('🏆 정당 순위 API 호출...');
+            console.log('📊 정당 성과 데이터 조회...');
             
-            if (!window.APIService || !window.APIService.getPartyScoreRanking) {
-                throw new Error('정당 순위 API 서비스가 준비되지 않았습니다.');
+            const rawData = await window.APIService.getPartyPerformance();
+            
+            if (!rawData || !Array.isArray(rawData)) {
+                throw new Error('정당 성과 API 응답이 올바르지 않습니다.');
             }
             
-            const rankingResponse = await window.APIService.getPartyScoreRanking();
-            
-            if (!rankingResponse || !rankingResponse.data || !Array.isArray(rankingResponse.data)) {
-                throw new Error('정당 순위 API 응답이 올바르지 않습니다.');
-            }
-            
-            // API 데이터 매핑
-            const rankings = {};
-            rankingResponse.data.forEach(ranking => {
-                const partyName = normalizePartyName(ranking.POLY_NM);
-                rankings[partyName] = {
-                    name: partyName,
-                    rank: parseInt(ranking.평균실적_순위) || 999,
-                    source: 'ranking_server'
-                };
+            // 정당별 성과 데이터 매핑
+            const performanceData = {};
+            rawData.forEach(party => {
+                const partyName = normalizePartyName(party.party);
+                if (partyName && partyName !== '정보없음') {
+                    performanceData[partyName] = {
+                        // === 기본 정보 ===
+                        party: partyName,
+                        
+                        // === 출석 관련 (데이터 매핑에 따름) ===
+                        avg_attendance: parseFloat(party.avg_attendance || 0),
+                        max_attendance: parseFloat(party.max_attendance || 0),
+                        min_attendance: parseFloat(party.min_attendance || 0),
+                        std_attendance: parseFloat(party.std_attendance || 0),
+                        
+                        // === 무효표 및 기권 관련 ===
+                        avg_invalid_vote_ratio: parseFloat(party.avg_invalid_vote_ratio || 0),
+                        max_invalid_vote_ratio: parseFloat(party.max_invalid_vote_ratio || 0),
+                        min_invalid_vote_ratio: parseFloat(party.min_invalid_vote_ratio || 0),
+                        std_invalid_vote_ratio: parseFloat(party.std_invalid_vote_ratio || 0),
+                        
+                        // === 표결 일치 관련 ===
+                        avg_vote_match_ratio: parseFloat(party.avg_vote_match_ratio || 0),
+                        max_vote_match_ratio: parseFloat(party.max_vote_match_ratio || 0),
+                        min_vote_match_ratio: parseFloat(party.min_vote_match_ratio || 0),
+                        std_vote_match_ratio: parseFloat(party.std_vote_match_ratio || 0),
+                        
+                        // === 표결 불일치 관련 ===
+                        avg_vote_mismatch_ratio: parseFloat(party.avg_vote_mismatch_ratio || 0),
+                        max_vote_mismatch_ratio: parseFloat(party.max_vote_mismatch_ratio || 0),
+                        min_vote_mismatch_ratio: parseFloat(party.min_vote_mismatch_ratio || 0),
+                        std_vote_mismatch_ratio: parseFloat(party.std_vote_mismatch_ratio || 0),
+                        
+                        // === 본회의 및 청원 관련 ===
+                        bill_pass_sum: parseInt(party.bill_pass_sum || 0),
+                        petition_sum: parseInt(party.petition_sum || 0),
+                        petition_pass_sum: parseInt(party.petition_pass_sum || 0),
+                        
+                        // === 위원회 관련 ===
+                        committee_leader_count: parseInt(party.committee_leader_count || 0),
+                        committee_secretary_count: parseInt(party.committee_secretary_count || 0),
+                        
+                        // === 총점 ===
+                        avg_total_score: parseFloat(party.avg_total_score || 0),
+                        
+                        // === 원본 데이터 ===
+                        _raw: party
+                    };
+                }
             });
             
-            partyRankings = rankings;
-            
-            console.log(`✅ 정당 순위 데이터 로드 완료: ${Object.keys(rankings).length}개`);
-            return rankings;
+            partyPerformanceData = performanceData;
+            console.log(`✅ 정당 성과 데이터 로드 완료: ${Object.keys(performanceData).length}개`);
+            return performanceData;
             
         } catch (error) {
-            console.error('❌ 정당 순위 데이터 로드 실패:', error);
+            console.error('❌ 정당 성과 데이터 로드 실패:', error);
+            partyPerformanceData = {};
+            throw error;
+        }
+    }
+
+    // 정당 랭킹 데이터 가져오기
+    async function fetchPartyRankingData() {
+        try {
+            console.log('🏆 정당 랭킹 데이터 조회...');
+            
+            const rawData = await window.APIService.getPartyScoreRanking();
+            
+            if (!rawData || !Array.isArray(rawData)) {
+                throw new Error('정당 랭킹 API 응답이 올바르지 않습니다.');
+            }
+            
+            // 정당별 랭킹 데이터 매핑
+            const rankingData = {};
+            rawData.forEach(ranking => {
+                const partyName = normalizePartyName(ranking.POLY_NM);
+                if (partyName && partyName !== '정보없음') {
+                    rankingData[partyName] = {
+                        party: partyName,
+                        rank: parseInt(ranking.평균실적_순위 || 999),
+                        _raw: ranking
+                    };
+                }
+            });
+            
+            partyRankings = rankingData;
+            console.log(`✅ 정당 랭킹 데이터 로드 완료: ${Object.keys(rankingData).length}개`);
+            return rankingData;
+            
+        } catch (error) {
+            console.error('❌ 정당 랭킹 데이터 로드 실패:', error);
             partyRankings = {};
             throw error;
         }
     }
 
-    // 🆕 메인 서버에서 정당 가중치 성과 데이터 가져오기 (위원장/간사)
-    async function fetchPartyWeightedPerformance() {
+    // 두 정당 직접 비교 API 호출
+    async function fetchPartyDirectComparison(party1, party2) {
         try {
-            console.log('🏛️ 정당 가중치 성과 API 호출...');
+            console.log(`🆚 정당 직접 비교 API 호출: ${party1} vs ${party2}`);
             
-            if (!window.APIService || !window.APIService.getPartyWeightedPerformanceData) {
-                throw new Error('정당 가중치 성과 API 서비스가 준비되지 않았습니다.');
+            const comparisonData = await window.APIService.compareParties(party1, party2);
+            
+            if (comparisonData) {
+                console.log(`✅ 정당 직접 비교 데이터 로드 완료: ${party1} vs ${party2}`);
+                return comparisonData;
             }
             
-            const performanceResponse = await window.APIService.getPartyWeightedPerformanceData();
-            
-            if (!performanceResponse || !Array.isArray(performanceResponse)) {
-                throw new Error('정당 가중치 성과 API 응답이 올바르지 않습니다.');
-            }
-            
-            // API 데이터 매핑
-            const performances = {};
-            performanceResponse.forEach(performance => {
-                const partyName = normalizePartyName(performance.party || performance.party_name || performance.정당명);
-                performances[partyName] = {
-                    name: partyName,
-                    committee_leader_count: parseInt(performance.committee_leader_count) || 0,
-                    committee_secretary_count: parseInt(performance.committee_secretary_count) || 0,
-                    source: 'main_server'
-                };
-            });
-            
-            console.log(`✅ 정당 가중치 성과 데이터 로드 완료: ${Object.keys(performances).length}개`);
-            return performances;
+            return null;
             
         } catch (error) {
-            console.error('❌ 정당 가중치 성과 데이터 로드 실패:', error);
-            return {};
-        }
-    }
-
-    // 🆕 랭킹 서버에서 두 정당 비교 데이터 가져오기
-    async function fetchPartyComparison(party1, party2) {
-        try {
-            console.log(`🆚 정당 비교 API 호출: ${party1} vs ${party2}`);
-            
-            if (!window.APIService || !window.APIService.comparePartiesAdvanced) {
-                throw new Error('정당 비교 API 서비스가 준비되지 않았습니다.');
-            }
-            
-            const comparisonResponse = await window.APIService.comparePartiesAdvanced(party1, party2);
-            
-            if (!comparisonResponse || !comparisonResponse.data) {
-                console.warn('정당 비교 API 응답이 없음, 기본 비교 로직 사용');
-                return null;
-            }
-            
-            console.log(`✅ 정당 비교 데이터 로드 완료: ${party1} vs ${party2}`);
-            return comparisonResponse.data;
-            
-        } catch (error) {
-            console.warn(`⚠️ 정당 비교 API 실패, 기본 비교 로직 사용:`, error);
+            console.warn(`⚠️ 정당 직접 비교 API 실패, 기본 비교 로직 사용:`, error);
             return null;
         }
     }
 
-    // API에서 정당 목록 가져오기 (APIService 사용)
+    // === 📋 정당 목록 로드 ===
     async function loadPartyList() {
         try {
             console.log('📋 정당 목록 로드 중...');
             
-            // APIService를 통해 의원 정보 가져오기
-            const members = await window.APIService.getAllMembers();
-            if (!Array.isArray(members)) {
-                throw new Error('국회의원 데이터 형식이 올바르지 않습니다');
+            // APIService의 getValidParties 사용
+            if (window.APIService && window.APIService.getValidParties) {
+                const parties = window.APIService.getValidParties();
+                console.log('✅ 정당 목록 로드 완료 (APIService):', parties);
+                return parties;
             }
-
-            // 정당 목록 추출 (중복 제거)
-            const parties = [...new Set(members.map(member => 
-                normalizePartyName(member.party || member.party_name || member.political_party)
-            ))].filter(party => party && party !== '정보없음').sort();
-
-            console.log('✅ 정당 목록 로드 완료:', parties);
-            return parties;
+            
+            // 폴백: 성과 데이터에서 정당 목록 추출
+            const performanceData = await fetchPartyPerformanceData();
+            const parties = Object.keys(performanceData).sort();
+            
+            if (parties.length > 0) {
+                console.log('✅ 정당 목록 로드 완료 (성과 데이터):', parties);
+                return parties;
+            }
+            
+            // 최종 폴백: 기본 정당 목록
+            const defaultParties = ["더불어민주당", "국민의힘", "조국혁신당", "개혁신당", "진보당", "기본소득당", "사회민주당", "무소속"];
+            console.log('✅ 정당 목록 로드 완료 (기본값):', defaultParties);
+            return defaultParties;
 
         } catch (error) {
             console.error('❌ 정당 목록 로드 실패:', error);
             showNotification('정당 목록 로드 실패', 'error');
-            // 폴백으로 기본 정당 목록 반환
             return ["더불어민주당", "국민의힘", "조국혁신당", "개혁신당", "진보당", "기본소득당", "사회민주당", "무소속"];
         }
     }
 
-    // 정당별 통계 계산 (APIService + 랭킹 서버 + 메인 서버 활용)
+    // === 📊 정당 통계 계산 ===
     async function calculatePartyStats(partyName) {
         try {
             console.log(`📊 ${partyName} 통계 계산 중...`);
 
-            // 1차: 정당 통계 API 직접 호출 시도
-            try {
-                const partyStatsData = await window.APIService.getPartyWeightedPerformanceData();
-                const partyData = partyStatsData.find(party => 
-                    normalizePartyName(party.party || party.party_name) === partyName
-                );
-                
-                if (partyData) {
-                    // 🆕 랭킹 데이터와 가중치 성과 데이터 결합
-                    const ranking = partyRankings[partyName];
-                    const weightedPerformance = partyWeightedPerformance[partyName];
-                    const stats = mapAPIDataToStats(partyData, ranking, weightedPerformance);
-                    console.log(`✅ ${partyName} 통계 계산 완료 (직접 API + 랭킹 + 성과):`, stats);
-                    return stats;
-                }
-            } catch (apiError) {
-                console.log(`⚠️ 정당 통계 API 실패, 대체 방법 사용:`, apiError.message);
-            }
-
-            // 2차: 기존 API들을 조합해서 계산
-            const [members, partyRanking, memberPerformance] = await Promise.all([
-                window.APIService.getAllMembers(),
-                window.APIService.getPartyWeightedPerformanceData(),
-                window.APIService.getPerformanceData()
-            ]);
-
-            // 해당 정당 소속 의원들 필터링
-            const partyMembers = members.filter(member => 
-                normalizePartyName(member.party || member.party_name || member.political_party) === partyName
-            );
-
-            if (partyMembers.length === 0) {
-                throw new Error(`${partyName} 소속 의원을 찾을 수 없습니다`);
-            }
-
-            // 정당 랭킹에서 해당 정당 정보 찾기
-            const partyRankData = partyRanking.find(party => 
-                normalizePartyName(party.party || party.party_name) === partyName
-            );
-
-            // 🆕 랭킹 데이터와 가중치 성과 데이터 결합
-            const ranking = partyRankings[partyName];
-            const weightedPerformance = partyWeightedPerformance[partyName];
-
-            // 통계 계산
-            const stats = calculateDetailedStats(partyMembers, partyRankData, memberPerformance, ranking, weightedPerformance);
+            // 성과 데이터에서 해당 정당 찾기
+            const performanceData = partyPerformanceData[partyName];
+            const rankingData = partyRankings[partyName];
             
-            console.log(`✅ ${partyName} 통계 계산 완료 (조합 방식 + 랭킹 + 성과):`, stats);
+            if (!performanceData) {
+                console.warn(`⚠️ ${partyName} 성과 데이터 없음, 기본값 사용`);
+                return generateDefaultStats(partyName, rankingData);
+            }
+
+            // API 데이터를 UI에 맞는 형식으로 변환
+            const stats = {
+                // === 기본 정보 ===
+                partyName: partyName,
+                
+                // === 순위 정보 ===
+                rank: rankingData ? rankingData.rank : 999,
+                rankSource: rankingData ? 'api' : 'estimated',
+                
+                // === 출석 관련 ===
+                attendanceRate: performanceData.avg_attendance,
+                attendanceStats: {
+                    avg: performanceData.avg_attendance,
+                    max: performanceData.max_attendance,
+                    min: performanceData.min_attendance,
+                    std: performanceData.std_attendance
+                },
+                
+                // === 본회의 가결 관련 ===
+                billPassSum: performanceData.bill_pass_sum,
+                billPassRate: calculateBillPassRate(performanceData.bill_pass_sum),
+                
+                // === 청원 관련 ===
+                petitionProposed: performanceData.petition_sum,
+                petitionPassed: performanceData.petition_pass_sum,
+                petitionSum: performanceData.petition_sum,
+                petitionPassSum: performanceData.petition_pass_sum,
+                
+                // === 위원회 관련 ===
+                chairmanCount: performanceData.committee_leader_count,
+                secretaryCount: performanceData.committee_secretary_count,
+                chairmanSource: 'api',
+                secretarySource: 'api',
+                
+                // === 무효표 및 기권 관련 ===
+                invalidVoteRatio: performanceData.avg_invalid_vote_ratio * 100, // 퍼센트로 변환
+                invalidVotes: Math.floor(performanceData.avg_invalid_vote_ratio * 1000), // 건수로 추정
+                abstentions: Math.floor(performanceData.avg_invalid_vote_ratio * 500), // 기권 건수 추정
+                invalidVoteStats: {
+                    avg: performanceData.avg_invalid_vote_ratio,
+                    max: performanceData.max_invalid_vote_ratio,
+                    min: performanceData.min_invalid_vote_ratio,
+                    std: performanceData.std_invalid_vote_ratio
+                },
+                
+                // === 투표 일치 관련 ===
+                voteMatchRatio: performanceData.avg_vote_match_ratio * 100, // 퍼센트로 변환
+                voteConsistency: Math.floor(performanceData.avg_vote_match_ratio * 200), // 건수로 추정
+                voteMatchStats: {
+                    avg: performanceData.avg_vote_match_ratio * 100,
+                    max: performanceData.max_vote_match_ratio * 100,
+                    min: performanceData.min_vote_match_ratio * 100,
+                    std: performanceData.std_vote_match_ratio * 100
+                },
+                
+                // === 투표 불일치 관련 ===
+                voteMismatchRatio: performanceData.avg_vote_mismatch_ratio * 100, // 퍼센트로 변환
+                voteInconsistency: Math.floor(performanceData.avg_vote_mismatch_ratio * 200), // 건수로 추정
+                voteMismatchStats: {
+                    avg: performanceData.avg_vote_mismatch_ratio * 100,
+                    max: performanceData.max_vote_mismatch_ratio * 100,
+                    min: performanceData.min_vote_mismatch_ratio * 100,
+                    std: performanceData.std_vote_mismatch_ratio * 100
+                },
+                
+                // === 총점 ===
+                totalScore: performanceData.avg_total_score,
+                
+                // === 원본 데이터 ===
+                _performanceData: performanceData,
+                _rankingData: rankingData
+            };
+            
+            console.log(`✅ ${partyName} 통계 계산 완료:`, stats);
             return stats;
 
         } catch (error) {
             console.error(`❌ ${partyName} 통계 계산 실패:`, error);
             showNotification(`${partyName} 정보 로드 실패`, 'error');
-            
-            // 🆕 랭킹 데이터와 가중치 성과 데이터만이라도 사용
-            const ranking = partyRankings[partyName];
-            const weightedPerformance = partyWeightedPerformance[partyName];
-            return generateSampleStats(ranking, weightedPerformance);
+            return generateDefaultStats(partyName);
         }
     }
 
-    // 🔄 API 데이터를 내부 통계 형식으로 매핑 (랭킹 + 가중치 성과 데이터 추가)
-    function mapAPIDataToStats(partyData, ranking = null, weightedPerformance = null) {
-        try {
-            // 가결률 계산 (가결 수를 기준으로 임의의 제안 수 대비 비율 계산)
-            const estimatedBillCount = Math.max(partyData.bill_pass_sum * 2, 1);
-            const billPassRate = (partyData.bill_pass_sum / estimatedBillCount) * 100;
-
-            // 🆕 실제 위원장/간사 데이터 사용 (우선순위: 가중치 성과 API > 기본 API > 폴백)
-            const chairmanCount = weightedPerformance?.committee_leader_count 
-                || partyData.committee_leader_count 
-                || 2;
-                
-            const secretaryCount = weightedPerformance?.committee_secretary_count 
-                || partyData.committee_secretary_count 
-                || 5;
-
-            return {
-                memberCount: partyData.member_count || 50,
-                attendanceRate: partyData.avg_attendance || 85,
-                billPassRate: Math.min(billPassRate, 100),
-                petitionProposed: partyData.petition_sum || 0,
-                petitionPassed: partyData.petition_pass_sum || 0,
-                chairmanCount: chairmanCount,
-                secretaryCount: secretaryCount,
-                invalidVotes: Math.floor((partyData.avg_invalid_vote_ratio || 0.02) * 1000),
-                abstentions: Math.floor((partyData.avg_invalid_vote_ratio || 0.02) * 500),
-                voteConsistency: Math.floor((partyData.avg_vote_match_ratio || 0.8) * 200),
-                voteInconsistency: Math.floor((partyData.avg_vote_mismatch_ratio || 0.15) * 200),
-                // 🆕 랭킹 정보 추가
-                rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
-                rankSource: ranking ? ranking.source : 'estimated',
-                // 🆕 가중치 성과 정보 추가
-                chairmanSource: weightedPerformance ? 'main_server' : 'estimated',
-                secretarySource: weightedPerformance ? 'main_server' : 'estimated',
-                // 상세 정보 (툴팁용)
-                attendanceStats: {
-                    avg: partyData.avg_attendance || 85,
-                    max: partyData.max_attendance || 95,
-                    min: partyData.min_attendance || 75,
-                    std: partyData.std_attendance || 5
-                },
-                invalidVoteStats: {
-                    avg: partyData.avg_invalid_vote_ratio || 0.025,
-                    max: partyData.max_invalid_vote_ratio || 0.050,
-                    min: partyData.min_invalid_vote_ratio || 0.010,
-                    std: partyData.std_invalid_vote_ratio || 0.015
-                },
-                voteMatchStats: {
-                    avg: (partyData.avg_vote_match_ratio || 0.8) * 100,
-                    max: (partyData.max_vote_match_ratio || 0.95) * 100,
-                    min: (partyData.min_vote_match_ratio || 0.7) * 100,
-                    std: (partyData.std_vote_match_ratio || 0.05) * 100
-                },
-                voteMismatchStats: {
-                    avg: (partyData.avg_vote_mismatch_ratio || 0.15) * 100,
-                    max: (partyData.max_vote_mismatch_ratio || 0.25) * 100,
-                    min: (partyData.min_vote_mismatch_ratio || 0.05) * 100,
-                    std: (partyData.std_vote_mismatch_ratio || 0.05) * 100
-                },
-                billPassSum: partyData.bill_pass_sum || 0,
-                petitionSum: partyData.petition_sum || 0,
-                petitionPassSum: partyData.petition_pass_sum || 0
-            };
-        } catch (error) {
-            console.error('API 데이터 매핑 실패:', error);
-            return generateSampleStats(ranking, weightedPerformance);
-        }
+    // 본회의 가결률 계산 (가결 수를 기반으로 추정)
+    function calculateBillPassRate(billPassSum) {
+        if (!billPassSum || billPassSum === 0) return 0;
+        
+        // 가결 수를 기반으로 전체 제안 수 추정 (가결률 40-70% 가정)
+        const estimatedTotalBills = Math.max(billPassSum * 2, billPassSum + 50);
+        const passRate = (billPassSum / estimatedTotalBills) * 100;
+        
+        return Math.min(passRate, 100); // 최대 100%로 제한
     }
 
-    // 🔄 상세 통계 계산 (랭킹 + 가중치 성과 데이터 추가)
-    function calculateDetailedStats(partyMembers, partyRankData, memberPerformance, ranking = null, weightedPerformance = null) {
-        try {
-            const memberCount = partyMembers.length;
-            
-            // 파티 랭킹 데이터가 있으면 사용, 없으면 계산
-            let attendanceRate, billPassRate, petitionStats, chairmanCount, secretaryCount;
-            
-            if (partyRankData) {
-                // API 데이터 활용
-                attendanceRate = partyRankData.avg_attendance || calculateAttendanceRate(partyMembers, memberPerformance);
-                billPassRate = (partyRankData.bill_pass_sum / Math.max(partyRankData.bill_pass_sum * 2, 1)) * 100;
-                petitionStats = {
-                    proposed: partyRankData.petition_sum || 0,
-                    passed: partyRankData.petition_pass_sum || 0
-                };
-                // 🆕 가중치 성과 데이터 우선 사용
-                chairmanCount = weightedPerformance?.committee_leader_count 
-                    || partyRankData.committee_leader_count 
-                    || calculateChairmanCount(partyMembers);
-                secretaryCount = weightedPerformance?.committee_secretary_count 
-                    || partyRankData.committee_secretary_count 
-                    || calculateSecretaryCount(partyMembers);
-            } else {
-                // 계산으로 통계 생성
-                attendanceRate = calculateAttendanceRate(partyMembers, memberPerformance);
-                billPassRate = calculateBillPassRate(partyMembers);
-                petitionStats = calculatePetitionStats(partyMembers);
-                // 🆕 가중치 성과 데이터 우선 사용
-                chairmanCount = weightedPerformance?.committee_leader_count 
-                    || calculateChairmanCount(partyMembers);
-                secretaryCount = weightedPerformance?.committee_secretary_count 
-                    || calculateSecretaryCount(partyMembers);
-            }
-
-            const invalidVoteStats = calculateInvalidVoteStats(partyMembers);
-            const voteConsistency = calculateVoteConsistency(partyMembers);
-
-            return {
-                memberCount: memberCount,
-                attendanceRate: attendanceRate,
-                billPassRate: billPassRate,
-                petitionProposed: petitionStats.proposed,
-                petitionPassed: petitionStats.passed,
-                chairmanCount: chairmanCount,
-                secretaryCount: secretaryCount,
-                invalidVotes: invalidVoteStats.invalid,
-                abstentions: invalidVoteStats.abstentions,
-                voteConsistency: voteConsistency.consistent,
-                voteInconsistency: voteConsistency.inconsistent,
-                // 🆕 랭킹 정보 추가
-                rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
-                rankSource: ranking ? ranking.source : 'estimated',
-                // 🆕 가중치 성과 정보 추가
-                chairmanSource: weightedPerformance ? 'main_server' : 'estimated',
-                secretarySource: weightedPerformance ? 'main_server' : 'estimated',
-                // 상세 정보 (툴팁용)
-                attendanceStats: {
-                    avg: attendanceRate,
-                    max: Math.min(attendanceRate + 5, 100),
-                    min: Math.max(attendanceRate - 5, 0),
-                    std: 2.5
-                },
-                invalidVoteStats: {
-                    avg: (invalidVoteStats.invalid + invalidVoteStats.abstentions) / memberCount / 100,
-                    max: 0.050,
-                    min: 0.010,
-                    std: 0.015
-                },
-                voteMatchStats: {
-                    avg: (voteConsistency.consistent / (voteConsistency.consistent + voteConsistency.inconsistent)) * 100,
-                    max: 95.0,
-                    min: 75.0,
-                    std: 5.0
-                },
-                voteMismatchStats: {
-                    avg: (voteConsistency.inconsistent / (voteConsistency.consistent + voteConsistency.inconsistent)) * 100,
-                    max: 25.0,
-                    min: 5.0,
-                    std: 5.0
-                },
-                billPassSum: partyRankData?.bill_pass_sum || Math.floor(billPassRate * 2),
-                petitionSum: petitionStats.proposed,
-                petitionPassSum: petitionStats.passed
-            };
-
-        } catch (error) {
-            console.error('상세 통계 계산 실패:', error);
-            return generateSampleStats(ranking, weightedPerformance);
-        }
-    }
-
-    // 출석률 계산
-    function calculateAttendanceRate(partyMembers, memberPerformance) {
-        try {
-            if (!memberPerformance || !Array.isArray(memberPerformance)) {
-                return Math.random() * 20 + 75; // 75-95%
-            }
-
-            const memberNames = partyMembers.map(m => m.name || m.member_name);
-            const partyPerformance = memberPerformance.filter(p => 
-                memberNames.includes(p.name || p.member_name)
-            );
-
-            if (partyPerformance.length === 0) {
-                return Math.random() * 20 + 75;
-            }
-
-            const avgAttendance = partyPerformance.reduce((sum, p) => {
-                const attendance = p.attendance_rate || p.attendance || 85;
-                return sum + (typeof attendance === 'number' ? attendance : 85);
-            }, 0) / partyPerformance.length;
-
-            return Math.max(0, Math.min(100, avgAttendance));
-        } catch (error) {
-            return Math.random() * 20 + 75;
-        }
-    }
-
-    // 본회의 가결률 계산
-    function calculateBillPassRate(partyMembers) {
-        try {
-            // 정당별 추정 가결률 (실제 법안 데이터 없이 추정)
-            const partyEstimates = {
-                "더불어민주당": 65,
-                "국민의힘": 58,
-                "조국혁신당": 45,
-                "개혁신당": 42,
-                "진보당": 38,
-                "기본소득당": 35,
-                "사회민주당": 40,
-                "무소속": 50
-            };
-
-            const partyName = partyMembers[0]?.party || partyMembers[0]?.party_name || "무소속";
-            const normalizedName = normalizePartyName(partyName);
-            
-            return partyEstimates[normalizedName] || (Math.random() * 30 + 40);
-        } catch (error) {
-            return Math.random() * 30 + 40;
-        }
-    }
-
-    // 청원 통계 계산
-    function calculatePetitionStats(partyMembers) {
-        try {
-            const memberCount = partyMembers.length;
-            const proposed = Math.floor(memberCount * (Math.random() * 3 + 2)); // 2-5건/인
-            const passed = Math.floor(proposed * (Math.random() * 0.4 + 0.2)); // 20-60%
-
-            return { proposed, passed };
-        } catch (error) {
-            return { 
-                proposed: Math.floor(Math.random() * 100) + 50,
-                passed: Math.floor(Math.random() * 50) + 20
-            };
-        }
-    }
-
-    // 위원장 수 계산
-    function calculateChairmanCount(partyMembers) {
-        try {
-            const chairmen = partyMembers.filter(member => {
-                const position = member.position || member.committee_position || member.role || '';
-                return position.includes('위원장') || position.includes('의장');
-            });
-
-            return chairmen.length || Math.floor(partyMembers.length * 0.1) + 1;
-        } catch (error) {
-            return Math.floor(Math.random() * 8) + 2;
-        }
-    }
-
-    // 간사 수 계산
-    function calculateSecretaryCount(partyMembers) {
-        try {
-            const secretaries = partyMembers.filter(member => {
-                const position = member.position || member.committee_position || member.role || '';
-                return position.includes('간사');
-            });
-
-            return secretaries.length || Math.floor(partyMembers.length * 0.2) + 2;
-        } catch (error) {
-            return Math.floor(Math.random() * 15) + 5;
-        }
-    }
-
-    // 무효표/기권 계산
-    function calculateInvalidVoteStats(partyMembers) {
-        try {
-            const memberCount = partyMembers.length;
-            const estimatedVotes = 300; // 연간 예상 투표 수
-            
-            const invalid = Math.floor(memberCount * estimatedVotes * (Math.random() * 0.02 + 0.01)); // 1-3%
-            const abstentions = Math.floor(memberCount * estimatedVotes * (Math.random() * 0.05 + 0.02)); // 2-7%
-
-            return { invalid, abstentions };
-        } catch (error) {
-            return { 
-                invalid: Math.floor(Math.random() * 20) + 5,
-                abstentions: Math.floor(Math.random() * 30) + 10
-            };
-        }
-    }
-
-    // 투표 일치도 계산
-    function calculateVoteConsistency(partyMembers) {
-        try {
-            const totalVotes = 300; // 연간 예상 투표 수
-            const consistencyRate = Math.random() * 0.3 + 0.6; // 60-90%
-            
-            const consistent = Math.floor(totalVotes * consistencyRate);
-            const inconsistent = totalVotes - consistent;
-
-            return { consistent, inconsistent };
-        } catch (error) {
-            return { 
-                consistent: Math.floor(Math.random() * 50) + 150,
-                inconsistent: Math.floor(Math.random() * 30) + 20
-            };
-        }
-    }
-
-    // 🔄 샘플 통계 생성 (API 실패 시, 랭킹 + 가중치 성과 데이터 포함)
-    function generateSampleStats(ranking = null, weightedPerformance = null) {
+    // 기본 통계 생성 (API 데이터 없을 때)
+    function generateDefaultStats(partyName, rankingData = null) {
         const attendanceRate = Math.random() * 20 + 75; // 75-95%
         const billPassRate = Math.random() * 30 + 40; // 40-70%
         const petitionProposed = Math.floor(Math.random() * 100) + 50;
@@ -637,31 +426,30 @@ document.addEventListener('DOMContentLoaded', function() {
         const voteConsistency = Math.floor(Math.random() * 50) + 150;
         const voteInconsistency = Math.floor(Math.random() * 30) + 20;
         
-        // 🆕 실제 위원장/간사 데이터 우선 사용
-        const chairmanCount = weightedPerformance?.committee_leader_count 
-            || Math.floor(Math.random() * 8) + 2;
-        const secretaryCount = weightedPerformance?.committee_secretary_count 
-            || Math.floor(Math.random() * 15) + 5;
-        
         return {
-            memberCount: Math.floor(Math.random() * 50) + 20,
+            partyName: partyName,
+            rank: rankingData ? rankingData.rank : Math.floor(Math.random() * 8) + 1,
+            rankSource: rankingData ? 'api' : 'estimated',
             attendanceRate: attendanceRate,
             billPassRate: billPassRate,
+            billPassSum: Math.floor(billPassRate * 2),
             petitionProposed: petitionProposed,
             petitionPassed: petitionPassed,
-            chairmanCount: chairmanCount,
-            secretaryCount: secretaryCount,
+            petitionSum: petitionProposed,
+            petitionPassSum: petitionPassed,
+            chairmanCount: Math.floor(Math.random() * 8) + 2,
+            secretaryCount: Math.floor(Math.random() * 15) + 5,
+            chairmanSource: 'estimated',
+            secretarySource: 'estimated',
+            invalidVoteRatio: Math.random() * 3 + 1, // 1-4%
             invalidVotes: Math.floor(Math.random() * 20) + 5,
             abstentions: Math.floor(Math.random() * 30) + 10,
+            voteMatchRatio: Math.random() * 20 + 70, // 70-90%
             voteConsistency: voteConsistency,
+            voteMismatchRatio: Math.random() * 15 + 10, // 10-25%
             voteInconsistency: voteInconsistency,
-            // 🆕 랭킹 정보 추가
-            rank: ranking ? ranking.rank : Math.floor(Math.random() * 8) + 1,
-            rankSource: ranking ? ranking.source : 'estimated',
-            // 🆕 가중치 성과 정보 추가
-            chairmanSource: weightedPerformance ? 'main_server' : 'estimated',
-            secretarySource: weightedPerformance ? 'main_server' : 'estimated',
-            // 상세 정보 (툴팁용)
+            totalScore: Math.random() * 30 + 60, // 60-90%
+            // 기본 통계 구조
             attendanceStats: {
                 avg: attendanceRate,
                 max: attendanceRate + 5,
@@ -675,76 +463,87 @@ document.addEventListener('DOMContentLoaded', function() {
                 std: 0.015
             },
             voteMatchStats: {
-                avg: (voteConsistency / (voteConsistency + voteInconsistency)) * 100,
+                avg: 85.0,
                 max: 95.0,
                 min: 75.0,
                 std: 5.0
             },
             voteMismatchStats: {
-                avg: (voteInconsistency / (voteConsistency + voteInconsistency)) * 100,
+                avg: 15.0,
                 max: 25.0,
                 min: 5.0,
                 std: 5.0
-            },
-            billPassSum: Math.floor(billPassRate * 2),
-            petitionSum: petitionProposed,
-            petitionPassSum: petitionPassed
+            }
         };
     }
 
-    // 🔄 두 정당 비교 분석 (랭킹 서버 데이터 우선 사용)
+    // === ⚖️ 정당 비교 로직 ===
     async function compareParties(party1Stats, party2Stats, party1Name, party2Name) {
-        let comparisons = {};
-        
-        // 🆕 1차: 랭킹 서버의 비교 API 시도
+        // 1차: API 직접 비교 시도
         try {
-            const apiComparison = await fetchPartyComparison(party1Name, party2Name);
+            const apiComparison = await fetchPartyDirectComparison(party1Name, party2Name);
             if (apiComparison) {
-                console.log(`✅ 랭킹 서버 비교 데이터 사용: ${party1Name} vs ${party2Name}`);
-                // API 데이터를 우리 형식으로 변환
-                comparisons = mapComparisonAPIData(apiComparison);
-                return comparisons;
+                console.log(`✅ API 비교 데이터 사용: ${party1Name} vs ${party2Name}`);
+                return mapAPIComparisonData(apiComparison);
             }
         } catch (error) {
-            console.warn('랭킹 서버 비교 API 실패, 기본 비교 로직 사용');
+            console.warn('API 비교 실패, 로컬 비교 로직 사용');
         }
         
-        // 2차: 기본 비교 로직
+        // 2차: 로컬 비교 로직
+        const comparisons = {};
+        
+        // 출석률 비교
         comparisons.attendance = party1Stats.attendanceRate > party2Stats.attendanceRate ? [true, false] : [false, true];
-        comparisons.billPass = party1Stats.billPassRate > party2Stats.billPassRate ? [true, false] : [false, true];
+        
+        // 본회의 가결 비교
+        comparisons.billPass = party1Stats.billPassSum > party2Stats.billPassSum ? [true, false] : [false, true];
+        
+        // 청원 제안 비교
         comparisons.petitionProposed = party1Stats.petitionProposed > party2Stats.petitionProposed ? [true, false] : [false, true];
+        
+        // 청원 결과 비교
         comparisons.petitionPassed = party1Stats.petitionPassed > party2Stats.petitionPassed ? [true, false] : [false, true];
+        
+        // 위원장 수 비교
         comparisons.chairman = party1Stats.chairmanCount > party2Stats.chairmanCount ? [true, false] : [false, true];
+        
+        // 간사 수 비교
         comparisons.secretary = party1Stats.secretaryCount > party2Stats.secretaryCount ? [true, false] : [false, true];
         
-        // 무효표/기권은 적을수록 좋음
+        // 무효표/기권 비교 (적을수록 좋음)
         const party1InvalidTotal = party1Stats.invalidVotes + party1Stats.abstentions;
         const party2InvalidTotal = party2Stats.invalidVotes + party2Stats.abstentions;
         comparisons.invalidVotes = party1InvalidTotal < party2InvalidTotal ? [true, false] : [false, true];
         
+        // 투표 일치 비교
         comparisons.voteConsistency = party1Stats.voteConsistency > party2Stats.voteConsistency ? [true, false] : [false, true];
+        
+        // 투표 불일치 비교 (적을수록 좋음)
         comparisons.voteInconsistency = party1Stats.voteInconsistency < party2Stats.voteInconsistency ? [true, false] : [false, true];
 
         return comparisons;
     }
 
-    // 🆕 비교 API 데이터를 내부 형식으로 매핑
-    function mapComparisonAPIData(apiData) {
-        // API 응답 구조에 따른 기본 매핑
+    // API 비교 데이터를 내부 형식으로 매핑
+    function mapAPIComparisonData(apiData) {
+        // API 응답 구조에 따른 매핑 (실제 API 응답 구조에 맞춰 조정 필요)
         return {
-            attendance: [apiData.party1_wins?.attendance || false, apiData.party2_wins?.attendance || false],
-            billPass: [apiData.party1_wins?.bill_pass || false, apiData.party2_wins?.bill_pass || false],
-            petitionProposed: [apiData.party1_wins?.petition_proposed || false, apiData.party2_wins?.petition_proposed || false],
-            petitionPassed: [apiData.party1_wins?.petition_passed || false, apiData.party2_wins?.petition_passed || false],
-            chairman: [apiData.party1_wins?.chairman || false, apiData.party2_wins?.chairman || false],
-            secretary: [apiData.party1_wins?.secretary || false, apiData.party2_wins?.secretary || false],
-            invalidVotes: [apiData.party1_wins?.invalid_votes || false, apiData.party2_wins?.invalid_votes || false],
-            voteConsistency: [apiData.party1_wins?.vote_consistency || false, apiData.party2_wins?.vote_consistency || false],
-            voteInconsistency: [apiData.party1_wins?.vote_inconsistency || false, apiData.party2_wins?.vote_inconsistency || false]
+            attendance: [apiData.party1_better?.attendance || false, apiData.party2_better?.attendance || false],
+            billPass: [apiData.party1_better?.bill_pass || false, apiData.party2_better?.bill_pass || false],
+            petitionProposed: [apiData.party1_better?.petition_proposed || false, apiData.party2_better?.petition_proposed || false],
+            petitionPassed: [apiData.party1_better?.petition_passed || false, apiData.party2_better?.petition_passed || false],
+            chairman: [apiData.party1_better?.chairman || false, apiData.party2_better?.chairman || false],
+            secretary: [apiData.party1_better?.secretary || false, apiData.party2_better?.secretary || false],
+            invalidVotes: [apiData.party1_better?.invalid_votes || false, apiData.party2_better?.invalid_votes || false],
+            voteConsistency: [apiData.party1_better?.vote_consistency || false, apiData.party2_better?.vote_consistency || false],
+            voteInconsistency: [apiData.party1_better?.vote_inconsistency || false, apiData.party2_better?.vote_inconsistency || false]
         };
     }
 
-    // 🔄 정당 카드 업데이트 (HTML 순서와 정확히 매칭)
+    // === 🎨 UI 업데이트 함수들 ===
+
+    // 정당 카드 업데이트 (HTML 순서와 정확히 매칭)
     function updatePartyCard(cardIndex, partyName, stats, comparisons = null) {
         const cards = document.querySelectorAll('.comparison-card');
         if (cardIndex >= cards.length) return;
@@ -752,8 +551,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = cards[cardIndex];
         const statusItems = card.querySelectorAll('.status-item');
 
-        // 🆕 실시간 순위 표시
-        const rankDisplay = stats.rankSource === 'ranking_server' 
+        // 실시간 순위 표시
+        const rankDisplay = stats.rankSource === 'api' 
             ? `${stats.rank}위 <span style="font-size: 12px; color: #888;">(실시간)</span>`
             : `${stats.rank}위 <span style="font-size: 12px; color: #888;">(추정)</span>`;
 
@@ -774,31 +573,32 @@ document.addEventListener('DOMContentLoaded', function() {
                          표준편차: ${stats.attendanceStats?.std?.toFixed(1) || '2.5'}%`
             },
             { // 2. 본회의 가결
-                value: `${stats.billPassRate.toFixed(1)}%`,
+                value: `${stats.billPassSum}건`,
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `가결 수: ${stats.billPassSum || 0}건`
+                tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>
+                         가결률 추정: ${stats.billPassRate?.toFixed(1) || '0.0'}%`
             },
             { // 3. 청원 제안
                 value: `${stats.petitionProposed}건`,
                 winLose: comparisons ? (comparisons.petitionProposed[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `제안 건수: ${stats.petitionSum || stats.petitionProposed || 0}건`
+                tooltip: `청원 제안 수: ${stats.petitionSum}건`
             },
             { // 4. 청원 결과
                 value: `${stats.petitionPassed}건`,
                 winLose: comparisons ? (comparisons.petitionPassed[cardIndex] ? 'WIN' : 'LOSE') : null,
-                tooltip: `청원 결과수: ${stats.petitionPassSum || stats.petitionPassed || 0}건`
+                tooltip: `청원 결과 수: ${stats.petitionPassSum}건`
             },
             { // 5. 위원장
                 value: `${stats.chairmanCount}명`,
                 winLose: comparisons ? (comparisons.chairman[cardIndex] ? 'WIN' : 'LOSE') : null,
                 tooltip: `위원장 수: ${stats.chairmanCount}명<br>
-                         데이터 출처: ${stats.chairmanSource === 'main_server' ? '실시간 API' : '추정값'}`
+                         데이터 출처: ${stats.chairmanSource === 'api' ? '실시간 API' : '추정값'}`
             },
             { // 6. 간사
                 value: `${stats.secretaryCount}명`,
                 winLose: comparisons ? (comparisons.secretary[cardIndex] ? 'WIN' : 'LOSE') : null,
                 tooltip: `간사 수: ${stats.secretaryCount}명<br>
-                         데이터 출처: ${stats.secretarySource === 'main_server' ? '실시간 API' : '추정값'}`
+                         데이터 출처: ${stats.secretarySource === 'api' ? '실시간 API' : '추정값'}`
             },
             { // 7. 무효표 및 기권
                 value: `${(stats.invalidVotes + stats.abstentions)}건`,
@@ -869,7 +669,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 🆕 랭킹 데이터 표시 로그
         console.log(`✅ ${partyName} 카드 업데이트 완료 (순위: ${stats.rank}위, 출처: ${stats.rankSource})`);
     }
 
@@ -885,7 +684,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     dropdown.removeChild(dropdown.lastChild);
                 }
 
-                // API에서 가져온 정당 목록 추가
+                // 정당 목록 추가
                 parties.forEach(party => {
                     const option = document.createElement('option');
                     option.value = party;
@@ -930,6 +729,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         const stats = await calculatePartyStats(selectedParty);
                         partyStats[selectedParty] = stats;
                         
+                        // localStorage에 현재 비교 정보 저장 (weight_sync.js에서 사용)
+                        if (selectedParties[0] && selectedParties[1]) {
+                            localStorage.setItem('current_party_comparison', JSON.stringify({
+                                party1: selectedParties[0],
+                                party2: selectedParties[1]
+                            }));
+                        }
+                        
                         // 두 정당이 모두 선택되었으면 비교 수행
                         if (selectedParties[0] && selectedParties[1]) {
                             const comparisons = await compareParties(
@@ -955,6 +762,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // 선택 해제 시 카드 리셋
                     resetPartyCard(index);
+                    // localStorage에서 비교 정보 제거
+                    localStorage.removeItem('current_party_comparison');
                 }
             });
         });
@@ -989,14 +798,14 @@ document.addEventListener('DOMContentLoaded', function() {
         const resetValues = [
             '00위', // 현재 순위
             'WIN(00%)', // 출석
-            'LOSE(00%)', // 본회의 가결
-            'WIN(00%)', // 청원 제안
-            'LOSE(00%)', // 청원 결과
+            'LOSE(00건)', // 본회의 가결
+            'WIN(00건)', // 청원 제안
+            'LOSE(00건)', // 청원 결과
             '00명', // 위원장
             '00명', // 간사
-            'WIN(00%)', // 무효표 및 기권
-            'WIN(00%)', // 투표 결과 일치
-            'LOSE(00%)' // 투표 결과 불일치
+            'WIN(00건)', // 무효표 및 기권
+            'WIN(00건)', // 투표 결과 일치
+            'LOSE(00건)' // 투표 결과 불일치
         ];
 
         resetValues.forEach((resetValue, index) => {
@@ -1011,18 +820,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 🔄 데이터 새로고침 (가중치 변경 시 사용)
+    // === 🔄 데이터 새로고침 함수들 ===
+
+    // 전체 데이터 새로고침 (가중치 변경 시 사용)
     async function refreshPartyComparison() {
         try {
-            console.log('🔄 정당 비교 새로고침...');
+            console.log('🔄 정당 비교 데이터 새로고침...');
             showLoading(true);
             
-            // 랭킹 데이터와 가중치 성과 데이터 다시 로드
+            // 모든 데이터 다시 로드
             await Promise.all([
-                fetchPartyRankings(),
-                fetchPartyWeightedPerformance().then(data => {
-                    partyWeightedPerformance = data;
-                })
+                fetchPartyPerformanceData(),
+                fetchPartyRankingData()
             ]);
             
             // 선택된 정당들의 통계 다시 계산
@@ -1058,170 +867,41 @@ document.addEventListener('DOMContentLoaded', function() {
             showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
             
         } catch (error) {
-            console.error('❌ 새로고침 실패:', error);
+            console.error('❌ 데이터 새로고침 실패:', error);
             showNotification('데이터 새로고침에 실패했습니다', 'error');
         } finally {
             showLoading(false);
         }
     }
 
-    // 🔄 페이지 데이터 새로고침 (WeightSync 호환)
+    // WeightSync 호환 함수들
+    async function refreshPartyComparisonData() {
+        return await refreshPartyComparison();
+    }
+
     async function loadPartyComparisonData() {
         return await refreshPartyComparison();
     }
 
-    // === 🔄 가중치 변경 실시간 업데이트 시스템 ===
-    
-    // 가중치 변경 감지 및 자동 새로고침
-    function setupWeightChangeListener() {
-        try {
-            console.log('[CompareParty] 🔄 가중치 변경 감지 시스템 설정...');
-            
-            // 1. localStorage 이벤트 감지 (다른 페이지에서 가중치 변경 시)
-            window.addEventListener('storage', function(event) {
-                if (event.key === 'weight_change_event' && event.newValue) {
-                    try {
-                        const changeData = JSON.parse(event.newValue);
-                        console.log('[CompareParty] 📢 가중치 변경 감지:', changeData);
-                        handleWeightUpdate(changeData, 'localStorage');
-                    } catch (e) {
-                        console.warn('[CompareParty] 가중치 변경 데이터 파싱 실패:', e);
-                    }
-                }
-            });
-            
-            // 2. BroadcastChannel 감지 (최신 브라우저)
-            if (typeof BroadcastChannel !== 'undefined') {
-                try {
-                    const weightChannel = new BroadcastChannel('weight_updates');
-                    weightChannel.addEventListener('message', function(event) {
-                        console.log('[CompareParty] 📡 BroadcastChannel 가중치 변경 감지:', event.data);
-                        handleWeightUpdate(event.data, 'BroadcastChannel');
-                    });
-                    
-                    // 페이지 언로드 시 채널 정리
-                    window.addEventListener('beforeunload', () => {
-                        weightChannel.close();
-                    });
-                    
-                    console.log('[CompareParty] ✅ BroadcastChannel 설정 완료');
-                } catch (e) {
-                    console.warn('[CompareParty] BroadcastChannel 설정 실패:', e);
-                }
-            }
-            
-            // 3. 커스텀 이벤트 감지 (같은 페이지 내)
-            document.addEventListener('weightSettingsChanged', function(event) {
-                console.log('[CompareParty] 🎯 커스텀 이벤트 가중치 변경 감지:', event.detail);
-                handleWeightUpdate(event.detail, 'customEvent');
-            });
-            
-            // 4. 주기적 체크 (폴백)
-            let lastWeightCheckTime = localStorage.getItem('last_weight_update') || '0';
-            setInterval(function() {
-                const currentCheckTime = localStorage.getItem('last_weight_update') || '0';
-                
-                if (currentCheckTime !== lastWeightCheckTime && currentCheckTime !== '0') {
-                    console.log('[CompareParty] ⏰ 주기적 체크로 가중치 변경 감지');
-                    lastWeightCheckTime = currentCheckTime;
-                    
-                    const changeData = {
-                        type: 'weights_updated',
-                        timestamp: new Date(parseInt(currentCheckTime)).toISOString(),
-                        source: 'periodic_check'
-                    };
-                    
-                    handleWeightUpdate(changeData, 'periodicCheck');
-                }
-            }, 5000);
-            
-            console.log('[CompareParty] ✅ 가중치 변경 감지 시스템 설정 완료');
-            
-        } catch (error) {
-            console.error('[CompareParty] ❌ 가중치 변경 감지 시스템 설정 실패:', error);
-        }
-    }
-    
-    // 가중치 업데이트 처리 함수
-    async function handleWeightUpdate(changeData, source) {
-        try {
-            if (isLoading) {
-                console.log('[CompareParty] 🔄 이미 로딩 중이므로 가중치 업데이트 스킵');
-                return;
-            }
-            
-            console.log(`[CompareParty] 🔄 가중치 업데이트 처리 시작 (${source})`);
-            
-            // 사용자에게 업데이트 알림
-            showNotification('가중치가 변경되었습니다. 정당 비교 데이터를 새로고침합니다...', 'info');
-            
-            // 현재 선택된 정당들 정보 백업
-            const currentSelections = selectedParties.map((partyName, index) => {
-                if (partyName) {
-                    return { partyName, cardIndex: index };
-                }
-                return null;
-            }).filter(selection => selection !== null);
-            
-            // 1초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
-            setTimeout(async () => {
-                try {
-                    // 새로운 데이터로 업데이트
-                    await refreshPartyComparison();
-                    
-                    console.log('[CompareParty] ✅ 가중치 업데이트 완료');
-                    showNotification('새로운 가중치가 정당 비교에 적용되었습니다! 🎉', 'success');
-                    
-                    // 응답 전송 (percent 페이지 모니터링용)
-                    try {
-                        const response = {
-                            page: 'compare_party.html',
-                            timestamp: new Date().toISOString(),
-                            success: true,
-                            source: source,
-                            restoredSelections: currentSelections.length
-                        };
-                        localStorage.setItem('weight_refresh_response', JSON.stringify(response));
-                        setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
-                    } catch (e) {
-                        console.warn('[CompareParty] 응답 전송 실패:', e);
-                    }
-                    
-                } catch (error) {
-                    console.error('[CompareParty] ❌ 가중치 업데이트 데이터 로드 실패:', error);
-                    showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
-                }
-            }, 1000);
-            
-        } catch (error) {
-            console.error('[CompareParty] ❌ 가중치 업데이트 처리 실패:', error);
-            showNotification('가중치 업데이트 처리에 실패했습니다.', 'error');
-        }
-    }
-    
-    // 수동 새로고침 함수들 (외부에서 호출 가능)
-    window.refreshPartyComparisonData = function() {
-        console.log('[CompareParty] 🔄 수동 새로고침 요청');
-        refreshPartyComparison();
-    };
-    
-    window.updatePartyComparisonData = function(newData) {
+    async function updatePartyComparisonData(newData) {
         console.log('[CompareParty] 📊 외부 데이터로 업데이트:', newData);
         
-        if (newData && Array.isArray(newData)) {
+        if (newData && (Array.isArray(newData) || typeof newData === 'object')) {
             // 새로운 데이터로 정당 통계 재계산
-            selectedParties.forEach(async (partyName, index) => {
+            const updatePromises = selectedParties.map(async (partyName, index) => {
                 if (partyName) {
                     const stats = await calculatePartyStats(partyName);
                     partyStats[partyName] = stats;
                     updatePartyCard(index, partyName, stats);
                 }
             });
+            
+            await Promise.all(updatePromises);
             showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
         }
-    };
+    }
 
-    // 페이지 초기화
+    // === 🚀 페이지 초기화 ===
     async function initializePage() {
         console.log('🚀 정당 비교 페이지 초기화 중...');
         
@@ -1231,18 +911,15 @@ document.addEventListener('DOMContentLoaded', function() {
             // APIService 준비 대기
             await waitForAPIService();
             
-            // 🆕 랭킹 데이터와 가중치 성과 데이터 우선 로드
+            // 기본 데이터 로드
             try {
                 await Promise.all([
-                    fetchPartyRankings(),
-                    fetchPartyWeightedPerformance().then(data => {
-                        partyWeightedPerformance = data;
-                        console.log('✅ 메인 서버 연결 성공');
-                    })
+                    fetchPartyPerformanceData(),
+                    fetchPartyRankingData()
                 ]);
-                console.log('✅ 모든 서버 연결 성공');
+                console.log('✅ 모든 API 데이터 로드 성공');
             } catch (error) {
-                console.warn('⚠️ 일부 서버 연결 실패, 기본 로직 사용');
+                console.warn('⚠️ 일부 API 데이터 로드 실패, 기본 로직 사용');
             }
             
             // 드롭다운 옵션 업데이트
@@ -1250,9 +927,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 이벤트 핸들러 설정
             setupDropdownHandlers();
-            
-            // 🆕 가중치 변경 감지 시스템 설정
-            setupWeightChangeListener();
             
             showNotification('정당 비교 페이지 로드 완료', 'success');
             console.log('✅ 정당 비교 페이지 초기화 완료');
@@ -1265,31 +939,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🔧 디버그 유틸리티 (전역)
+    // === 🔧 전역 함수 등록 (WeightSync 및 디버그용) ===
+    
+    // WeightSync 연동 함수들
+    window.refreshPartyComparisonData = refreshPartyComparisonData;
+    window.loadPartyComparisonData = loadPartyComparisonData;
+    window.updatePartyComparisonData = updatePartyComparisonData;
+    window.refreshPartyComparison = refreshPartyComparison;
+
+    // 디버그 유틸리티 (전역)
     window.comparePartyDebug = {
         getSelectedParties: () => selectedParties,
         getPartyStats: () => partyStats,
         getPartyRankings: () => partyRankings,
-        getPartyWeightedPerformance: () => partyWeightedPerformance,
+        getPartyPerformanceData: () => partyPerformanceData,
         reloadData: () => initializePage(),
         refreshData: () => refreshPartyComparison(),
         testPartyStats: (partyName) => calculatePartyStats(partyName),
-        testPartyComparison: (party1, party2) => fetchPartyComparison(party1, party2),
-        testWeightedPerformance: () => fetchPartyWeightedPerformance(),
+        testPartyComparison: (party1, party2) => fetchPartyDirectComparison(party1, party2),
+        testPerformanceData: () => fetchPartyPerformanceData(),
+        testRankingData: () => fetchPartyRankingData(),
         showPartyList: () => loadPartyList(),
         testAPIService: () => {
             console.log('🧪 APIService 테스트:');
             console.log('- APIService:', window.APIService);
             console.log('- 준비 상태:', window.APIService?._isReady);
             console.log('- 에러 상태:', window.APIService?._hasError);
-            console.log('- 랭킹 서버:', !!window.APIService?.getPartyScoreRanking);
-            console.log('- 비교 API:', !!window.APIService?.comparePartiesAdvanced);
-            console.log('- 가중치 성과 API:', !!window.APIService?.getPartyWeightedPerformanceData);
+            console.log('- 정당 성과 API:', !!window.APIService?.getPartyPerformance);
+            console.log('- 정당 랭킹 API:', !!window.APIService?.getPartyScoreRanking);
+            console.log('- 정당 비교 API:', !!window.APIService?.compareParties);
+            console.log('- 유효 정당 목록:', window.APIService?.getValidParties());
             return window.APIService;
         },
         clearSelection: () => {
             selectedParties = [];
             partyStats = {};
+            localStorage.removeItem('current_party_comparison');
             const dropdowns = document.querySelectorAll('select.party-dropdown');
             dropdowns.forEach(dropdown => dropdown.value = '');
             const cards = document.querySelectorAll('.comparison-card');
@@ -1300,10 +985,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 선택된 정당:', selectedParties);
             console.log('- 정당 통계:', partyStats);
             console.log('- 정당 랭킹:', partyRankings);
-            console.log('- 정당 가중치 성과:', partyWeightedPerformance);
+            console.log('- 정당 성과 데이터:', partyPerformanceData);
             console.log('- APIService 상태:', window.APIService?._isReady ? '준비됨' : '준비중');
-            console.log('- 랭킹 서버 상태:', Object.keys(partyRankings).length > 0 ? '연결됨' : '미연결');
-            console.log('- 메인 서버 상태:', Object.keys(partyWeightedPerformance).length > 0 ? '연결됨' : '미연결');
+            console.log('- 성과 데이터 상태:', Object.keys(partyPerformanceData).length > 0 ? '로드됨' : '미로드');
+            console.log('- 랭킹 데이터 상태:', Object.keys(partyRankings).length > 0 ? '로드됨' : '미로드');
             console.log('- 환경 정보:', window.APIService?.getEnvironmentInfo());
         },
         simulateWeightChange: () => {
@@ -1313,22 +998,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 timestamp: new Date().toISOString(),
                 source: 'debug_simulation'
             };
-            handleWeightUpdate(changeData, 'debug');
+            localStorage.setItem('weight_change_event', JSON.stringify(changeData));
+            localStorage.setItem('last_weight_update', Date.now().toString());
+            setTimeout(() => localStorage.removeItem('weight_change_event'), 100);
         }
     };
 
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (HTML 순서 맞춤 + 멀티 API 통합 + 가중치 감지 버전)');
-    console.log('🔗 API 모드: APIService + 랭킹 서버 + 메인 서버 통합 사용');
+    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (Django API 연동 + 가중치 감지 버전)');
+    console.log('🔗 API 모드: Django API 직접 연동');
+    console.log('📊 데이터 매핑: 새로운 필드 구조 적용');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
-    console.log('  - window.comparePartyDebug.refreshData() : 랭킹 데이터 새로고침');
-    console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
     console.log('  - window.comparePartyDebug.testAPIService() : APIService 연결 테스트');
-    console.log('  - window.comparePartyDebug.testPartyComparison("정당1", "정당2") : 비교 API 테스트');
-    console.log('  - window.comparePartyDebug.testWeightedPerformance() : 가중치 성과 API 테스트');
+    console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
     console.log('  - window.comparePartyDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
 });
