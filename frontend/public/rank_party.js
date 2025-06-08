@@ -582,7 +582,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === 🎨 UI 렌더링 함수들 ===
 
-    // 정당 랭킹 테이블 렌더링 (안전한 버전)
     // 정당 랭킹 테이블 렌더링 (기존 HTML 테이블 사용)
 function renderPartyRankingTable() {
     // 기존 HTML의 tbody 요소 찾기
@@ -764,7 +763,7 @@ function addBasicStyles() {
     }
 
     // 정렬 이벤트 리스너 설정
-    // 정렬 이벤트 리스너 설정 (HTML 드롭다운 사용) - 수정된 버전
+// 정렬 이벤트 리스너 설정 (HTML 드롭다운 사용) - 수정된 버전
 function setupSortingListeners() {
     const settingsBtn = document.getElementById('settingsBtn');
     const sortDropdown = document.getElementById('sortDropdown');
@@ -811,7 +810,7 @@ function setupSortingListeners() {
     }
 }
 
-// 정렬 적용 함수
+// 정렬 적용 함수 - 수정된 버전
 function applySorting(sortType) {
     console.log('[RankParty] 📊 정렬 적용 중:', sortType);
     
