@@ -1406,6 +1406,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === 🔧 전역 함수 등록 (WeightSync 및 디버그용) ===
     
+    // WeightSync 연동 함수들
+    window.refreshCompareMemberData = refreshCompareMemberData;
+    window.loadCompareMemberData = loadCompareMemberData;
+    window.updateCompareMemberData = updateCompareMemberData;
+    window.fetchMemberData = fetchMemberData;
+    
     // 디버그 유틸리티 (전역)
     window.compareMemberDebug = {
         getMemberData: () => mpData,
