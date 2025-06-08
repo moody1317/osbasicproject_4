@@ -819,9 +819,9 @@ function applySorting(sortType) {
         currentSort = 'rank_asc';
         console.log('[RankParty] 📊 순위 오름차순 정렬 적용 (1위부터)');
     } else if (sortType === 'desc') {
-        // 내림차순: 점수 기준 (높은 점수부터)
-        currentSort = 'score_desc';
-        console.log('[RankParty] 📊 점수 내림차순 정렬 적용 (높은 점수부터)');
+        // 내림차순
+        currentSort = 'rank_desc';
+        console.log('[RankParty] 📊 순위 내림차순 정렬 적용 (8위)');
     }
     
     currentPage = 1; // 정렬 시 첫 페이지로
@@ -860,11 +860,11 @@ function getSortedPartyData() {
         case 'totalScore':
             // 점수 내림차순 (높은 점수부터)
             sortedData.sort((a, b) => {
-                const scoreA = a.totalScore || 0;
-                const scoreB = b.totalScore || 0;
+                const rankA = a.rank || 999;
+                const rankB = b.rank || 999;
                 return scoreB - scoreA;
             });
-            console.log('[RankParty] 🔄 점수 내림차순 정렬 완료');
+            console.log('[RankParty] 🔄 순위 내림차순 정렬 완료');
             break;
             
         case 'attendanceRate':
@@ -919,6 +919,120 @@ function debugSortingState() {
 
 // 전역 함수로 등록
 window.debugSortingState = debugSortingState;
+
+// 페이지네이션 렌더링 (간단한 버전)
+function renderPagination() {
+    const totalItems = partyData.length;
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    
+    // 기존 페이지네이션 컨테이너 찾기 또는 생성
+    let paginationContainer = document.getElementById('pagination-container');
+    if (!paginationContainer) {
+        paginationContainer = document.createElement('div');
+        paginationContainer.id = 'pagination-container';
+        paginationContainer.style.textAlign = 'center';
+        paginationContainer.style.marginTop = '20px';
+        
+        const table = document.querySelector('.party-table');
+        if (table && table.parentNode) {
+            table.parentNode.insertBefore(paginationContainer, table.nextSibling);
+        }
+    }
+    
+    if (totalPages <= 1) {
+        paginationContainer.innerHTML = '';
+        return;
+    }
+    
+    let paginationHTML = '<div class="pagination">';
+    
+    // 이전 페이지 버튼
+    if (currentPage > 1) {
+        paginationHTML += `<button onclick="goToPage(${currentPage - 1})" class="page-btn">이전</button>`;
+    }
+    
+    // 페이지 번호 버튼들
+    for (let i = 1; i <= totalPages; i++) {
+        if (i === currentPage) {
+            paginationHTML += `<button class="page-btn active">${i}</button>`;
+        } else {
+            paginationHTML += `<button onclick="goToPage(${i})" class="page-btn">${i}</button>`;
+        }
+    }
+    
+    // 다음 페이지 버튼
+    if (currentPage < totalPages) {
+        paginationHTML += `<button onclick="goToPage(${currentPage + 1})" class="page-btn">다음</button>`;
+    }
+    
+    paginationHTML += '</div>';
+    paginationContainer.innerHTML = paginationHTML;
+    
+    // 페이지네이션 스타일 추가
+    addPaginationStyles();
+    
+    console.log(`[RankParty] ✅ 페이지네이션 렌더링 완료: ${currentPage}/${totalPages}`);
+}
+
+// 페이지 이동 함수
+function goToPage(page) {
+    const totalPages = Math.ceil(partyData.length / itemsPerPage);
+    if (page >= 1 && page <= totalPages) {
+        console.log(`[RankParty] 📄 페이지 이동: ${currentPage} → ${page}`);
+        currentPage = page;
+        renderPartyRankingTable();
+        renderPagination();
+    }
+}
+
+// 페이지네이션 스타일 추가
+function addPaginationStyles() {
+    if (document.getElementById('pagination-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'pagination-styles';
+    style.textContent = `
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+        
+        .page-btn {
+            padding: 8px 12px;
+            border: 1px solid var(--side2);
+            background: white;
+            color: var(--string);
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .page-btn:hover {
+            background: var(--main2);
+            border-color: var(--light-blue);
+        }
+        
+        .page-btn.active {
+            background: var(--light-blue);
+            color: white;
+            border-color: var(--light-blue);
+        }
+        
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    `;
+    
+    document.head.appendChild(style);
+}
+
+// 전역 함수 등록
+window.goToPage = goToPage;
 
     // 통계 정보 렌더링
     function renderStatistics() {
