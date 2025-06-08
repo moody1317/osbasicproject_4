@@ -194,7 +194,9 @@ async function fetchPerformanceData() {
     try {
         console.log('📊 국회의원 실적 API 호출...');
         
-        const performanceData = await window.APIService.getMemberPerformance();
+        const response = await window.APIService.getMemberPerformance();
+        const performanceData = response?.ranking ?? [];
+
         const inspection = inspectAPIResponse(performanceData, '실적');
         
         if (!inspection) {
