@@ -65,16 +65,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // === 🔗 실시간 연동 시스템 초기화 ===
-    function initializeRealTimeSync() {
-        console.log('[MainPage] 🔗 클라이언트 가중치 연동 시스템 초기화...');
-        
+    // === 📡 안전한 BroadcastChannel 관리 ===
+    function createBroadcastChannel() {
+        if (typeof BroadcastChannel === 'undefined') {
+            console.warn('[MainPage] ⚠️ BroadcastChannel을 지원하지 않는 브라우저입니다');
+            return false;
+        }
+
         try {
-            // 1. BroadcastChannel 설정
-            if (typeof BroadcastChannel !== 'undefined') {
-                mainPageState.realTimeUpdateChannel = new BroadcastChannel('client_weight_updates_v3');
-                
-                mainPageState.realTimeUpdateChannel.addEventListener('message', async function(event) {
+            // 기존 채널이 있으면 정리
+            if (mainPageState.realTimeUpdateChannel) {
+                try {
+                    mainPageState.realTimeUpdateChannel.close();
+                } catch (e) {
+                    // 이미 닫혔을 수 있음
+                }
+            }
+
+            // 🔧 통일된 채널명 사용
+            mainPageState.realTimeUpdateChannel = new BroadcastChannel('client_weight_updates_v4');
+            
+            mainPageState.realTimeUpdateChannel.addEventListener('message', async function(event) {
+                try {
                     const data = event.data;
                     console.log('[MainPage] 📡 가중치 업데이트 수신:', data);
                     
@@ -82,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         await handleClientWeightUpdate(data);
                     } else if (data.type === 'connection_check') {
                         // percent 페이지의 연결 확인 요청에 응답
-                        mainPageState.realTimeUpdateChannel.postMessage({
+                        safeBroadcast({
                             type: 'connection_response',
                             source: 'main_page',
                             timestamp: new Date().toISOString(),
@@ -91,10 +103,65 @@ document.addEventListener('DOMContentLoaded', function() {
                         mainPageState.percentPageConnected = true;
                         updateConnectionStatus();
                     }
-                });
-                
-                console.log('[MainPage] ✅ BroadcastChannel 초기화 완료');
+                } catch (error) {
+                    console.warn('[MainPage] 메시지 처리 실패:', error);
+                }
+            });
+
+            // 채널 오류 처리
+            mainPageState.realTimeUpdateChannel.addEventListener('error', function(error) {
+                console.warn('[MainPage] BroadcastChannel 오류:', error);
+                // 채널 재생성 시도
+                setTimeout(createBroadcastChannel, 1000);
+            });
+            
+            console.log('[MainPage] ✅ BroadcastChannel 초기화 완료 (v4)');
+            return true;
+            
+        } catch (error) {
+            console.error('[MainPage] BroadcastChannel 초기화 실패:', error);
+            mainPageState.realTimeUpdateChannel = null;
+            return false;
+        }
+    }
+
+    // === 📡 안전한 브로드캐스트 함수 ===
+    function safeBroadcast(data) {
+        try {
+            if (!mainPageState.realTimeUpdateChannel) {
+                // 채널이 없으면 재생성 시도
+                if (!createBroadcastChannel()) {
+                    return false;
+                }
             }
+
+            mainPageState.realTimeUpdateChannel.postMessage(data);
+            return true;
+            
+        } catch (error) {
+            console.warn('[MainPage] 브로드캐스트 실패, 채널 재생성 시도:', error);
+            
+            // 채널 재생성 시도
+            if (createBroadcastChannel()) {
+                try {
+                    mainPageState.realTimeUpdateChannel.postMessage(data);
+                    return true;
+                } catch (retryError) {
+                    console.warn('[MainPage] 재시도 후에도 브로드캐스트 실패:', retryError);
+                }
+            }
+            
+            return false;
+        }
+    }
+
+    // === 🔗 실시간 연동 시스템 초기화 ===
+    function initializeRealTimeSync() {
+        console.log('[MainPage] 🔗 클라이언트 가중치 연동 시스템 초기화...');
+        
+        try {
+            // 1. BroadcastChannel 설정
+            createBroadcastChannel();
             
             // 2. localStorage 이벤트 감지
             window.addEventListener('storage', function(e) {
@@ -109,13 +176,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             
-            // 3. 저장된 가중치 확인 및 로드
+            // 3. 🎯 percent 페이지 연결 확인 (능동적)
+            setTimeout(() => {
+                checkPercentPageConnection();
+                // 5초마다 연결 확인
+                setInterval(checkPercentPageConnection, 5000);
+            }, 1000);
+            
+            // 4. 저장된 가중치 확인 및 로드
             loadStoredWeights();
             
             console.log('[MainPage] ✅ 실시간 연동 시스템 초기화 완료');
             
         } catch (error) {
             console.error('[MainPage] 실시간 연동 시스템 초기화 실패:', error);
+        }
+    }
+
+    // === 🔍 percent 페이지 연결 확인 ===
+    function checkPercentPageConnection() {
+        try {
+            const success = safeBroadcast({
+                type: 'connection_check',
+                source: 'main_page',
+                timestamp: new Date().toISOString()
+            });
+            
+            if (!success) {
+                console.warn('[MainPage] percent 페이지 연결 확인 브로드캐스트 실패');
+            }
+        } catch (error) {
+            console.warn('[MainPage] percent 페이지 연결 확인 중 오류:', error);
         }
     }
 
@@ -166,6 +257,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // 🧮 모든 점수 재계산
             await recalculateAllScores();
+            
+            // 연결 상태 업데이트
+            mainPageState.percentPageConnected = true;
+            updateConnectionStatus();
             
             // 성공 알림
             showWeightUpdateNotification('✅ 메인페이지 순위가 새로운 가중치로 업데이트되었습니다!', 'success', 4000);
@@ -632,7 +727,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === 나머지 코드들은 동일하게 유지 ===
+    // === 나머지 기존 코드들은 모두 동일하게 유지 ===
     
     // API 연결 상태 확인
     function checkAPIService() {
@@ -1316,15 +1411,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return loadMainPageData();
     };
 
-    // === 🛠️ 디버깅 함수들 ===
+    // === 🛠️ 디버깅 함수들 (향상된 버전) ===
     window.mainPageDebug = {
         getState: () => mainPageState,
         refreshData: () => loadMainPageData(),
         recalculateScores: () => recalculateAllScores(),
         getCurrentWeights: () => mainPageState.currentWeights,
         
+        // 🔧 BroadcastChannel 관련 디버그
+        recreateChannel: () => {
+            console.log('[MainPage] BroadcastChannel 재생성 시도...');
+            const success = createBroadcastChannel();
+            console.log('[MainPage] 재생성 결과:', success ? '성공' : '실패');
+            return success;
+        },
+        
+        getChannelStatus: () => {
+            return {
+                exists: !!mainPageState.realTimeUpdateChannel,
+                type: typeof mainPageState.realTimeUpdateChannel,
+                supported: typeof BroadcastChannel !== 'undefined'
+            };
+        },
+        
+        testBroadcast: (testData = { test: true, timestamp: new Date().toISOString() }) => {
+            const success = safeBroadcast(testData);
+            console.log('[MainPage] 테스트 브로드캐스트 결과:', success ? '성공' : '실패');
+            return success;
+        },
+        
+        checkConnection: () => {
+            checkPercentPageConnection();
+            console.log('[MainPage] percent 페이지 연결 확인 요청 전송');
+        },
+        
         showInfo: () => {
-            console.log('[MainPage] 📊 메인페이지 정보 (v3.0.1 - rank_member.js 동기화):');
+            console.log('[MainPage] 📊 메인페이지 정보 (v3.1.0 - 실시간 연동 개선):');
             console.log('- 원본 정당 데이터:', mainPageState.originalPartyData.length, '개');
             console.log('- 원본 의원 데이터:', mainPageState.originalMemberData.length, '명');
             console.log('- 현재 정당 순위:', mainPageState.currentPartyRanking.length, '개');
@@ -1333,6 +1455,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 가중치 연결:', mainPageState.percentPageConnected ? '✅' : '❌');
             console.log('- 현재 가중치:', mainPageState.currentWeights);
             console.log('- 마지막 가중치 업데이트:', mainPageState.lastWeightUpdate || '없음');
+            console.log('- BroadcastChannel 상태:', this.getChannelStatus());
         },
         
         testWeightCalculation: () => {
@@ -1403,7 +1526,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 1000);
 
-        console.log('✅ 클라이언트 가중치 연동 메인페이지 스크립트 로드 완료 (v3.0.1 - rank_member.js 동기화)');
+        console.log('✅ 클라이언트 가중치 연동 메인페이지 스크립트 로드 완료 (v3.1.0 - 실시간 연동 개선)');
         console.log('🎯 디버깅: window.mainPageDebug.showInfo()');
         
     } catch (error) {
