@@ -1087,6 +1087,15 @@ function setupSearch() {
         
         searchContainer.appendChild(searchResults);
         console.log('✅ 검색 결과 컨테이너 생성됨');
+        
+        // 🔧 검색 결과 컨테이너 마우스 이벤트
+        searchResults.addEventListener('mouseenter', function() {
+            console.log('🖱️ 검색 결과에 마우스 진입');
+        });
+        
+        searchResults.addEventListener('mouseleave', function() {
+            console.log('🖱️ 검색 결과에서 마우스 이탈');
+        });
     }
     
     elements.searchResults = searchResults;
@@ -1143,19 +1152,39 @@ function setupSearch() {
         }
     });
     
-    // 외부 클릭 시 검색 결과 숨김
+    // 외부 클릭 시 검색 결과 숨김 (지연 처리)
     document.addEventListener('click', function(e) {
+        // 검색 결과 아이템 클릭은 제외
+        if (e.target.closest('.search-result-item')) {
+            return;
+        }
+        
+        // 검색 컨테이너 외부 클릭만 처리
         if (!searchContainer.contains(e.target)) {
-            hideSearchResults();
+            setTimeout(() => {
+                hideSearchResults();
+            }, 150); // 클릭 이벤트 처리 후 숨김
         }
     });
     
     // 포커스 이벤트
     elements.searchInput.addEventListener('focus', function() {
         const query = this.value.trim();
-        if (query && elements.searchResults.children.length > 0) {
+        if (query && elements.searchResults && elements.searchResults.children.length > 0) {
+            console.log('🔍 검색창 포커스 - 이전 결과 다시 표시');
             elements.searchResults.style.display = 'block';
         }
+    });
+    
+    // 🔧 검색창에서 벗어날 때 지연 숨김
+    elements.searchInput.addEventListener('blur', function() {
+        setTimeout(() => {
+            // 검색 결과를 클릭 중이 아닐 때만 숨김
+            if (!elements.searchResults.matches(':hover')) {
+                console.log('🔍 검색창 블러 - 결과 숨김');
+                hideSearchResults();
+            }
+        }, 200);
     });
     
     console.log('✅ 검색 기능 설정 완료');
@@ -1255,6 +1284,7 @@ function displaySearchResults(results, query = '') {
         limitedResults.forEach((member, index) => {
             const item = document.createElement('div');
             item.className = 'search-result-item';
+            item.setAttribute('data-member-name', member.name);
             item.style.cssText = `
                 padding: 12px 15px;
                 border-bottom: 1px solid #eee;
@@ -1263,6 +1293,7 @@ function displaySearchResults(results, query = '') {
                 align-items: center;
                 gap: 10px;
                 transition: background-color 0.2s;
+                user-select: none;
             `;
             
             // 호버 효과
@@ -1293,9 +1324,10 @@ function displaySearchResults(results, query = '') {
                         border-radius: 50%;
                         object-fit: cover;
                         flex-shrink: 0;
+                        pointer-events: none;
                      "
                      onerror="this.style.display='none'">
-                <div class="search-result-info" style="flex: 1; min-width: 0;">
+                <div class="search-result-info" style="flex: 1; min-width: 0; pointer-events: none;">
                     <div class="search-result-name" style="
                         font-weight: bold;
                         color: #333;
@@ -1314,13 +1346,34 @@ function displaySearchResults(results, query = '') {
                 </div>
             `;
             
-            // 클릭 이벤트
-            item.addEventListener('click', (e) => {
+            // 🔧 개선된 클릭 이벤트 처리
+            item.addEventListener('click', function(e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(`👤 검색 결과에서 ${member.name} 선택`);
-                selectMember(member);
+                e.stopImmediatePropagation();
+                
+                console.log(`👤 검색 결과 클릭 감지: ${member.name}`);
+                
+                // 검색 결과 즉시 숨김
                 hideSearchResults();
+                
+                // 의원 선택 처리
+                setTimeout(() => {
+                    console.log(`🔄 ${member.name} 선택 처리 시작`);
+                    selectMember(member);
+                }, 50);
+            });
+            
+            // 추가 이벤트 처리 (모바일 지원)
+            item.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`📱 터치 이벤트: ${member.name}`);
+                
+                hideSearchResults();
+                setTimeout(() => {
+                    selectMember(member);
+                }, 50);
             });
             
             elements.searchResults.appendChild(item);
@@ -1355,23 +1408,33 @@ function hideSearchResults() {
 }
 
 function selectMember(member) {
-    console.log(`👤 ${member.name} 선택됨`);
+    console.log(`👤 ${member.name} 선택됨 - 처리 시작`);
     
     if (!member) {
         console.warn('❌ 선택된 의원 정보가 없습니다');
         return;
     }
     
+    console.log('🔄 선택된 의원 정보:', member);
+    
+    // 현재 의원 업데이트
     pageState.currentMember = member;
     
     // 검색창에 선택된 의원 이름 표시
     if (elements.searchInput) {
         elements.searchInput.value = member.name;
+        console.log(`✅ 검색창 업데이트: "${member.name}"`);
     }
     
+    // URL 업데이트
+    console.log('🔗 URL 업데이트 시작...');
     updateUrl(member.name);
+    
+    // 프로필 업데이트
+    console.log('👤 프로필 업데이트 시작...');
     updateMemberProfile(member);
     
+    console.log(`✅ ${member.name} 의원 선택 완료`);
     showNotification(`${member.name} 의원 정보 로드 완료`, 'success');
 }
 
@@ -1389,10 +1452,39 @@ function getMemberFromUrl() {
 }
 
 function updateUrl(memberName) {
-    if (history.pushState) {
-        const url = new URL(window.location);
-        url.searchParams.set('member', memberName);
-        history.pushState({ member: memberName }, '', url);
+    if (!memberName) {
+        console.warn('❌ URL 업데이트할 의원명이 없습니다');
+        return;
+    }
+    
+    console.log(`🔗 URL 업데이트 중: "${memberName}"`);
+    
+    try {
+        if (history.pushState) {
+            const currentUrl = new URL(window.location);
+            const newUrl = new URL(window.location);
+            
+            // member 파라미터 설정
+            newUrl.searchParams.set('member', memberName);
+            
+            console.log(`🔗 현재 URL: ${currentUrl.href}`);
+            console.log(`🔗 새로운 URL: ${newUrl.href}`);
+            
+            // 브라우저 히스토리에 추가
+            history.pushState({ member: memberName }, `백일하 - ${memberName} 의원`, newUrl);
+            
+            console.log(`✅ URL 업데이트 완료: ${window.location.href}`);
+        } else {
+            console.warn('⚠️ pushState를 지원하지 않는 브라우저');
+            
+            // 폴백: location.search 직접 업데이트
+            const params = new URLSearchParams(window.location.search);
+            params.set('member', memberName);
+            const newUrl = `${window.location.pathname}?${params.toString()}`;
+            window.location.href = newUrl;
+        }
+    } catch (error) {
+        console.error('❌ URL 업데이트 실패:', error);
     }
 }
 
@@ -1551,10 +1643,42 @@ window.memberPageDebug = {
         console.log(`🧪 검색 테스트: "${query}"`);
         if (elements.searchInput) {
             elements.searchInput.value = query;
+            elements.searchInput.focus();
             performSearch(query);
         } else {
             console.warn('❌ 검색 입력창이 없습니다');
         }
+    },
+    
+    // 🔧 검색 결과 직접 클릭 시뮬레이션
+    clickSearchResult: (memberName) => {
+        console.log(`🖱️ 검색 결과 클릭 시뮬레이션: "${memberName}"`);
+        
+        const member = pageState.memberList.find(m => m.name === memberName);
+        if (member) {
+            console.log('✅ 의원 발견, 선택 처리 중...');
+            selectMember(member);
+        } else {
+            console.warn(`❌ "${memberName}" 의원을 찾을 수 없습니다`);
+            console.log('📋 사용 가능한 의원명:', pageState.memberList.slice(0, 10).map(m => m.name));
+        }
+    },
+    
+    // 🔧 URL 테스트
+    testUrl: (memberName) => {
+        console.log(`🔗 URL 테스트: "${memberName}"`);
+        updateUrl(memberName);
+        console.log(`현재 URL: ${window.location.href}`);
+    },
+    
+    // 🔧 현재 URL 파라미터 확인
+    getCurrentUrlParams: () => {
+        const params = new URLSearchParams(window.location.search);
+        const memberParam = params.get('member');
+        console.log('🔗 현재 URL 파라미터:');
+        console.log('- member:', memberParam);
+        console.log('- 전체 URL:', window.location.href);
+        return { member: memberParam, fullUrl: window.location.href };
     },
     
     showSearchElements: () => {
