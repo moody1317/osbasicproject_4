@@ -1064,6 +1064,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
+            const statusItem = statusItems[index];
+    const valueElement = statusItem.querySelector('.status-value');
+
+    console.log(`🔍 index: ${index}`);
+    console.log(`📌 HTML Label:`, statusItem.querySelector('.status-label')?.textContent.trim());
+    console.log(`📊 update.key: ${update.key}, value: ${update.value}, suffix: ${update.suffix}`);
         });
         
         console.log(`✅ ${mp.name} 통계 업데이트 완료 (실제 API 데이터 기반)`);
