@@ -1020,9 +1020,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // HTML의 status-item 순서와 정확히 매칭하여 업데이트
         updates.forEach((update, index) => {
-            // index + 1은 HTML의 실제 status-item 인덱스 (0번은 국회의원 선택이므로)
-            if (index + 1 < statusItems.length) {
-                const statusItem = statusItems[index + 1];
+            if (index < statusItems.length) {
+                const statusItem = statusItems[index];
                 const valueElement = statusItem.querySelector('.status-value');
                 
                 if (valueElement && update.value !== undefined) {
