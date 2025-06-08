@@ -1,8 +1,9 @@
-// rank_member.js - 국회의원 랭킹 페이지 (v2.0.0)
+// rank_member.js - 국회의원 랭킹 페이지 (v2.1.0 - 메인페이지 연동)
 
 // 페이지 상태 관리
 let pageState = {
     memberList: [],        // /member/ API 데이터 (name, party, homepage, phone)
+    memberPerformance: [], // /performance/api/performance/ API 데이터 (lawmaker_name, party, total_score)
     memberRanking: [],     // /ranking/members/ API 데이터 (HG_NM, POLY_NM, 총점_순위)  
     filteredMembers: [],   // 필터링된 결과
     currentPage: 1,
@@ -69,7 +70,71 @@ function showNotification(message, type = 'info', duration = 3000) {
     }
 }
 
-// API 데이터 로드
+// 🎯 메인페이지용 상위 3명 의원 데이터 반환 함수
+function getTop3Members() {
+    try {
+        if (!pageState.memberPerformance || pageState.memberPerformance.length === 0) {
+            console.warn('[RankMember] ⚠️ 의원 성과 데이터가 없어 기본값 반환');
+            return getDefaultTop3Members();
+        }
+
+        // total_score 기준으로 정렬하여 상위 3명 선택
+        const top3 = pageState.memberPerformance
+            .filter(member => {
+                return member.lawmaker_name && 
+                       member.lawmaker_name !== '알 수 없음' && 
+                       member.total_score !== undefined && 
+                       member.total_score !== null;
+            })
+            .sort((a, b) => (b.total_score || 0) - (a.total_score || 0))
+            .slice(0, 3)
+            .map((member, index) => ({
+                rank: index + 1,
+                name: member.lawmaker_name,
+                party: normalizePartyName(member.party) || '정보없음',
+                score: Math.round(member.total_score) || 0
+            }));
+
+        console.log('[RankMember] ✅ 상위 3명 의원 데이터 생성:', top3);
+        return top3;
+
+    } catch (error) {
+        console.error('[RankMember] ❌ 상위 3명 데이터 생성 실패:', error);
+        return getDefaultTop3Members();
+    }
+}
+
+// 기본 상위 3명 의원 데이터
+function getDefaultTop3Members() {
+    return [
+        { rank: 1, name: '김민석', party: '더불어민주당', score: 94 },
+        { rank: 2, name: '김상훈', party: '국민의힘', score: 91 },
+        { rank: 3, name: '이재명', party: '더불어민주당', score: 88 }
+    ];
+}
+
+// 정당명 정규화
+function normalizePartyName(partyName) {
+    if (!partyName) return '정보없음';
+    
+    const nameMapping = {
+        '더불어민주당': '더불어민주당',
+        '민주당': '더불어민주당',
+        '국민의힘': '국민의힘',
+        '국민의 힘': '국민의힘',
+        '조국혁신당': '조국혁신당',
+        '개혁신당': '개혁신당',
+        '진보당': '진보당',
+        '기본소득당': '기본소득당',
+        '사회민주당': '사회민주당',
+        '무소속': '무소속',
+        '없음': '무소속'
+    };
+
+    return nameMapping[partyName] || partyName;
+}
+
+// API 데이터 로드 (수정된 버전)
 async function loadAllData() {
     try {
         setLoadingState(true);
@@ -79,13 +144,14 @@ async function loadAllData() {
             throw new Error('API 서비스가 준비되지 않았습니다.');
         }
         
-        // 필수 데이터 로드
+        // 🎯 변경된 API 구조에 맞춰서 데이터 로드
         const results = await Promise.allSettled([
-            window.APIService.getAllMembers(),    // /member/ - name, party, homepage, phone
-            window.APIService.getMemberRanking()  // /ranking/members/ - HG_NM, POLY_NM, 총점_순위
+            window.APIService.getAllMembers(),      // /member/ - name, party, homepage, phone
+            window.APIService.getMemberPerformance(), // /performance/api/performance/ - lawmaker_name, party, total_score
+            window.APIService.getMemberRanking()    // /ranking/members/ - HG_NM, POLY_NM, 총점_순위
         ]);
         
-        const [membersResult, rankingResult] = results;
+        const [membersResult, performanceResult, rankingResult] = results;
         
         // 국회의원 명단 처리
         if (membersResult.status === 'fulfilled') {
@@ -94,6 +160,20 @@ async function loadAllData() {
         } else {
             console.error('[RankMember] ❌ 국회의원 명단 로드 실패:', membersResult.reason);
             throw new Error('국회의원 명단을 불러올 수 없습니다.');
+        }
+        
+        // 🎯 의원 성과 데이터 처리 (새로 추가)
+        if (performanceResult.status === 'fulfilled') {
+            pageState.memberPerformance = performanceResult.value || [];
+            console.log(`[RankMember] ✅ 의원 성과 데이터: ${pageState.memberPerformance.length}개`);
+            
+            // 디버깅: 샘플 데이터 확인
+            if (pageState.memberPerformance.length > 0) {
+                console.log('[RankMember] 🔍 성과 데이터 샘플:', pageState.memberPerformance.slice(0, 2));
+            }
+        } else {
+            console.warn('[RankMember] ⚠️ 의원 성과 데이터 로드 실패:', performanceResult.reason);
+            pageState.memberPerformance = [];
         }
         
         // 랭킹 데이터 처리
@@ -108,6 +188,9 @@ async function loadAllData() {
         // 데이터 병합 및 렌더링
         mergeAndProcessData();
         
+        // 🎯 메인페이지로 상위 3명 데이터 전송
+        notifyMainPageWithTop3();
+        
         console.log('[RankMember] ✅ 데이터 로드 완료');
         return true;
         
@@ -118,12 +201,44 @@ async function loadAllData() {
         
         // 폴백 데이터 사용
         pageState.memberList = getFallbackData();
+        pageState.memberPerformance = [];
         pageState.memberRanking = [];
         mergeAndProcessData();
         
         throw error;
     } finally {
         setLoadingState(false);
+    }
+}
+
+// 🎯 메인페이지에 상위 3명 데이터 전송
+function notifyMainPageWithTop3() {
+    try {
+        const top3Data = getTop3Members();
+        
+        // 1. 전역 변수로 저장
+        window.top3MemberData = top3Data;
+        
+        // 2. 커스텀 이벤트 발생
+        const event = new CustomEvent('memberTop3Updated', {
+            detail: {
+                top3: top3Data,
+                timestamp: new Date().toISOString(),
+                source: 'rank_member_page'
+            }
+        });
+        document.dispatchEvent(event);
+        
+        // 3. localStorage를 통한 페이지 간 통신
+        localStorage.setItem('member_top3_data', JSON.stringify({
+            data: top3Data,
+            timestamp: Date.now()
+        }));
+        
+        console.log('[RankMember] 📤 메인페이지에 상위 3명 데이터 전송:', top3Data);
+        
+    } catch (error) {
+        console.error('[RankMember] ❌ 메인페이지 데이터 전송 실패:', error);
     }
 }
 
@@ -151,25 +266,62 @@ function getFallbackData() {
     ];
 }
 
-// 데이터 병합 및 처리
+// 데이터 병합 및 처리 (수정된 버전)
 function mergeAndProcessData() {
     try {
-        // 의원 명단을 기본으로 랭킹 데이터 병합
-        pageState.filteredMembers = pageState.memberList.map((member, index) => {
-            const memberName = member.name || '';
-            
-            // 랭킹 데이터 찾기 (이름으로 매칭)
-            const ranking = pageState.memberRanking.find(r => r.HG_NM === memberName);
-            
-            return {
-                rank: ranking ? parseInt(ranking.총점_순위) || (index + 1) : (index + 1),
-                name: memberName,
-                party: member.party || '정당 정보 없음',
-                contact: member.phone || '',
-                homepage: member.homepage || '',
-                originalIndex: index
-            };
+        // 🎯 성과 데이터를 우선으로 하고 명단 데이터로 보완
+        const memberMap = new Map();
+        
+        // 1. 성과 데이터를 기준으로 생성
+        pageState.memberPerformance.forEach((performance, index) => {
+            const memberName = performance.lawmaker_name || '';
+            if (memberName) {
+                memberMap.set(memberName, {
+                    name: memberName,
+                    party: normalizePartyName(performance.party) || '정당 정보 없음',
+                    score: performance.total_score || 0,
+                    contact: '',
+                    homepage: '',
+                    rank: index + 1, // 임시 순위
+                    source: 'performance',
+                    originalIndex: index
+                });
+            }
         });
+        
+        // 2. 명단 데이터로 연락처 정보 보완
+        pageState.memberList.forEach(member => {
+            const memberName = member.name || '';
+            if (memberName && memberMap.has(memberName)) {
+                const existing = memberMap.get(memberName);
+                existing.contact = member.phone || '';
+                existing.homepage = member.homepage || '';
+            } else if (memberName) {
+                // 성과 데이터에 없는 의원도 추가 (점수 0)
+                memberMap.set(memberName, {
+                    name: memberName,
+                    party: normalizePartyName(member.party) || '정당 정보 없음',
+                    score: 0,
+                    contact: member.phone || '',
+                    homepage: member.homepage || '',
+                    rank: 999, // 성과 데이터 없는 경우 뒤쪽 순위
+                    source: 'list_only',
+                    originalIndex: pageState.memberList.indexOf(member)
+                });
+            }
+        });
+        
+        // 3. 랭킹 데이터로 순위 보정
+        pageState.memberRanking.forEach(ranking => {
+            const memberName = ranking.HG_NM || '';
+            if (memberName && memberMap.has(memberName)) {
+                const existing = memberMap.get(memberName);
+                existing.rank = parseInt(ranking.총점_순위) || existing.rank;
+            }
+        });
+        
+        // 4. 배열로 변환
+        pageState.filteredMembers = Array.from(memberMap.values());
         
         // 정렬 적용
         applySorting();
@@ -183,7 +335,7 @@ function mergeAndProcessData() {
         // 테이블 렌더링
         renderTable();
         
-        console.log(`[RankMember] 📊 데이터 처리 완료: ${pageState.filteredMembers.length}명`);
+        console.log(`[RankMember] 📊 데이터 처리 완료: ${pageState.filteredMembers.length}명 (성과:${pageState.memberPerformance.length}, 명단:${pageState.memberList.length})`);
         
     } catch (error) {
         console.error('[RankMember] ❌ 데이터 처리 실패:', error);
@@ -233,7 +385,7 @@ function calculatePagination() {
     }
 }
 
-// 테이블 렌더링
+// 테이블 렌더링 (수정된 버전)
 function renderTable() {
     if (!elements.memberTableBody) return;
     
@@ -259,10 +411,19 @@ function renderTable() {
     // 순위 > 국회의원명 > 정당명 > 연락처 > 의원 홈페이지
     const tableHTML = currentPageMembers.map(member => `
         <tr>
-            <td class="rank-cell">${member.rank}</td>
+            <td class="rank-cell">
+                ${member.rank}
+                ${member.source === 'performance' ? 
+                    '<span style="font-size: 10px; color: #28a745; margin-left: 5px;" title="성과 데이터 기준">●</span>' : 
+                    '<span style="font-size: 10px; color: #6c757d; margin-left: 5px;" title="명단 데이터만">○</span>'
+                }
+            </td>
             <td>
                 <a href="percent_member.html?member=${encodeURIComponent(member.name)}" 
                    class="member-name">${member.name}</a>
+                ${member.score > 0 ? 
+                    `<small style="color: var(--example); margin-left: 8px;">(${member.score}%)</small>` : ''
+                }
             </td>
             <td class="party-name">${member.party}</td>
             <td class="phone-number">${member.contact || '연락처 정보 없음'}</td>
@@ -443,7 +604,7 @@ function setupSorting() {
     });
 }
 
-// WeightSync 호환 함수들
+// WeightSync 호환 함수들 (수정된 버전)
 async function refreshMemberRankingData() {
     console.log('[RankMember] 🔄 의원 랭킹 데이터 새로고침...');
     try {
@@ -471,6 +632,23 @@ async function fetchMemberData() {
     return await loadAllData();
 }
 
+// 🎯 메인페이지 연동 함수들 (새로 추가)
+window.getMemberTop3Data = function() {
+    return getTop3Members();
+};
+
+window.refreshMemberTop3 = async function() {
+    try {
+        await loadAllData(); // 데이터 새로고침
+        const top3 = getTop3Members();
+        notifyMainPageWithTop3();
+        return top3;
+    } catch (error) {
+        console.error('[RankMember] ❌ Top3 새로고침 실패:', error);
+        return getDefaultTop3Members();
+    }
+};
+
 // 페이지 초기화
 async function initializePage() {
     try {
@@ -497,14 +675,21 @@ async function initializePage() {
     }
 }
 
-// 디버그 함수들
+// 디버그 함수들 (수정된 버전)
 window.rankMemberDebug = {
     getState: () => pageState,
     refreshData: () => refreshMemberRankingData(),
     reloadData: () => loadAllData(),
+    getTop3: () => getTop3Members(),
+    showTop3: () => {
+        const top3 = getTop3Members();
+        console.log('[RankMember] 🏆 현재 상위 3명:', top3);
+        return top3;
+    },
     showInfo: () => {
         console.log('[RankMember] 📊 페이지 정보:');
         console.log(`- 전체 의원: ${pageState.memberList.length}명`);
+        console.log(`- 성과 데이터: ${pageState.memberPerformance.length}명`);
         console.log(`- 필터된 의원: ${pageState.filteredMembers.length}명`);
         console.log(`- 현재 페이지: ${pageState.currentPage}/${pageState.totalPages}`);
         console.log(`- 정렬: ${pageState.currentSort}`);
@@ -512,12 +697,27 @@ window.rankMemberDebug = {
         console.log(`- 검색: "${pageState.searchQuery}"`);
         console.log(`- 랭킹 데이터: ${pageState.memberRanking.length}개`);
         console.log(`- API 연결: ${window.APIService?._isReady ? '✅' : '❌'}`);
+        console.log(`- 상위 3명:`, getTop3Members());
+    },
+    testAPIStructure: async () => {
+        try {
+            console.log('[RankMember] 🔍 API 구조 테스트...');
+            const performance = await window.APIService.getMemberPerformance();
+            console.log('성과 API 타입:', typeof performance);
+            console.log('성과 API 길이:', Array.isArray(performance) ? performance.length : 'not array');
+            if (Array.isArray(performance) && performance.length > 0) {
+                console.log('성과 샘플:', performance[0]);
+                console.log('성과 필드:', Object.keys(performance[0]));
+            }
+        } catch (error) {
+            console.error('API 구조 테스트 실패:', error);
+        }
     }
 };
 
 // DOM 로드 완료 후 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('[RankMember] 📄 DOM 로드 완료 (v2.0.0)');
+    console.log('[RankMember] 📄 DOM 로드 완료 (v2.1.0 - 메인페이지 연동)');
     
     // API 서비스 대기
     let attempts = 0;
@@ -535,16 +735,20 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('[RankMember] ⚠️ API 서비스 연결 타임아웃, 폴백 데이터 사용');
             // 폴백 데이터로 초기화
             pageState.memberList = getFallbackData();
+            pageState.memberPerformance = [];
             pageState.memberRanking = [];
             mergeAndProcessData();
             initializeElements();
             setupSearch();
             setupFilters();
             setupSorting();
+            
+            // 폴백 상황에서도 메인페이지에 데이터 전송
+            notifyMainPageWithTop3();
         }
     }
     
     waitForAPI();
 });
 
-console.log('[RankMember] 📦 rank_member.js 로드 완료 (v2.0.0)');
+console.log('[RankMember] 📦 rank_member.js 로드 완료 (v2.1.0 - 메인페이지 연동)');
