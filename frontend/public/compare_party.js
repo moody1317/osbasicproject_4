@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 비교 페이지 로드 시작 (로컬 비교 로직 버전)');
+    console.log('🚀 정당 비교 페이지 로드 시작 (기본 비교 로직 버전)');
 
     // === 🔧 상태 관리 변수들 ===
     let selectedParties = [];
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const rankingData = partyRankings[partyName];
             
             if (!performanceData) {
-                console.warn(`⚠️ ${partyName} 성과 데이터 없음, 기본값 사용`);
+                console.warn(`⚠️ ${partyName} 성과 데이터를 찾을 수 없습니다, 기본값 사용`);
                 return generateDefaultStats(partyName, rankingData);
             }
 
@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // === ⚖️ 순수 로컬 비교 로직 (API 의존성 완전 제거) ===
+    // === ⚖️ 순수 로컬 비교 로직 ===
     function comparePartiesLocal(party1Stats, party2Stats) {
         console.log(`🆚 로컬 비교 시작: ${party1Stats.partyName} vs ${party2Stats.partyName}`);
         console.log('Party1 Stats:', {
@@ -619,7 +619,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 value: `${stats.billPassSum}건`,
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
-                tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>`
+                tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>
+                         가결률 추정: ${stats.billPassRate?.toFixed(1) || '0.0'}%`
             },
             { // 3. 청원 제안
                 value: `${stats.petitionProposed}건`,
@@ -796,14 +797,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         const stats = await calculatePartyStats(selectedParty);
                         partyStats[selectedParty] = stats;
                         
-                        // localStorage에 현재 비교 정보 저장 (weight_sync.js에서 사용)
-                        if (selectedParties[0] && selectedParties[1]) {
-                            localStorage.setItem('current_party_comparison', JSON.stringify({
-                                party1: selectedParties[0],
-                                party2: selectedParties[1]
-                            }));
-                        }
-                        
                         // 두 정당이 모두 선택되었으면 비교 수행
                         if (selectedParties[0] && selectedParties[1]) {
                             console.log(`🆚 두 정당 비교 시작: ${selectedParties[0]} vs ${selectedParties[1]}`);
@@ -828,8 +821,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     // 선택 해제 시 카드 리셋
                     resetPartyCard(index);
-                    // localStorage에서 비교 정보 제거
-                    localStorage.removeItem('current_party_comparison');
                 }
             });
         });
@@ -904,12 +895,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // === 🔄 데이터 새로고침 함수들 ===
+    // === 🔄 기본 데이터 새로고침 함수들 (가중치 제거) ===
 
-    // 전체 데이터 새로고침 (가중치 변경 시 사용)
-    async function refreshPartyComparison() {
+    // 기본 데이터 새로고침 (수동 새로고침용)
+    async function refreshPartyData() {
         try {
-            console.log('🔄 정당 비교 데이터 새로고침...');
+            console.log('🔄 정당 비교 데이터 수동 새로고침...');
             showLoading(true);
             
             // 모든 데이터 다시 로드
@@ -946,7 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             
-            showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
+            showNotification('정당 비교 데이터가 새로고침되었습니다', 'success');
             
         } catch (error) {
             console.error('❌ 데이터 새로고침 실패:', error);
@@ -956,36 +947,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // WeightSync 호환 함수들
-    async function refreshPartyComparisonData() {
-        return await refreshPartyComparison();
-    }
-
-    async function loadPartyComparisonData() {
-        return await refreshPartyComparison();
-    }
-
-    async function updatePartyComparisonData(newData) {
-        console.log('[CompareParty] 📊 외부 데이터로 업데이트:', newData);
-        
-        if (newData && (Array.isArray(newData) || typeof newData === 'object')) {
-            // 새로운 데이터로 정당 통계 재계산
-            const updatePromises = selectedParties.map(async (partyName, index) => {
-                if (partyName) {
-                    const stats = await calculatePartyStats(partyName);
-                    partyStats[partyName] = stats;
-                    updatePartyCard(index, partyName, stats);
-                }
-            });
-            
-            await Promise.all(updatePromises);
-            showNotification('정당 비교 데이터가 업데이트되었습니다', 'success');
-        }
-    }
-
     // === 🚀 페이지 초기화 ===
-    async function initializePage() {
-        console.log('🚀 정당 비교 페이지 초기화 중...');
+    async function initializePage() {  
+        console.log('📊 정당 비교 페이지 초기화 중...');
         
         try {
             showLoading(true);
@@ -1021,22 +985,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === 🔧 전역 함수 등록 (WeightSync 및 디버그용) ===
+    // === 🔧 기본 함수 등록 (가중치 제거) ===
     
-    // WeightSync 연동 함수들
-    window.refreshPartyComparisonData = refreshPartyComparisonData;
-    window.loadPartyComparisonData = loadPartyComparisonData;
-    window.updatePartyComparisonData = updatePartyComparisonData;
-    window.refreshPartyComparison = refreshPartyComparison;
+    // 기본 새로고침 함수들
+    window.refreshPartyComparisonData = refreshPartyData;
+    window.loadPartyComparisonData = refreshPartyData;
 
-    // 디버그 유틸리티 (전역)
+    // 디버그 유틸리티 (가중치 관련 기능 제거)
     window.comparePartyDebug = {
         getSelectedParties: () => selectedParties,
         getPartyStats: () => partyStats,
         getPartyRankings: () => partyRankings,
         getPartyPerformanceData: () => partyPerformanceData,
         reloadData: () => initializePage(),
-        refreshData: () => refreshPartyComparison(),
+        refreshData: () => refreshPartyData(),
         testPartyStats: (partyName) => calculatePartyStats(partyName),
         testPerformanceData: () => fetchPartyPerformanceData(),
         testRankingData: () => fetchPartyRankingData(),
@@ -1054,7 +1016,6 @@ document.addEventListener('DOMContentLoaded', function() {
         clearSelection: () => {
             selectedParties = [];
             partyStats = {};
-            localStorage.removeItem('current_party_comparison');
             const dropdowns = document.querySelectorAll('select.party-dropdown');
             dropdowns.forEach(dropdown => dropdown.value = '');
             const cards = document.querySelectorAll('.comparison-card');
@@ -1080,17 +1041,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (tooltips.length > 0) {
                 console.log('- 첫 번째 툴팁 내용:', tooltips[0].innerHTML.substring(0, 50) + '...');
             }
-        },
-        simulateWeightChange: () => {
-            console.log('🔧 가중치 변경 시뮬레이션...');
-            const changeData = {
-                type: 'weights_updated',
-                timestamp: new Date().toISOString(),
-                source: 'debug_simulation'
-            };
-            localStorage.setItem('weight_change_event', JSON.stringify(changeData));
-            localStorage.setItem('last_weight_update', Date.now().toString());
-            setTimeout(() => localStorage.removeItem('weight_change_event'), 100);
         },
         testComparison: async (party1, party2) => {
             if (!party1 || !party2) {
@@ -1127,147 +1077,24 @@ document.addEventListener('DOMContentLoaded', function() {
             const comparison = comparePartiesLocal(stats1, stats2);
             console.log(`🆚 ${party1} vs ${party2} 비교 결과:`, comparison);
             return comparison;
-        },
-        
-        // 툴팁 테스트 함수
-        testTooltips: () => {
-            console.log('🔍 툴팁 상태 점검:');
-            
-            const statusItems = document.querySelectorAll('.status-item');
-            statusItems.forEach((item, index) => {
-                const label = item.querySelector('.status-label')?.textContent || `항목 ${index + 1}`;
-                const infoIcon = item.querySelector('.info-icon');
-                const tooltip = item.querySelector('.tooltip');
-                
-                console.log(`${index + 1}. ${label}:`);
-                console.log(`   - i 아이콘: ${infoIcon ? '✅ 있음' : '❌ 없음'}`);
-                console.log(`   - 툴팁: ${tooltip ? '✅ 있음' : '❌ 없음'}`);
-                
-                if (tooltip) {
-                    const content = tooltip.innerHTML.substring(0, 30) + '...';
-                    console.log(`   - 툴팁 내용: ${content}`);
-                }
-                
-                if (infoIcon) {
-                    const styles = window.getComputedStyle(infoIcon);
-                    console.log(`   - display: ${styles.display}, visibility: ${styles.visibility}`);
-                }
-            });
-            
-            return {
-                총_상태_항목: statusItems.length,
-                i_아이콘_개수: document.querySelectorAll('.info-icon').length,
-                툴팁_개수: document.querySelectorAll('.tooltip').length
-            };
-        },
-        
-        // 🔧 i 아이콘 강제 재생성 함수
-        forceRecreateIcons: () => {
-            console.log('🔧 모든 i 아이콘 강제 재생성...');
-            
-            const statusItems = document.querySelectorAll('.status-item');
-            const needsTooltip = [1, 2, 3, 4, 7, 8, 9]; // 출석, 본회의가결, 청원제안, 청원결과, 무효표기권, 투표일치, 투표불일치
-            
-            statusItems.forEach((item, index) => {
-                if (needsTooltip.includes(index)) {
-                    const statusValue = item.querySelector('.status-value');
-                    if (statusValue) {
-                        // 기존 i 아이콘 제거
-                        const existingIcon = statusValue.querySelector('.info-icon');
-                        if (existingIcon) {
-                            existingIcon.remove();
-                        }
-                        
-                        // 새 i 아이콘 생성
-                        const infoIcon = document.createElement('span');
-                        infoIcon.className = 'info-icon';
-                        infoIcon.textContent = 'i';
-                        infoIcon.style.cssText = `
-                            display: inline-flex;
-                            align-items: center;
-                            justify-content: center;
-                            width: 18px;
-                            height: 18px;
-                            border-radius: 50%;
-                            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-                            color: white;
-                            font-size: 11px;
-                            font-weight: bold;
-                            cursor: help;
-                            position: relative;
-                            margin-left: 8px;
-                            transition: all 0.3s ease;
-                            border: 2px solid rgba(255, 255, 255, 0.2);
-                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-                        `;
-                        
-                        const tooltip = document.createElement('div');
-                        tooltip.className = 'tooltip';
-                        tooltip.innerHTML = '테스트 툴팁입니다.<br>i 아이콘이 보이시나요?';
-                        tooltip.style.cssText = `
-                            position: absolute;
-                            bottom: 100%;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-                            color: white;
-                            padding: 12px 16px;
-                            border-radius: 8px;
-                            font-size: 13px;
-                            font-weight: 500;
-                            white-space: normal;
-                            opacity: 0;
-                            visibility: hidden;
-                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                            z-index: 1000;
-                            margin-bottom: 8px;
-                            min-width: 180px;
-                            max-width: 280px;
-                            line-height: 1.5;
-                            text-align: left;
-                            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-                            border: 1px solid rgba(255, 255, 255, 0.1);
-                        `;
-                        
-                        // 호버 이벤트 추가
-                        infoIcon.addEventListener('mouseenter', () => {
-                            tooltip.style.opacity = '1';
-                            tooltip.style.visibility = 'visible';
-                        });
-                        
-                        infoIcon.addEventListener('mouseleave', () => {
-                            tooltip.style.opacity = '0';
-                            tooltip.style.visibility = 'hidden';
-                        });
-                        
-                        infoIcon.appendChild(tooltip);
-                        statusValue.appendChild(infoIcon);
-                        
-                        console.log(`✅ ${index + 1}번째 항목에 i 아이콘 재생성 완료`);
-                    }
-                }
-            });
-            
-            console.log('🎉 모든 i 아이콘 재생성 완료!');
         }
     };
 
     // 초기화 실행
-    setTimeout(initializePage, 100);
+    initializePage();
 
-    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (로컬 비교 로직 버전)');
-    console.log('🔗 API 의존성: 완전 제거');
+    console.log('✅ 정당 비교 페이지 스크립트 로드 완료 (가중치 반영 기능 제거)');
+    console.log('🔗 API 의존성: Django API 직접 연동');
     console.log('📊 데이터 정규화: 자동 퍼센트 형식 감지');
     console.log('🔧 주요 변경사항:');
     console.log('  - compare_parties API 호출 완전 제거');
     console.log('  - 순수 로컬 비교 로직 사용');
     console.log('  - 비율 데이터 자동 정규화 (26940% → 올바른 퍼센트)');
     console.log('  - i 아이콘과 툴팁 완전 보존 (outerHTML 사용)');
+    console.log('  - 가중치 변경 감지 시스템 제거');
     console.log('🔧 디버그 명령어:');
     console.log('  - window.comparePartyDebug.showInfo() : 페이지 정보 확인');
     console.log('  - window.comparePartyDebug.testComparison("정당1", "정당2") : 비교 테스트');
-    console.log('  - window.comparePartyDebug.testTooltips() : 툴팁 상태 점검');
-    console.log('  - window.comparePartyDebug.forceRecreateIcons() : i 아이콘 강제 재생성');
     console.log('  - window.comparePartyDebug.reloadData() : 데이터 새로고침');
     console.log('  - window.comparePartyDebug.clearSelection() : 선택 초기화');
 });
