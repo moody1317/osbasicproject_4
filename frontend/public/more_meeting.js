@@ -653,8 +653,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (homeIcon) {
             homeIcon.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('🏠 본회의 현황 페이지로 이동');
-                window.location.href = 'meeting.html';
+                const targetUrl = foundBill.DETAIL_LINK || 'petition.html';
+                window.location.href = targetUrl;  
             });
         }
     }
