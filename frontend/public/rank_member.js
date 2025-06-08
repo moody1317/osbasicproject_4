@@ -562,115 +562,228 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === 🚀 기존 API 데이터 로드 함수 (원본 데이터용) ===
-    async function loadAllData() {
-        try {
-            setLoadingState(true);
-            console.log('[RankMember] 🚀 원본 API 데이터 로드 시작...');
-            
-            if (!window.APIService || !window.APIService._isReady) {
-                throw new Error('API 서비스가 준비되지 않았습니다.');
-            }
-            
-            const results = await Promise.allSettled([
-                window.APIService.getAllMembers(),
-                window.APIService.getMemberRanking(),
-                window.APIService.getMemberPerformance()
-            ]);
-            
-            const [membersResult, rankingResult, performanceResult] = results;
-            
-            if (membersResult.status === 'fulfilled') {
-                memberList = membersResult.value || [];
-                console.log(`[RankMember] ✅ 국회의원 명단: ${memberList.length}명`);
-            } else {
-                console.error('[RankMember] ❌ 국회의원 명단 로드 실패:', membersResult.reason);
-                throw new Error('국회의원 명단을 불러올 수 없습니다.');
-            }
-            
-            let memberRanking = [];
-            if (rankingResult.status === 'fulfilled') {
-                memberRanking = rankingResult.value || [];
-                console.log(`[RankMember] ✅ 랭킹 데이터: ${memberRanking.length}개`);
-            } else {
-                console.warn('[RankMember] ⚠️ 랭킹 데이터 로드 실패:', rankingResult.reason);
-            }
-
-            // 성과 데이터 로드
-            let memberPerformanceData = [];
-            if (performanceResult.status === 'fulfilled') {
-                memberPerformanceData = performanceResult.value || [];
-                console.log(`[RankMember] ✅ 성과 데이터: ${memberPerformanceData.length}개`);
-            }
-            
-            // 🎯 원본 데이터 병합 및 보관
-            mergeAndStoreOriginalData(memberRanking, memberPerformanceData);
-            
-            // 계산된 데이터가 있으면 그것을 사용, 없으면 원본 데이터 사용
-            if (dataReceiveState.isUsingCalculatedData && calculatedMemberData.length > 0) {
-                filteredMembers = [...calculatedMemberData];
-            } else {
-                filteredMembers = [...originalMemberData];
-            }
-            
-            applyCurrentFiltersAndSort();
-            renderTable();
-            renderPagination();
-            
-            console.log('[RankMember] ✅ 원본 API 데이터 로드 완료');
-            return true;
-            
-        } catch (error) {
-            console.error('[RankMember] ❌ 데이터 로드 실패:', error);
-            hasError = true;
-            showNotification('데이터 로드에 실패했습니다.', 'error');
-            
-            memberList = getFallbackData();
-            mergeAndStoreOriginalData([], []);
-            
-            throw error;
-        } finally {
-            setLoadingState(false);
+// === 🚀 기존 API 데이터 로드 함수 (원본 데이터용) - 수정된 버전 ===
+async function loadAllData() {
+    try {
+        setLoadingState(true);
+        console.log('[RankMember] 🚀 원본 API 데이터 로드 시작...');
+        
+        if (!window.APIService || !window.APIService._isReady) {
+            throw new Error('API 서비스가 준비되지 않았습니다.');
         }
-    }
+        
+        const results = await Promise.allSettled([
+            window.APIService.getAllMembers(),
+            window.APIService.getMemberRanking(),
+            window.APIService.getMemberPerformance()
+        ]);
+        
+        const [membersResult, rankingResult, performanceResult] = results;
+        
+        if (membersResult.status === 'fulfilled') {
+            memberList = membersResult.value || [];
+            console.log(`[RankMember] ✅ 국회의원 명단: ${memberList.length}명`);
+        } else {
+            console.error('[RankMember] ❌ 국회의원 명단 로드 실패:', membersResult.reason);
+            throw new Error('국회의원 명단을 불러올 수 없습니다.');
+        }
+        
+        let memberRanking = [];
+        if (rankingResult.status === 'fulfilled') {
+            memberRanking = rankingResult.value || [];
+            console.log(`[RankMember] ✅ 랭킹 데이터: ${memberRanking.length}개`);
+        } else {
+            console.warn('[RankMember] ⚠️ 랭킹 데이터 로드 실패:', rankingResult.reason);
+        }
 
-    // === 🎯 원본 데이터 병합 및 저장 ===
-    function mergeAndStoreOriginalData(memberRanking, performanceData) {
-        try {
-            console.log('[RankMember] 📊 원본 데이터 병합 중...');
+        // 🔧 성과 데이터 로드 - 수정된 버전
+        let memberPerformanceData = [];
+        if (performanceResult.status === 'fulfilled') {
+            const rawPerformanceData = performanceResult.value;
             
-            originalMemberData = memberList.map((member, index) => {
-                const memberName = member.name || '';
-                const ranking = memberRanking.find(r => r.HG_NM === memberName);
-                const performance = performanceData.find(p => p.lawmaker_name === memberName);
+            // 📊 데이터 구조 확인 및 정규화
+            if (Array.isArray(rawPerformanceData)) {
+                memberPerformanceData = rawPerformanceData;
+            } else if (rawPerformanceData && typeof rawPerformanceData === 'object') {
+                // 객체 형태로 반환된 경우 (예: {ranking: [...], data: [...]} 등)
+                if (rawPerformanceData.ranking && Array.isArray(rawPerformanceData.ranking)) {
+                    memberPerformanceData = rawPerformanceData.ranking;
+                } else if (rawPerformanceData.data && Array.isArray(rawPerformanceData.data)) {
+                    memberPerformanceData = rawPerformanceData.data;
+                } else if (rawPerformanceData.results && Array.isArray(rawPerformanceData.results)) {
+                    memberPerformanceData = rawPerformanceData.results;
+                } else {
+                    // 객체의 모든 값 중 배열인 것을 찾아서 사용
+                    const arrayValues = Object.values(rawPerformanceData).filter(val => Array.isArray(val));
+                    if (arrayValues.length > 0) {
+                        memberPerformanceData = arrayValues[0];
+                    } else {
+                        console.warn('[RankMember] ⚠️ 성과 데이터에서 배열을 찾을 수 없습니다:', rawPerformanceData);
+                        memberPerformanceData = [];
+                    }
+                }
+            } else {
+                console.warn('[RankMember] ⚠️ 예상하지 못한 성과 데이터 형태:', rawPerformanceData);
+                memberPerformanceData = [];
+            }
+            
+            console.log(`[RankMember] ✅ 성과 데이터: ${memberPerformanceData.length}개`);
+            
+            // 🔍 데이터 구조 확인 로깅
+            if (memberPerformanceData.length > 0) {
+                console.log('[RankMember] 📋 성과 데이터 샘플:', memberPerformanceData[0]);
+            }
+            
+        } else {
+            console.warn('[RankMember] ⚠️ 성과 데이터 로드 실패:', performanceResult.reason);
+            memberPerformanceData = [];
+        }
+        
+        // 🎯 원본 데이터 병합 및 보관
+        mergeAndStoreOriginalData(memberRanking, memberPerformanceData);
+        
+        // 계산된 데이터가 있으면 그것을 사용, 없으면 원본 데이터 사용
+        if (dataReceiveState.isUsingCalculatedData && calculatedMemberData.length > 0) {
+            filteredMembers = [...calculatedMemberData];
+        } else {
+            filteredMembers = [...originalMemberData];
+        }
+        
+        applyCurrentFiltersAndSort();
+        renderTable();
+        renderPagination();
+        
+        console.log('[RankMember] ✅ 원본 API 데이터 로드 완료');
+        return true;
+        
+    } catch (error) {
+        console.error('[RankMember] ❌ 데이터 로드 실패:', error);
+        hasError = true;
+        showNotification('데이터 로드에 실패했습니다.', 'error');
+        
+        memberList = getFallbackData();
+        mergeAndStoreOriginalData([], []);
+        
+        throw error;
+    } finally {
+        setLoadingState(false);
+    }
+}
+
+// === 🎯 원본 데이터 병합 및 저장 - 수정된 버전 ===
+function mergeAndStoreOriginalData(memberRanking, performanceData) {
+    try {
+        console.log('[RankMember] 📊 원본 데이터 병합 중...');
+        
+        // 🔧 데이터 유효성 검증
+        const validMemberRanking = Array.isArray(memberRanking) ? memberRanking : [];
+        const validPerformanceData = Array.isArray(performanceData) ? performanceData : [];
+        
+        console.log(`[RankMember] 📋 병합 대상 - 랭킹: ${validMemberRanking.length}개, 성과: ${validPerformanceData.length}개`);
+        
+        originalMemberData = memberList.map((member, index) => {
+            const memberName = member.name || '';
+            
+            // 🔍 랭킹 데이터 검색 (방어적 프로그래밍)
+            let ranking = null;
+            try {
+                ranking = validMemberRanking.find(r => r && r.HG_NM === memberName);
+            } catch (error) {
+                console.warn(`[RankMember] 랭킹 데이터 검색 실패 (${memberName}):`, error);
+            }
+            
+            // 🔍 성과 데이터 검색 (방어적 프로그래밍)
+            let performance = null;
+            try {
+                performance = validPerformanceData.find(p => {
+                    // 다양한 필드명 대응
+                    return p && (
+                        p.lawmaker_name === memberName ||
+                        p.name === memberName ||
+                        p.member_name === memberName ||
+                        p.HG_NM === memberName
+                    );
+                });
+            } catch (error) {
+                console.warn(`[RankMember] 성과 데이터 검색 실패 (${memberName}):`, error);
+            }
+            
+            return {
+                // 기본 정보
+                rank: ranking ? parseInt(ranking.총점_순위) || (index + 1) : (index + 1),
+                name: memberName,
+                party: member.party || '정당 정보 없음',
+                contact: member.phone || '',
+                homepage: member.homepage || '',
+                originalIndex: index,
                 
-                return {
-                    // 기본 정보
-                    rank: ranking ? parseInt(ranking.총점_순위) || (index + 1) : (index + 1),
-                    name: memberName,
-                    party: member.party || '정당 정보 없음',
-                    contact: member.phone || '',
-                    homepage: member.homepage || '',
-                    originalIndex: index,
-                    
-                    // 원본 점수 정보
-                    originalScore: ranking ? parseFloat(ranking.총점 || 0) : 0,
-                    scoreSource: 'api_original',
-                    
-                    // 원본 데이터 참조
-                    _member: member,
-                    _ranking: ranking,
-                    _performance: performance
-                };
-            });
-            
-            console.log(`[RankMember] ✅ 원본 데이터 병합 완료: ${originalMemberData.length}명`);
-            
-        } catch (error) {
-            console.error('[RankMember] ❌ 원본 데이터 병합 실패:', error);
-            originalMemberData = [];
-        }
+                // 원본 점수 정보
+                originalScore: ranking ? parseFloat(ranking.총점 || 0) : 0,
+                scoreSource: 'api_original',
+                
+                // 성과 데이터 추가 정보 (있는 경우)
+                performanceScore: performance ? parseFloat(performance.total_score || performance.총점 || 0) : null,
+                attendanceScore: performance ? parseFloat(performance.attendance_score || 0) : null,
+                
+                // 원본 데이터 참조
+                _member: member,
+                _ranking: ranking,
+                _performance: performance
+            };
+        });
+        
+        console.log(`[RankMember] ✅ 원본 데이터 병합 완료: ${originalMemberData.length}명`);
+        
+        // 🔍 병합된 데이터 품질 확인
+        const withRanking = originalMemberData.filter(m => m._ranking).length;
+        const withPerformance = originalMemberData.filter(m => m._performance).length;
+        
+        console.log(`[RankMember] 📊 데이터 품질 - 랭킹 연결: ${withRanking}명, 성과 연결: ${withPerformance}명`);
+        
+    } catch (error) {
+        console.error('[RankMember] ❌ 원본 데이터 병합 실패:', error);
+        
+        // 📋 최소한의 기본 데이터라도 생성
+        originalMemberData = memberList.map((member, index) => ({
+            rank: index + 1,
+            name: member.name || '',
+            party: member.party || '정당 정보 없음',
+            contact: member.phone || '',
+            homepage: member.homepage || '',
+            originalIndex: index,
+            originalScore: 0,
+            scoreSource: 'fallback',
+            _member: member,
+            _ranking: null,
+            _performance: null
+        }));
+        
+        console.log(`[RankMember] 🔧 폴백 데이터 생성: ${originalMemberData.length}명`);
     }
+}
+
+// === 🔧 API 데이터 구조 디버깅 함수 추가 ===
+function debugApiDataStructure() {
+    console.log('[RankMember] 🔍 API 데이터 구조 디버깅:');
+    
+    if (memberList.length > 0) {
+        console.log('👥 memberList 샘플:', memberList[0]);
+    }
+    
+    if (originalMemberData.length > 0) {
+        console.log('📊 originalMemberData 샘플:', originalMemberData[0]);
+    }
+    
+    console.log('📈 데이터 상태:', {
+        memberList: memberList.length,
+        originalMemberData: originalMemberData.length,
+        calculatedMemberData: calculatedMemberData.length,
+        filteredMembers: filteredMembers.length
+    });
+}
+
+// 디버그 함수를 전역으로 등록
+window.debugRankMemberData = debugApiDataStructure;
 
     // === 🔍 검색 상태 복원 ===
     async function restoreSearchState(searchState) {
