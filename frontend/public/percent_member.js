@@ -189,25 +189,33 @@ async function fetchMemberList() {
     }
 }
 
-// 🔧 수정된 실적 데이터 가져오기 함수 (API 응답 구조에 맞춤)
+// 🔧 강화된 실적 데이터 가져오기 함수 (API 응답 구조에 맞춤)
 async function fetchPerformanceData() {
     try {
         console.log('📊 국회의원 실적 API 호출...');
         
         const response = await window.APIService.getMemberPerformance();
-        console.log('🔍 실적 API 원본 응답:', response);
+        console.log('🔍 실적 API 원본 응답 구조:', {
+            type: typeof response,
+            isArray: Array.isArray(response),
+            hasRanking: !!response?.ranking,
+            keys: response ? Object.keys(response) : [],
+            responseLength: response?.length,
+            rankingLength: response?.ranking?.length
+        });
         
         // 🎯 API 응답 구조 확인: {ranking: [...]} 형태
         let performanceData = [];
         
         if (response && response.ranking && Array.isArray(response.ranking)) {
             performanceData = response.ranking;
-            console.log('✅ response.ranking 배열 사용');
+            console.log(`✅ response.ranking 배열 사용 (${performanceData.length}개)`);
         } else if (Array.isArray(response)) {
             performanceData = response;
-            console.log('✅ response 직접 배열 사용');
+            console.log(`✅ response 직접 배열 사용 (${performanceData.length}개)`);
         } else {
             console.warn('⚠️ 예상하지 못한 API 응답 구조:', response);
+            console.log('🔍 전체 응답 데이터:', JSON.stringify(response, null, 2).substring(0, 1000));
             throw new Error('API 응답 형식이 올바르지 않습니다');
         }
 
@@ -221,10 +229,23 @@ async function fetchPerformanceData() {
             return pageState.performanceData;
         }
         
+        // 🔧 첫 번째 샘플 데이터 상세 분석
+        if (performanceData.length > 0) {
+            const sample = performanceData[0];
+            console.log('🔍 첫 번째 실적 데이터 샘플:', sample);
+            console.log('🔍 사용 가능한 필드들:', Object.keys(sample));
+            console.log('🔍 의원명 필드들:', {
+                lawmaker_name: sample.lawmaker_name,
+                name: sample.name,
+                HG_NM: sample.HG_NM,
+                member_name: sample.member_name
+            });
+        }
+        
         // 🔧 실제 API 필드명을 기반으로 한 정확한 매핑
-        pageState.performanceData = performanceData.map(perf => {
-            // 실제 API 필드명 사용
-            const name = perf.lawmaker_name || perf.name || perf.HG_NM || perf.member_name || '';
+        pageState.performanceData = performanceData.map((perf, index) => {
+            // 실제 API 필드명 사용 - 다양한 필드명 시도
+            const name = perf.lawmaker_name || perf.name || perf.HG_NM || perf.member_name || `Unknown_${index}`;
             const party = perf.party || perf.POLY_NM || perf.party_name || '무소속';
             
             // ✅ 올바른 필드명 사용 (total_score, 오타 수정)
@@ -263,24 +284,31 @@ async function fetchPerformanceData() {
         
         console.log(`✅ 실적 데이터 로드 완료: ${pageState.performanceData.length}개`);
         
-        // 🔧 나경원 의원 실적 확인 및 디버깅
-        const naKyungWonPerf = pageState.performanceData.find(p => p.name === '나경원');
-        if (naKyungWonPerf) {
-            console.log('✅ 나경원 실적 데이터 발견:', naKyungWonPerf);
-        } else {
-            console.warn('❌ 나경원 실적 데이터 없음');
-            console.log('📋 실적 데이터 의원명 목록 (처음 10명):', 
-                pageState.performanceData.slice(0, 10).map(p => p.name));
-            
-            // 유사한 이름 검색
-            const similarNames = pageState.performanceData
-                .map(p => p.name)
-                .filter(name => name.includes('나') || name.includes('경원'));
-            
-            if (similarNames.length > 0) {
-                console.log('🔍 유사한 이름들:', similarNames);
+        // 🔧 전체 의원명 목록 출력 (디버깅용)
+        const allNames = pageState.performanceData.map(p => p.name);
+        console.log('📋 전체 실적 데이터 의원명 목록:', allNames);
+        
+        // 🔧 특정 의원들 확인 (박찬대, 나경원 등)
+        const testMembers = ['박찬대', '나경원', '이재명', '김건희'];
+        testMembers.forEach(memberName => {
+            const found = pageState.performanceData.find(p => p.name === memberName);
+            if (found) {
+                console.log(`✅ ${memberName} 실적 데이터 발견:`, found);
+            } else {
+                console.warn(`❌ ${memberName} 실적 데이터 없음`);
+                
+                // 유사한 이름 검색
+                const similarNames = allNames.filter(name => 
+                    name.includes(memberName) || 
+                    memberName.includes(name) ||
+                    name.replace(/\s/g, '') === memberName.replace(/\s/g, '')
+                );
+                
+                if (similarNames.length > 0) {
+                    console.log(`🔍 ${memberName}와 유사한 이름들:`, similarNames);
+                }
             }
-        }
+        });
         
         pageState.apiErrors.performance = false;
         return pageState.performanceData;
@@ -641,41 +669,137 @@ function findMemberPhoto(memberCode, memberName) {
     return photoByName && photoByName.photo ? photoByName.photo : null;
 }
 
+// 🔧 강화된 의원 실적 검색 함수
 function findMemberPerformance(memberName) {
+    console.log(`🔍 ${memberName} 실적 검색 시작...`);
+    
     if (!pageState.performanceData || pageState.performanceData.length === 0) {
-        console.log(`🔍 ${memberName} 실적 검색: 실적 데이터가 없음`);
+        console.log(`❌ ${memberName} 실적 검색: 실적 데이터가 비어있음`);
         return null;
     }
     
-    console.log(`🔍 ${memberName} 실적 검색 중... (데이터 유형: ${pageState.performanceData[0]._fallback ? '폴백' : 'API'})`);
+    console.log(`📊 실적 데이터 상태: ${pageState.performanceData.length}개 (데이터 유형: ${pageState.performanceData[0]._fallback ? '폴백' : 'API'})`);
     
-    // 정확한 이름 매칭
+    // 🔍 1단계: 정확한 이름 매칭
     let performance = pageState.performanceData.find(perf => perf.name === memberName);
-    
-    // 정확한 매칭이 없으면 유사한 이름 검색
-    if (!performance) {
-        // 공백 제거 후 매칭
-        performance = pageState.performanceData.find(perf => 
-            perf.name.replace(/\s/g, '') === memberName.replace(/\s/g, '')
-        );
-    }
-    
-    // 부분 매칭
-    if (!performance) {
-        performance = pageState.performanceData.find(perf => 
-            perf.name.includes(memberName) || memberName.includes(perf.name)
-        );
-    }
-    
     if (performance) {
-        const dataType = performance._fallback ? '폴백' : 'API';
-        console.log(`✅ ${memberName} ${dataType} 실적 데이터 발견:`, performance);
-    } else {
-        console.warn(`❌ ${memberName} 실적 데이터 없음`);
-        console.log('🔍 전체 실적 데이터 의원명:', pageState.performanceData.slice(0, 10).map(p => p.name));
+        console.log(`✅ ${memberName} 정확한 이름 매칭 성공:`, performance);
+        return performance;
     }
     
-    return performance;
+    // 🔍 2단계: 공백 제거 후 매칭
+    performance = pageState.performanceData.find(perf => 
+        perf.name.replace(/\s/g, '') === memberName.replace(/\s/g, '')
+    );
+    if (performance) {
+        console.log(`✅ ${memberName} 공백 제거 매칭 성공:`, performance);
+        return performance;
+    }
+    
+    // 🔍 3단계: 부분 매칭
+    performance = pageState.performanceData.find(perf => 
+        perf.name.includes(memberName) || memberName.includes(perf.name)
+    );
+    if (performance) {
+        console.log(`✅ ${memberName} 부분 매칭 성공:`, performance);
+        return performance;
+    }
+    
+    // 🔍 4단계: 대소문자 무시 매칭
+    performance = pageState.performanceData.find(perf => 
+        perf.name.toLowerCase() === memberName.toLowerCase()
+    );
+    if (performance) {
+        console.log(`✅ ${memberName} 대소문자 무시 매칭 성공:`, performance);
+        return performance;
+    }
+    
+    // 🔍 5단계: 한글 초성 매칭 (간단한 버전)
+    const getInitials = (str) => {
+        const initials = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+        return str.split('').map(char => {
+            const code = char.charCodeAt(0) - 44032;
+            if (code > -1 && code < 11172) {
+                return initials[Math.floor(code / 588)];
+            }
+            return char;
+        }).join('');
+    };
+    
+    const targetInitials = getInitials(memberName);
+    performance = pageState.performanceData.find(perf => 
+        getInitials(perf.name) === targetInitials
+    );
+    if (performance) {
+        console.log(`✅ ${memberName} 초성 매칭 성공:`, performance);
+        return performance;
+    }
+    
+    // ❌ 모든 매칭 실패
+    console.warn(`❌ ${memberName} 실적 데이터 매칭 실패`);
+    
+    // 🔍 디버깅 정보 출력
+    console.log('🔍 전체 실적 데이터 의원명 목록:');
+    const allNames = pageState.performanceData.map(p => p.name);
+    allNames.forEach((name, index) => {
+        console.log(`  ${index + 1}. "${name}"`);
+    });
+    
+    // 🔍 유사한 이름 찾기
+    const similarNames = allNames.filter(name => {
+        const similarity = getSimilarity(name, memberName);
+        return similarity > 0.3; // 30% 이상 유사한 이름
+    });
+    
+    if (similarNames.length > 0) {
+        console.log(`🔍 ${memberName}와 유사한 이름들:`, similarNames);
+    }
+    
+    // 🔍 첫 글자가 같은 이름들
+    const firstCharMatches = allNames.filter(name => 
+        name.charAt(0) === memberName.charAt(0)
+    );
+    
+    if (firstCharMatches.length > 0) {
+        console.log(`🔍 ${memberName}와 첫 글자가 같은 이름들:`, firstCharMatches);
+    }
+    
+    return null;
+}
+
+// 🔧 문자열 유사도 계산 함수 (레벤슈타인 거리 기반)
+function getSimilarity(str1, str2) {
+    const matrix = [];
+    const len1 = str1.length;
+    const len2 = str2.length;
+    
+    if (len1 === 0) return len2 === 0 ? 1 : 0;
+    if (len2 === 0) return 0;
+    
+    for (let i = 0; i <= len2; i++) {
+        matrix[i] = [i];
+    }
+    
+    for (let j = 0; j <= len1; j++) {
+        matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= len2; i++) {
+        for (let j = 1; j <= len1; j++) {
+            if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j] + 1
+                );
+            }
+        }
+    }
+    
+    const maxLen = Math.max(len1, len2);
+    return (maxLen - matrix[len2][len1]) / maxLen;
 }
 
 function findMemberAttendance(memberName) {
@@ -1300,6 +1424,22 @@ async function initializePage() {
         initializeElements();
         setupSearch();
         
+        // 🔧 초기화 시 API 상태 자동 확인
+        console.log('🔍 초기화 중 API 상태 확인...');
+        if (window.APIService && window.APIService._isReady) {
+            try {
+                const testResponse = await window.APIService.getMemberPerformance();
+                console.log('🔧 초기 API 테스트 응답:', {
+                    type: typeof testResponse,
+                    hasRanking: !!testResponse?.ranking,
+                    rankingLength: testResponse?.ranking?.length || 0,
+                    directArrayLength: Array.isArray(testResponse) ? testResponse.length : 0
+                });
+            } catch (e) {
+                console.warn('⚠️ 초기 API 테스트 실패:', e.message);
+            }
+        }
+        
         await loadAllData();
         
         const urlMember = getMemberFromUrl();
@@ -1312,6 +1452,31 @@ async function initializePage() {
         
         selectMember(memberToLoad);
         
+        // 🔧 초기화 완료 후 실적 데이터 상태 확인
+        setTimeout(() => {
+            console.log('🔧 초기화 완료 후 실적 데이터 상태:');
+            console.log(`- 실적 데이터 개수: ${pageState.performanceData.length}`);
+            console.log(`- 데이터 타입: ${pageState.performanceData[0]?._fallback ? '폴백' : 'API'}`);
+            
+            if (pageState.performanceData.length > 0) {
+                console.log('- 첫 번째 실적 데이터:', pageState.performanceData[0]);
+                
+                // 박찬대 자동 검색
+                const parkChanDae = findMemberPerformance('박찬대');
+                if (!parkChanDae) {
+                    console.log('⚠️ 박찬대 의원 실적 데이터 자동 검색 실패');
+                    console.log('🔧 실시간 디버깅을 위해 memberPageDebug.forceSearchMember("박찬대") 실행');
+                    
+                    if (window.memberPageDebug) {
+                        window.memberPageDebug.forceSearchMember('박찬대');
+                    }
+                }
+            }
+        }, 1000);
+        
+        // 🔧 실시간 API 확인 버튼 추가
+        addDebugButtons();
+        
         console.log('✅ 페이지 초기화 완료');
         
     } catch (error) {
@@ -1321,6 +1486,69 @@ async function initializePage() {
         updateMemberProfile(DEFAULT_MEMBER);
         
         showNotification('일부 데이터 로드에 실패했습니다', 'warning', 5000);
+    }
+}
+
+// 🔧 디버그 버튼들 추가
+function addDebugButtons() {
+    try {
+        // 기존 디버그 버튼들 제거
+        const existingButtons = document.querySelectorAll('.debug-button');
+        existingButtons.forEach(btn => btn.remove());
+        
+        const buttonContainer = document.createElement('div');
+        buttonContainer.style.cssText = `
+            position: fixed; top: 120px; right: 20px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 5px;
+        `;
+        
+        const buttons = [
+            {
+                text: '🔍 API 확인',
+                action: () => window.memberPageDebug?.checkAPIResponses?.()
+            },
+            {
+                text: '🔄 API 재호출',
+                action: () => window.memberPageDebug?.recheckAPI?.()
+            },
+            {
+                text: '👤 박찬대 검색',
+                action: () => window.memberPageDebug?.forceSearchMember?.('박찬대')
+            },
+            {
+                text: '📊 상태 정보',
+                action: () => window.memberPageDebug?.showInfo?.()
+            }
+        ];
+        
+        buttons.forEach(({ text, action }) => {
+            const btn = document.createElement('button');
+            btn.className = 'debug-button';
+            btn.textContent = text;
+            btn.style.cssText = `
+                padding: 5px 10px; background: #ff5722; color: white;
+                border: none; border-radius: 3px; font-size: 11px;
+                cursor: pointer; transition: all 0.2s ease;
+                font-family: 'Blinker', sans-serif; min-width: 120px;
+            `;
+            
+            btn.addEventListener('click', action);
+            btn.addEventListener('mouseenter', function() {
+                this.style.background = '#d32f2f';
+                this.style.transform = 'scale(1.05)';
+            });
+            btn.addEventListener('mouseleave', function() {
+                this.style.background = '#ff5722';
+                this.style.transform = 'scale(1)';
+            });
+            
+            buttonContainer.appendChild(btn);
+        });
+        
+        document.body.appendChild(buttonContainer);
+        
+    } catch (error) {
+        console.warn('[Debug] 디버그 버튼 추가 실패:', error);
     }
 }
 
@@ -1396,33 +1624,151 @@ window.memberPageDebug = {
         return ranking;
     },
     
-    // 🔧 수정된 API 응답 확인 함수
+    // 🔧 강화된 API 응답 원본 데이터 확인
     checkAPIResponses: async () => {
-        console.log('🔍 수정된 API 응답 확인:');
+        console.log('🔍 강화된 API 응답 확인:');
         
         try {
             console.log('\n📡 getMemberPerformance 호출 중...');
             const response = await window.APIService.getMemberPerformance();
             
-            console.log('원본 응답 구조:', {
-                type: typeof response,
-                isArray: Array.isArray(response),
-                hasRanking: !!response?.ranking,
-                rankingLength: response?.ranking?.length,
-                keys: Object.keys(response || {}),
-                sample: response?.ranking?.[0] || response?.[0]
-            });
+            console.log('========== API 응답 구조 분석 ==========');
+            console.log('1. 응답 타입:', typeof response);
+            console.log('2. 배열 여부:', Array.isArray(response));
+            console.log('3. null/undefined 여부:', response === null || response === undefined);
+            console.log('4. 객체 키들:', response ? Object.keys(response) : '없음');
             
-            if (response?.ranking?.[0]) {
-                console.log('✅ ranking 배열의 첫 번째 요소 필드:', Object.keys(response.ranking[0]));
-                console.log('📊 샘플 데이터:', response.ranking[0]);
-            } else if (response?.[0]) {
-                console.log('✅ 직접 배열의 첫 번째 요소 필드:', Object.keys(response[0]));
-                console.log('📊 샘플 데이터:', response[0]);
+            if (response?.ranking) {
+                console.log('5. ranking 필드 존재: ✅');
+                console.log('6. ranking 타입:', typeof response.ranking);
+                console.log('7. ranking 배열 여부:', Array.isArray(response.ranking));
+                console.log('8. ranking 길이:', response.ranking.length);
+                
+                if (response.ranking.length > 0) {
+                    console.log('\n========== 첫 번째 데이터 분석 ==========');
+                    const first = response.ranking[0];
+                    console.log('첫 번째 데이터 전체:', first);
+                    console.log('사용 가능한 모든 필드:', Object.keys(first));
+                    
+                    console.log('\n========== 의원명 필드 확인 ==========');
+                    console.log('lawmaker_name:', first.lawmaker_name);
+                    console.log('name:', first.name);
+                    console.log('HG_NM:', first.HG_NM);
+                    console.log('member_name:', first.member_name);
+                    
+                    console.log('\n========== 점수 필드 확인 ==========');
+                    console.log('total_score:', first.total_score);
+                    console.log('attendance_score:', first.attendance_score);
+                    console.log('bill_pass_score:', first.bill_pass_score);
+                    console.log('petition_score:', first.petition_score);
+                    console.log('petition_result_score:', first.petition_result_score);
+                    console.log('committee_score:', first.committee_score);
+                    
+                    console.log('\n========== 의원명 목록 (처음 20명) ==========');
+                    response.ranking.slice(0, 20).forEach((member, index) => {
+                        const name = member.lawmaker_name || member.name || member.HG_NM || member.member_name || 'Unknown';
+                        console.log(`${index + 1}. "${name}" (${member.party || '정당없음'})`);
+                    });
+                    
+                    console.log('\n========== 박찬대 검색 ==========');
+                    const foundByChanDae = response.ranking.find(m => 
+                        (m.lawmaker_name && m.lawmaker_name.includes('박찬대')) ||
+                        (m.name && m.name.includes('박찬대')) ||
+                        (m.HG_NM && m.HG_NM.includes('박찬대')) ||
+                        (m.member_name && m.member_name.includes('박찬대'))
+                    );
+                    
+                    if (foundByChanDae) {
+                        console.log('✅ 박찬대 발견:', foundByChanDae);
+                    } else {
+                        console.log('❌ 박찬대 없음');
+                        
+                        // '박'으로 시작하는 이름들 찾기
+                        const parkMembers = response.ranking.filter(m => {
+                            const name = m.lawmaker_name || m.name || m.HG_NM || m.member_name || '';
+                            return name.startsWith('박');
+                        });
+                        
+                        console.log('🔍 "박"으로 시작하는 의원들:', parkMembers.map(m => ({
+                            name: m.lawmaker_name || m.name || m.HG_NM || m.member_name,
+                            party: m.party
+                        })));
+                    }
+                }
+            } else if (Array.isArray(response)) {
+                console.log('5. 직접 배열 응답');
+                console.log('6. 배열 길이:', response.length);
+                
+                if (response.length > 0) {
+                    console.log('\n========== 첫 번째 데이터 분석 ==========');
+                    const first = response[0];
+                    console.log('첫 번째 데이터:', first);
+                    console.log('필드들:', Object.keys(first));
+                }
+            } else {
+                console.log('5. 예상하지 못한 응답 구조');
+                console.log('전체 응답:', JSON.stringify(response, null, 2));
             }
             
         } catch (error) {
             console.error('❌ API 응답 확인 실패:', error);
+        }
+    },
+    
+    // 🔧 특정 의원 강제 검색
+    forceSearchMember: (memberName) => {
+        console.log(`🔍 ${memberName} 강제 검색 시작...`);
+        
+        if (!pageState.performanceData || pageState.performanceData.length === 0) {
+            console.log('❌ 실적 데이터가 없습니다');
+            return null;
+        }
+        
+        console.log(`📊 현재 실적 데이터: ${pageState.performanceData.length}개`);
+        
+        // 모든 의원명 출력
+        console.log('📋 전체 의원명 목록:');
+        pageState.performanceData.forEach((member, index) => {
+            console.log(`${index + 1}. "${member.name}" (${member.party})`);
+        });
+        
+        // 다양한 방법으로 검색
+        const results = {
+            exact: pageState.performanceData.find(p => p.name === memberName),
+            includes: pageState.performanceData.filter(p => p.name.includes(memberName)),
+            startsWith: pageState.performanceData.filter(p => p.name.startsWith(memberName.charAt(0))),
+            similar: pageState.performanceData.filter(p => getSimilarity(p.name, memberName) > 0.5)
+        };
+        
+        console.log(`🔍 ${memberName} 검색 결과:`, results);
+        
+        return results;
+    },
+    
+    // 🔧 실시간 API 재호출 및 확인
+    recheckAPI: async () => {
+        console.log('🔄 실시간 API 재호출 시작...');
+        
+        try {
+            // 실적 데이터 재호출
+            await fetchPerformanceData();
+            
+            console.log(`📊 재호출 후 실적 데이터: ${pageState.performanceData.length}개`);
+            
+            // 박찬대 재검색
+            const parkChanDae = findMemberPerformance('박찬대');
+            
+            if (parkChanDae) {
+                console.log('✅ 박찬대 재검색 성공:', parkChanDae);
+            } else {
+                console.log('❌ 박찬대 재검색 실패');
+            }
+            
+            return parkChanDae;
+            
+        } catch (error) {
+            console.error('❌ API 재호출 실패:', error);
+            return null;
         }
     },
     
@@ -1441,30 +1787,60 @@ window.memberPageDebug = {
 
 // DOM 로드 완료 후 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 percent_member.js DOM 로드 완료 (API 응답 구조 수정 버전)');
+    console.log('📄 percent_member.js DOM 로드 완료 (강화된 디버깅 버전)');
     
     let attempts = 0;
     const maxAttempts = 30;
     
     function waitForAPI() {
         attempts++;
+        console.log(`🔗 API 서비스 연결 확인 시도 ${attempts}/${maxAttempts}...`);
         
         if (window.APIService && window.APIService._isReady) {
-            console.log('✅ API 서비스 연결 확인');
+            console.log('✅ API 서비스 연결 확인됨');
+            console.log('🔧 API 서비스 상태:', {
+                isReady: window.APIService._isReady,
+                hasError: window.APIService._hasError,
+                version: window.APIService._version,
+                methods: Object.keys(window.APIService).filter(key => typeof window.APIService[key] === 'function')
+            });
+            
+            // API 연결 후 즉시 테스트
+            setTimeout(async () => {
+                try {
+                    console.log('🧪 API 연결 후 즉시 테스트...');
+                    const testResponse = await window.APIService.getMemberPerformance();
+                    console.log('🧪 즉시 테스트 결과:', {
+                        success: !!testResponse,
+                        type: typeof testResponse,
+                        hasRanking: !!testResponse?.ranking,
+                        length: testResponse?.ranking?.length || testResponse?.length || 0
+                    });
+                } catch (e) {
+                    console.warn('🧪 즉시 테스트 실패:', e.message);
+                }
+            }, 500);
+            
             initializePage();
         } else if (attempts < maxAttempts) {
+            console.log(`⏳ API 서비스 대기 중... (${attempts}/${maxAttempts})`);
             setTimeout(waitForAPI, 100);
         } else {
             console.warn('⚠️ API 서비스 연결 타임아웃, 폴백 데이터 사용');
+            console.log('🔧 폴백 모드로 전환...');
+            
             pageState.memberList = getFallbackMemberList();
             initializeElements();
             setupSearch();
             pageState.currentMember = DEFAULT_MEMBER;
             updateMemberProfile(DEFAULT_MEMBER);
+            
+            // 폴백 모드에서도 디버그 버튼 추가
+            setTimeout(addDebugButtons, 1000);
         }
     }
     
     waitForAPI();
 });
 
-console.log('📦 percent_member.js 로드 완료 (API 응답 구조 수정 버전)');
+console.log('📦 percent_member.js 로드 완료 (강화된 디버깅 버전 - API 응답 구조 상세 분석)');
