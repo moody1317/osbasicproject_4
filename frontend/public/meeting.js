@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPage > 1) {
             const prevButton = document.createElement('a');
             prevButton.href = '#';
-            prevButton.className = 'navigate';
+            prevButton.className = 'pagination-btn navigate';
             prevButton.innerHTML = '&lt;';
             prevButton.setAttribute('aria-label', '이전 페이지');
             prevButton.addEventListener('click', (e) => {
@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentPage < totalPages) {
             const nextButton = document.createElement('a');
             nextButton.href = '#';
-            nextButton.className = 'navigate';
+            nextButton.className = 'pagination-btn navigate';
             nextButton.innerHTML = '&gt;';
             nextButton.setAttribute('aria-label', '다음 페이지');
             nextButton.addEventListener('click', (e) => {
@@ -600,12 +600,13 @@ document.addEventListener('DOMContentLoaded', function() {
     function createMeetingPageButton(pageNumber, currentPageNum) {
         const button = document.createElement('a');
         button.href = '#';
+        button.className = 'pagination-btn';
         button.textContent = pageNumber;
         button.setAttribute('aria-label', `${pageNumber}페이지로 이동`);
         
         // 현재 페이지 스타일 적용
         if (pageNumber === currentPageNum) {
-            button.className = 'active';
+            button.classList.add('active');
             button.setAttribute('aria-current', 'page');
         }
         
