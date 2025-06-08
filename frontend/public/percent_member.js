@@ -90,6 +90,49 @@ function toggleLoadingState(show) {
                 el.innerHTML = '<span class="loading-spinner"></span>로딩 중...';
                 el.classList.add('loading');
             }
+    
+    // 🔧 데이터 매핑 확인 함수 추가
+    checkDataMapping: () => {
+        console.log('🔍 API 데이터 매핑 확인:');
+        
+        // 의원 명단 샘플
+        if (pageState.memberList.length > 0) {
+            console.log('👤 의원 명단 샘플:', pageState.memberList[0]);
+        }
+        
+        // 실적 데이터 샘플
+        if (pageState.performanceData.length > 0) {
+            console.log('📊 실적 데이터 샘플:', pageState.performanceData[0]);
+        }
+        
+        // 위원회 데이터 샘플
+        const committeeKeys = Object.keys(pageState.committeeData);
+        if (committeeKeys.length > 0) {
+            console.log('🏛️ 위원회 데이터 샘플:', {
+                member: committeeKeys[0],
+                committees: pageState.committeeData[committeeKeys[0]]
+            });
+        }
+        
+        // 랭킹 데이터 샘플
+        if (pageState.rankingData.length > 0) {
+            console.log('🏆 랭킹 데이터 샘플:', pageState.rankingData[0]);
+        }
+        
+        // 나경원 의원 전체 데이터 매핑 확인
+        console.log('\n🔍 나경원 의원 데이터 매핑:');
+        const naKyungWon = {
+            member: pageState.memberList.find(m => m.name === '나경원'),
+            performance: findMemberPerformance('나경원'),
+            committees: findMemberCommittees('나경원'),
+            ranking: findMemberRanking('나경원'),
+            attendance: findMemberAttendance('나경원'),
+            billCount: pageState.billCountData.find(b => b.proposer === '나경원')
+        };
+        
+        console.log('나경원 전체 데이터:', naKyungWon);
+        return naKyungWon;
+    }
         });
         
         if (elements.searchButton) {
@@ -116,7 +159,7 @@ function showNotification(message, type = 'info', duration = 3000) {
     }
 }
 
-// 🔧 API에서 국회의원 명단 가져오기 (수정된 버전)
+// 🔧 API에서 국회의원 명단 가져오기 (디버깅 강화)
 async function fetchMemberList() {
     try {
         console.log('📋 국회의원 명단 API 호출...');
@@ -131,17 +174,30 @@ async function fetchMemberList() {
             throw new Error('국회의원 명단 API 응답이 올바르지 않습니다.');
         }
         
+        console.log('🔍 의원 명단 원본 샘플:', rawData.slice(0, 3));
+        
         // API 데이터 매핑
         pageState.memberList = rawData.map(member => ({
-            name: member.name || '',
-            party: member.party || '무소속',
-            mona_cd: member.mona_cd || '',
-            homepage: member.homepage || '',
+            name: member.name || '',          // 국회의원명
+            party: member.party || '무소속',   // 정당명
+            mona_cd: member.mona_cd || '',    // 국회의원 코드
+            homepage: member.homepage || '',  // 홈페이지주소
             phone: member.phone || '',
             _raw: member
         }));
         
         console.log(`✅ 국회의원 명단 로드 완료: ${pageState.memberList.length}명`);
+        console.log('🔍 매핑된 의원 명단 샘플:', pageState.memberList.slice(0, 3));
+        
+        // 🔧 특정 의원 확인 (나경원)
+        const naKyungWonMember = pageState.memberList.find(m => m.name === '나경원');
+        if (naKyungWonMember) {
+            console.log('✅ 나경원 의원 명단 발견:', naKyungWonMember);
+        } else {
+            console.warn('❌ 나경원 의원 명단 없음');
+            console.log('📋 사용 가능한 의원명들:', pageState.memberList.map(m => m.name).slice(0, 10));
+        }
+        
         return pageState.memberList;
         
     } catch (error) {
@@ -181,7 +237,7 @@ async function fetchPhotoList() {
     }
 }
 
-// 🔧 API에서 국회의원 실적 데이터 가져오기 (수정된 버전)
+// 🔧 API에서 국회의원 실적 데이터 가져오기 (디버깅 강화)
 async function fetchPerformanceData() {
     try {
         console.log('📊 국회의원 실적 API 호출...');
@@ -194,22 +250,35 @@ async function fetchPerformanceData() {
             return pageState.performanceData;
         }
         
+        console.log('🔍 실적 데이터 원본 샘플:', performanceData.slice(0, 3));
+        
+        // API 데이터 매핑 (정확한 필드명 사용)
         pageState.performanceData = performanceData.map(perf => ({
-            name: perf.lawmaker_name || '',
-            party: perf.party || '무소속',
-            total_score: parseFloat(perf.total_score || perf.total_socre || 0),
-            attendance_score: parseFloat(perf.attendance_score || 0),
-            petition_score: parseFloat(perf.petition_score || 0),
-            petition_result_score: parseFloat(perf.petition_result_score || 0),
-            committee_score: parseFloat(perf.committee_score || 0),
-            invalid_vote_ratio: parseFloat(perf.invalid_vote_ratio || 0),
-            vote_match_ratio: parseFloat(perf.vote_match_ratio || 0),
-            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0),
+            name: perf.lawmaker_name || '',           // 국회의원명
+            party: perf.party || '무소속',             // 정당명
+            total_score: parseFloat(perf.total_socre || perf.total_score || 0), // 총 퍼센트 (오타 대응)
+            attendance_score: parseFloat(perf.attendance_score || 0),           // 투표 퍼센트
+            petition_score: parseFloat(perf.petition_score || 0),               // 청원제시
+            petition_result_score: parseFloat(perf.petition_result_score || 0), // 청원 가결
+            invalid_vote_ratio: parseFloat(perf.invalid_vote_ratio || 0),       // 기권 및 무효
+            vote_match_ratio: parseFloat(perf.vote_match_ratio || 0),           // 투표 결과 일치
+            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0),     // 투표 결과 불일치
             lawmaker_id: perf.lawmaker || '',
             _raw: perf
         }));
         
         console.log(`✅ 실적 데이터 로드 완료: ${pageState.performanceData.length}개`);
+        console.log('🔍 매핑된 실적 데이터 샘플:', pageState.performanceData.slice(0, 3));
+        
+        // 🔧 특정 의원 확인 (나경원)
+        const naKyungWonPerf = pageState.performanceData.find(p => p.name === '나경원');
+        if (naKyungWonPerf) {
+            console.log('✅ 나경원 실적 데이터 발견:', naKyungWonPerf);
+        } else {
+            console.warn('❌ 나경원 실적 데이터 없음');
+            console.log('📋 사용 가능한 의원명들:', pageState.performanceData.map(p => p.name).slice(0, 10));
+        }
+        
         return pageState.performanceData;
         
     } catch (error) {
@@ -411,15 +480,37 @@ function findMemberPhoto(memberCode, memberName) {
     return photoByName ? photoByName.photo : null;
 }
 
-// 국회의원 실적 찾기
+// 국회의원 실적 찾기 (디버깅 강화)
 function findMemberPerformance(memberName) {
     if (!pageState.performanceData || pageState.performanceData.length === 0) {
+        console.log(`🔍 ${memberName} 실적 검색: 실적 데이터가 없음`);
         return null;
     }
     
-    return pageState.performanceData.find(perf => 
+    console.log(`🔍 ${memberName} 실적 검색 중...`);
+    console.log(`📊 전체 실적 데이터 수: ${pageState.performanceData.length}`);
+    
+    const performance = pageState.performanceData.find(perf => 
         perf.name === memberName
     );
+    
+    if (performance) {
+        console.log(`✅ ${memberName} 실적 데이터 발견:`, performance);
+    } else {
+        console.warn(`❌ ${memberName} 실적 데이터 없음`);
+        console.log('📋 실적 데이터에 있는 의원명들:', pageState.performanceData.map(p => p.name).slice(0, 10));
+        
+        // 🔧 유사한 이름 검색
+        const similarNames = pageState.performanceData
+            .map(p => p.name)
+            .filter(name => name.includes(memberName) || memberName.includes(name));
+        
+        if (similarNames.length > 0) {
+            console.log('🔍 유사한 이름들:', similarNames);
+        }
+    }
+    
+    return performance;
 }
 
 // 국회의원 출석 정보 찾기
@@ -560,22 +651,35 @@ function updatePerformanceStats(member) {
     updateStatElement(elements.voteMismatchStat, stats.voteMismatch, '%');
 }
 
-// 통계 계산
+// 통계 계산 (실제 API 필드 사용)
 function calculateMemberStats(performance, attendance, billCount, committees) {
     return {
+        // 1. 출석 (attendance API 우선, 없으면 performance API의 attendance_score)
         attendance: attendance ? 
             (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
             (performance.attendance_score || 0),
         
+        // 2. 본회의 가결 (billCount API 기반)
         billPass: billCount ? 
             calculateBillPassRate(billCount) : 
             Math.min((performance.total_score || 0) * 1.2, 95),
         
+        // 3. 청원제시 (performance API의 petition_score)
         petitionProposal: performance.petition_score || 0,
+        
+        // 4. 청원 가결 (performance API의 petition_result_score)
         petitionResult: performance.petition_result_score || 0,
+        
+        // 5. 기권 및 무효 (performance API의 invalid_vote_ratio, 비율을 퍼센트로 변환)
         abstention: (performance.invalid_vote_ratio || 0) * 100,
+        
+        // 6. 위원회 직책 (committee API 기반, "위원회명 구성" 형태)
         committee: getCommitteeInfo(committees),
+        
+        // 7. 투표 결과 일치 (performance API의 vote_match_ratio, 비율을 퍼센트로 변환)
         voteMatch: (performance.vote_match_ratio || 0) * 100,
+        
+        // 8. 투표 결과 불일치 (performance API의 vote_mismatch_ratio, 비율을 퍼센트로 변환)
         voteMismatch: (performance.vote_mismatch_ratio || 0) * 100
     };
 }
