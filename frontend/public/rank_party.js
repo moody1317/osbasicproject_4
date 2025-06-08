@@ -1240,12 +1240,15 @@ function renderPartyRankingTable() {
                     ${getPartyLeader(party.name)}
                 </td>
                 <td class="home-icon">
-                    <a href="${getPartyHomepage(party.name)}" target="_blank" rel="noopener noreferrer">
+                        <a href="${getPartyHomepage(party.name)}" 
+                        target="_blank" 
+                       rel="noopener noreferrer" 
+                       onclick="event.stopPropagation();">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
                         </svg>
-                    </a>
-                </td>
+                </a>
+            </td>
             </tr>
         `;
     }).join('');
