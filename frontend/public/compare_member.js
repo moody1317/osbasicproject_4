@@ -1174,8 +1174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
 
         resetValues.forEach((resetValue, index) => {
-            // index + 1은 HTML의 실제 status-item 인덱스 (0번은 국회의원 선택이므로)
-            if (index + 1 < statusItems.length) {
+            if (index < statusItems.length) {
                 const statusItem = statusItems[index + 1];
                 const valueElement = statusItem.querySelector('.status-value');
                 if (valueElement) {
