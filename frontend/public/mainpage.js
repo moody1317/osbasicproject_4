@@ -243,61 +243,65 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 국회의원 순위 데이터 가져오기
-    async function fetchMemberRankingData() {
-        try {
-            console.log('👥 국회의원 순위 데이터 로드 중...');
+async function fetchMemberRankingData() {
+    try {
+        console.log('👥 국회의원 순위 데이터 로드 중...');
 
-            if (!window.APIService || !window.APIService.getMemberPerformance) {
-                throw new Error('의원 성과 API가 준비되지 않았습니다');
-            }
+        if (!window.APIService || !window.APIService.getMemberPerformance) {
+            throw new Error('의원 성과 API가 준비되지 않았습니다');
+        }
 
-            const rawData = await window.APIService.getMemberPerformance();
-            const memberPerformanceData = rawData?.ranking || [];
+        const rawData = await window.APIService.getMemberPerformance();
+        const memberPerformanceData = rawData?.ranking || [];
 
-            
-            if (!validateData(memberPerformanceData, '의원 성과')) {
-                console.warn('의원 성과 데이터가 없습니다. 기본값 사용');
-                return getDefaultMemberRanking();
-            }
+        console.log('🔍 getMemberPerformance 응답 원본:', rawData);
+        console.log('🔍 ranking 배열:', memberPerformanceData);
 
-            const validMembers = memberPerformanceData
-                .filter(member => {
-                    return member && 
-                           member.lawmaker_name && 
-                           member.lawmaker_name !== '알 수 없음' && 
-                           member.total_score !== undefined && 
-                           member.total_score !== null &&
-                           !isNaN(member.total_score) &&
-                           member.total_score > 0;
-                });
-
-            if (validMembers.length === 0) {
-                console.warn('유효한 의원 데이터가 없습니다. 기본값 사용');
-                return getDefaultMemberRanking();
-            }
-
-            const top3 = validMembers
-                .sort((a, b) => (parseFloat(b.total_score) || 0) - (parseFloat(a.total_score) || 0))
-                .slice(0, 3)
-                .map((member, index) => {
-                    const score = parseFloat(member.total_score) || 0;
-                    return {
-                        rank: index + 1,
-                        name: member.lawmaker_name,
-                        party: normalizePartyName(member.party) || '정보없음',
-                        score: Math.round(score * 10) / 10
-                    };
-                });
-
-            console.log('✅ 국회의원 순위 데이터 로드 완료:', top3.length, '명');
-            console.log('🔍 상위 3명 데이터:', top3);
-            return top3;
-
-        } catch (error) {
-            console.error('❌ 국회의원 순위 데이터 로드 실패:', error);
+        if (!Array.isArray(memberPerformanceData) || memberPerformanceData.length === 0) {
+            console.warn('의원 성과 데이터가 없습니다. 기본값 사용');
             return getDefaultMemberRanking();
         }
+
+        const validMembers = memberPerformanceData.filter(member => {
+            const score = parseFloat(member.total_score ?? member.total_socre);
+            return member &&
+                member.lawmaker_name &&
+                member.lawmaker_name !== '알 수 없음' &&
+                !isNaN(score) &&
+                score > 0;
+        });
+
+        if (validMembers.length === 0) {
+            console.warn('유효한 의원 데이터가 없습니다. 기본값 사용');
+            return getDefaultMemberRanking();
+        }
+
+        const top3 = validMembers
+            .sort((a, b) => (parseFloat(b.total_score ?? b.total_socre) || 0) - (parseFloat(a.total_score ?? a.total_socre) || 0))
+            .slice(0, 3)
+            .map((member, index) => {
+                const rawScore = member.total_score ?? member.total_socre ?? 0;
+                const score = Math.round(parseFloat(rawScore) * 10) / 10;
+
+                console.log(`[TOP${index + 1}] ${member.lawmaker_name} (${member.party}) - ${score}%`);
+
+                return {
+                    rank: index + 1,
+                    name: member.lawmaker_name,
+                    party: normalizePartyName(member.party) || '정보없음',
+                    score: score
+                };
+            });
+
+        console.log('✅ 국회의원 순위 데이터 로드 완료:', top3);
+        return top3;
+
+    } catch (error) {
+        console.error('❌ 국회의원 순위 데이터 로드 실패:', error);
+        return getDefaultMemberRanking();
     }
+}
+
 
     // 기본 데이터
     function getDefaultPartyRanking() {
