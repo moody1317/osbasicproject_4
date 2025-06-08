@@ -349,7 +349,7 @@ async function fetchRankingData() {
         pageState.rankingData = rankingData.map(rank => ({
             name: rank.HG_NM || '',
             party: rank.POLY_NM || '무소속',
-            overall_rank: parseInt(rank.총점_순위 || 999),
+            overall_rank: parseInt(rank.총점_순위) || 999, // 🔧 총점_순위 정확한 파싱
             _raw: rank
         }));
         
@@ -538,14 +538,14 @@ function updatePerformanceStats(member) {
     const committees = findMemberCommittees(member.name);
     const ranking = findMemberRanking(member.name);
     
+    // 🔧 순위 정보는 랭킹 API 데이터를 우선적으로 표시
+    updateRankingInfo(member, ranking);
+    
     if (!performance) {
-        console.warn(`⚠️ ${member.name} 실적 데이터 없음`);
-        updateStatsWithFallback(member);
+        console.warn(`⚠️ ${member.name} 실적 데이터 없음 - 랭킹과 폴백 데이터 사용`);
+        updateStatsWithFallback(member, attendance, billCount, committees);
         return;
     }
-    
-    // 순위 정보 업데이트
-    updateRankingInfo(member, ranking);
     
     // 실적 통계 계산 및 업데이트
     const stats = calculateMemberStats(performance, attendance, billCount, committees);
@@ -610,8 +610,9 @@ function getCommitteeInfo(committees) {
     return `${prioritizedCommittee.committee} ${prioritizedCommittee.position}`;
 }
 
-// 순위 정보 업데이트
+// 순위 정보 업데이트 (전체 순위만 표시)
 function updateRankingInfo(member, ranking) {
+    // 전체 순위 (랭킹 API의 총점_순위 사용)
     if (elements.overallRanking) {
         if (ranking && ranking.overall_rank && ranking.overall_rank !== 999) {
             elements.overallRanking.innerHTML = `전체 순위: <strong>${ranking.overall_rank}위</strong>`;
@@ -620,9 +621,9 @@ function updateRankingInfo(member, ranking) {
         }
     }
     
+    // 정당별 순위는 제거 (요청에 따라)
     if (elements.partyRanking) {
-        const partyRank = calculatePartyRank(member);
-        elements.partyRanking.innerHTML = `정당 내 순위: <strong>${partyRank}위</strong>`;
+        elements.partyRanking.style.display = 'none'; // 숨김 처리
     }
 }
 
@@ -684,25 +685,35 @@ function updateCommitteeElement(element, position) {
     }
 }
 
-// 폴백 통계 업데이트
-function updateStatsWithFallback(member) {
-    console.log(`🔄 ${member.name} 폴백 데이터 사용`);
+// 폴백 통계 업데이트 (실제 데이터 우선 사용)
+function updateStatsWithFallback(member, attendance, billCount, committees) {
+    console.log(`🔄 ${member.name} 폴백 데이터 사용 (실제 데이터 조합)`);
     
+    // 실제 데이터가 있으면 우선 사용, 없으면 폴백 데이터
     const fallbackStats = generateFallbackStats(member);
     
-    if (elements.overallRanking) {
-        elements.overallRanking.innerHTML = `전체 순위: <strong>정보 없음</strong>`;
-    }
-    if (elements.partyRanking) {
-        elements.partyRanking.innerHTML = `정당 내 순위: <strong>정보 없음</strong>`;
-    }
+    // 출석 데이터 (실제 출석 API 데이터 우선)
+    const attendanceRate = attendance ? 
+        (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
+        fallbackStats.attendance;
     
-    updateStatElement(elements.attendanceStat, fallbackStats.attendance, '%');
-    updateStatElement(elements.billPassStat, fallbackStats.billPass, '%');
+    // 본회의 가결률 (실제 본회의 API 데이터 우선)  
+    const billPassRate = billCount ? 
+        calculateBillPassRate(billCount) : 
+        fallbackStats.billPass;
+    
+    // 위원회 정보 (실제 위원회 API 데이터 우선)
+    const committeeInfo = committees && committees.length > 0 ? 
+        getCommitteeInfo(committees) : 
+        getDefaultCommitteeInfo(member);
+    
+    // 통계 업데이트
+    updateStatElement(elements.attendanceStat, attendanceRate, '%');
+    updateStatElement(elements.billPassStat, billPassRate, '%');
     updateStatElement(elements.petitionProposalStat, fallbackStats.petition, '%');
     updateStatElement(elements.petitionResultStat, fallbackStats.petitionResult, '%');
     updateStatElement(elements.abstentionStat, fallbackStats.abstention, '%');
-    updateCommitteeElement(elements.committeeStat, getDefaultCommitteeInfo(member));
+    updateCommitteeElement(elements.committeeStat, committeeInfo);
     updateStatElement(elements.voteMatchStat, fallbackStats.voteMatch, '%');
     updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
 }
@@ -1069,6 +1080,31 @@ window.memberPageDebug = {
         console.log(`- 위원회 데이터: ${Object.keys(pageState.committeeData).length}명`);
         console.log(`- 랭킹 데이터: ${pageState.rankingData.length}개`);
         console.log(`- API 서비스: ${!!window.APIService}`);
+        
+        // 🔧 현재 의원의 랭킹 정보 표시
+        if (pageState.currentMember) {
+            const ranking = findMemberRanking(pageState.currentMember.name);
+            console.log(`- ${pageState.currentMember.name} 순위:`, ranking ? `${ranking.overall_rank}위` : '정보 없음');
+        }
+    },
+    
+    // 🔧 랭킹 데이터 테스트 함수 추가
+    checkRanking: (memberName) => {
+        const member = pageState.memberList.find(m => m.name === memberName);
+        const ranking = findMemberRanking(memberName);
+        
+        console.log(`🏆 ${memberName} 랭킹 정보:`);
+        console.log('- 의원 데이터:', member);
+        console.log('- 랭킹 데이터:', ranking);
+        
+        if (ranking) {
+            console.log(`✅ 전체 순위: ${ranking.overall_rank}위`);
+        } else {
+            console.log('❌ 랭킹 정보 없음');
+            console.log('전체 랭킹 데이터:', pageState.rankingData.map(r => r.name));
+        }
+        
+        return ranking;
     }
 };
 
