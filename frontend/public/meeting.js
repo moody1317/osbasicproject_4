@@ -477,151 +477,152 @@ document.addEventListener('DOMContentLoaded', function() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    // 페이지네이션 업데이트 함수
-    function updatePagination() {
-        console.log('🔧 페이지네이션 업데이트 시작:', {
-            currentPage,
-            filteredDataLength: filteredData.length,
-            itemsPerPage: ITEMS_PER_PAGE
-        });
+    // 페이지네이션 업데이트 함수 
+function updatePagination() {
+    console.log('🔧 페이지네이션 업데이트 시작:', {
+        currentPage,
+        filteredDataLength: filteredData.length,
+        itemsPerPage: ITEMS_PER_PAGE
+    });
 
-        // scripts.js의 전역 페이지네이션 함수 사용
-        if (typeof window.createPagination === 'function') {
-            try {
-                window.createPagination(
-                    filteredData.length,
-                    currentPage,
-                    ITEMS_PER_PAGE,
-                    window.changePage
-                );
-                console.log('✅ 전역 페이지네이션 함수 사용 성공');
-                return;
-            } catch (error) {
-                console.warn('⚠️ 전역 페이지네이션 함수 실패, 로컬 함수 사용:', error.message);
-            }
-        }
-
-        // 전역 함수가 없거나 실패한 경우 로컬 페이지네이션 함수 실행
-        const pagination = document.getElementById('pagination');
-        if (!pagination) {
-            console.error('❌ 페이지네이션 컨테이너를 찾을 수 없습니다.');
+    // scripts.js의 전역 페이지네이션 함수 우선 사용
+    if (typeof window.createPagination === 'function') {
+        try {
+            window.createPagination(
+                filteredData.length,
+                currentPage,
+                ITEMS_PER_PAGE,
+                window.changePage
+            );
+            console.log('✅ 전역 페이지네이션 함수 사용 성공');
             return;
+        } catch (error) {
+            console.warn('⚠️ 전역 페이지네이션 함수 실패, 로컬 함수 사용:', error.message);
         }
-
-        const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
-        console.log(`📊 총 페이지 수: ${totalPages}, 현재 페이지: ${currentPage}`);
-        
-        if (totalPages <= 1) {
-            pagination.style.display = 'none';
-            console.log('📊 페이지가 1개 이하이므로 페이지네이션 숨김');
-            return;
-        }
-
-        pagination.style.display = 'flex';
-        pagination.innerHTML = '';
-
-        // 이전 버튼
-        if (currentPage > 1) {
-            const prevButton = document.createElement('a');
-            prevButton.href = '#';
-            prevButton.className = 'pagination-btn navigate';
-            prevButton.innerHTML = '&lt;';
-            prevButton.setAttribute('aria-label', '이전 페이지');
-            prevButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log(`🔙 이전 페이지 클릭: ${currentPage - 1}`);
-                window.changePage(currentPage - 1);
-            });
-            pagination.appendChild(prevButton);
-        }
-
-        // 페이지 번호 계산
-        let startPage = Math.max(1, currentPage - 2);
-        let endPage = Math.min(totalPages, startPage + 4);
-        
-        if (endPage - startPage < 4) {
-            startPage = Math.max(1, endPage - 4);
-        }
-
-        console.log(`📊 페이지 범위: ${startPage} ~ ${endPage}`);
-
-        // 첫 페이지 (1이 범위에 없는 경우)
-        if (startPage > 1) {
-            pagination.appendChild(createMeetingPageButton(1, currentPage));
-            
-            if (startPage > 2) {
-                const dots = document.createElement('span');
-                dots.textContent = '...';
-                dots.className = 'pagination-ellipsis';
-                dots.setAttribute('aria-hidden', 'true');
-                dots.style.padding = '8px 4px';
-                pagination.appendChild(dots);
-            }
-        }
-
-        // 페이지 번호들
-        for (let i = startPage; i <= endPage; i++) {
-            pagination.appendChild(createMeetingPageButton(i, currentPage));
-        }
-
-        // 마지막 페이지 (마지막이 범위에 없는 경우)
-        if (endPage < totalPages) {
-            if (endPage < totalPages - 1) {
-                const dots = document.createElement('span');
-                dots.textContent = '...';
-                dots.className = 'pagination-ellipsis';
-                dots.setAttribute('aria-hidden', 'true');
-                dots.style.padding = '8px 4px';
-                pagination.appendChild(dots);
-            }
-            
-            pagination.appendChild(createMeetingPageButton(totalPages, currentPage));
-        }
-
-        // 다음 버튼
-        if (currentPage < totalPages) {
-            const nextButton = document.createElement('a');
-            nextButton.href = '#';
-            nextButton.className = 'pagination-btn navigate';
-            nextButton.innerHTML = '&gt;';
-            nextButton.setAttribute('aria-label', '다음 페이지');
-            nextButton.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log(`🔜 다음 페이지 클릭: ${currentPage + 1}`);
-                window.changePage(currentPage + 1);
-            });
-            pagination.appendChild(nextButton);
-        }
-        
-        console.log(`✅ 로컬 페이지네이션 업데이트 완료: ${currentPage}/${totalPages} (총 ${filteredData.length}개 항목)`);
     }
+
+    // 전역 함수가 없거나 실패한 경우 로컬 페이지네이션 함수 실행
+    const pagination = document.getElementById('pagination');
+    if (!pagination) {
+        console.error('❌ 페이지네이션 컨테이너를 찾을 수 없습니다.');
+        return;
+    }
+
+    const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+    console.log(`📊 총 페이지 수: ${totalPages}, 현재 페이지: ${currentPage}`);
+    
+    // 페이지가 1개 이하인 경우 숨김
+    if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        console.log('📊 페이지가 1개 이하이므로 페이지네이션 숨김');
+        return;
+    }
+
+    pagination.style.display = 'flex';
+    pagination.innerHTML = '';
+
+    // 이전 버튼
+    if (currentPage > 1) {
+        const prevButton = document.createElement('a');
+        prevButton.href = '#';
+        prevButton.className = 'pagination-btn navigate';
+        prevButton.innerHTML = '&lt;';
+        prevButton.setAttribute('aria-label', '이전 페이지');
+        prevButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log(`🔙 이전 페이지 클릭: ${currentPage - 1}`);
+            window.changePage(currentPage - 1);
+        });
+        pagination.appendChild(prevButton);
+    }
+
+    // 페이지 번호 계산 (rank_member.js와 동일한 로직)
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    console.log(`📊 페이지 범위: ${startPage} ~ ${endPage}`);
+
+    // 첫 페이지 (1이 범위에 없는 경우)
+    if (startPage > 1) {
+        pagination.appendChild(createMeetingPageButton(1, currentPage));
+        
+        if (startPage > 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.className = 'pagination-ellipsis';
+            dots.setAttribute('aria-hidden', 'true');
+            dots.style.padding = '8px 4px';
+            pagination.appendChild(dots);
+        }
+    }
+
+    // 페이지 번호들
+    for (let i = startPage; i <= endPage; i++) {
+        pagination.appendChild(createMeetingPageButton(i, currentPage));
+    }
+
+    // 마지막 페이지 (마지막이 범위에 없는 경우)
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.className = 'pagination-ellipsis';
+            dots.setAttribute('aria-hidden', 'true');
+            dots.style.padding = '8px 4px';
+            pagination.appendChild(dots);
+        }
+        
+        pagination.appendChild(createMeetingPageButton(totalPages, currentPage));
+    }
+
+    // 다음 버튼
+    if (currentPage < totalPages) {
+        const nextButton = document.createElement('a');
+        nextButton.href = '#';
+        nextButton.className = 'pagination-btn navigate';
+        nextButton.innerHTML = '&gt;';
+        nextButton.setAttribute('aria-label', '다음 페이지');
+        nextButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log(`🔜 다음 페이지 클릭: ${currentPage + 1}`);
+            window.changePage(currentPage + 1);
+        });
+        pagination.appendChild(nextButton);
+    }
+    
+    console.log(`✅ 로컬 페이지네이션 업데이트 완료: ${currentPage}/${totalPages} (총 ${filteredData.length}개 항목)`);
+}
 
     // 페이지 버튼 생성 헬퍼 함수 (이름 변경으로 충돌 방지)
     function createMeetingPageButton(pageNumber, currentPageNum) {
-        const button = document.createElement('a');
-        button.href = '#';
-        button.className = 'pagination-btn';
-        button.textContent = pageNumber;
-        button.setAttribute('aria-label', `${pageNumber}페이지로 이동`);
-        
-        // 현재 페이지 스타일 적용
-        if (pageNumber === currentPageNum) {
-            button.classList.add('active');
-            button.setAttribute('aria-current', 'page');
-        }
-        
-        // 클릭 이벤트 (클로저 문제 해결)
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetPage = pageNumber; // 클로저 캡처
-            if (targetPage !== currentPage) {
-                console.log(`📄 페이지 버튼 클릭: ${targetPage}`);
-                window.changePage(targetPage);
-            }
-        });
-        
-        return button;
+    const button = document.createElement('a');
+    button.href = '#';
+    button.className = 'pagination-btn';
+    button.textContent = pageNumber;
+    button.setAttribute('aria-label', `${pageNumber}페이지로 이동`);
+    
+    // 현재 페이지 스타일 적용
+    if (pageNumber === currentPageNum) {
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'page');
     }
+    
+    // 클릭 이벤트 (클로저 문제 해결)
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetPage = pageNumber; // 클로저 캡처
+        if (targetPage !== currentPage) {
+            console.log(`📄 페이지 버튼 클릭: ${targetPage}`);
+            window.changePage(targetPage);
+        }
+    });
+    
+    return button;
+}
 
     // 상태에 따른 클래스명 반환
     function getStatusClass(status) {
@@ -629,91 +630,91 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 법안 목록 테이블 렌더링 - 개선된 버전
-    function renderBillTable(page = 1) {
-        console.log(`📊 테이블 렌더링 시작: 페이지 ${page}`);
-        
-        const tableBody = document.getElementById('billTableBody');
-        const totalBillCountElement = document.getElementById('totalBillCount');
-        
-        if (!tableBody) {
-            console.error('❌ billTableBody 요소를 찾을 수 없습니다!');
-            return;
-        }
+  function renderBillTable(page = 1) {
+    console.log(`📊 테이블 렌더링 시작: 페이지 ${page}`);
+    
+    const tableBody = document.getElementById('billTableBody');
+    const totalBillCountElement = document.getElementById('totalBillCount');
+    
+    if (!tableBody) {
+        console.error('❌ billTableBody 요소를 찾을 수 없습니다!');
+        return;
+    }
 
-        // 데이터가 없는 경우
-        if (!filteredData || filteredData.length === 0) {
-            console.log('📋 표시할 데이터가 없습니다.');
-            showEmptyMessage();
-            
-            if (totalBillCountElement) {
-                totalBillCountElement.textContent = '0';
-            }
-            
-            // 페이지네이션 숨김
-            const pagination = document.getElementById('pagination');
-            if (pagination) {
-                pagination.style.display = 'none';
-            }
-            return;
-        }
-
-        // 페이지에 해당하는 데이터 추출
-        const startIndex = (page - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-        const pageData = filteredData.slice(startIndex, endIndex);
+    // 데이터가 없는 경우
+    if (!filteredData || filteredData.length === 0) {
+        console.log('📋 표시할 데이터가 없습니다.');
+        showEmptyMessage();
         
-        console.log(`📄 데이터 범위: ${startIndex + 1}~${Math.min(endIndex, filteredData.length)} / ${filteredData.length}`);
-        console.log(`📋 현재 페이지 데이터:`, pageData.length, '건');
-
-        // 전체 건수 업데이트
         if (totalBillCountElement) {
-            const totalCount = filteredData.length;
-            totalBillCountElement.textContent = window.formatNumber ? 
-                window.formatNumber(totalCount) : totalCount.toLocaleString();
+            totalBillCountElement.textContent = '0';
+        }
+        
+        // 페이지네이션 숨김
+        const pagination = document.getElementById('pagination');
+        if (pagination) {
+            pagination.style.display = 'none';
+        }
+        return;
+    }
+
+    // 페이지에 해당하는 데이터 추출
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const pageData = filteredData.slice(startIndex, endIndex);
+    
+    console.log(`📄 데이터 범위: ${startIndex + 1}~${Math.min(endIndex, filteredData.length)} / ${filteredData.length}`);
+    console.log(`📋 현재 페이지 데이터:`, pageData.length, '건');
+
+    // 전체 건수 업데이트
+    if (totalBillCountElement) {
+        const totalCount = filteredData.length;
+        totalBillCountElement.textContent = window.formatNumber ? 
+            window.formatNumber(totalCount) : totalCount.toLocaleString();
+    }
+
+    // 기존 내용 초기화
+    tableBody.innerHTML = '';
+
+    // 각 법안 데이터로 행 생성
+    pageData.forEach((bill, index) => {
+        const row = document.createElement('tr');
+        const globalIndex = startIndex + index + 1;
+        
+        // 상태에 따른 클래스 추가
+        const statusClass = getStatusClass(bill.status);
+        if (statusClass) {
+            row.classList.add(statusClass);
         }
 
-        // 기존 내용 초기화
-        tableBody.innerHTML = '';
+        // 행 HTML 생성
+        row.innerHTML = `
+            <td>${globalIndex}</td>
+            <td class="bill-number">${bill.billNumber}</td>
+            <td class="bill-title">${bill.title}</td>
+            <td>${bill.proposer}</td>
+            <td>${bill.date}</td>
+            <td><span class="status-badge status-${statusClass}">${bill.status}</span></td>
+        `;
 
-        // 각 법안 데이터로 행 생성
-        pageData.forEach((bill, index) => {
-            const row = document.createElement('tr');
-            const globalIndex = startIndex + index + 1;
-            
-            // 상태에 따른 클래스 추가
-            const statusClass = getStatusClass(bill.status);
-            if (statusClass) {
-                row.classList.add(statusClass);
-            }
-
-            // 행 HTML 생성
-            row.innerHTML = `
-                <td>${globalIndex}</td>
-                <td class="bill-number">${bill.billNumber}</td>
-                <td class="bill-title">${bill.title}</td>
-                <td>${bill.proposer}</td>
-                <td>${bill.date}</td>
-                <td><span class="status-badge status-${statusClass}">${bill.status}</span></td>
-            `;
-
-            // 클릭 이벤트 추가
-            row.addEventListener('click', function() {
-                navigateToMeetingDetail(bill);
-            });
-
-            // 호버 효과를 위한 스타일 추가
-            row.style.cursor = 'pointer';
-
-            tableBody.appendChild(row);
+        // 클릭 이벤트 추가
+        row.addEventListener('click', function() {
+            navigateToMeetingDetail(bill);
         });
 
-        console.log(`✅ 테이블 렌더링 완료: ${pageData.length}건 표시`);
+        // 호버 효과를 위한 스타일 추가
+        row.style.cursor = 'pointer';
 
-        // 페이지네이션 업데이트 (렌더링 후)
-        setTimeout(() => {
-            updatePagination();
-        }, 50);
-    }
+        tableBody.appendChild(row);
+    });
+
+    console.log(`✅ 테이블 렌더링 완료: ${pageData.length}건 표시`);
+
+    // 페이지네이션 업데이트 (렌더링 후 즉시 실행)
+    setTimeout(() => {
+        updatePagination();
+    }, 10); // 10ms 지연으로 DOM 업데이트 보장
+}
 
     // 본회의 상세 페이지로 이동
     function navigateToMeetingDetail(bill) {
