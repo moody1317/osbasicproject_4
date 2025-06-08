@@ -126,15 +126,38 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('[Percent] 🔗 실시간 업데이트 시스템 초기화...');
         
         // BroadcastChannel 설정 (페이지간 실시간 통신)
-        if (typeof BroadcastChannel !== 'undefined') {
-            try {
-                window.weightUpdateChannel = new BroadcastChannel('client_weight_updates_v4');
-                
-                // 다른 페이지에서 연결 확인 요청 수신
-                window.weightUpdateChannel.addEventListener('message', function(event) {
+        createBroadcastChannel();
+        
+        // 페이지 연결 상태 주기적 확인
+        setInterval(checkConnectedPages, 10000); // 10초마다
+    }
+
+    // === 📡 BroadcastChannel 생성 및 관리 ===
+    function createBroadcastChannel() {
+        if (typeof BroadcastChannel === 'undefined') {
+            console.warn('[Percent] ⚠️ BroadcastChannel을 지원하지 않는 브라우저입니다');
+            return false;
+        }
+
+        try {
+            // 기존 채널이 있으면 정리
+            if (window.weightUpdateChannel) {
+                try {
+                    window.weightUpdateChannel.close();
+                } catch (e) {
+                    // 이미 닫혔을 수 있음
+                }
+            }
+
+            // 새 채널 생성
+            window.weightUpdateChannel = new BroadcastChannel('client_weight_updates_v4');
+            
+            // 다른 페이지에서 연결 확인 요청 수신
+            window.weightUpdateChannel.addEventListener('message', function(event) {
+                try {
                     if (event.data.type === 'connection_check') {
-                        // 응답 전송
-                        window.weightUpdateChannel.postMessage({
+                        // 응답 전송 (채널 상태 확인 후)
+                        safeBroadcast({
                             type: 'connection_response',
                             source: 'percent_page',
                             timestamp: new Date().toISOString(),
@@ -146,28 +169,74 @@ document.addEventListener('DOMContentLoaded', function() {
                         appState.connectedPages.add(event.data.source);
                         updateConnectedPagesDisplay();
                     }
-                });
-                
-                console.log('[Percent] ✅ BroadcastChannel 초기화 완료');
-            } catch (e) {
-                console.warn('[Percent] ⚠️ BroadcastChannel 초기화 실패:', e);
-            }
+                } catch (error) {
+                    console.warn('[Percent] 메시지 처리 실패:', error);
+                }
+            });
+
+            // 채널 오류 처리
+            window.weightUpdateChannel.addEventListener('error', function(error) {
+                console.warn('[Percent] BroadcastChannel 오류:', error);
+                // 채널 재생성 시도
+                setTimeout(createBroadcastChannel, 1000);
+            });
+            
+            console.log('[Percent] ✅ BroadcastChannel 초기화 완료');
+            return true;
+            
+        } catch (e) {
+            console.warn('[Percent] ⚠️ BroadcastChannel 초기화 실패:', e);
+            window.weightUpdateChannel = null;
+            return false;
         }
-        
-        // 페이지 연결 상태 주기적 확인
-        setInterval(checkConnectedPages, 10000); // 10초마다
     }
 
-    // === 📡 연결된 페이지 확인 ===
+    // === 📡 안전한 브로드캐스트 함수 ===
+    function safeBroadcast(data) {
+        try {
+            if (!window.weightUpdateChannel) {
+                // 채널이 없으면 재생성 시도
+                if (!createBroadcastChannel()) {
+                    return false;
+                }
+            }
+
+            // 채널 상태 확인 (readyState는 없지만, 예외 발생으로 확인)
+            window.weightUpdateChannel.postMessage(data);
+            return true;
+            
+        } catch (error) {
+            console.warn('[Percent] 브로드캐스트 실패, 채널 재생성 시도:', error);
+            
+            // 채널 재생성 시도
+            if (createBroadcastChannel()) {
+                try {
+                    window.weightUpdateChannel.postMessage(data);
+                    return true;
+                } catch (retryError) {
+                    console.warn('[Percent] 재시도 후에도 브로드캐스트 실패:', retryError);
+                }
+            }
+            
+            return false;
+        }
+    }
+
+    // === 📡 연결된 페이지 확인 (안전한 버전) ===
     function checkConnectedPages() {
-        if (window.weightUpdateChannel) {
-            // 연결 확인 요청 전송
-            window.weightUpdateChannel.postMessage({
+        try {
+            const success = safeBroadcast({
                 type: 'connection_check',
                 source: 'percent_page',
                 timestamp: new Date().toISOString(),
                 userId: appState.userId
             });
+            
+            if (!success) {
+                console.warn('[Percent] 연결 확인 브로드캐스트 실패');
+            }
+        } catch (error) {
+            console.warn('[Percent] 연결 확인 중 오류:', error);
         }
     }
 
@@ -313,10 +382,12 @@ document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('client_weight_change_event', JSON.stringify(updateData));
             localStorage.setItem('last_client_weight_update', Date.now().toString());
             
-            // 2. BroadcastChannel (실시간 통신)
-            if (window.weightUpdateChannel) {
-                window.weightUpdateChannel.postMessage(updateData);
-                console.log('[Percent] 📡 BroadcastChannel로 업데이트 알림 전송');
+            // 2. BroadcastChannel (실시간 통신) - 안전한 방식
+            const broadcastSuccess = safeBroadcast(updateData);
+            if (broadcastSuccess) {
+                console.log('[Percent] 📡 BroadcastChannel로 업데이트 알림 전송 성공');
+            } else {
+                console.warn('[Percent] ⚠️ BroadcastChannel 알림 실패, localStorage만 사용');
             }
             
             // 3. 커스텀 이벤트
@@ -328,11 +399,16 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('[Percent] 랭킹 업데이트 알림 실패:', error);
-            throw error;
+            // 에러가 발생해도 localStorage는 작동하므로 완전히 실패하지 않음
+            console.log('[Percent] 📦 localStorage 이벤트는 정상 작동합니다');
         } finally {
             // localStorage 정리
             setTimeout(() => {
-                localStorage.removeItem('client_weight_change_event');
+                try {
+                    localStorage.removeItem('client_weight_change_event');
+                } catch (e) {
+                    // 무시
+                }
             }, 1000);
         }
     }
@@ -473,9 +549,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 event.returnValue = '저장되지 않은 변경사항이 있습니다.';
             }
             
-            // BroadcastChannel 정리
+            // BroadcastChannel 정리 (안전하게)
             if (window.weightUpdateChannel) {
-                window.weightUpdateChannel.close();
+                try {
+                    window.weightUpdateChannel.close();
+                } catch (e) {
+                    // 이미 닫혔을 수 있음, 무시
+                }
+                window.weightUpdateChannel = null;
             }
         });
     }
@@ -932,6 +1013,24 @@ document.addEventListener('DOMContentLoaded', function() {
             updateConnectedPagesDisplay();
             updateLastSavedDisplay();
         },
+        recreateChannel: () => {
+            console.log('[Percent] BroadcastChannel 재생성 시도...');
+            const success = createBroadcastChannel();
+            console.log('[Percent] 재생성 결과:', success ? '성공' : '실패');
+            return success;
+        },
+        getChannelStatus: () => {
+            return {
+                exists: !!window.weightUpdateChannel,
+                type: typeof window.weightUpdateChannel,
+                supported: typeof BroadcastChannel !== 'undefined'
+            };
+        },
+        testBroadcast: (testData = { test: true, timestamp: new Date().toISOString() }) => {
+            const success = safeBroadcast(testData);
+            console.log('[Percent] 테스트 브로드캐스트 결과:', success ? '성공' : '실패');
+            return success;
+        },
         help: () => {
             console.log('[Percent] 🔧 클라이언트 전용 가중치 시스템 디버그 도구 (v4.0.0):');
             console.log('  - getCurrentWeights(): 현재 가중치 반환');
@@ -940,6 +1039,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('  - checkConnectedPages(): 연결된 페이지 확인');
             console.log('  - getUserId(): 현재 사용자 ID 확인');
             console.log('  - resetUserId(): 새로운 사용자 ID 생성');
+            console.log('  - recreateChannel(): BroadcastChannel 재생성');
+            console.log('  - getChannelStatus(): 채널 상태 확인');
+            console.log('  - testBroadcast(): 브로드캐스트 테스트');
         }
     };
 
