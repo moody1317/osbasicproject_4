@@ -659,13 +659,13 @@ function renderPartyRankingTable() {
 // 정당 대표 정보 가져오기 (임시 데이터)
 function getPartyLeader(partyName) {
     const leaders = {
-        "더불어민주당": "이재명",
-        "국민의힘": "한동훈", 
-        "조국혁신당": "조국",
-        "개혁신당": "김종민",
-        "진보당": "강성희",
+        "더불어민주당": "박찬대",
+        "국민의힘": "공석", 
+        "조국혁신당": "서왕진",
+        "개혁신당": "천하람",
+        "진보당": "윤종오",
         "기본소득당": "용혜인",
-        "사회민주당": "장석웅",
+        "사회민주당": "	한창민",
         "무소속": "-"
     };
     return leaders[partyName] || "-";
@@ -764,7 +764,7 @@ function addBasicStyles() {
     }
 
     // 정렬 이벤트 리스너 설정
-    // 정렬 이벤트 리스너 설정 (HTML 드롭다운 사용)
+    // 정렬 이벤트 리스너 설정 (HTML 드롭다운 사용) - 수정된 버전
 function setupSortingListeners() {
     const settingsBtn = document.getElementById('settingsBtn');
     const sortDropdown = document.getElementById('sortDropdown');
@@ -775,6 +775,7 @@ function setupSortingListeners() {
         settingsBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             sortDropdown.classList.toggle('active');
+            console.log('[RankParty] 📋 설정 드롭다운 토글');
         });
 
         // 드롭다운 외부 클릭 시 닫기
@@ -786,6 +787,8 @@ function setupSortingListeners() {
         dropdownItems.forEach(item => {
             item.addEventListener('click', function(e) {
                 e.stopPropagation();
+                
+                console.log('[RankParty] 📊 정렬 옵션 클릭:', this.textContent, this.getAttribute('data-sort'));
                 
                 // 이전 활성 아이템 제거
                 dropdownItems.forEach(i => i.classList.remove('active'));
@@ -801,134 +804,122 @@ function setupSortingListeners() {
                 sortDropdown.classList.remove('active');
             });
         });
+        
+        console.log('[RankParty] ✅ 정렬 이벤트 리스너 설정 완료');
+    } else {
+        console.error('[RankParty] ❌ 정렬 버튼 또는 드롭다운을 찾을 수 없습니다');
     }
 }
 
 // 정렬 적용 함수
 function applySorting(sortType) {
+    console.log('[RankParty] 📊 정렬 적용 중:', sortType);
+    
     if (sortType === 'asc') {
-        currentSort = 'rank';
-        console.log('[RankParty] 📊 오름차순 정렬 적용');
+        // 오름차순: 순위 기준 (낮은 순위부터)
+        currentSort = 'rank_asc';
+        console.log('[RankParty] 📊 순위 오름차순 정렬 적용 (1위부터)');
     } else if (sortType === 'desc') {
-        currentSort = 'totalScore';
-        console.log('[RankParty] 📊 내림차순 정렬 적용 (점수 기준)');
+        // 내림차순: 점수 기준 (높은 점수부터)
+        currentSort = 'score_desc';
+        console.log('[RankParty] 📊 점수 내림차순 정렬 적용 (높은 점수부터)');
     }
     
     currentPage = 1; // 정렬 시 첫 페이지로
+    
+    // UI 즉시 업데이트
     renderPartyRankingTable();
     renderPagination();
+    
+    console.log('[RankParty] ✅ 정렬 완료, 현재 정렬:', currentSort);
 }
 
-// 페이지네이션 렌더링 (간단한 버전)
-function renderPagination() {
-    const totalItems = partyData.length;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
+// 정렬된 정당 데이터 가져오기 - 수정된 버전
+function getSortedPartyData() {
+    if (!partyData || partyData.length === 0) {
+        console.warn('[RankParty] ⚠️ 정당 데이터가 없음');
+        return [];
+    }
+
+    const sortedData = [...partyData];
     
-    // 기존 페이지네이션 컨테이너 찾기 또는 생성
-    let paginationContainer = document.getElementById('pagination-container');
-    if (!paginationContainer) {
-        paginationContainer = document.createElement('div');
-        paginationContainer.id = 'pagination-container';
-        paginationContainer.style.textAlign = 'center';
-        paginationContainer.style.marginTop = '20px';
-        
-        const table = document.querySelector('.party-table');
-        if (table && table.parentNode) {
-            table.parentNode.insertBefore(paginationContainer, table.nextSibling);
-        }
+    console.log('[RankParty] 📊 정렬 적용 중:', currentSort, '데이터 수:', sortedData.length);
+    
+    switch (currentSort) {
+        case 'rank_asc':
+        case 'rank':
+            // 순위 오름차순 (1위부터)
+            sortedData.sort((a, b) => {
+                const rankA = a.rank || 999;
+                const rankB = b.rank || 999;
+                return rankA - rankB;
+            });
+            console.log('[RankParty] 🔄 순위 오름차순 정렬 완료');
+            break;
+            
+        case 'score_desc':
+        case 'totalScore':
+            // 점수 내림차순 (높은 점수부터)
+            sortedData.sort((a, b) => {
+                const scoreA = a.totalScore || 0;
+                const scoreB = b.totalScore || 0;
+                return scoreB - scoreA;
+            });
+            console.log('[RankParty] 🔄 점수 내림차순 정렬 완료');
+            break;
+            
+        case 'attendanceRate':
+            sortedData.sort((a, b) => (b.attendanceRate || 0) - (a.attendanceRate || 0));
+            break;
+            
+        case 'billPassSum':
+            sortedData.sort((a, b) => (b.billPassSum || 0) - (a.billPassSum || 0));
+            break;
+            
+        case 'petitionSum':
+            sortedData.sort((a, b) => (b.petitionSum || 0) - (a.petitionSum || 0));
+            break;
+            
+        case 'chairmanCount':
+            sortedData.sort((a, b) => (b.chairmanCount || 0) - (a.chairmanCount || 0));
+            break;
+            
+        case 'secretaryCount':
+            sortedData.sort((a, b) => (b.secretaryCount || 0) - (a.secretaryCount || 0));
+            break;
+            
+        default:
+            // 기본: 순위 오름차순
+            sortedData.sort((a, b) => (a.rank || 999) - (b.rank || 999));
+            console.log('[RankParty] 🔄 기본 정렬 (순위 오름차순) 적용');
     }
     
-    if (totalPages <= 1) {
-        paginationContainer.innerHTML = '';
-        return;
-    }
+    // 정렬 결과 로그
+    console.log('[RankParty] 📊 정렬 결과 미리보기:');
+    sortedData.slice(0, 3).forEach((party, index) => {
+        console.log(`  ${index + 1}. ${party.name} - 순위: ${party.rank}, 점수: ${party.totalScore?.toFixed(1)}%`);
+    });
     
-    let paginationHTML = '<div class="pagination">';
-    
-    // 이전 페이지 버튼
-    if (currentPage > 1) {
-        paginationHTML += `<button onclick="goToPage(${currentPage - 1})" class="page-btn">이전</button>`;
-    }
-    
-    // 페이지 번호 버튼들
-    for (let i = 1; i <= totalPages; i++) {
-        if (i === currentPage) {
-            paginationHTML += `<button class="page-btn active">${i}</button>`;
-        } else {
-            paginationHTML += `<button onclick="goToPage(${i})" class="page-btn">${i}</button>`;
-        }
-    }
-    
-    // 다음 페이지 버튼
-    if (currentPage < totalPages) {
-        paginationHTML += `<button onclick="goToPage(${currentPage + 1})" class="page-btn">다음</button>`;
-    }
-    
-    paginationHTML += '</div>';
-    paginationContainer.innerHTML = paginationHTML;
-    
-    // 페이지네이션 스타일 추가
-    addPaginationStyles();
+    return sortedData;
 }
 
-// 페이지 이동 함수
-function goToPage(page) {
-    const totalPages = Math.ceil(partyData.length / itemsPerPage);
-    if (page >= 1 && page <= totalPages) {
-        currentPage = page;
-        renderPartyRankingTable();
-        renderPagination();
-    }
+// 정렬 상태 디버깅 함수
+function debugSortingState() {
+    console.log('[RankParty] 🔍 정렬 상태 디버깅:');
+    console.log('- currentSort:', currentSort);
+    console.log('- partyData 길이:', partyData?.length || 0);
+    console.log('- 정렬 결과 첫 3개:');
+    
+    const sorted = getSortedPartyData();
+    sorted.slice(0, 3).forEach((party, index) => {
+        console.log(`  ${index + 1}. ${party.name} (순위: ${party.rank}, 점수: ${party.totalScore?.toFixed(1)}%)`);
+    });
+    
+    return sorted;
 }
 
-// 페이지네이션 스타일 추가
-function addPaginationStyles() {
-    if (document.getElementById('pagination-styles')) return;
-    
-    const style = document.createElement('style');
-    style.id = 'pagination-styles';
-    style.textContent = `
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin: 20px 0;
-        }
-        
-        .page-btn {
-            padding: 8px 12px;
-            border: 1px solid var(--side2);
-            background: white;
-            color: var(--string);
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-        
-        .page-btn:hover {
-            background: var(--main2);
-            border-color: var(--light-blue);
-        }
-        
-        .page-btn.active {
-            background: var(--light-blue);
-            color: white;
-            border-color: var(--light-blue);
-        }
-        
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-    `;
-    
-    document.head.appendChild(style);
-}
-
-// 전역 함수 등록
-window.goToPage = goToPage;
+// 전역 함수로 등록
+window.debugSortingState = debugSortingState;
 
     // 통계 정보 렌더링
     function renderStatistics() {
@@ -1025,21 +1016,30 @@ window.goToPage = goToPage;
         }
     }
 
-    // === 🚀 페이지 초기화 ===
+    // === 🚀 페이지 초기화 === (개선된 버전)
 async function initializePage() {
     console.log('[RankParty] 🚀 정당 랭킹 페이지 초기화 중...');
     
     try {
+        // 기본 정렬 설정
+        currentSort = 'rank_asc';
+        currentPage = 1;
+        
         // 정당 데이터 로드
         await loadPartyData();
+        
+        console.log('[RankParty] 📊 로드된 데이터 확인:', partyData?.length || 0, '개 정당');
+        
+        // 이벤트 리스너 먼저 설정
+        setupSortingListeners();
         
         // UI 렌더링
         renderPartyRankingTable();
         renderPagination();
         renderStatistics();
         
-        // 이벤트 리스너 설정
-        setupSortingListeners();
+        // 초기 정렬 상태 확인
+        console.log('[RankParty] 🔧 초기 정렬 상태:', currentSort);
         
         showNotification('정당 랭킹 페이지 로드 완료', 'success');
         console.log('[RankParty] ✅ 정당 랭킹 페이지 초기화 완료');
@@ -1055,10 +1055,99 @@ async function initializePage() {
                 <tr>
                     <td colspan="5" style="text-align: center; padding: 40px; color: var(--example);">
                         데이터를 불러오는데 실패했습니다. 페이지를 새로고침해주세요.
+                        <br><br>
+                        <button onclick="location.reload()" style="padding: 8px 16px; margin-top: 10px;">새로고침</button>
                     </td>
                 </tr>
             `;
         }
+    }
+}
+
+// 렌더링 함수에 디버깅 추가
+function renderPartyRankingTable() {
+    // 기존 HTML의 tbody 요소 찾기
+    const tableBody = document.getElementById('partyTableBody');
+    
+    if (!tableBody) {
+        console.error('[RankParty] ❌ partyTableBody 요소를 찾을 수 없습니다');
+        return;
+    }
+
+    // 데이터가 없을 경우 로딩 메시지 표시
+    if (!partyData || partyData.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: var(--example);">
+                    <div class="loading-spinner"></div>
+                    정당 데이터를 불러오는 중...
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    // 페이지네이션 적용
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const sortedData = getSortedPartyData();
+    const pageData = sortedData.slice(startIndex, endIndex);
+
+    console.log('[RankParty] 📋 테이블 렌더링:', {
+        totalData: partyData.length,
+        sortedData: sortedData.length,
+        pageData: pageData.length,
+        currentSort: currentSort,
+        currentPage: currentPage
+    });
+
+    // 테이블 body 내용 생성
+    const tableHTML = pageData.map((party, index) => {
+        const partyColor = partyColors[party.name];
+        
+        return `
+            <tr class="party-row" data-party="${party.name}" onclick="showPartyDetail('${party.name}')">
+                <td class="rank-cell">
+                    <span style="color: ${partyColor?.main || '#333'}">${party.rank}</span>
+                    ${party.rankSource === 'api' ? 
+                        '<span style="font-size: 10px; color: #28a745; margin-left: 5px;" title="실시간 데이터">●</span>' : 
+                        '<span style="font-size: 10px; color: #6c757d; margin-left: 5px;" title="추정 데이터">○</span>'
+                    }
+                </td>
+                <td style="font-weight: 600; color: ${partyColor?.main || '#333'}">
+                    ${party.totalScore.toFixed(1)}%
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="width: 12px; height: 12px; border-radius: 50%; background-color: ${partyColor?.main || '#999'}; display: inline-block;"></span>
+                        <strong>${party.name}</strong>
+                    </div>
+                </td>
+                <td style="color: var(--example)">
+                    ${getPartyLeader(party.name)}
+                </td>
+                <td class="home-icon">
+                    <a href="${getPartyHomepage(party.name)}" target="_blank" rel="noopener noreferrer">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
+                        </svg>
+                    </a>
+                </td>
+            </tr>
+        `;
+    }).join('');
+
+    // 기존 테이블의 tbody에 내용 삽입
+    tableBody.innerHTML = tableHTML;
+
+    // 기본 스타일이 없다면 추가
+    addBasicStyles();
+    
+    console.log(`[RankParty] ✅ 테이블 렌더링 완료: ${pageData.length}개 정당 표시`);
+    
+    // 렌더링 후 정렬 상태 표시
+    if (pageData.length > 0) {
+        console.log(`[RankParty] 📊 현재 정렬(${currentSort}) 결과: 첫번째=${pageData[0].name}(순위:${pageData[0].rank}, 점수:${pageData[0].totalScore?.toFixed(1)}%)`);
     }
 }
 
