@@ -75,7 +75,7 @@
     
     <main>
     
-    <!-- 검색 영역 추가 -->
+        <!-- 검색 영역 추가 -->
     <div class="search-container">
         <div class="search-bar">
             <div class="search-filter">
@@ -91,11 +91,10 @@
                     <option value="무소속">무소속</option>
                 </select>
             </div>
-            <div class="search-input" style="position: relative;">
-                <input type="text" id="memberSearchInput" placeholder="국회의원 이름을 입력하세요..." autocomplete="off">
-                <!-- 검색 결과는 JavaScript에서 동적으로 생성됩니다 -->
+            <div class="search-input">
+                <input type="text" id="memberSearchInput" placeholder="국회의원 이름을 입력하세요...">
             </div>
-            <button class="search-button" id="searchButton" type="button">
+            <button class="search-button" id="searchButton">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="m19 19-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
@@ -103,13 +102,6 @@
             </button>
         </div>
     </div>
-
-    <!-- API 상태 표시 (선택사항) -->
-    <div class="api-status-indicator" id="apiStatus" style="display: none;">
-        <div class="status-message">
-            <span class="status-icon">🔄</span>
-            <span class="status-text">데이터 연결 중...</span>
-        </
     
     <!-- 국회의원 프로필 -->
     <div class="container">
