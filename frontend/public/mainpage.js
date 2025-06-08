@@ -410,7 +410,7 @@ async function fetchMemberRankingData() {
                 const rank = member.rank || (index + 1);
                 const name = String(member.name || '정보없음');
                 const party = String(member.party || '정보없음');
-                const score = Math.round(member.score || 0);
+                const score = Math.round(parseFloat(member.score) * 10) / 10; 
                 
                 rankingItem.innerHTML = `
                     <div class="rank-number">${rank}</div>
