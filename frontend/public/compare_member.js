@@ -179,12 +179,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('📊 국회의원 실적 데이터 조회...');
             
             const rawData = await window.APIService.getMemberPerformance();
-            const rankingArray = rawData?.ranking || [];
-
-            if (!Array.isArray(rankingArray)) {
-                throw new Error('국회의원 실적 API 응답이 배열 형태가 아닙니다.');
+            
+            if (!rawData || !Array.isArray(rawData)) {
+                throw new Error('국회의원 실적 API 응답이 올바르지 않습니다.');
             }
-
             
             // 실적 데이터 매핑 (실제 API 필드명 사용)
             const performanceData = {};
@@ -802,18 +800,6 @@ document.addEventListener('DOMContentLoaded', function() {
             // 새로운 선택 저장
             selectedMembers[cardIndex] = mp.id;
 
-            // localStorage에 현재 비교 정보 저장 (weight_sync.js에서 사용)
-            if (selectedMembers[0] && selectedMembers[1]) {
-                const member1 = mpData.find(m => m.id === selectedMembers[0]);
-                const member2 = mpData.find(m => m.id === selectedMembers[1]);
-                if (member1 && member2) {
-                    localStorage.setItem('current_member_comparison', JSON.stringify({
-                        member1: member1.name,
-                        member2: member2.name
-                    }));
-                }
-            }
-
             // 선택된 국회의원 정보 업데이트
             const mpSelected = card.querySelector('.mp-selected');
             const mpImage = mpSelected.querySelector('img');
@@ -858,9 +844,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (card) {
             // 선택 해제
             selectedMembers[cardIndex] = null;
-
-            // localStorage에서 비교 정보 제거
-            localStorage.removeItem('current_member_comparison');
 
             const mpSelected = card.querySelector('.mp-selected');
             const mpImage = mpSelected.querySelector('img');
@@ -1064,12 +1047,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 }
             }
-            const statusItem = statusItems[index];
-    const valueElement = statusItem.querySelector('.status-value');
-
-    console.log(`🔍 index: ${index}`);
-    console.log(`📌 HTML Label:`, statusItem.querySelector('.status-label')?.textContent.trim());
-    console.log(`📊 update.key: ${update.key}, value: ${update.value}, suffix: ${update.suffix}`);
         });
         
         console.log(`✅ ${mp.name} 통계 업데이트 완료 (실제 API 데이터 기반)`);
@@ -1189,73 +1166,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         });
-    }
-
-    // === 🔄 데이터 새로고침 함수들 ===
-
-    // 전체 데이터 새로고침 (가중치 변경 시 사용)
-    async function refreshMemberComparison() {
-        try {
-            console.log('🔄 국회의원 비교 데이터 새로고침...');
-            showLoading(true);
-            
-            // 현재 선택된 의원들 정보 백업
-            const currentSelections = selectedMembers.map((memberId, index) => {
-                if (memberId) {
-                    const member = mpData.find(m => m.id === memberId);
-                    return member ? { member, cardIndex: index } : null;
-                }
-                return null;
-            }).filter(selection => selection !== null);
-            
-            // 모든 데이터 다시 로드
-            await fetchMemberData();
-            
-            // 이전 선택 복원
-            currentSelections.forEach(({ member, cardIndex }) => {
-                const updatedMember = mpData.find(m => m.name === member.name && m.party === member.party);
-                if (updatedMember) {
-                    selectMP(updatedMember, cardIndex);
-                    console.log(`🔄 ${member.name} 의원 선택 복원 완료`);
-                }
-            });
-            
-            showNotification('국회의원 비교 데이터가 업데이트되었습니다', 'success');
-            
-        } catch (error) {
-            console.error('❌ 데이터 새로고침 실패:', error);
-            showNotification('데이터 새로고침에 실패했습니다', 'error');
-        } finally {
-            showLoading(false);
-        }
-    }
-
-    // WeightSync 호환 함수들
-    async function refreshCompareMemberData() {
-        return await refreshMemberComparison();
-    }
-
-    async function loadCompareMemberData() {
-        return await fetchMemberData();
-    }
-
-    async function updateCompareMemberData(newData) {
-        console.log('[CompareMember] 📊 외부 데이터로 업데이트:', newData);
-        
-        if (newData && Array.isArray(newData)) {
-            mpData = newData;
-            showNotification('데이터가 업데이트되었습니다', 'success');
-            
-            // 현재 선택된 의원들 재설정
-            selectedMembers.forEach((memberId, index) => {
-                if (memberId) {
-                    const member = mpData.find(m => m.id === memberId);
-                    if (member) {
-                        selectMP(member, index);
-                    }
-                }
-            });
-        }
     }
 
     // === 🔍 검색 및 필터 기능 ===
@@ -1404,15 +1314,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // === 🔧 전역 함수 등록 (WeightSync 및 디버그용) ===
+    // === 🔧 기본 새로고침 함수들 (가중치 제거) ===
     
-    // WeightSync 연동 함수들
-    window.refreshCompareMemberData = refreshCompareMemberData;
-    window.loadCompareMemberData = loadCompareMemberData;
-    window.updateCompareMemberData = updateCompareMemberData;
+    // 기본 데이터 새로고침 함수 (수동 새로고침용)
+    async function refreshMemberData() {
+        console.log('[CompareMember] 🔄 국회의원 비교 데이터 수동 새로고침...');
+        try {
+            await fetchMemberData();
+            showNotification('국회의원 비교 데이터가 새로고침되었습니다', 'success');
+        } catch (error) {
+            console.error('[CompareMember] ❌ 새로고침 실패:', error);
+            showNotification('데이터 새로고침에 실패했습니다', 'error');
+        }
+    }
+
+    // === 🔧 전역 함수 등록 (기본 기능만) ===
+    
+    // 기본 새로고침 함수들 (가중치 자동 감지 제거)
+    window.refreshCompareMemberData = refreshMemberData;
+    window.loadCompareMemberData = fetchMemberData;
     window.fetchMemberData = fetchMemberData;
     
-    // 디버그 유틸리티 (전역)
+    // 디버그 유틸리티 (가중치 관련 기능 제거)
     window.compareMemberDebug = {
         getMemberData: () => mpData,
         getSelectedMembers: () => selectedMembers,
@@ -1423,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', function() {
         getRankingData: () => memberRankingData,
         getCommitteeData: () => committeeMemberData,
         reloadData: () => initializePage(),
-        refreshData: () => refreshMemberComparison(),
+        refreshData: () => refreshMemberData,
         showMemberStats: (memberName) => {
             const member = mpData.find(m => m.name === memberName);
             if (member) {
@@ -1436,7 +1359,6 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         clearSelection: () => {
             selectedMembers = [];
-            localStorage.removeItem('current_member_comparison');
             const cards = document.querySelectorAll('.comparison-card');
             cards.forEach((card, index) => resetMP(index));
         },
@@ -1492,78 +1414,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('❌ 비교 테스트 실패:', error);
                 return null;
             }
-        },
-        simulateWeightChange: () => {
-            console.log('🔧 가중치 변경 시뮬레이션...');
-            const changeData = {
-                type: 'weights_updated',
-                timestamp: new Date().toISOString(),
-                source: 'debug_simulation'
-            };
-            localStorage.setItem('weight_change_event', JSON.stringify(changeData));
-            localStorage.setItem('last_weight_update', Date.now().toString());
-            setTimeout(() => localStorage.removeItem('weight_change_event'), 100);
-        },
-        testHTMLMapping: () => {
-            console.log('🔍 HTML 매핑 테스트...');
-            const statusItems = document.querySelectorAll('.comparison-card:first-child .status-item');
-            statusItems.forEach((item, index) => {
-                const label = item.querySelector('.status-label')?.textContent?.trim() || 'Unknown';
-                console.log(`HTML Index ${index}: ${label}`);
-            });
-        },
-        showMemberCommittee: (memberName) => {
-            const member = mpData.find(m => m.name === memberName);
-            if (member && member.committee) {
-                console.log(`🏛️ ${memberName} 위원회 정보:`);
-                member.committee.forEach((c, index) => {
-                    console.log(`  ${index + 1}. ${c.committee} - ${c.position} (${c.party})`);
-                });
-                console.log(`주요 직책: ${member.stats.committeePosition}`);
-                console.log(`직책 랭크: ${member.stats.committeeRank}`);
-                return member.committee;
-            } else {
-                console.log(`❌ ${memberName} 의원의 위원회 정보를 찾을 수 없습니다`);
-                return null;
-            }
-        },
-        listCommittees: () => {
-            const committees = new Set();
-            Object.values(committeeMemberData).forEach(memberCommittees => {
-                memberCommittees.forEach(c => committees.add(c.committee));
-            });
-            const sortedCommittees = Array.from(committees).sort();
-            console.log('🏛️ 전체 위원회 목록:');
-            sortedCommittees.forEach((committee, index) => {
-                console.log(`  ${index + 1}. ${committee}`);
-            });
-            return sortedCommittees;
-        },
-        getCommitteeMembers: (committeeName) => {
-            const members = [];
-            Object.entries(committeeMemberData).forEach(([memberName, committees]) => {
-                committees.forEach(c => {
-                    if (c.committee === committeeName) {
-                        members.push({
-                            name: memberName,
-                            position: c.position,
-                            party: c.party
-                        });
-                    }
-                });
-            });
-            console.log(`🏛️ ${committeeName} 구성원:`);
-            members.forEach(m => {
-                console.log(`  - ${m.name} (${m.position}) - ${m.party}`);
-            });
-            return members;
         }
     };
 
     // 초기화 실행
     setTimeout(initializePage, 100);
 
-    console.log('✅ 국회의원 비교 페이지 스크립트 로드 완료 (실제 API 구조 + 위원회 데이터 적용 버전)');
+    console.log('✅ 국회의원 비교 페이지 스크립트 로드 완료 (가중치 반영 기능 제거)');
     console.log('🔗 API 모드: Django API 직접 연동');
     console.log('📊 데이터 매핑: 실제 API 필드명 + 위원회 정보 적용');
     console.log('🔧 디버그 명령어:');
@@ -1572,8 +1429,4 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('  - window.compareMemberDebug.testAPIService() : APIService 테스트');
     console.log('  - window.compareMemberDebug.clearSelection() : 선택 초기화');
     console.log('  - window.compareMemberDebug.testComparison("의원1", "의원2") : 비교 API 테스트');
-    console.log('  - window.compareMemberDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
-    console.log('  - window.compareMemberDebug.showMemberCommittee("의원명") : 의원 위원회 정보');
-    console.log('  - window.compareMemberDebug.listCommittees() : 전체 위원회 목록');
-    console.log('  - window.compareMemberDebug.getCommitteeMembers("위원회명") : 위원회 구성원');
 });
