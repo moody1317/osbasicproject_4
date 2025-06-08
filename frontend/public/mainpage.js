@@ -449,9 +449,28 @@ document.addEventListener('DOMContentLoaded', function() {
         ];
     }
 
-    // 페이지 변경 함수 (전역으로 노출)
+    // 페이지 변경 함수 (전역으로 노출) - 개선된 버전
     window.changePage = function(page) {
+        console.log(`🔄 페이지 변경 요청: ${currentPage} → ${page}`);
+        
+        // 유효성 검사
+        const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+        
+        if (page < 1 || page > totalPages) {
+            console.warn(`⚠️ 잘못된 페이지 번호: ${page} (유효 범위: 1~${totalPages})`);
+            return;
+        }
+        
+        if (page === currentPage) {
+            console.log(`ℹ️ 이미 현재 페이지입니다: ${page}`);
+            return;
+        }
+        
+        // 페이지 변경
         currentPage = page;
+        console.log(`✅ 현재 페이지 업데이트: ${currentPage}`);
+        
+        // 테이블 렌더링
         renderBillTable(currentPage);
         
         // 페이지 상단으로 스크롤
@@ -460,16 +479,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 페이지네이션 업데이트 함수
     function updatePagination() {
+        console.log('🔧 페이지네이션 업데이트 시작:', {
+            currentPage,
+            filteredDataLength: filteredData.length,
+            itemsPerPage: ITEMS_PER_PAGE
+        });
+
+        // scripts.js의 전역 페이지네이션 함수 사용
+        if (typeof window.createPagination === 'function') {
+            try {
+                window.createPagination(
+                    filteredData.length,
+                    currentPage,
+                    ITEMS_PER_PAGE,
+                    window.changePage
+                );
+                console.log('✅ 전역 페이지네이션 함수 사용 성공');
+                return;
+            } catch (error) {
+                console.warn('⚠️ 전역 페이지네이션 함수 실패, 로컬 함수 사용:', error.message);
+            }
+        }
+
+        // 전역 함수가 없거나 실패한 경우 로컬 페이지네이션 함수 실행
         const pagination = document.getElementById('pagination');
         if (!pagination) {
-            console.warn('페이지네이션 컨테이너를 찾을 수 없습니다.');
+            console.error('❌ 페이지네이션 컨테이너를 찾을 수 없습니다.');
             return;
         }
 
         const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
+        console.log(`📊 총 페이지 수: ${totalPages}, 현재 페이지: ${currentPage}`);
         
         if (totalPages <= 1) {
             pagination.style.display = 'none';
+            console.log('📊 페이지가 1개 이하이므로 페이지네이션 숨김');
             return;
         }
 
@@ -485,10 +529,8 @@ document.addEventListener('DOMContentLoaded', function() {
             prevButton.setAttribute('aria-label', '이전 페이지');
             prevButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (currentPage > 1) {
-                    console.log(`페이지 이동: ${currentPage - 1}`);
-                    window.changePage(currentPage - 1);
-                }
+                console.log(`🔙 이전 페이지 클릭: ${currentPage - 1}`);
+                window.changePage(currentPage - 1);
             });
             pagination.appendChild(prevButton);
         }
@@ -501,35 +543,39 @@ document.addEventListener('DOMContentLoaded', function() {
             startPage = Math.max(1, endPage - 4);
         }
 
-        // 첫 페이지
+        console.log(`📊 페이지 범위: ${startPage} ~ ${endPage}`);
+
+        // 첫 페이지 (1이 범위에 없는 경우)
         if (startPage > 1) {
-            pagination.appendChild(createPageButton(1, currentPage));
+            pagination.appendChild(createMeetingPageButton(1, currentPage));
             
             if (startPage > 2) {
                 const dots = document.createElement('span');
                 dots.textContent = '...';
                 dots.className = 'pagination-ellipsis';
                 dots.setAttribute('aria-hidden', 'true');
+                dots.style.padding = '8px 4px';
                 pagination.appendChild(dots);
             }
         }
 
         // 페이지 번호들
         for (let i = startPage; i <= endPage; i++) {
-            pagination.appendChild(createPageButton(i, currentPage));
+            pagination.appendChild(createMeetingPageButton(i, currentPage));
         }
 
-        // 마지막 페이지
+        // 마지막 페이지 (마지막이 범위에 없는 경우)
         if (endPage < totalPages) {
             if (endPage < totalPages - 1) {
                 const dots = document.createElement('span');
                 dots.textContent = '...';
                 dots.className = 'pagination-ellipsis';
                 dots.setAttribute('aria-hidden', 'true');
+                dots.style.padding = '8px 4px';
                 pagination.appendChild(dots);
             }
             
-            pagination.appendChild(createPageButton(totalPages, currentPage));
+            pagination.appendChild(createMeetingPageButton(totalPages, currentPage));
         }
 
         // 다음 버튼
@@ -541,34 +587,35 @@ document.addEventListener('DOMContentLoaded', function() {
             nextButton.setAttribute('aria-label', '다음 페이지');
             nextButton.addEventListener('click', (e) => {
                 e.preventDefault();
-                if (currentPage < totalPages) {
-                    console.log(`페이지 이동: ${currentPage + 1}`);
-                    window.changePage(currentPage + 1);
-                }
+                console.log(`🔜 다음 페이지 클릭: ${currentPage + 1}`);
+                window.changePage(currentPage + 1);
             });
             pagination.appendChild(nextButton);
         }
         
-        console.log(`📊 페이지네이션 업데이트 완료: ${currentPage}/${totalPages} (총 ${filteredData.length}개 항목)`);
+        console.log(`✅ 로컬 페이지네이션 업데이트 완료: ${currentPage}/${totalPages} (총 ${filteredData.length}개 항목)`);
     }
 
-    // 페이지 버튼 생성 헬퍼 함수
-    function createPageButton(pageNumber, currentPageNum) {
+    // 페이지 버튼 생성 헬퍼 함수 (이름 변경으로 충돌 방지)
+    function createMeetingPageButton(pageNumber, currentPageNum) {
         const button = document.createElement('a');
         button.href = '#';
         button.textContent = pageNumber;
         button.setAttribute('aria-label', `${pageNumber}페이지로 이동`);
         
+        // 현재 페이지 스타일 적용
         if (pageNumber === currentPageNum) {
             button.className = 'active';
             button.setAttribute('aria-current', 'page');
         }
         
-        button.addEventListener('click', (e) => {
+        // 클릭 이벤트 (클로저 문제 해결)
+        button.addEventListener('click', function(e) {
             e.preventDefault();
-            if (pageNumber !== currentPageNum) {
-                console.log(`페이지 변경: ${pageNumber}`);
-                window.changePage(pageNumber);
+            const targetPage = pageNumber; // 클로저 캡처
+            if (targetPage !== currentPage) {
+                console.log(`📄 페이지 버튼 클릭: ${targetPage}`);
+                window.changePage(targetPage);
             }
         });
         
@@ -580,18 +627,21 @@ document.addEventListener('DOMContentLoaded', function() {
         return statusClassMap[status] || '';
     }
 
-    // 법안 목록 테이블 렌더링
+    // 법안 목록 테이블 렌더링 - 개선된 버전
     function renderBillTable(page = 1) {
+        console.log(`📊 테이블 렌더링 시작: 페이지 ${page}`);
+        
         const tableBody = document.getElementById('billTableBody');
         const totalBillCountElement = document.getElementById('totalBillCount');
         
         if (!tableBody) {
-            console.error('billTableBody 요소를 찾을 수 없습니다!');
+            console.error('❌ billTableBody 요소를 찾을 수 없습니다!');
             return;
         }
 
         // 데이터가 없는 경우
         if (!filteredData || filteredData.length === 0) {
+            console.log('📋 표시할 데이터가 없습니다.');
             showEmptyMessage();
             
             if (totalBillCountElement) {
@@ -610,11 +660,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const startIndex = (page - 1) * ITEMS_PER_PAGE;
         const endIndex = startIndex + ITEMS_PER_PAGE;
         const pageData = filteredData.slice(startIndex, endIndex);
+        
+        console.log(`📄 데이터 범위: ${startIndex + 1}~${Math.min(endIndex, filteredData.length)} / ${filteredData.length}`);
+        console.log(`📋 현재 페이지 데이터:`, pageData.length, '건');
 
         // 전체 건수 업데이트
         if (totalBillCountElement) {
+            const totalCount = filteredData.length;
             totalBillCountElement.textContent = window.formatNumber ? 
-                window.formatNumber(filteredData.length) : filteredData.length.toLocaleString();
+                window.formatNumber(totalCount) : totalCount.toLocaleString();
         }
 
         // 기존 내용 초기화
@@ -652,10 +706,12 @@ document.addEventListener('DOMContentLoaded', function() {
             tableBody.appendChild(row);
         });
 
-        // 페이지네이션 업데이트
-        updatePagination();
+        console.log(`✅ 테이블 렌더링 완료: ${pageData.length}건 표시`);
 
-        console.log(`📊 테이블 렌더링 완료: ${pageData.length}건 표시 (전체 ${filteredData.length}건)`);
+        // 페이지네이션 업데이트 (렌더링 후)
+        setTimeout(() => {
+            updatePagination();
+        }, 50);
     }
 
     // 본회의 상세 페이지로 이동
@@ -853,13 +909,69 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 디버그 유틸리티 (전역)
+    // 디버그 유틸리티 (전역) - 페이지네이션 디버그 추가
     window.meetingDebug = {
         getData: () => billData,
         getFiltered: () => filteredData,
         reloadData: window.loadBillData,
         getCurrentPage: () => currentPage,
         loadSpecific: (type) => loadSpecificLegislation(type),
+        
+        // 페이지네이션 디버그 함수들 추가
+        testPagination: () => {
+            console.log('🧪 페이지네이션 테스트 시작...');
+            console.log(`📊 현재 상태:`, {
+                currentPage,
+                totalData: billData.length,
+                filteredData: filteredData.length,
+                itemsPerPage: ITEMS_PER_PAGE,
+                totalPages: Math.ceil(filteredData.length / ITEMS_PER_PAGE)
+            });
+            
+            // DOM 요소 확인
+            const pagination = document.getElementById('pagination');
+            const tableBody = document.getElementById('billTableBody');
+            
+            console.log('📋 DOM 요소:', {
+                pagination: !!pagination,
+                tableBody: !!tableBody,
+                paginationDisplay: pagination?.style.display,
+                paginationHTML: pagination?.innerHTML.substring(0, 100)
+            });
+            
+            // 페이지네이션 강제 재생성
+            updatePagination();
+        },
+        
+        changePage: (page) => {
+            console.log(`🧪 테스트 페이지 변경: ${page}`);
+            window.changePage(page);
+        },
+        
+        generateTestData: (count = 50) => {
+            console.log(`🧪 테스트 데이터 생성: ${count}건`);
+            const testData = [];
+            for (let i = 1; i <= count; i++) {
+                testData.push({
+                    id: `TEST_${i}`,
+                    billNumber: `제22대-2024-${String(i).padStart(6, '0')}`,
+                    title: `테스트 법안 ${i}번`,
+                    proposer: `테스트의원${i} 의원 외 ${Math.floor(Math.random() * 10) + 5}인`,
+                    date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+                    status: ['가결', '부결', '심의중'][Math.floor(Math.random() * 3)],
+                    committee: '테스트위원회',
+                    age: '22'
+                });
+            }
+            
+            billData = testData;
+            filteredData = [...testData];
+            currentPage = 1;
+            renderBillTable(1);
+            
+            console.log(`✅ 테스트 데이터 적용 완료: ${count}건`);
+        },
+        
         testAllAPIs: async () => {
             console.log('🧪 모든 본회의 API 테스트...');
             const results = {};
@@ -884,6 +996,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('🎉 본회의 API 테스트 완료:', results);
             return results;
         },
+        
         testDataMapping: () => {
             console.log('🔍 데이터 매핑 테스트:');
             const sampleData = [
@@ -903,11 +1016,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('변환된 데이터:', transformed);
             return transformed;
         },
+        
         showInfo: () => {
             console.log('📊 본회의 페이지 정보:');
             console.log(`- 전체 데이터: ${billData.length}건`);
             console.log(`- 필터된 데이터: ${filteredData.length}건`);
             console.log(`- 현재 페이지: ${currentPage}`);
+            console.log(`- 페이지당 항목: ${ITEMS_PER_PAGE}개`);
+            console.log(`- 총 페이지: ${Math.ceil(filteredData.length / ITEMS_PER_PAGE)}페이지`);
             console.log(`- API 서비스: ${!!window.APIService}`);
             console.log('- 사용 가능한 API:');
             console.log('  * getAllLegislation() - 전체 입법 데이터');
@@ -921,6 +1037,14 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('  * PROPOSER → proposer (제안자)');
             console.log('  * RGS_PROC_DT → date (의결일)');
             console.log('  * PROC_RESULT_CD/PRO_RESULT_CD → status (결과)');
+            console.log('  * DETAIL_LINK → link (상세링크)');
+            console.log('  * age → age (대수)');
+            console.log('- 페이지네이션 디버그:');
+            console.log('  * meetingDebug.testPagination() - 페이지네이션 테스트');
+            console.log('  * meetingDebug.changePage(번호) - 페이지 변경 테스트');
+            console.log('  * meetingDebug.generateTestData(수량) - 테스트 데이터 생성');
+        }
+    };  * PROC_RESULT_CD/PRO_RESULT_CD → status (결과)');
             console.log('  * DETAIL_LINK → link (상세링크)');
             console.log('  * age → age (대수)');
         }
