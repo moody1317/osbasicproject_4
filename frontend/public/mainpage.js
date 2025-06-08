@@ -85,29 +85,43 @@ document.addEventListener('DOMContentLoaded', function() {
         return nameMapping[partyName] || partyName;
     }
 
-    // API에서 정당 순위 데이터 가져오기
+    // 🎯 API에서 정당 순위 데이터 가져오기 (수정된 버전)
     async function fetchPartyRankingData() {
         try {
             console.log('📊 정당 순위 데이터 로드 중...');
 
-            const partyData = await window.APIService.getPartyWeightedPerformanceData();
+            // 🔄 새로운 API 구조에 맞춰서 데이터 가져오기
+            const partyData = await window.APIService.getPartyPerformance();
             
             if (!Array.isArray(partyData) || partyData.length === 0) {
                 console.warn('정당 데이터가 없습니다. 기본값 사용');
                 return getDefaultPartyRanking();
             }
 
-            // 점수순으로 정렬하고 상위 3개 선택
-            const sortedData = partyData
-                .filter(party => party.party && party.party !== '알 수 없음')
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 3);
+            console.log('🔍 정당 원본 데이터 샘플:', partyData.slice(0, 2));
 
-            console.log('✅ 정당 순위 데이터 로드 완료:', sortedData.length, '개 정당');
-            return sortedData.map((party, index) => ({
+            // 🎯 새로운 데이터 구조에 맞춰서 매핑
+            const processedData = partyData
+                .filter(party => {
+                    return party.party && 
+                           party.party !== '알 수 없음' && 
+                           party.avg_total_score !== undefined && 
+                           party.avg_total_score !== null;
+                })
+                .map(party => ({
+                    name: normalizePartyName(party.party),
+                    score: Math.round(party.avg_total_score) || 0,
+                    originalData: party // 디버깅용
+                }))
+                .sort((a, b) => b.score - a.score) // 점수순 정렬
+                .slice(0, 3); // 상위 3개만
+
+            console.log('✅ 정당 순위 데이터 가공 완료:', processedData);
+            
+            return processedData.map((party, index) => ({
                 rank: index + 1,
-                name: party.party,
-                score: Math.round(party.score) || 0
+                name: party.name,
+                score: party.score
             }));
 
         } catch (error) {
@@ -116,100 +130,50 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // API에서 국회의원 순위 데이터 가져오기
+    // 🎯 API에서 국회의원 순위 데이터 가져오기 (수정된 버전)
     async function fetchMemberRankingData() {
         try {
             console.log('👥 국회의원 순위 데이터 로드 중...');
 
-            const memberData = await window.APIService.getPerformanceData();
+            // 🔄 새로운 API 구조에 맞춰서 데이터 가져오기
+            const memberData = await window.APIService.getMemberPerformance();
             
             if (!Array.isArray(memberData) || memberData.length === 0) {
                 console.warn('의원 데이터가 없습니다. 기본값 사용');
                 return getDefaultMemberRanking();
             }
 
-            // 점수순으로 정렬하고 상위 3명 선택
-            const sortedData = memberData
-                .filter(member => member.name && member.name !== '알 수 없음')
-                .sort((a, b) => b.score - a.score)
-                .slice(0, 3);
+            console.log('🔍 의원 원본 데이터 샘플:', memberData.slice(0, 2));
 
-            console.log('✅ 국회의원 순위 데이터 로드 완료:', sortedData.length, '명');
-            return sortedData.map((member, index) => ({
+            // 🎯 새로운 데이터 구조에 맞춰서 매핑
+            const processedData = memberData
+                .filter(member => {
+                    return member.lawmaker_name && 
+                           member.lawmaker_name !== '알 수 없음' && 
+                           member.total_score !== undefined && 
+                           member.total_score !== null;
+                })
+                .map(member => ({
+                    name: member.lawmaker_name,
+                    party: normalizePartyName(member.party) || '정보없음',
+                    score: Math.round(member.total_score) || 0,
+                    originalData: member // 디버깅용
+                }))
+                .sort((a, b) => b.score - a.score) // 점수순 정렬
+                .slice(0, 3); // 상위 3명만
+
+            console.log('✅ 국회의원 순위 데이터 가공 완료:', processedData);
+
+            return processedData.map((member, index) => ({
                 rank: index + 1,
                 name: member.name,
-                party: normalizePartyName(member.party) || '정보없음',
-                score: Math.round(member.score) || 0
+                party: member.party,
+                score: member.score
             }));
 
         } catch (error) {
             console.error('❌ 국회의원 순위 데이터 로드 실패:', error);
             return getDefaultMemberRanking();
-        }
-    }
-
-    // 정당 점수 계산 (성과 기반)
-    function calculatePartyScore(party) {
-        try {
-            let score = 0;
-            
-            // 다양한 필드명에 대응
-            const attendance = party.attendance_rate || party.attendance || party.avg_attendance || 0;
-            const billPass = party.bill_pass_rate || party.pass_rate || party.avg_pass_rate || 0;
-            const activity = party.activity_score || party.total_activity || party.performance_score || 0;
-            
-            score += attendance * 0.3; // 출석률 30%
-            score += billPass * 0.4;   // 가결률 40%
-            score += activity * 0.3;   // 활동점수 30%
-            
-            return Math.round(score);
-        } catch (error) {
-            return Math.random() * 100;
-        }
-    }
-
-    // 정당 통계 기반 점수 계산
-    function calculatePartyScoreFromStats(party) {
-        try {
-            let score = 0;
-            
-            const members = party.member_count || party.total_members || 1;
-            const totalBills = party.total_bills || party.bill_count || 0;
-            const passedBills = party.passed_bills || party.passed_count || 0;
-            const attendance = party.avg_attendance || party.attendance_avg || 0;
-            
-            const passRate = totalBills > 0 ? (passedBills / totalBills) * 100 : 0;
-            
-            score += attendance * 0.4;     // 출석률 40%
-            score += passRate * 0.4;       // 가결률 40%
-            score += Math.min(members * 2, 20); // 의원수 보너스 (최대 20점)
-            
-            return Math.round(score);
-        } catch (error) {
-            return Math.random() * 100;
-        }
-    }
-
-    // 국회의원 점수 계산 (성과 기반)
-    function calculateMemberScore(member) {
-        try {
-            let score = 0;
-            
-            const attendance = member.attendance_rate || member.attendance || 0;
-            const billCount = member.bill_count || member.bills_proposed || member.total_bills || 0;
-            const passRate = member.pass_rate || member.bill_pass_rate || 0;
-            const activity = member.activity_score || member.total_activity || 0;
-            const committee = member.committee_activity || member.committee_score || 0;
-            
-            score += attendance * 0.25;    // 출석률 25%
-            score += Math.min(billCount * 2, 30); // 법안수 (최대 30점)
-            score += passRate * 0.25;      // 가결률 25%
-            score += activity * 0.15;      // 활동점수 15%
-            score += committee * 0.1;      // 위원회 활동 10%
-            
-            return Math.round(score);
-        } catch (error) {
-            return Math.random() * 100;
         }
     }
 
@@ -261,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
             rankingList.appendChild(rankingItem);
         });
         
-        console.log('✅ 정당 순위 카드 업데이트 완료 (HTML 순서 매칭)');
+        console.log('✅ 정당 순위 카드 업데이트 완료');
     }
 
     // 🔄 국회의원 순위 카드 업데이트 (HTML 순서와 정확히 매칭)
@@ -295,7 +259,7 @@ document.addEventListener('DOMContentLoaded', function() {
             rankingList.appendChild(rankingItem);
         });
         
-        console.log('✅ 국회의원 순위 카드 업데이트 완료 (HTML 순서 매칭)');
+        console.log('✅ 국회의원 순위 카드 업데이트 완료');
     }
 
     // 🔄 메인 데이터 로드 함수 (개선된 버전)
@@ -321,16 +285,18 @@ document.addEventListener('DOMContentLoaded', function() {
             // 정당 순위 업데이트
             if (partyRanking.status === 'fulfilled') {
                 updatePartyRankingCard(partyRanking.value);
+                console.log('🏛️ 정당 순위 업데이트 성공');
             } else {
-                console.warn('정당 순위 로드 실패, 기본값 사용');
+                console.warn('정당 순위 로드 실패, 기본값 사용:', partyRanking.reason);
                 updatePartyRankingCard(getDefaultPartyRanking());
             }
             
             // 국회의원 순위 업데이트
             if (memberRanking.status === 'fulfilled') {
                 updateMemberRankingCard(memberRanking.value);
+                console.log('👤 국회의원 순위 업데이트 성공');
             } else {
-                console.warn('국회의원 순위 로드 실패, 기본값 사용');
+                console.warn('국회의원 순위 로드 실패, 기본값 사용:', memberRanking.reason);
                 updateMemberRankingCard(getDefaultMemberRanking());
             }
             
@@ -435,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // 사용자에게 업데이트 알림
             showNotification('가중치가 변경되었습니다. 메인페이지 데이터를 새로고침합니다...', 'info');
             
-            // 1초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
+            // 3초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
             setTimeout(async () => {
                 try {
                     // 새로운 데이터로 업데이트
@@ -462,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('[MainPage] ❌ 가중치 업데이트 데이터 로드 실패:', error);
                     showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
                 }
-            }, 1000);
+            }, 3000); // 서버 처리 시간 고려하여 3초로 증가
             
         } catch (error) {
             console.error('[MainPage] ❌ 가중치 업데이트 처리 실패:', error);
@@ -474,6 +440,17 @@ document.addEventListener('DOMContentLoaded', function() {
     window.refreshMainPageData = function() {
         console.log('[MainPage] 🔄 수동 새로고침 요청');
         loadMainPageData();
+    };
+
+    // WeightSync 호환 함수들
+    window.refreshMemberDetails = function() {
+        console.log('[MainPage] 🔄 의원 데이터 새로고침 (WeightSync 호환)');
+        return loadMainPageData();
+    };
+
+    window.refreshPartyRanking = function() {
+        console.log('[MainPage] 🔄 정당 데이터 새로고침 (WeightSync 호환)');
+        return loadMainPageData();
     };
 
     // === 기존 네비게이션 및 팝업 기능 유지 ===
@@ -992,17 +969,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-    // API 데이터 디버깅 함수
+    // 🎯 API 데이터 디버깅 함수 (수정된 버전)
     window.mainPageDebug = {
         reloadData: () => loadMainPageData(),
         refreshData: () => loadMainPageData(), // WeightSync 호환
+        
+        // 🔍 API 응답 구조 확인
+        checkAPIStructure: async () => {
+            console.log('🔍 API 구조 확인 중...');
+            try {
+                const [partyData, memberData] = await Promise.all([
+                    window.APIService.getPartyPerformance(),
+                    window.APIService.getMemberPerformance()
+                ]);
+                
+                console.log('📊 정당 API 응답 샘플:', partyData?.slice(0, 2));
+                console.log('👤 의원 API 응답 샘플:', memberData?.slice(0, 2));
+                
+                // 필드 존재 여부 확인
+                if (partyData && partyData.length > 0) {
+                    const party = partyData[0];
+                    console.log('정당 필드 확인:', {
+                        party: party.party,
+                        avg_total_score: party.avg_total_score
+                    });
+                }
+                
+                if (memberData && memberData.length > 0) {
+                    const member = memberData[0];
+                    console.log('의원 필드 확인:', {
+                        lawmaker_name: member.lawmaker_name,
+                        party: member.party,
+                        total_score: member.total_score
+                    });
+                }
+                
+            } catch (error) {
+                console.error('API 구조 확인 실패:', error);
+            }
+        },
+        
         showPartyData: () => console.log('정당 데이터:', document.querySelector('.card:first-child')),
         showMemberData: () => console.log('의원 데이터:', document.querySelector('.card:last-child')),
+        
         showInfo: () => {
             console.log('📊 메인페이지 정보:');
             console.log('- API 서비스:', !!window.APIService);
             console.log('- 로딩 상태:', isLoading);
+            console.log('- API 준비 상태:', window.APIService?._isReady);
         },
+        
         testHTMLMapping: () => {
             console.log('🔍 HTML 매핑 테스트...');
             const partyCard = document.querySelector('.card:first-child .ranking-list');
@@ -1010,6 +1026,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('정당 카드 구조:', partyCard?.innerHTML);
             console.log('의원 카드 구조:', memberCard?.innerHTML);
         },
+        
         simulateWeightChange: () => {
             console.log('🔧 가중치 변경 시뮬레이션...');
             const changeData = {
@@ -1018,12 +1035,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 source: 'debug_simulation'
             };
             handleWeightUpdate(changeData, 'debug');
+        },
+        
+        // 🎯 새로운 API 테스트 함수
+        testNewAPIMapping: async () => {
+            console.log('🧪 새로운 API 매핑 테스트...');
+            try {
+                const partyRanking = await fetchPartyRankingData();
+                const memberRanking = await fetchMemberRankingData();
+                
+                console.log('✅ 가공된 정당 순위:', partyRanking);
+                console.log('✅ 가공된 의원 순위:', memberRanking);
+                
+                return { partyRanking, memberRanking };
+            } catch (error) {
+                console.error('❌ API 매핑 테스트 실패:', error);
+            }
         }
     };
     
-    console.log('🎯 개별 팝업 제어 시스템 + API 연동 + 가중치 감지 활성화!');
+    console.log('🎯 수정된 API 데이터 매핑 시스템 활성화!');
     console.log('팝업 디버깅: window.debugPopup.checkStatus()');
     console.log('API 디버깅: window.mainPageDebug.showInfo()');
-    console.log('HTML 매핑 테스트: window.mainPageDebug.testHTMLMapping()');
-    console.log('✅ 메인페이지 스크립트 로드 완료 (HTML 순서 맞춤 + 가중치 감지 버전)');
+    console.log('🎯 새로운 API 구조 확인: window.mainPageDebug.checkAPIStructure()');
+    console.log('🧪 새로운 매핑 테스트: window.mainPageDebug.testNewAPIMapping()');
+    console.log('✅ 메인페이지 스크립트 로드 완료 (새로운 API 구조 반영)');
 });
