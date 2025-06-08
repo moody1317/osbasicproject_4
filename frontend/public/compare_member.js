@@ -179,10 +179,12 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('📊 국회의원 실적 데이터 조회...');
             
             const rawData = await window.APIService.getMemberPerformance();
-            
-            if (!rawData || !Array.isArray(rawData)) {
-                throw new Error('국회의원 실적 API 응답이 올바르지 않습니다.');
+            const rankingArray = rawData?.ranking || [];
+
+            if (!Array.isArray(rankingArray)) {
+                throw new Error('국회의원 실적 API 응답이 배열 형태가 아닙니다.');
             }
+
             
             // 실적 데이터 매핑 (실제 API 필드명 사용)
             const performanceData = {};
