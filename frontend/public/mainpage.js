@@ -1036,6 +1036,25 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('  * BILL_NM → title (법안명)');
             console.log('  * PROPOSER → proposer (제안자)');
             console.log('  * RGS_PROC_DT → date (의결일)');
+        showInfo: () => {
+            console.log('📊 본회의 페이지 정보:');
+            console.log(`- 전체 데이터: ${billData.length}건`);
+            console.log(`- 필터된 데이터: ${filteredData.length}건`);
+            console.log(`- 현재 페이지: ${currentPage}`);
+            console.log(`- 페이지당 항목: ${ITEMS_PER_PAGE}개`);
+            console.log(`- 총 페이지: ${Math.ceil(filteredData.length / ITEMS_PER_PAGE)}페이지`);
+            console.log(`- API 서비스: ${!!window.APIService}`);
+            console.log('- 사용 가능한 API:');
+            console.log('  * getAllLegislation() - 전체 입법 데이터');
+            console.log('  * getBillLegislation() - 법안 데이터');
+            console.log('  * getCostlyLegislation() - 예산안 입법');
+            console.log('  * getCostLegislation() - 결산안 입법');
+            console.log('  * getEtcLegislation() - 기타 입법');
+            console.log('  * getLawLegislation() - 법률 입법');
+            console.log('- 데이터 매핑:');
+            console.log('  * BILL_NM → title (법안명)');
+            console.log('  * PROPOSER → proposer (제안자)');
+            console.log('  * RGS_PROC_DT → date (의결일)');
             console.log('  * PROC_RESULT_CD/PRO_RESULT_CD → status (결과)');
             console.log('  * DETAIL_LINK → link (상세링크)');
             console.log('  * age → age (대수)');
