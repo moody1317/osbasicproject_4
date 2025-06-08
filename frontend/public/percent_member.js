@@ -1,4 +1,4 @@
-// 국회의원 상세정보 페이지 (실적 데이터 문제 해결 버전)
+// 국회의원 상세정보 페이지 (API 응답 구조 수정 버전)
 
 // 페이지 상태 관리
 let pageState = {
@@ -189,13 +189,27 @@ async function fetchMemberList() {
     }
 }
 
-// 🔧 개선된 API에서 국회의원 실적 데이터 가져오기
+// 🔧 수정된 실적 데이터 가져오기 함수 (API 응답 구조에 맞춤)
 async function fetchPerformanceData() {
     try {
         console.log('📊 국회의원 실적 API 호출...');
         
         const response = await window.APIService.getMemberPerformance();
-        const performanceData = response?.ranking ?? [];
+        console.log('🔍 실적 API 원본 응답:', response);
+        
+        // 🎯 API 응답 구조 확인: {ranking: [...]} 형태
+        let performanceData = [];
+        
+        if (response && response.ranking && Array.isArray(response.ranking)) {
+            performanceData = response.ranking;
+            console.log('✅ response.ranking 배열 사용');
+        } else if (Array.isArray(response)) {
+            performanceData = response;
+            console.log('✅ response 직접 배열 사용');
+        } else {
+            console.warn('⚠️ 예상하지 못한 API 응답 구조:', response);
+            throw new Error('API 응답 형식이 올바르지 않습니다');
+        }
 
         const inspection = inspectAPIResponse(performanceData, '실적');
         
@@ -207,48 +221,42 @@ async function fetchPerformanceData() {
             return pageState.performanceData;
         }
         
-        // 🔧 실제 API 필드명을 기반으로 한 유연한 매핑
+        // 🔧 실제 API 필드명을 기반으로 한 정확한 매핑
         pageState.performanceData = performanceData.map(perf => {
-            // 다양한 가능한 필드명들을 시도
+            // 실제 API 필드명 사용
             const name = perf.lawmaker_name || perf.name || perf.HG_NM || perf.member_name || '';
             const party = perf.party || perf.POLY_NM || perf.party_name || '무소속';
             
-            // 점수 필드들 (다양한 변형 시도)
-            const totalScore = parseFloat(
-                perf.total_score || perf.total_socre || perf.총점 || perf.TOTAL_SCORE || 0
-            );
-            const attendanceScore = parseFloat(
-                perf.attendance_score || perf.출석점수 || perf.ATTENDANCE_SCORE || 0
-            );
-            const petitionScore = parseFloat(
-                perf.petition_score || perf.청원점수 || perf.PETITION_SCORE || 0
-            );
-            const petitionResultScore = parseFloat(
-                perf.petition_result_score || perf.청원결과점수 || perf.PETITION_RESULT_SCORE || 0
-            );
+            // ✅ 올바른 필드명 사용 (total_score, 오타 수정)
+            const totalScore = parseFloat(perf.total_score || 0);
+            const attendanceScore = parseFloat(perf.attendance_score || 0);
+            const billPassScore = parseFloat(perf.bill_pass_score || 0);
+            const petitionScore = parseFloat(perf.petition_score || 0);
+            const petitionResultScore = parseFloat(perf.petition_result_score || 0);
+            const committeeScore = parseFloat(perf.committee_score || 0);
             
-            // 비율 필드들
-            const invalidVoteRatio = parseFloat(
-                perf.invalid_vote_ratio || perf.무효표비율 || perf.INVALID_VOTE_RATIO || 0
-            );
-            const voteMatchRatio = parseFloat(
-                perf.vote_match_ratio || perf.투표일치비율 || perf.VOTE_MATCH_RATIO || 0
-            );
-            const voteMismatchRatio = parseFloat(
-                perf.vote_mismatch_ratio || perf.투표불일치비율 || perf.VOTE_MISMATCH_RATIO || 0
-            );
+            // 비율 필드들 (0-1 범위를 0-100 퍼센트로 변환)
+            const invalidVoteRatio = parseFloat(perf.invalid_vote_ratio || 0);
+            const voteMatchRatio = parseFloat(perf.vote_match_ratio || 0);
+            const voteMismatchRatio = parseFloat(perf.vote_mismatch_ratio || 0);
             
             return {
                 name,
                 party,
                 total_score: totalScore,
                 attendance_score: attendanceScore,
+                bill_pass_score: billPassScore,
                 petition_score: petitionScore,
                 petition_result_score: petitionResultScore,
+                committee_score: committeeScore,
                 invalid_vote_ratio: invalidVoteRatio,
                 vote_match_ratio: voteMatchRatio,
                 vote_mismatch_ratio: voteMismatchRatio,
-                lawmaker_id: perf.lawmaker || perf.lawmaker_id || perf.MONA_CD || '',
+                lawmaker_id: perf.lawmaker || perf.lawmaker_id || perf.id || '',
+                committee_leader_count: parseInt(perf.committee_leader_count || 0),
+                committee_secretary_count: parseInt(perf.committee_secretary_count || 0),
+                committee_leader_score: parseFloat(perf.committee_leader_score || 0),
+                committee_secretary_score: parseFloat(perf.committee_secretary_score || 0),
                 _raw: perf
             };
         });
@@ -478,7 +486,7 @@ async function fetchBillCountData() {
     }
 }
 
-// 🔧 폴백 실적 데이터 생성 함수
+// 🔧 폴백 실적 데이터 생성 함수 (수정된 필드명 사용)
 function generateFallbackPerformanceData() {
     if (!pageState.memberList || pageState.memberList.length === 0) {
         console.warn('의원 명단이 없어 폴백 실적 데이터 생성 불가');
@@ -491,40 +499,50 @@ function generateFallbackPerformanceData() {
     const partyBaseStats = {
         '국민의힘': {
             attendance_score: 85.5,
+            bill_pass_score: 75.2,
             petition_score: 65.3,
             petition_result_score: 58.7,
+            committee_score: 70.0,
             invalid_vote_ratio: 0.08,
             vote_match_ratio: 0.92,
             vote_mismatch_ratio: 0.08
         },
         '더불어민주당': {
             attendance_score: 87.2,
+            bill_pass_score: 82.1,
             petition_score: 72.4,
             petition_result_score: 67.9,
+            committee_score: 75.0,
             invalid_vote_ratio: 0.06,
             vote_match_ratio: 0.94,
             vote_mismatch_ratio: 0.06
         },
         '조국혁신당': {
             attendance_score: 82.8,
+            bill_pass_score: 76.4,
             petition_score: 61.2,
             petition_result_score: 55.8,
+            committee_score: 68.0,
             invalid_vote_ratio: 0.12,
             vote_match_ratio: 0.88,
             vote_mismatch_ratio: 0.12
         },
         '개혁신당': {
             attendance_score: 84.1,
+            bill_pass_score: 79.3,
             petition_score: 68.5,
             petition_result_score: 62.1,
+            committee_score: 72.0,
             invalid_vote_ratio: 0.09,
             vote_match_ratio: 0.91,
             vote_mismatch_ratio: 0.09
         },
         '진보당': {
             attendance_score: 81.7,
+            bill_pass_score: 74.6,
             petition_score: 58.9,
             petition_result_score: 53.4,
+            committee_score: 65.0,
             invalid_vote_ratio: 0.14,
             vote_match_ratio: 0.86,
             vote_mismatch_ratio: 0.14
@@ -534,8 +552,10 @@ function generateFallbackPerformanceData() {
     // 기본값 (무소속 등)
     const defaultStats = {
         attendance_score: 80.0,
+        bill_pass_score: 70.0,
         petition_score: 60.0,
         petition_result_score: 55.0,
+        committee_score: 65.0,
         invalid_vote_ratio: 0.10,
         vote_match_ratio: 0.90,
         vote_mismatch_ratio: 0.10
@@ -558,22 +578,30 @@ function generateFallbackPerformanceData() {
         }
         
         const attendance_score = Math.min(95, baseStats.attendance_score * variationFactor * specialBonus);
+        const bill_pass_score = Math.min(90, baseStats.bill_pass_score * variationFactor * specialBonus);
         const petition_score = Math.min(90, baseStats.petition_score * variationFactor * specialBonus);
         const petition_result_score = Math.min(85, baseStats.petition_result_score * variationFactor * specialBonus);
+        const committee_score = Math.min(80, baseStats.committee_score * variationFactor * specialBonus);
         
-        const total_score = (attendance_score + petition_score + petition_result_score) / 3;
+        const total_score = (attendance_score + bill_pass_score + petition_score + petition_result_score + committee_score) / 5;
         
         return {
             name: member.name,
             party: member.party,
             total_score: parseFloat(total_score.toFixed(1)),
             attendance_score: parseFloat(attendance_score.toFixed(1)),
+            bill_pass_score: parseFloat(bill_pass_score.toFixed(1)),
             petition_score: parseFloat(petition_score.toFixed(1)),
             petition_result_score: parseFloat(petition_result_score.toFixed(1)),
+            committee_score: parseFloat(committee_score.toFixed(1)),
             invalid_vote_ratio: baseStats.invalid_vote_ratio * (0.8 + Math.random() * 0.4),
             vote_match_ratio: baseStats.vote_match_ratio * (0.95 + Math.random() * 0.1),
             vote_mismatch_ratio: baseStats.vote_mismatch_ratio * (0.8 + Math.random() * 0.4),
             lawmaker_id: member.mona_cd || `GENERATED_${index}`,
+            committee_leader_count: Math.floor(Math.random() * 3),
+            committee_secretary_count: Math.floor(Math.random() * 2),
+            committee_leader_score: Math.random() * 10,
+            committee_secretary_score: Math.random() * 5,
             _fallback: true // 폴백 데이터임을 표시
         };
     });
@@ -711,21 +739,19 @@ function findMemberRanking(memberName) {
     );
 }
 
-// 통계 계산 함수 (기존 유지)
+// 🔧 수정된 통계 계산 함수 (새로운 필드명 반영)
 function calculateMemberStats(performance, attendance, billCount, committees) {
     return {
         attendance: attendance ? 
             (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
             (performance?.attendance_score || 0),
         
-        billPass: billCount ? 
-            calculateBillPassRate(billCount) : 
-            Math.min((performance?.total_score || 0) * 1.2, 95),
+        billPass: performance?.bill_pass_score || 0, // 수정된 필드명
         
         petitionProposal: performance?.petition_score || 0,
         petitionResult: performance?.petition_result_score || 0,
         abstention: (performance?.invalid_vote_ratio || 0) * 100,
-        committee: getCommitteeInfo(committees),
+        committee: getCommitteeInfo(committees) || getCommitteeScoreInfo(performance),
         voteMatch: (performance?.vote_match_ratio || 0) * 100,
         voteMismatch: (performance?.vote_mismatch_ratio || 0) * 100
     };
@@ -743,7 +769,7 @@ function calculateBillPassRate(billCount) {
 
 function getCommitteeInfo(committees) {
     if (!committees || committees.length === 0) {
-        return '위원회 정보 없음';
+        return null;
     }
     
     const prioritizedCommittee = committees.sort((a, b) => {
@@ -758,22 +784,69 @@ function getCommitteeInfo(committees) {
     return `${prioritizedCommittee.committee} ${prioritizedCommittee.position}`;
 }
 
+// 🔧 새로운 위원회 점수 정보 함수 (API 데이터 활용)
+function getCommitteeScoreInfo(performance) {
+    if (!performance) return '위원회 정보 없음';
+    
+    const leaderCount = performance.committee_leader_count || 0;
+    const secretaryCount = performance.committee_secretary_count || 0;
+    
+    if (leaderCount > 0) {
+        return `위원장 ${leaderCount}개 위원회`;
+    } else if (secretaryCount > 0) {
+        return `간사 ${secretaryCount}개 위원회`;
+    } else {
+        return `위원회 점수: ${(performance.committee_score || 0).toFixed(1)}점`;
+    }
+}
+
 // 🔧 개선된 폴백 데이터 생성
 function generateFallbackStats(member) {
     // 실제적인 통계 기반 폴백 데이터
     const partyStats = {
-        '국민의힘': { attendance: 85.5, billPass: 78.2, petition: 65.3, petitionResult: 58.7 },
-        '더불어민주당': { attendance: 87.2, billPass: 82.1, petition: 72.4, petitionResult: 67.9 },
-        '조국혁신당': { attendance: 82.8, billPass: 76.4, petition: 61.2, petitionResult: 55.8 },
-        '개혁신당': { attendance: 84.1, billPass: 79.3, petition: 68.5, petitionResult: 62.1 },
-        '진보당': { attendance: 81.7, billPass: 74.6, petition: 58.9, petitionResult: 53.4 }
+        '국민의힘': { 
+            attendance: 85.5, 
+            billPass: 78.2, 
+            petition: 65.3, 
+            petitionResult: 58.7,
+            committee: 70.0 
+        },
+        '더불어민주당': { 
+            attendance: 87.2, 
+            billPass: 82.1, 
+            petition: 72.4, 
+            petitionResult: 67.9,
+            committee: 75.0 
+        },
+        '조국혁신당': { 
+            attendance: 82.8, 
+            billPass: 76.4, 
+            petition: 61.2, 
+            petitionResult: 55.8,
+            committee: 68.0 
+        },
+        '개혁신당': { 
+            attendance: 84.1, 
+            billPass: 79.3, 
+            petition: 68.5, 
+            petitionResult: 62.1,
+            committee: 72.0 
+        },
+        '진보당': { 
+            attendance: 81.7, 
+            billPass: 74.6, 
+            petition: 58.9, 
+            petitionResult: 53.4,
+            committee: 65.0 
+        }
     };
     
     const baseStats = partyStats[member.party] || {
         attendance: 75 + Math.random() * 20,
         billPass: 60 + Math.random() * 35,
         petition: 50 + Math.random() * 40,
-        petitionResult: 40 + Math.random() * 50
+        petitionResult: 40 + Math.random() * 50,
+        committee: 60 + Math.random() * 30
     };
     
     return {
@@ -973,7 +1046,7 @@ function updateStatsWithFallback(member, attendance, billCount, committees) {
     updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
 }
 
-// 검색 관련 함수들 (기존 유지 - 생략)
+// 검색 관련 함수들 (기존 유지 - 생략된 부분은 원본과 동일)
 function setupSearch() {
     if (!elements.searchInput) return;
     
@@ -1323,154 +1396,52 @@ window.memberPageDebug = {
         return ranking;
     },
     
-    // 🔧 개선된 데이터 매핑 확인 함수
-    checkDataMapping: () => {
-        console.log('🔍 API 데이터 매핑 확인:');
-        
-        if (pageState.memberList.length > 0) {
-            console.log('👤 의원 명단 샘플:', pageState.memberList[0]);
-        }
-        
-        if (pageState.performanceData.length > 0) {
-            console.log('📊 실적 데이터 샘플:', pageState.performanceData[0]);
-        } else {
-            console.warn('❌ 실적 데이터가 없습니다.');
-        }
-        
-        const committeeKeys = Object.keys(pageState.committeeData);
-        if (committeeKeys.length > 0) {
-            console.log('🏛️ 위원회 데이터 샘플:', {
-                member: committeeKeys[0],
-                committees: pageState.committeeData[committeeKeys[0]]
-            });
-        }
-        
-        if (pageState.rankingData.length > 0) {
-            console.log('🏆 랭킹 데이터 샘플:', pageState.rankingData[0]);
-        }
-        
-        console.log('\n🔍 나경원 의원 데이터 매핑:');
-        const naKyungWon = {
-            member: pageState.memberList.find(m => m.name === '나경원'),
-            performance: findMemberPerformance('나경원'),
-            committees: findMemberCommittees('나경원'),
-            ranking: findMemberRanking('나경원'),
-            attendance: findMemberAttendance('나경원'),
-            billCount: pageState.billCountData.find(b => b.proposer === '나경원')
-        };
-        
-        console.log('나경원 전체 데이터:', naKyungWon);
-        return naKyungWon;
-    },
-    
-    // 🔧 API 응답 원본 데이터 확인
+    // 🔧 수정된 API 응답 확인 함수
     checkAPIResponses: async () => {
-        console.log('🔍 API 원본 응답 확인:');
+        console.log('🔍 수정된 API 응답 확인:');
         
         try {
-            const apis = [
-                { name: 'getAllMembers', method: window.APIService.getAllMembers },
-                { name: 'getMemberPerformance', method: window.APIService.getMemberPerformance },
-                { name: 'getCommitteeMembers', method: window.APIService.getCommitteeMembers },
-                { name: 'getMemberRanking', method: window.APIService.getMemberRanking },
-                { name: 'getMemberPhotos', method: window.APIService.getMemberPhotos },
-                { name: 'getMemberAttendance', method: window.APIService.getMemberAttendance },
-                { name: 'getMemberBillCount', method: window.APIService.getMemberBillCount }
-            ];
+            console.log('\n📡 getMemberPerformance 호출 중...');
+            const response = await window.APIService.getMemberPerformance();
             
-            for (const api of apis) {
-                try {
-                    console.log(`\n📡 ${api.name} 호출 중...`);
-                    const response = await api.method.call(window.APIService);
-                    
-                    if (response && Array.isArray(response) && response.length > 0) {
-                        console.log(`✅ ${api.name} 성공:`, {
-                            총개수: response.length,
-                            첫번째요소: response[0],
-                            필드목록: Object.keys(response[0])
-                        });
-                    } else {
-                        console.warn(`⚠️ ${api.name} 데이터 없음:`, response);
-                    }
-                } catch (error) {
-                    console.error(`❌ ${api.name} 실패:`, error);
-                }
+            console.log('원본 응답 구조:', {
+                type: typeof response,
+                isArray: Array.isArray(response),
+                hasRanking: !!response?.ranking,
+                rankingLength: response?.ranking?.length,
+                keys: Object.keys(response || {}),
+                sample: response?.ranking?.[0] || response?.[0]
+            });
+            
+            if (response?.ranking?.[0]) {
+                console.log('✅ ranking 배열의 첫 번째 요소 필드:', Object.keys(response.ranking[0]));
+                console.log('📊 샘플 데이터:', response.ranking[0]);
+            } else if (response?.[0]) {
+                console.log('✅ 직접 배열의 첫 번째 요소 필드:', Object.keys(response[0]));
+                console.log('📊 샘플 데이터:', response[0]);
             }
+            
         } catch (error) {
-            console.error('API 확인 중 오류:', error);
+            console.error('❌ API 응답 확인 실패:', error);
         }
     },
     
-    // 🔧 폴백 데이터 확인
-    checkFallbackData: () => {
-        console.log('🎲 폴백 데이터 사용 상태:');
-        
-        const fallbackUsage = {
-            실적데이터: pageState.performanceData.length > 0 && pageState.performanceData[0]._fallback,
-            실적데이터개수: pageState.performanceData.length,
-            의원명단: pageState.memberList.length,
-            나경원실적: pageState.performanceData.find(p => p.name === '나경원')
-        };
-        
-        console.log('폴백 사용 현황:', fallbackUsage);
-        
-        if (fallbackUsage.실적데이터) {
-            console.log('✅ 폴백 실적 데이터 사용 중');
-            console.log('나경원 폴백 데이터:', fallbackUsage.나경원실적);
+    // 🔧 필드 매핑 테스트
+    testFieldMapping: () => {
+        if (pageState.performanceData.length > 0) {
+            const sample = pageState.performanceData[0];
+            console.log('🔧 현재 매핑된 실적 데이터 샘플:', sample);
+            console.log('- 원본 데이터:', sample._raw);
+            console.log('- 폴백 여부:', sample._fallback);
         } else {
-            console.log('❌ 실제 API 데이터 사용 중 (또는 데이터 없음)');
-        }
-        
-        return fallbackUsage;
-    },
-    
-    // 🔧 폴백 데이터 강제 재생성
-    regenerateFallbackData: () => {
-        console.log('🔄 폴백 실적 데이터 강제 재생성...');
-        
-        if (pageState.memberList.length === 0) {
-            console.warn('❌ 의원 명단이 없어 재생성 불가');
-            return false;
-        }
-        
-        pageState.performanceData = generateFallbackPerformanceData();
-        
-        if (pageState.currentMember) {
-            updateMemberProfile(pageState.currentMember);
-        }
-        
-        console.log(`✅ ${pageState.performanceData.length}개 폴백 실적 데이터 재생성 완료`);
-        showNotification('폴백 실적 데이터가 재생성되었습니다.', 'success');
-        
-        return true;
-    },
-    
-    // 🔧 실제 API 재시도
-    retryPerformanceAPI: async () => {
-        console.log('🔄 실적 API 재시도...');
-        
-        try {
-            const result = await fetchPerformanceData();
-            
-            if (pageState.currentMember) {
-                updateMemberProfile(pageState.currentMember);
-            }
-            
-            console.log('✅ 실적 API 재시도 완료');
-            showNotification('실적 데이터 재시도 완료', 'success');
-            
-            return result;
-        } catch (error) {
-            console.error('❌ 실적 API 재시도 실패:', error);
-            showNotification('실적 API 재시도 실패', 'error');
-            return null;
+            console.warn('❌ 실적 데이터가 없습니다');
         }
     }
 };
 
 // DOM 로드 완료 후 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 percent_member.js DOM 로드 완료 (개선된 버전)');
+    console.log('📄 percent_member.js DOM 로드 완료 (API 응답 구조 수정 버전)');
     
     let attempts = 0;
     const maxAttempts = 30;
@@ -1496,4 +1467,4 @@ document.addEventListener('DOMContentLoaded', function() {
     waitForAPI();
 });
 
-console.log('📦 percent_member.js 로드 완료 (개선된 버전 - 실적 데이터 문제 해결)');
+console.log('📦 percent_member.js 로드 완료 (API 응답 구조 수정 버전)');
