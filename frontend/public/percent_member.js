@@ -613,27 +613,42 @@ function findMemberPhoto(memberCode, memberName) {
     return photoByName && photoByName.photo ? photoByName.photo : null;
 }
 
-function findMemberPerformance(selectedMember) {
-    if (!pageState.performanceData || !selectedMember) {
-        console.warn('⚠️ 실적 데이터 또는 선택된 국회의원 정보 없음');
+function findMemberPerformance(memberName) {
+    if (!pageState.performanceData || pageState.performanceData.length === 0) {
+        console.log(`🔍 ${memberName} 실적 검색: 실적 데이터가 없음`);
         return null;
     }
-
-    // 고유 식별자로 매칭 시도
-    const mona_cd = selectedMember.mona_cd;
-
-    const matchedPerformance = pageState.performanceData.find(perf => {
-        const perfId = perf.lawmaker || perf.lawmaker_id || perf.id;
-        return String(perfId) === String(mona_cd);  // 타입 불일치 방지
-    });
-
-    if (!matchedPerformance) {
-        console.warn(`❌ ${selectedMember.name} 실적 데이터 없음`);
+    
+    console.log(`🔍 ${memberName} 실적 검색 중... (데이터 유형: ${pageState.performanceData[0]._fallback ? '폴백' : 'API'})`);
+    
+    // 정확한 이름 매칭
+    let performance = pageState.performanceData.find(perf => perf.name === memberName);
+    
+    // 정확한 매칭이 없으면 유사한 이름 검색
+    if (!performance) {
+        // 공백 제거 후 매칭
+        performance = pageState.performanceData.find(perf => 
+            perf.name.replace(/\s/g, '') === memberName.replace(/\s/g, '')
+        );
     }
-
-    return matchedPerformance;
+    
+    // 부분 매칭
+    if (!performance) {
+        performance = pageState.performanceData.find(perf => 
+            perf.name.includes(memberName) || memberName.includes(perf.name)
+        );
+    }
+    
+    if (performance) {
+        const dataType = performance._fallback ? '폴백' : 'API';
+        console.log(`✅ ${memberName} ${dataType} 실적 데이터 발견:`, performance);
+    } else {
+        console.warn(`❌ ${memberName} 실적 데이터 없음`);
+        console.log('🔍 전체 실적 데이터 의원명:', pageState.performanceData.slice(0, 10).map(p => p.name));
+    }
+    
+    return performance;
 }
-
 
 function findMemberAttendance(memberName) {
     if (!pageState.attendanceData || pageState.attendanceData.length === 0) {
@@ -837,30 +852,47 @@ function updateHomepageLink(member) {
 }
 
 // 🔧 개선된 성능 통계 업데이트
-function updatePerformanceStats(selectedMember) {
-    const performance = findMemberPerformance(selectedMember);
-
-    if (!performance) {
-        // 실적 데이터 없을 때 처리 (예: 기본값, UI 알림 등)
-        // 예시: UI에 '데이터 없음' 표시하거나 기본값 세팅
-        displayNoPerformanceData(selectedMember.name);
+function updatePerformanceStats(member) {
+    const performance = findMemberPerformance(member.name);
+    const attendance = findMemberAttendance(member.name);
+    const billCount = findMemberBillCount(member.name, performance?.lawmaker_id);
+    const committees = findMemberCommittees(member.name);
+    const ranking = findMemberRanking(member.name);
+    
+    // 순위 정보 업데이트
+    updateRankingInfo(member, ranking);
+    
+    // 실적 데이터 상태 확인
+    const hasPerformanceData = !!performance;
+    const hasAnyData = hasPerformanceData || !!attendance || !!billCount || committees.length > 0;
+    
+    if (!hasPerformanceData && !hasAnyData) {
+        console.log(`⚠️ ${member.name} 모든 데이터 없음 - 완전 폴백 데이터 사용`);
+        updateStatsWithFallback(member, null, null, []);
         return;
     }
-
-    // 실적 데이터가 있을 때 UI 업데이트 예시
-    document.getElementById('totalScore').textContent = performance.total_score ?? '-';
-    document.getElementById('attendanceScore').textContent = performance.attendance_score ?? '-';
-    document.getElementById('petitionScore').textContent = performance.petition_score ?? '-';
-    // ...필요한 나머지 필드 업데이트
-
-    console.log(`✅ ${selectedMember.name} 실적 데이터 업데이트 완료`);
+    
+    if (!hasPerformanceData) {
+        console.log(`⚠️ ${member.name} 실적 데이터 없음 - 부분 데이터와 폴백 조합 사용`);
+        updateStatsWithFallback(member, attendance, billCount, committees);
+        return;
+    }
+    
+    const dataType = performance._fallback ? '폴백' : 'API';
+    console.log(`✅ ${member.name} ${dataType} 실적 데이터 활용`);
+    
+    // 실적 통계 계산 및 업데이트
+    const stats = calculateMemberStats(performance, attendance, billCount, committees);
+    
+    updateStatElement(elements.attendanceStat, stats.attendance, '%');
+    updateStatElement(elements.billPassStat, stats.billPass, '%');
+    updateStatElement(elements.petitionProposalStat, stats.petitionProposal, '%');
+    updateStatElement(elements.petitionResultStat, stats.petitionResult, '%');
+    updateStatElement(elements.abstentionStat, stats.abstention, '%');
+    updateCommitteeElement(elements.committeeStat, stats.committee);
+    updateStatElement(elements.voteMatchStat, stats.voteMatch, '%');
+    updateStatElement(elements.voteMismatchStat, stats.voteMismatch, '%');
 }
-
-function displayNoPerformanceData(memberName) {
-    // UI에 ‘실적 데이터 없음’ 메시지 띄우기 (예시)
-    alert(`${memberName} 실적 데이터가 없습니다.`);
-}
-
 
 function updateRankingInfo(member, ranking) {
     if (elements.overallRanking) {
