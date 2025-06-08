@@ -1,4 +1,4 @@
-// 국회의원 상세정보 페이지 (API 오류 수정 버전)
+// 국회의원 상세정보 페이지 (완전 수정 버전)
 
 // 페이지 상태 관리
 let pageState = {
@@ -15,12 +15,11 @@ let pageState = {
     isSearching: false
 };
 
-// 기본 국회의원 정보 (URL 파라미터나 폴백용)
+// 기본 국회의원 정보
 const DEFAULT_MEMBER = {
     name: '나경원',
     party: '국민의힘',
     mona_cd: 'DEFAULT_001',
-    committees: ['행정안전위원회'],
     homepage: ''
 };
 
@@ -90,49 +89,6 @@ function toggleLoadingState(show) {
                 el.innerHTML = '<span class="loading-spinner"></span>로딩 중...';
                 el.classList.add('loading');
             }
-    
-    // 🔧 데이터 매핑 확인 함수 추가
-    checkDataMapping: () => {
-        console.log('🔍 API 데이터 매핑 확인:');
-        
-        // 의원 명단 샘플
-        if (pageState.memberList.length > 0) {
-            console.log('👤 의원 명단 샘플:', pageState.memberList[0]);
-        }
-        
-        // 실적 데이터 샘플
-        if (pageState.performanceData.length > 0) {
-            console.log('📊 실적 데이터 샘플:', pageState.performanceData[0]);
-        }
-        
-        // 위원회 데이터 샘플
-        const committeeKeys = Object.keys(pageState.committeeData);
-        if (committeeKeys.length > 0) {
-            console.log('🏛️ 위원회 데이터 샘플:', {
-                member: committeeKeys[0],
-                committees: pageState.committeeData[committeeKeys[0]]
-            });
-        }
-        
-        // 랭킹 데이터 샘플
-        if (pageState.rankingData.length > 0) {
-            console.log('🏆 랭킹 데이터 샘플:', pageState.rankingData[0]);
-        }
-        
-        // 나경원 의원 전체 데이터 매핑 확인
-        console.log('\n🔍 나경원 의원 데이터 매핑:');
-        const naKyungWon = {
-            member: pageState.memberList.find(m => m.name === '나경원'),
-            performance: findMemberPerformance('나경원'),
-            committees: findMemberCommittees('나경원'),
-            ranking: findMemberRanking('나경원'),
-            attendance: findMemberAttendance('나경원'),
-            billCount: pageState.billCountData.find(b => b.proposer === '나경원')
-        };
-        
-        console.log('나경원 전체 데이터:', naKyungWon);
-        return naKyungWon;
-    }
         });
         
         if (elements.searchButton) {
@@ -159,7 +115,7 @@ function showNotification(message, type = 'info', duration = 3000) {
     }
 }
 
-// 🔧 API에서 국회의원 명단 가져오기 (디버깅 강화)
+// 🔧 API에서 국회의원 명단 가져오기 (강화된 디버깅)
 async function fetchMemberList() {
     try {
         console.log('📋 국회의원 명단 API 호출...');
@@ -174,28 +130,27 @@ async function fetchMemberList() {
             throw new Error('국회의원 명단 API 응답이 올바르지 않습니다.');
         }
         
-        console.log('🔍 의원 명단 원본 샘플:', rawData.slice(0, 3));
+        console.log('🔍 의원 명단 원본 샘플 (처음 5개):', rawData.slice(0, 5));
         
         // API 데이터 매핑
         pageState.memberList = rawData.map(member => ({
-            name: member.name || '',          // 국회의원명
-            party: member.party || '무소속',   // 정당명
-            mona_cd: member.mona_cd || '',    // 국회의원 코드
-            homepage: member.homepage || '',  // 홈페이지주소
+            name: member.name || '',
+            party: member.party || '무소속',
+            mona_cd: member.mona_cd || '',
+            homepage: member.homepage || '',
             phone: member.phone || '',
             _raw: member
         }));
         
         console.log(`✅ 국회의원 명단 로드 완료: ${pageState.memberList.length}명`);
-        console.log('🔍 매핑된 의원 명단 샘플:', pageState.memberList.slice(0, 3));
         
-        // 🔧 특정 의원 확인 (나경원)
+        // 🔧 나경원 의원 확인
         const naKyungWonMember = pageState.memberList.find(m => m.name === '나경원');
         if (naKyungWonMember) {
             console.log('✅ 나경원 의원 명단 발견:', naKyungWonMember);
         } else {
             console.warn('❌ 나경원 의원 명단 없음');
-            console.log('📋 사용 가능한 의원명들:', pageState.memberList.map(m => m.name).slice(0, 10));
+            console.log('📋 전체 의원명 목록:', pageState.memberList.map(m => m.name).sort());
         }
         
         return pageState.memberList;
@@ -207,37 +162,7 @@ async function fetchMemberList() {
     }
 }
 
-// 🔧 API에서 국회의원 사진 데이터 가져오기 (수정된 버전)
-async function fetchPhotoList() {
-    try {
-        console.log('📸 국회의원 사진 API 호출...');
-        
-        const photoData = await window.APIService.getMemberPhotos();
-        
-        if (!photoData || !Array.isArray(photoData)) {
-            console.warn('사진 데이터가 없거나 올바르지 않습니다.');
-            pageState.photoList = [];
-            return pageState.photoList;
-        }
-        
-        pageState.photoList = photoData.map(photo => ({
-            member_code: photo.member_code || '',
-            member_name: photo.member_name || '',
-            photo: photo.photo || '',
-            _raw: photo
-        }));
-        
-        console.log(`✅ 사진 데이터 로드 완료: ${pageState.photoList.length}개`);
-        return pageState.photoList;
-        
-    } catch (error) {
-        console.error('❌ 사진 데이터 로드 실패:', error);
-        pageState.photoList = [];
-        return pageState.photoList;
-    }
-}
-
-// 🔧 API에서 국회의원 실적 데이터 가져오기 (디버깅 강화)
+// 🔧 API에서 국회의원 실적 데이터 가져오기 (강화된 디버깅)
 async function fetchPerformanceData() {
     try {
         console.log('📊 국회의원 실적 API 호출...');
@@ -250,33 +175,45 @@ async function fetchPerformanceData() {
             return pageState.performanceData;
         }
         
-        console.log('🔍 실적 데이터 원본 샘플:', performanceData.slice(0, 3));
+        console.log('🔍 실적 데이터 원본 구조:', {
+            총개수: performanceData.length,
+            첫번째샘플: performanceData[0],
+            필드목록: performanceData[0] ? Object.keys(performanceData[0]) : []
+        });
         
         // API 데이터 매핑 (정확한 필드명 사용)
         pageState.performanceData = performanceData.map(perf => ({
-            name: perf.lawmaker_name || '',           // 국회의원명
-            party: perf.party || '무소속',             // 정당명
-            total_score: parseFloat(perf.total_socre || perf.total_score || 0), // 총 퍼센트 (오타 대응)
-            attendance_score: parseFloat(perf.attendance_score || 0),           // 투표 퍼센트
-            petition_score: parseFloat(perf.petition_score || 0),               // 청원제시
-            petition_result_score: parseFloat(perf.petition_result_score || 0), // 청원 가결
-            invalid_vote_ratio: parseFloat(perf.invalid_vote_ratio || 0),       // 기권 및 무효
-            vote_match_ratio: parseFloat(perf.vote_match_ratio || 0),           // 투표 결과 일치
-            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0),     // 투표 결과 불일치
+            name: perf.lawmaker_name || '',
+            party: perf.party || '무소속',
+            total_score: parseFloat(perf.total_socre || perf.total_score || 0),
+            attendance_score: parseFloat(perf.attendance_score || 0),
+            petition_score: parseFloat(perf.petition_score || 0),
+            petition_result_score: parseFloat(perf.petition_result_score || 0),
+            invalid_vote_ratio: parseFloat(perf.invalid_vote_ratio || 0),
+            vote_match_ratio: parseFloat(perf.vote_match_ratio || 0),
+            vote_mismatch_ratio: parseFloat(perf.vote_mismatch_ratio || 0),
             lawmaker_id: perf.lawmaker || '',
             _raw: perf
         }));
         
         console.log(`✅ 실적 데이터 로드 완료: ${pageState.performanceData.length}개`);
-        console.log('🔍 매핑된 실적 데이터 샘플:', pageState.performanceData.slice(0, 3));
         
-        // 🔧 특정 의원 확인 (나경원)
+        // 🔧 나경원 의원 실적 확인
         const naKyungWonPerf = pageState.performanceData.find(p => p.name === '나경원');
         if (naKyungWonPerf) {
             console.log('✅ 나경원 실적 데이터 발견:', naKyungWonPerf);
         } else {
             console.warn('❌ 나경원 실적 데이터 없음');
-            console.log('📋 사용 가능한 의원명들:', pageState.performanceData.map(p => p.name).slice(0, 10));
+            console.log('📋 실적 데이터 의원명 목록:', pageState.performanceData.map(p => p.name).sort());
+            
+            // 유사한 이름 검색
+            const similarNames = pageState.performanceData
+                .map(p => p.name)
+                .filter(name => name.includes('나') && name.includes('원'));
+            
+            if (similarNames.length > 0) {
+                console.log('🔍 "나"와 "원"이 포함된 이름들:', similarNames);
+            }
         }
         
         return pageState.performanceData;
@@ -288,83 +225,11 @@ async function fetchPerformanceData() {
     }
 }
 
-// 🔧 API에서 출석 데이터 가져오기 (수정된 버전)
-async function fetchAttendanceData() {
-    try {
-        console.log('🏛️ 국회의원 출석 API 호출...');
-        
-        // ✅ 수정: 올바른 API 함수 사용
-        const attendanceData = await window.APIService.getMemberAttendance();
-        
-        if (!attendanceData || !Array.isArray(attendanceData)) {
-            console.warn('출석 데이터가 없거나 올바르지 않습니다.');
-            pageState.attendanceData = [];
-            return pageState.attendanceData;
-        }
-        
-        pageState.attendanceData = attendanceData.map(att => ({
-            member_name: att.member_name || '',
-            party: att.party || '무소속',
-            total_meetings: parseInt(att.total_meetings || 0),
-            attendance: parseInt(att.attendance || 0),
-            absences: parseInt(att.absences || 0),
-            leaves: parseInt(att.leaves || 0),
-            business_trips: parseInt(att.business_trips || 0),
-            attendance_rate: parseFloat(att.attendance_rate || 0),
-            _raw: att
-        }));
-        
-        console.log(`✅ 출석 데이터 로드 완료: ${pageState.attendanceData.length}개`);
-        return pageState.attendanceData;
-        
-    } catch (error) {
-        console.error('❌ 출석 데이터 로드 실패:', error);
-        pageState.attendanceData = [];
-        return pageState.attendanceData;
-    }
-}
-
-// 🔧 API에서 본회의 제안 데이터 가져오기 (수정된 버전)
-async function fetchBillCountData() {
-    try {
-        console.log('📋 본회의 제안 API 호출...');
-        
-        // ✅ 수정: 올바른 API 함수 사용
-        const billCountData = await window.APIService.getMemberBillCount();
-        
-        if (!billCountData || !Array.isArray(billCountData)) {
-            console.warn('본회의 제안 데이터가 없거나 올바르지 않습니다.');
-            pageState.billCountData = [];
-            return pageState.billCountData;
-        }
-        
-        pageState.billCountData = billCountData.map(bill => ({
-            id: bill.id || '',
-            proposer: bill.proposer || '',
-            total: parseInt(bill.total || 0),
-            approved: parseInt(bill.approved || 0),
-            discarded: parseInt(bill.discarded || 0),
-            rejected: parseInt(bill.rejected || 0),
-            other: parseInt(bill.other || 0),
-            _raw: bill
-        }));
-        
-        console.log(`✅ 본회의 제안 데이터 로드 완료: ${pageState.billCountData.length}개`);
-        return pageState.billCountData;
-        
-    } catch (error) {
-        console.error('❌ 본회의 제안 데이터 로드 실패:', error);
-        pageState.billCountData = [];
-        return pageState.billCountData;
-    }
-}
-
-// 🔧 API에서 위원회 데이터 가져오기 (수정된 버전)
+// 🔧 API에서 위원회 데이터 가져오기 (강화된 디버깅)
 async function fetchCommitteeData() {
     try {
         console.log('🏛️ 위원회 API 호출...');
         
-        // ✅ 수정: 올바른 API 함수 사용
         const committeeData = await window.APIService.getCommitteeMembers();
         
         if (!committeeData || !Array.isArray(committeeData)) {
@@ -372,6 +237,12 @@ async function fetchCommitteeData() {
             pageState.committeeData = {};
             return pageState.committeeData;
         }
+        
+        console.log('🔍 위원회 데이터 원본 구조:', {
+            총개수: committeeData.length,
+            첫번째샘플: committeeData[0],
+            필드목록: committeeData[0] ? Object.keys(committeeData[0]) : []
+        });
         
         // 위원회 데이터를 의원별로 그룹화
         const committeeMap = {};
@@ -393,6 +264,24 @@ async function fetchCommitteeData() {
         
         pageState.committeeData = committeeMap;
         console.log(`✅ 위원회 데이터 로드 완료: ${Object.keys(committeeMap).length}명`);
+        
+        // 🔧 나경원 의원 위원회 확인
+        const naKyungWonCommittee = committeeMap['나경원'];
+        if (naKyungWonCommittee) {
+            console.log('✅ 나경원 위원회 데이터 발견:', naKyungWonCommittee);
+        } else {
+            console.warn('❌ 나경원 위원회 데이터 없음');
+            console.log('📋 위원회 데이터 의원명 목록:', Object.keys(committeeMap).sort());
+            
+            // 유사한 이름 검색
+            const similarNames = Object.keys(committeeMap)
+                .filter(name => name.includes('나') && name.includes('원'));
+            
+            if (similarNames.length > 0) {
+                console.log('🔍 "나"와 "원"이 포함된 이름들:', similarNames);
+            }
+        }
+        
         return pageState.committeeData;
         
     } catch (error) {
@@ -402,7 +291,7 @@ async function fetchCommitteeData() {
     }
 }
 
-// 🔧 API에서 랭킹 데이터 가져오기 (수정된 버전)
+// 🔧 API에서 랭킹 데이터 가져오기 (강화된 디버깅)
 async function fetchRankingData() {
     try {
         console.log('🏆 국회의원 랭킹 API 호출...');
@@ -415,20 +304,115 @@ async function fetchRankingData() {
             return pageState.rankingData;
         }
         
+        console.log('🔍 랭킹 데이터 원본 구조:', {
+            총개수: rankingData.length,
+            첫번째샘플: rankingData[0],
+            필드목록: rankingData[0] ? Object.keys(rankingData[0]) : []
+        });
+        
         pageState.rankingData = rankingData.map(rank => ({
             name: rank.HG_NM || '',
             party: rank.POLY_NM || '무소속',
-            overall_rank: parseInt(rank.총점_순위) || 999, // 🔧 총점_순위 정확한 파싱
+            overall_rank: parseInt(rank.총점_순위) || 999,
             _raw: rank
         }));
         
         console.log(`✅ 랭킹 데이터 로드 완료: ${pageState.rankingData.length}개`);
+        
+        // 🔧 나경원 의원 랭킹 확인
+        const naKyungWonRanking = pageState.rankingData.find(r => r.name === '나경원');
+        if (naKyungWonRanking) {
+            console.log('✅ 나경원 랭킹 데이터 발견:', naKyungWonRanking);
+        } else {
+            console.warn('❌ 나경원 랭킹 데이터 없음');
+            console.log('📋 랭킹 데이터 의원명 목록:', pageState.rankingData.map(r => r.name).sort());
+        }
+        
         return pageState.rankingData;
         
     } catch (error) {
         console.error('❌ 랭킹 데이터 로드 실패:', error);
         pageState.rankingData = [];
         return pageState.rankingData;
+    }
+}
+
+// 기타 API 로드 함수들 (간단히 유지)
+async function fetchPhotoList() {
+    try {
+        const photoData = await window.APIService.getMemberPhotos();
+        if (!photoData || !Array.isArray(photoData)) {
+            pageState.photoList = [];
+            return pageState.photoList;
+        }
+        
+        pageState.photoList = photoData.map(photo => ({
+            member_code: photo.member_code || '',
+            member_name: photo.member_name || '',
+            photo: photo.photo || '',
+            _raw: photo
+        }));
+        
+        console.log(`✅ 사진 데이터 로드 완료: ${pageState.photoList.length}개`);
+        return pageState.photoList;
+        
+    } catch (error) {
+        console.error('❌ 사진 데이터 로드 실패:', error);
+        pageState.photoList = [];
+        return pageState.photoList;
+    }
+}
+
+async function fetchAttendanceData() {
+    try {
+        const attendanceData = await window.APIService.getMemberAttendance();
+        if (!attendanceData || !Array.isArray(attendanceData)) {
+            pageState.attendanceData = [];
+            return pageState.attendanceData;
+        }
+        
+        pageState.attendanceData = attendanceData.map(att => ({
+            member_name: att.member_name || '',
+            party: att.party || '무소속',
+            total_meetings: parseInt(att.total_meetings || 0),
+            attendance: parseInt(att.attendance || 0),
+            attendance_rate: parseFloat(att.attendance_rate || 0),
+            _raw: att
+        }));
+        
+        console.log(`✅ 출석 데이터 로드 완료: ${pageState.attendanceData.length}개`);
+        return pageState.attendanceData;
+        
+    } catch (error) {
+        console.error('❌ 출석 데이터 로드 실패:', error);
+        pageState.attendanceData = [];
+        return pageState.attendanceData;
+    }
+}
+
+async function fetchBillCountData() {
+    try {
+        const billCountData = await window.APIService.getMemberBillCount();
+        if (!billCountData || !Array.isArray(billCountData)) {
+            pageState.billCountData = [];
+            return pageState.billCountData;
+        }
+        
+        pageState.billCountData = billCountData.map(bill => ({
+            id: bill.id || '',
+            proposer: bill.proposer || '',
+            total: parseInt(bill.total || 0),
+            approved: parseInt(bill.approved || 0),
+            _raw: bill
+        }));
+        
+        console.log(`✅ 본회의 제안 데이터 로드 완료: ${pageState.billCountData.length}개`);
+        return pageState.billCountData;
+        
+    } catch (error) {
+        console.error('❌ 본회의 제안 데이터 로드 실패:', error);
+        pageState.billCountData = [];
+        return pageState.billCountData;
     }
 }
 
@@ -439,27 +423,24 @@ function getFallbackMemberList() {
             name: '나경원',
             party: '국민의힘',
             mona_cd: 'MEMBER_001',
-            homepage: 'https://www.assembly.go.kr',
-            phone: '02-788-2721'
+            homepage: 'https://www.assembly.go.kr'
         },
         {
             name: '이재명',
             party: '더불어민주당',
             mona_cd: 'MEMBER_002',
-            homepage: 'https://www.assembly.go.kr',
-            phone: '02-788-2922'
+            homepage: 'https://www.assembly.go.kr'
         },
         {
             name: '조국',
             party: '조국혁신당',
             mona_cd: 'MEMBER_003',
-            homepage: 'https://www.assembly.go.kr',
-            phone: '02-788-2923'
+            homepage: 'https://www.assembly.go.kr'
         }
     ];
 }
 
-// 국회의원 사진 찾기
+// 데이터 검색 함수들
 function findMemberPhoto(memberCode, memberName) {
     if (!pageState.photoList || pageState.photoList.length === 0) {
         return null;
@@ -480,7 +461,6 @@ function findMemberPhoto(memberCode, memberName) {
     return photoByName ? photoByName.photo : null;
 }
 
-// 국회의원 실적 찾기 (디버깅 강화)
 function findMemberPerformance(memberName) {
     if (!pageState.performanceData || pageState.performanceData.length === 0) {
         console.log(`🔍 ${memberName} 실적 검색: 실적 데이터가 없음`);
@@ -488,7 +468,6 @@ function findMemberPerformance(memberName) {
     }
     
     console.log(`🔍 ${memberName} 실적 검색 중...`);
-    console.log(`📊 전체 실적 데이터 수: ${pageState.performanceData.length}`);
     
     const performance = pageState.performanceData.find(perf => 
         perf.name === memberName
@@ -498,205 +477,78 @@ function findMemberPerformance(memberName) {
         console.log(`✅ ${memberName} 실적 데이터 발견:`, performance);
     } else {
         console.warn(`❌ ${memberName} 실적 데이터 없음`);
-        console.log('📋 실적 데이터에 있는 의원명들:', pageState.performanceData.map(p => p.name).slice(0, 10));
         
-        // 🔧 유사한 이름 검색
-        const similarNames = pageState.performanceData
-            .map(p => p.name)
-            .filter(name => name.includes(memberName) || memberName.includes(name));
+        // 🔧 가능한 모든 매칭 시도
+        const exactMatch = pageState.performanceData.find(p => p.name === memberName);
+        const containsMatch = pageState.performanceData.find(p => p.name.includes(memberName) || memberName.includes(p.name));
+        const trimmedMatch = pageState.performanceData.find(p => p.name.trim() === memberName.trim());
         
-        if (similarNames.length > 0) {
-            console.log('🔍 유사한 이름들:', similarNames);
-        }
+        console.log('🔍 매칭 시도 결과:', {
+            정확히일치: exactMatch ? exactMatch.name : null,
+            포함일치: containsMatch ? containsMatch.name : null,
+            공백제거일치: trimmedMatch ? trimmedMatch.name : null
+        });
     }
     
     return performance;
 }
 
-// 국회의원 출석 정보 찾기
 function findMemberAttendance(memberName) {
-    if (!pageState.attendanceData || pageState.attendanceData.length === 0) {
-        return null;
-    }
-    
-    return pageState.attendanceData.find(att => 
-        att.member_name === memberName
-    );
+    return pageState.attendanceData.find(att => att.member_name === memberName);
 }
 
-// 국회의원 본회의 제안 정보 찾기
 function findMemberBillCount(memberName, lawyerId) {
     if (!pageState.billCountData || pageState.billCountData.length === 0) {
         return null;
     }
     
-    let billData = pageState.billCountData.find(bill => 
-        bill.proposer === memberName
-    );
+    let billData = pageState.billCountData.find(bill => bill.proposer === memberName);
     
     if (!billData && lawyerId) {
-        billData = pageState.billCountData.find(bill => 
-            bill.id === lawyerId
-        );
+        billData = pageState.billCountData.find(bill => bill.id === lawyerId);
     }
     
     return billData;
 }
 
-// 국회의원 위원회 정보 찾기
 function findMemberCommittees(memberName) {
-    if (!pageState.committeeData || Object.keys(pageState.committeeData).length === 0) {
-        return [];
-    }
-    
     return pageState.committeeData[memberName] || [];
 }
 
-// 국회의원 랭킹 정보 찾기
 function findMemberRanking(memberName) {
-    if (!pageState.rankingData || pageState.rankingData.length === 0) {
-        return null;
-    }
-    
-    return pageState.rankingData.find(rank => 
-        rank.name === memberName
-    );
+    return pageState.rankingData.find(rank => rank.name === memberName);
 }
 
-// 국회의원 정보 업데이트
-function updateMemberProfile(member) {
-    if (!member) return;
-    
-    console.log(`👤 ${member.name} 프로필 업데이트 중...`);
-    
-    // 기본 정보 업데이트
-    if (elements.memberName) elements.memberName.textContent = member.name;
-    if (elements.memberParty) elements.memberParty.textContent = member.party;
-    
-    // 사진 업데이트
-    updateMemberPhoto(member);
-    
-    // 홈페이지 링크 업데이트
-    updateHomepageLink(member);
-    
-    // 실적 데이터 업데이트
-    updatePerformanceStats(member);
-    
-    // 페이지 제목 업데이트
-    document.title = `백일하 - ${member.name} 의원`;
-    
-    console.log(`✅ ${member.name} 프로필 업데이트 완료`);
-}
-
-// 국회의원 사진 업데이트
-function updateMemberPhoto(member) {
-    if (!elements.memberPhoto) return;
-    
-    const photoUrl = findMemberPhoto(member.mona_cd, member.name);
-    
-    if (photoUrl) {
-        elements.memberPhoto.innerHTML = `
-            <img src="${photoUrl}" alt="${member.name} 의원" 
-                 onerror="this.parentElement.innerHTML='<div class=\\"photo-placeholder\\">사진 없음</div>'">
-        `;
-    } else {
-        elements.memberPhoto.innerHTML = `
-            <div class="photo-placeholder">사진 없음</div>
-        `;
-    }
-}
-
-// 홈페이지 링크 업데이트
-function updateHomepageLink(member) {
-    if (!elements.memberHomepageLink) return;
-    
-    if (member.homepage && member.homepage !== '') {
-        elements.memberHomepageLink.href = member.homepage;
-        elements.memberHomepageLink.classList.remove('disabled');
-        elements.memberHomepageLink.title = `${member.name} 의원 홈페이지`;
-    } else {
-        elements.memberHomepageLink.href = '#';
-        elements.memberHomepageLink.classList.add('disabled');
-        elements.memberHomepageLink.title = '홈페이지 정보 없음';
-    }
-}
-
-// 실적 통계 업데이트
-function updatePerformanceStats(member) {
-    const performance = findMemberPerformance(member.name);
-    const attendance = findMemberAttendance(member.name);
-    const billCount = findMemberBillCount(member.name, performance?.lawmaker_id);
-    const committees = findMemberCommittees(member.name);
-    const ranking = findMemberRanking(member.name);
-    
-    // 🔧 순위 정보는 랭킹 API 데이터를 우선적으로 표시
-    updateRankingInfo(member, ranking);
-    
-    if (!performance) {
-        console.warn(`⚠️ ${member.name} 실적 데이터 없음 - 랭킹과 폴백 데이터 사용`);
-        updateStatsWithFallback(member, attendance, billCount, committees);
-        return;
-    }
-    
-    // 실적 통계 계산 및 업데이트
-    const stats = calculateMemberStats(performance, attendance, billCount, committees);
-    
-    updateStatElement(elements.attendanceStat, stats.attendance, '%');
-    updateStatElement(elements.billPassStat, stats.billPass, '%');
-    updateStatElement(elements.petitionProposalStat, stats.petitionProposal, '%');
-    updateStatElement(elements.petitionResultStat, stats.petitionResult, '%');
-    updateStatElement(elements.abstentionStat, stats.abstention, '%');
-    updateCommitteeElement(elements.committeeStat, stats.committee);
-    updateStatElement(elements.voteMatchStat, stats.voteMatch, '%');
-    updateStatElement(elements.voteMismatchStat, stats.voteMismatch, '%');
-}
-
-// 통계 계산 (실제 API 필드 사용)
+// 통계 계산 함수
 function calculateMemberStats(performance, attendance, billCount, committees) {
     return {
-        // 1. 출석 (attendance API 우선, 없으면 performance API의 attendance_score)
         attendance: attendance ? 
             (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
             (performance.attendance_score || 0),
         
-        // 2. 본회의 가결 (billCount API 기반)
         billPass: billCount ? 
             calculateBillPassRate(billCount) : 
             Math.min((performance.total_score || 0) * 1.2, 95),
         
-        // 3. 청원제시 (performance API의 petition_score)
         petitionProposal: performance.petition_score || 0,
-        
-        // 4. 청원 가결 (performance API의 petition_result_score)
         petitionResult: performance.petition_result_score || 0,
-        
-        // 5. 기권 및 무효 (performance API의 invalid_vote_ratio, 비율을 퍼센트로 변환)
         abstention: (performance.invalid_vote_ratio || 0) * 100,
-        
-        // 6. 위원회 직책 (committee API 기반, "위원회명 구성" 형태)
         committee: getCommitteeInfo(committees),
-        
-        // 7. 투표 결과 일치 (performance API의 vote_match_ratio, 비율을 퍼센트로 변환)
         voteMatch: (performance.vote_match_ratio || 0) * 100,
-        
-        // 8. 투표 결과 불일치 (performance API의 vote_mismatch_ratio, 비율을 퍼센트로 변환)
         voteMismatch: (performance.vote_mismatch_ratio || 0) * 100
     };
 }
 
-// 출석률 계산
 function calculateAttendanceRate(attendance) {
     if (!attendance || !attendance.total_meetings) return 0;
     return (attendance.attendance / attendance.total_meetings) * 100;
 }
 
-// 본회의 가결률 계산
 function calculateBillPassRate(billCount) {
     if (!billCount || !billCount.total) return 0;
     return (billCount.approved / billCount.total) * 100;
 }
 
-// 위원회 정보 가져오기
 function getCommitteeInfo(committees) {
     if (!committees || committees.length === 0) {
         return '위원회 정보 없음';
@@ -714,131 +566,6 @@ function getCommitteeInfo(committees) {
     return `${prioritizedCommittee.committee} ${prioritizedCommittee.position}`;
 }
 
-// 순위 정보 업데이트 (전체 순위만 표시)
-function updateRankingInfo(member, ranking) {
-    // 전체 순위 (랭킹 API의 총점_순위 사용)
-    if (elements.overallRanking) {
-        if (ranking && ranking.overall_rank && ranking.overall_rank !== 999) {
-            elements.overallRanking.innerHTML = `전체 순위: <strong>${ranking.overall_rank}위</strong>`;
-        } else {
-            elements.overallRanking.innerHTML = `전체 순위: <strong>정보 없음</strong>`;
-        }
-    }
-    
-    // 정당별 순위는 제거 (요청에 따라)
-    if (elements.partyRanking) {
-        elements.partyRanking.style.display = 'none'; // 숨김 처리
-    }
-}
-
-// 정당 내 순위 계산
-function calculatePartyRank(member) {
-    if (!pageState.rankingData || pageState.rankingData.length === 0) {
-        return '정보 없음';
-    }
-    
-    const memberRanking = findMemberRanking(member.name);
-    if (!memberRanking || memberRanking.overall_rank === 999) {
-        return '정보 없음';
-    }
-    
-    const partyMembers = pageState.rankingData
-        .filter(rank => rank.party === member.party && rank.overall_rank !== 999)
-        .sort((a, b) => a.overall_rank - b.overall_rank);
-    
-    const partyRank = partyMembers.findIndex(rank => rank.name === member.name) + 1;
-    return partyRank || '정보 없음';
-}
-
-// 통계 요소 업데이트
-function updateStatElement(element, value, suffix = '') {
-    if (!element) return;
-    
-    const numValue = parseFloat(value) || 0;
-    const displayValue = numValue.toFixed(1);
-    
-    element.textContent = `${displayValue}${suffix}`;
-    element.classList.remove('loading');
-    
-    element.classList.remove('good', 'warning', 'bad');
-    
-    if (numValue >= 80) {
-        element.classList.add('good');
-    } else if (numValue >= 60) {
-        element.classList.add('warning');
-    } else if (numValue < 40) {
-        element.classList.add('bad');
-    }
-}
-
-// 위원회 직책 요소 업데이트
-function updateCommitteeElement(element, position) {
-    if (!element) return;
-    
-    element.textContent = position;
-    element.classList.remove('loading');
-    
-    element.classList.remove('good', 'warning', 'bad');
-    
-    if (position.includes('위원장') || position.includes('의장')) {
-        element.classList.add('good');
-    } else if (position.includes('간사')) {
-        element.classList.add('warning');
-    } else if (position.includes('정보 없음')) {
-        element.classList.add('bad');
-    }
-}
-
-// 폴백 통계 업데이트 (실제 데이터 우선 사용)
-function updateStatsWithFallback(member, attendance, billCount, committees) {
-    console.log(`🔄 ${member.name} 폴백 데이터 사용 (실제 데이터 조합)`);
-    
-    // 실제 데이터가 있으면 우선 사용, 없으면 폴백 데이터
-    const fallbackStats = generateFallbackStats(member);
-    
-    // 출석 데이터 (실제 출석 API 데이터 우선)
-    const attendanceRate = attendance ? 
-        (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
-        fallbackStats.attendance;
-    
-    // 본회의 가결률 (실제 본회의 API 데이터 우선)  
-    const billPassRate = billCount ? 
-        calculateBillPassRate(billCount) : 
-        fallbackStats.billPass;
-    
-    // 위원회 정보 (실제 위원회 API 데이터 우선)
-    const committeeInfo = committees && committees.length > 0 ? 
-        getCommitteeInfo(committees) : 
-        getDefaultCommitteeInfo(member);
-    
-    // 통계 업데이트
-    updateStatElement(elements.attendanceStat, attendanceRate, '%');
-    updateStatElement(elements.billPassStat, billPassRate, '%');
-    updateStatElement(elements.petitionProposalStat, fallbackStats.petition, '%');
-    updateStatElement(elements.petitionResultStat, fallbackStats.petitionResult, '%');
-    updateStatElement(elements.abstentionStat, fallbackStats.abstention, '%');
-    updateCommitteeElement(elements.committeeStat, committeeInfo);
-    updateStatElement(elements.voteMatchStat, fallbackStats.voteMatch, '%');
-    updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
-}
-
-// 기본 위원회 정보
-function getDefaultCommitteeInfo(member) {
-    const defaultCommittees = {
-        '국민의힘': '국정감사위원회 일반위원',
-        '더불어민주당': '예산결산위원회 일반위원',
-        '조국혁신당': '법제사법위원회 일반위원',
-        '개혁신당': '정무위원회 일반위원',
-        '진보당': '환경노동위원회 일반위원',
-        '기본소득당': '보건복지위원회 일반위원',
-        '사회민주당': '문화체육관광위원회 일반위원',
-        '무소속': '행정안전위원회 일반위원'
-    };
-    
-    return defaultCommittees[member.party] || '위원회 정보 없음';
-}
-
-// 폴백 통계 생성
 function generateFallbackStats(member) {
     const baseStats = {
         attendance: 75 + Math.random() * 20,
@@ -868,7 +595,178 @@ function generateFallbackStats(member) {
     return baseStats;
 }
 
-// 검색 기능 설정
+function getDefaultCommitteeInfo(member) {
+    const defaultCommittees = {
+        '국민의힘': '국정감사위원회 일반위원',
+        '더불어민주당': '예산결산위원회 일반위원',
+        '조국혁신당': '법제사법위원회 일반위원',
+        '개혁신당': '정무위원회 일반위원',
+        '진보당': '환경노동위원회 일반위원',
+        '기본소득당': '보건복지위원회 일반위원',
+        '사회민주당': '문화체육관광위원회 일반위원',
+        '무소속': '행정안전위원회 일반위원'
+    };
+    
+    return defaultCommittees[member.party] || '위원회 정보 없음';
+}
+
+// UI 업데이트 함수들
+function updateMemberProfile(member) {
+    if (!member) return;
+    
+    console.log(`👤 ${member.name} 프로필 업데이트 중...`);
+    
+    if (elements.memberName) elements.memberName.textContent = member.name;
+    if (elements.memberParty) elements.memberParty.textContent = member.party;
+    
+    updateMemberPhoto(member);
+    updateHomepageLink(member);
+    updatePerformanceStats(member);
+    
+    document.title = `백일하 - ${member.name} 의원`;
+    
+    console.log(`✅ ${member.name} 프로필 업데이트 완료`);
+}
+
+function updateMemberPhoto(member) {
+    if (!elements.memberPhoto) return;
+    
+    const photoUrl = findMemberPhoto(member.mona_cd, member.name);
+    
+    if (photoUrl) {
+        elements.memberPhoto.innerHTML = `
+            <img src="${photoUrl}" alt="${member.name} 의원" 
+                 onerror="this.parentElement.innerHTML='<div class=\\"photo-placeholder\\">사진 없음</div>'">
+        `;
+    } else {
+        elements.memberPhoto.innerHTML = `
+            <div class="photo-placeholder">사진 없음</div>
+        `;
+    }
+}
+
+function updateHomepageLink(member) {
+    if (!elements.memberHomepageLink) return;
+    
+    if (member.homepage && member.homepage !== '') {
+        elements.memberHomepageLink.href = member.homepage;
+        elements.memberHomepageLink.classList.remove('disabled');
+        elements.memberHomepageLink.title = `${member.name} 의원 홈페이지`;
+    } else {
+        elements.memberHomepageLink.href = '#';
+        elements.memberHomepageLink.classList.add('disabled');
+        elements.memberHomepageLink.title = '홈페이지 정보 없음';
+    }
+}
+
+function updatePerformanceStats(member) {
+    const performance = findMemberPerformance(member.name);
+    const attendance = findMemberAttendance(member.name);
+    const billCount = findMemberBillCount(member.name, performance?.lawmaker_id);
+    const committees = findMemberCommittees(member.name);
+    const ranking = findMemberRanking(member.name);
+    
+    // 순위 정보 업데이트
+    updateRankingInfo(member, ranking);
+    
+    if (!performance) {
+        console.warn(`⚠️ ${member.name} 실적 데이터 없음 - 랭킹과 폴백 데이터 사용`);
+        updateStatsWithFallback(member, attendance, billCount, committees);
+        return;
+    }
+    
+    // 실적 통계 계산 및 업데이트
+    const stats = calculateMemberStats(performance, attendance, billCount, committees);
+    
+    updateStatElement(elements.attendanceStat, stats.attendance, '%');
+    updateStatElement(elements.billPassStat, stats.billPass, '%');
+    updateStatElement(elements.petitionProposalStat, stats.petitionProposal, '%');
+    updateStatElement(elements.petitionResultStat, stats.petitionResult, '%');
+    updateStatElement(elements.abstentionStat, stats.abstention, '%');
+    updateCommitteeElement(elements.committeeStat, stats.committee);
+    updateStatElement(elements.voteMatchStat, stats.voteMatch, '%');
+    updateStatElement(elements.voteMismatchStat, stats.voteMismatch, '%');
+}
+
+function updateRankingInfo(member, ranking) {
+    if (elements.overallRanking) {
+        if (ranking && ranking.overall_rank && ranking.overall_rank !== 999) {
+            elements.overallRanking.innerHTML = `전체 순위: <strong>${ranking.overall_rank}위</strong>`;
+        } else {
+            elements.overallRanking.innerHTML = `전체 순위: <strong>정보 없음</strong>`;
+        }
+    }
+    
+    if (elements.partyRanking) {
+        elements.partyRanking.style.display = 'none';
+    }
+}
+
+function updateStatElement(element, value, suffix = '') {
+    if (!element) return;
+    
+    const numValue = parseFloat(value) || 0;
+    const displayValue = numValue.toFixed(1);
+    
+    element.textContent = `${displayValue}${suffix}`;
+    element.classList.remove('loading');
+    
+    element.classList.remove('good', 'warning', 'bad');
+    
+    if (numValue >= 80) {
+        element.classList.add('good');
+    } else if (numValue >= 60) {
+        element.classList.add('warning');
+    } else if (numValue < 40) {
+        element.classList.add('bad');
+    }
+}
+
+function updateCommitteeElement(element, position) {
+    if (!element) return;
+    
+    element.textContent = position;
+    element.classList.remove('loading');
+    
+    element.classList.remove('good', 'warning', 'bad');
+    
+    if (position.includes('위원장') || position.includes('의장')) {
+        element.classList.add('good');
+    } else if (position.includes('간사')) {
+        element.classList.add('warning');
+    } else if (position.includes('정보 없음')) {
+        element.classList.add('bad');
+    }
+}
+
+function updateStatsWithFallback(member, attendance, billCount, committees) {
+    console.log(`🔄 ${member.name} 폴백 데이터 사용 (실제 데이터 조합)`);
+    
+    const fallbackStats = generateFallbackStats(member);
+    
+    const attendanceRate = attendance ? 
+        (attendance.attendance_rate || calculateAttendanceRate(attendance)) : 
+        fallbackStats.attendance;
+    
+    const billPassRate = billCount ? 
+        calculateBillPassRate(billCount) : 
+        fallbackStats.billPass;
+    
+    const committeeInfo = committees && committees.length > 0 ? 
+        getCommitteeInfo(committees) : 
+        getDefaultCommitteeInfo(member);
+    
+    updateStatElement(elements.attendanceStat, attendanceRate, '%');
+    updateStatElement(elements.billPassStat, billPassRate, '%');
+    updateStatElement(elements.petitionProposalStat, fallbackStats.petition, '%');
+    updateStatElement(elements.petitionResultStat, fallbackStats.petitionResult, '%');
+    updateStatElement(elements.abstentionStat, fallbackStats.abstention, '%');
+    updateCommitteeElement(elements.committeeStat, committeeInfo);
+    updateStatElement(elements.voteMatchStat, fallbackStats.voteMatch, '%');
+    updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
+}
+
+// 검색 관련 함수들
 function setupSearch() {
     if (!elements.searchInput) return;
     
@@ -922,13 +820,10 @@ function setupSearch() {
     console.log('✅ 검색 기능 설정 완료');
 }
 
-// 검색 실행
 function performSearch(query) {
     if (pageState.isSearching) return;
     
     pageState.isSearching = true;
-    
-    console.log(`🔍 검색 실행: "${query}"`);
     
     try {
         const filtered = pageState.memberList.filter(member => {
@@ -951,7 +846,6 @@ function performSearch(query) {
     }
 }
 
-// 검색 결과 표시
 function displaySearchResults(results) {
     if (!elements.searchResults) return;
     
@@ -991,14 +885,12 @@ function displaySearchResults(results) {
     elements.searchResults.style.display = 'block';
 }
 
-// 검색 결과 숨기기
 function hideSearchResults() {
     if (elements.searchResults) {
         elements.searchResults.style.display = 'none';
     }
 }
 
-// 국회의원 선택
 function selectMember(member) {
     console.log(`👤 ${member.name} 선택됨`);
     
@@ -1011,7 +903,7 @@ function selectMember(member) {
     showNotification(`${member.name} 의원 정보 로드 완료`, 'success');
 }
 
-// URL 파라미터 처리
+// URL 관련 함수들
 function getMemberFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const memberName = urlParams.get('member') || urlParams.get('name');
@@ -1024,7 +916,6 @@ function getMemberFromUrl() {
     return null;
 }
 
-// URL 업데이트
 function updateUrl(memberName) {
     if (history.pushState) {
         const url = new URL(window.location);
@@ -1046,25 +937,25 @@ async function loadAllData() {
         
         // 병렬로 모든 데이터 로드
         const results = await Promise.allSettled([
-            fetchMemberList(),
-            fetchPhotoList(),
-            fetchPerformanceData(),
-            fetchAttendanceData(),
-            fetchBillCountData(),
-            fetchCommitteeData(),
-            fetchRankingData()
+            fetchMemberList(),      // 필수
+            fetchPerformanceData(), // 필수
+            fetchRankingData(),     // 중요
+            fetchCommitteeData(),   // 중요
+            fetchPhotoList(),       // 선택
+            fetchAttendanceData(),  // 선택
+            fetchBillCountData()    // 선택
         ]);
         
-        const [memberResult, photoResult, performanceResult, attendanceResult, billCountResult, committeeResult, rankingResult] = results;
+        const [memberResult, performanceResult, rankingResult, committeeResult, photoResult, attendanceResult, billCountResult] = results;
         
         const loadResults = {
             members: memberResult.status === 'fulfilled',
-            photos: photoResult.status === 'fulfilled',
             performance: performanceResult.status === 'fulfilled',
-            attendance: attendanceResult.status === 'fulfilled',
-            billCount: billCountResult.status === 'fulfilled',
+            ranking: rankingResult.status === 'fulfilled',
             committee: committeeResult.status === 'fulfilled',
-            ranking: rankingResult.status === 'fulfilled'
+            photos: photoResult.status === 'fulfilled',
+            attendance: attendanceResult.status === 'fulfilled',
+            billCount: billCountResult.status === 'fulfilled'
         };
         
         console.log('📊 API 로드 결과:', loadResults);
@@ -1185,14 +1076,12 @@ window.memberPageDebug = {
         console.log(`- 랭킹 데이터: ${pageState.rankingData.length}개`);
         console.log(`- API 서비스: ${!!window.APIService}`);
         
-        // 🔧 현재 의원의 랭킹 정보 표시
         if (pageState.currentMember) {
             const ranking = findMemberRanking(pageState.currentMember.name);
             console.log(`- ${pageState.currentMember.name} 순위:`, ranking ? `${ranking.overall_rank}위` : '정보 없음');
         }
     },
     
-    // 🔧 랭킹 데이터 테스트 함수 추가
     checkRanking: (memberName) => {
         const member = pageState.memberList.find(m => m.name === memberName);
         const ranking = findMemberRanking(memberName);
@@ -1209,12 +1098,50 @@ window.memberPageDebug = {
         }
         
         return ranking;
+    },
+    
+    // 🔧 데이터 매핑 확인 함수
+    checkDataMapping: () => {
+        console.log('🔍 API 데이터 매핑 확인:');
+        
+        if (pageState.memberList.length > 0) {
+            console.log('👤 의원 명단 샘플:', pageState.memberList[0]);
+        }
+        
+        if (pageState.performanceData.length > 0) {
+            console.log('📊 실적 데이터 샘플:', pageState.performanceData[0]);
+        }
+        
+        const committeeKeys = Object.keys(pageState.committeeData);
+        if (committeeKeys.length > 0) {
+            console.log('🏛️ 위원회 데이터 샘플:', {
+                member: committeeKeys[0],
+                committees: pageState.committeeData[committeeKeys[0]]
+            });
+        }
+        
+        if (pageState.rankingData.length > 0) {
+            console.log('🏆 랭킹 데이터 샘플:', pageState.rankingData[0]);
+        }
+        
+        console.log('\n🔍 나경원 의원 데이터 매핑:');
+        const naKyungWon = {
+            member: pageState.memberList.find(m => m.name === '나경원'),
+            performance: findMemberPerformance('나경원'),
+            committees: findMemberCommittees('나경원'),
+            ranking: findMemberRanking('나경원'),
+            attendance: findMemberAttendance('나경원'),
+            billCount: pageState.billCountData.find(b => b.proposer === '나경원')
+        };
+        
+        console.log('나경원 전체 데이터:', naKyungWon);
+        return naKyungWon;
     }
 };
 
 // DOM 로드 완료 후 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 percent_member.js DOM 로드 완료 (API 오류 수정 버전)');
+    console.log('📄 percent_member.js DOM 로드 완료 (완전 수정 버전)');
     
     let attempts = 0;
     const maxAttempts = 30;
@@ -1240,4 +1167,4 @@ document.addEventListener('DOMContentLoaded', function() {
     waitForAPI();
 });
 
-console.log('📦 percent_member.js 로드 완료 (API 오류 수정 버전)');
+console.log('📦 percent_member.js 로드 완료 (완전 수정 버전)');
