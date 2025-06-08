@@ -80,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
         PETITION_RESULT_MAX: 60,       // 청원 결과 최대 기준 (처리율을 고려)
         
         // 위원회 관련: 정당 규모에 따른 고정 퍼센트
-        COMMITTEE_CHAIR_PERCENT: 8.0,  // 위원장: 있으면 8% (중요도 상향)
-        SECRETARY_PERCENT: 5.0,        // 간사: 있으면 5% (중요도 상향)
+        COMMITTEE_CHAIR_PERCENT: 5.0,  // 위원장: 있으면 5%
+        SECRETARY_PERCENT: 3.0,        // 간사: 있으면 3% 
         
         // 무효표/기권: 일반적으로 5% 이하이므로 적절
         INVALID_VOTE_MAX: 10.0         // 최대 10%로 제한
