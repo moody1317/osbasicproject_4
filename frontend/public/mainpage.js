@@ -193,8 +193,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('정당 성과 API가 준비되지 않았습니다');
             }
 
-            const partyData = await window.APIService.getPartyPerformance();
-            
+            const rawData = await window.APIService.getPartyPerformance();
+            const partyData = rawData?.party_ranking || [];
+
             if (!validateData(partyData, '정당')) {
                 console.warn('정당 데이터가 없습니다. 기본값 사용');
                 return getDefaultPartyRanking();
@@ -250,7 +251,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 throw new Error('의원 성과 API가 준비되지 않았습니다');
             }
 
-            const memberPerformanceData = await window.APIService.getMemberPerformance();
+            const rawData = await window.APIService.getMemberPerformance();
+            const memberPerformanceData = rawData?.ranking || [];
+
             
             if (!validateData(memberPerformanceData, '의원 성과')) {
                 console.warn('의원 성과 데이터가 없습니다. 기본값 사용');
