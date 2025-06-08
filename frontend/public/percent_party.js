@@ -76,8 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
         PLENARY_BILLS_MAX: 154553,        // 본회의 가결 최대 기준 (더 현실적으로 조정)
         
         // 청원 관련: 정당별 평균 청원 처리 건수를 고려  
-        PETITION_PROPOSAL_MAX: 80,     // 청원 제안 최대 기준 (더 현실적으로 조정)
-        PETITION_RESULT_MAX: 60,       // 청원 결과 최대 기준 (처리율을 고려)
+        PETITION_PROPOSAL_MAX: 100,     // 청원 제안 최대 기준 (더 현실적으로 조정)
+        PETITION_RESULT_MAX: 100,       // 청원 결과 최대 기준 (처리율을 고려)
         
         // 위원회 관련: 정당 규모에 따른 고정 퍼센트
         COMMITTEE_CHAIR_PERCENT: 5.0,  // 위원장: 있으면 5%
