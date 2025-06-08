@@ -856,8 +856,8 @@ function getSortedPartyData() {
             console.log('[RankParty] 🔄 순위 오름차순 정렬 완료');
             break;
             
-        case 'score_desc':
-        case 'totalScore':
+        case 'rank_desc':
+        case 'rank':
             // 점수 내림차순 (높은 점수부터)
             sortedData.sort((a, b) => {
                 const rankA = a.rank || 999;
