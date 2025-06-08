@@ -135,41 +135,35 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             console.log('👥 국회의원 순위 데이터 로드 중...');
 
-            // 🔄 새로운 API 구조에 맞춰서 데이터 가져오기
-            const memberData = await window.APIService.getMemberPerformance();
+            // 🎯 올바른 API 사용: /performance/api/performance/
+            const memberPerformanceData = await window.APIService.getMemberPerformance();
             
-            if (!Array.isArray(memberData) || memberData.length === 0) {
-                console.warn('의원 데이터가 없습니다. 기본값 사용');
+            if (!Array.isArray(memberPerformanceData) || memberPerformanceData.length === 0) {
+                console.warn('의원 성과 데이터가 없습니다. 기본값 사용');
                 return getDefaultMemberRanking();
             }
 
-            console.log('🔍 의원 원본 데이터 샘플:', memberData.slice(0, 2));
-
-            // 🎯 새로운 데이터 구조에 맞춰서 매핑
-            const processedData = memberData
+            // 🎯 total_score 기준으로 정렬하여 상위 3명 선택
+            const top3 = memberPerformanceData
                 .filter(member => {
                     return member.lawmaker_name && 
                            member.lawmaker_name !== '알 수 없음' && 
                            member.total_score !== undefined && 
-                           member.total_score !== null;
+                           member.total_score !== null &&
+                           member.total_score > 0; // 0보다 큰 점수만
                 })
-                .map(member => ({
-                    name: member.lawmaker_name,
-                    party: normalizePartyName(member.party) || '정보없음',
-                    score: Math.round(member.total_score) || 0,
-                    originalData: member // 디버깅용
-                }))
-                .sort((a, b) => b.score - a.score) // 점수순 정렬
-                .slice(0, 3); // 상위 3명만
+                .sort((a, b) => (b.total_score || 0) - (a.total_score || 0)) // total_score 기준 내림차순
+                .slice(0, 3) // 상위 3명만
+                .map((member, index) => ({
+                    rank: index + 1,
+                    name: member.lawmaker_name,           // API 필드명: lawmaker_name
+                    party: normalizePartyName(member.party) || '정보없음', // API 필드명: party  
+                    score: Math.round(member.total_score) || 0            // API 필드명: total_score
+                }));
 
-            console.log('✅ 국회의원 순위 데이터 가공 완료:', processedData);
-
-            return processedData.map((member, index) => ({
-                rank: index + 1,
-                name: member.name,
-                party: member.party,
-                score: member.score
-            }));
+            console.log('✅ 국회의원 순위 데이터 로드 완료:', top3.length, '명');
+            console.log('🔍 상위 3명 데이터:', top3);
+            return top3;
 
         } catch (error) {
             console.error('❌ 국회의원 순위 데이터 로드 실패:', error);
@@ -262,59 +256,58 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('✅ 국회의원 순위 카드 업데이트 완료');
     }
 
-    // 🔄 메인 데이터 로드 함수 (개선된 버전)
-    async function loadMainPageData() {
-        if (!window.APIService) {
-            console.warn('⚠️ APIService 없음 - 기본 데이터 사용');
-            updatePartyRankingCard(getDefaultPartyRanking());
-            updateMemberRankingCard(getDefaultMemberRanking());
-            return;
-        }
-
-        console.log('🚀 메인페이지 데이터 로드 시작...');
-        
-        try {
-            showLoading(true);
-            
-            // 정당 순위와 국회의원 순위 동시 로드
-            const [partyRanking, memberRanking] = await Promise.allSettled([
-                fetchPartyRankingData(),
-                fetchMemberRankingData()
-            ]);
-            
-            // 정당 순위 업데이트
-            if (partyRanking.status === 'fulfilled') {
-                updatePartyRankingCard(partyRanking.value);
-                console.log('🏛️ 정당 순위 업데이트 성공');
-            } else {
-                console.warn('정당 순위 로드 실패, 기본값 사용:', partyRanking.reason);
-                updatePartyRankingCard(getDefaultPartyRanking());
-            }
-            
-            // 국회의원 순위 업데이트
-            if (memberRanking.status === 'fulfilled') {
-                updateMemberRankingCard(memberRanking.value);
-                console.log('👤 국회의원 순위 업데이트 성공');
-            } else {
-                console.warn('국회의원 순위 로드 실패, 기본값 사용:', memberRanking.reason);
-                updateMemberRankingCard(getDefaultMemberRanking());
-            }
-            
-            showNotification('메인페이지 데이터 로드 완료', 'success');
-            console.log('✅ 메인페이지 데이터 로드 완료');
-            
-        } catch (error) {
-            console.error('❌ 메인페이지 데이터 로드 실패:', error);
-            
-            // 기본 데이터로 폴백
-            updatePartyRankingCard(getDefaultPartyRanking());
-            updateMemberRankingCard(getDefaultMemberRanking());
-            
-            showError('데이터 로드에 실패했습니다. 기본 데이터를 표시합니다.');
-        } finally {
-            showLoading(false);
-        }
+    // === 🎯 수정된 메인 데이터 로드 함수 ===
+async function loadMainPageData() {
+    if (!window.APIService) {
+        console.warn('⚠️ APIService 없음 - 기본 데이터 사용');
+        updatePartyRankingCard(getDefaultPartyRanking());
+        updateMemberRankingCard(getDefaultMemberRanking());
+        return;
     }
+
+    console.log('🚀 메인페이지 데이터 로드 시작...');
+    
+    try {
+        showLoading(true);
+        
+        // 🎯 올바른 API 호출로 정당 순위와 국회의원 순위 동시 로드
+        const [partyRanking, memberRanking] = await Promise.allSettled([
+            fetchPartyRankingData(),
+            fetchMemberRankingData() // 수정된 함수 사용
+        ]);
+        
+        // 정당 순위 업데이트
+        if (partyRanking.status === 'fulfilled') {
+            updatePartyRankingCard(partyRanking.value);
+        } else {
+            console.warn('정당 순위 로드 실패, 기본값 사용');
+            updatePartyRankingCard(getDefaultPartyRanking());
+        }
+        
+        // 🎯 국회의원 순위 업데이트 (API 데이터 사용)
+        if (memberRanking.status === 'fulfilled') {
+            updateMemberRankingCard(memberRanking.value);
+            console.log('✅ 실제 API 데이터로 명예의 의원 업데이트 완료');
+        } else {
+            console.warn('국회의원 순위 로드 실패, 기본값 사용');
+            updateMemberRankingCard(getDefaultMemberRanking());
+        }
+        
+        showNotification('메인페이지 데이터 로드 완료', 'success');
+        console.log('✅ 메인페이지 데이터 로드 완료');
+        
+    } catch (error) {
+        console.error('❌ 메인페이지 데이터 로드 실패:', error);
+        
+        // 기본 데이터로 폴백
+        updatePartyRankingCard(getDefaultPartyRanking());
+        updateMemberRankingCard(getDefaultMemberRanking());
+        
+        showError('데이터 로드에 실패했습니다. 기본 데이터를 표시합니다.');
+    } finally {
+        showLoading(false);
+    }
+}
 
     // === 🔄 가중치 변경 실시간 업데이트 시스템 ===
     
@@ -388,54 +381,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // 가중치 업데이트 처리 함수
-    async function handleWeightUpdate(changeData, source) {
-        try {
-            if (isLoading) {
-                console.log('[MainPage] 🔄 이미 로딩 중이므로 가중치 업데이트 스킵');
-                return;
-            }
-            
-            console.log(`[MainPage] 🔄 가중치 업데이트 처리 시작 (${source})`);
-            
-            // 사용자에게 업데이트 알림
-            showNotification('가중치가 변경되었습니다. 메인페이지 데이터를 새로고침합니다...', 'info');
-            
-            // 3초 딜레이 후 데이터 새로고침 (서버에서 가중치 처리 시간 고려)
-            setTimeout(async () => {
-                try {
-                    // 새로운 데이터로 업데이트
-                    await loadMainPageData();
-                    
-                    console.log('[MainPage] ✅ 가중치 업데이트 완료');
-                    showNotification('새로운 가중치가 메인페이지에 적용되었습니다! 🎉', 'success');
-                    
-                    // 응답 전송 (percent 페이지 모니터링용)
-                    try {
-                        const response = {
-                            page: 'mainpage.html',
-                            timestamp: new Date().toISOString(),
-                            success: true,
-                            source: source
-                        };
-                        localStorage.setItem('weight_refresh_response', JSON.stringify(response));
-                        setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
-                    } catch (e) {
-                        console.warn('[MainPage] 응답 전송 실패:', e);
-                    }
-                    
-                } catch (error) {
-                    console.error('[MainPage] ❌ 가중치 업데이트 데이터 로드 실패:', error);
-                    showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
-                }
-            }, 3000); // 서버 처리 시간 고려하여 3초로 증가
-            
-        } catch (error) {
-            console.error('[MainPage] ❌ 가중치 업데이트 처리 실패:', error);
-            showNotification('가중치 업데이트 처리에 실패했습니다.', 'error');
+    // === 🎯 가중치 업데이트 처리 함수 수정 ===
+async function handleWeightUpdate(changeData, source) {
+    try {
+        if (isLoading) {
+            console.log('[MainPage] 🔄 이미 로딩 중이므로 가중치 업데이트 스킵');
+            return;
         }
+        
+        console.log(`[MainPage] 🔄 가중치 업데이트 처리 시작 (${source})`);
+        
+        // 사용자에게 업데이트 알림
+        showNotification('가중치가 변경되었습니다. 총 점수를 다시 계산하여 메인페이지를 새로고침합니다...', 'info');
+        
+        // 🎯 서버에서 total_score 재계산 시간을 고려한 딜레이 (5초)
+        setTimeout(async () => {
+            try {
+                // 🎯 새로운 total_score 데이터로 업데이트
+                await loadMainPageData();
+                
+                console.log('[MainPage] ✅ 가중치 업데이트 완료 - total_score 기반');
+                showNotification('새로운 가중치가 적용되어 총 점수가 업데이트되었습니다! 🎉', 'success');
+                
+                // 응답 전송 (percent 페이지 모니터링용)
+                try {
+                    const response = {
+                        page: 'mainpage.html',
+                        timestamp: new Date().toISOString(),
+                        success: true,
+                        source: source,
+                        scoreFieldsUpdated: ['total_score'] // 업데이트된 점수 필드 명시
+                    };
+                    localStorage.setItem('weight_refresh_response', JSON.stringify(response));
+                    setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
+                } catch (e) {
+                    console.warn('[MainPage] 응답 전송 실패:', e);
+                }
+                
+            } catch (error) {
+                console.error('[MainPage] ❌ 가중치 업데이트 데이터 로드 실패:', error);
+                showNotification('가중치 업데이트에 실패했습니다. 다시 시도해주세요.', 'error');
+            }
+        }, 5000); // 5초 대기 (서버에서 total_score 재계산 시간)
+        
+    } catch (error) {
+        console.error('[MainPage] ❌ 가중치 업데이트 처리 실패:', error);
+        showNotification('가중치 업데이트 처리에 실패했습니다.', 'error');
     }
-
+}
     // 수동 새로고침 함수들 (외부에서 호출 가능)
     window.refreshMainPageData = function() {
         console.log('[MainPage] 🔄 수동 새로고침 요청');
