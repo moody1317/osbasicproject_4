@@ -1054,22 +1054,24 @@ function setupSearch() {
 
 function performSearch(query) {
     if (pageState.isSearching) return;
-    
+
     pageState.isSearching = true;
-    
+
     try {
+        const normalize = (text) => text.toLowerCase().replace(/\s/g, '');
+
         const filtered = pageState.memberList.filter(member => {
-            const nameMatch = member.name.toLowerCase().includes(query.toLowerCase());
-            const partyMatch = member.party.toLowerCase().includes(query.toLowerCase());
-            
+            const nameMatch = normalize(member.name).includes(normalize(query));
+            const partyMatch = normalize(member.party).includes(normalize(query));
+
             const partyFilter = elements.partyFilter ? elements.partyFilter.value : '';
             const partyFilterMatch = !partyFilter || member.party === partyFilter;
-            
+
             return (nameMatch || partyMatch) && partyFilterMatch;
         });
-        
+
         displaySearchResults(filtered);
-        
+
     } catch (error) {
         console.error('❌ 검색 실패:', error);
         showNotification('검색 중 오류가 발생했습니다', 'error');
@@ -1077,6 +1079,7 @@ function performSearch(query) {
         pageState.isSearching = false;
     }
 }
+
 
 function displaySearchResults(results) {
     if (!elements.searchResults) return;
