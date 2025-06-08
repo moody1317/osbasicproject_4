@@ -862,7 +862,7 @@ function getSortedPartyData() {
             sortedData.sort((a, b) => {
                 const rankA = a.rank || 999;
                 const rankB = b.rank || 999;
-                return scoreB - scoreA;
+                return rankB - rankA;
             });
             console.log('[RankParty] 🔄 순위 내림차순 정렬 완료');
             break;
