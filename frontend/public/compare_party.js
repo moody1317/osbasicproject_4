@@ -457,17 +457,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 본회의 가결률 계산 (가결 수를 기반으로 추정)
-    function calculateBillPassRate(billPassSum) {
-        if (!billPassSum || billPassSum === 0) return 0;
-        
-        // 가결 수를 기반으로 전체 제안 수 추정 (가결률 40-70% 가정)
-        const estimatedTotalBills = Math.max(billPassSum * 2, billPassSum + 50);
-        const passRate = (billPassSum / estimatedTotalBills) * 100;
-        
-        return Math.min(passRate, 100); // 최대 100%로 제한
-    }
-
     // 기본 통계 생성 (API 데이터 없을 때)
     function generateDefaultStats(partyName, rankingData = null) {
         const attendanceRate = Math.random() * 20 + 75; // 75-95%
@@ -619,8 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 value: `${stats.billPassSum}건`,
                 winLose: comparisons ? (comparisons.billPass[cardIndex] ? 'WIN' : 'LOSE') : null,
                 isHTML: false,
-                tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>
-                         가결률 추정: ${stats.billPassRate?.toFixed(1) || '0.0'}%`
+                tooltip: `본회의 가결 수: ${stats.billPassSum}건<br>`
             },
             { // 3. 청원 제안
                 value: `${stats.petitionProposed}건`,
