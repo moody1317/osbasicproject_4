@@ -198,25 +198,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
         return apiData.map((item, index) => {
             // 실제 API 데이터 구조에 맞게 매핑
+            const billId = item.BILL_ID || generateBillId(index);
+            const billName = item.BILL_NM || '법안명 없음';
+            const proposer = item.PROPOSER || '제안자 정보 없음';
+            const procDate = item.RGS_PROC_DT || new Date().toISOString().split('T')[0];
+            
+            // 기타 데이터의 경우 PRO_RESULT_CD 사용 (오타 수정)
+            const resultCode = item.PROC_RESULT_CD || item.PRO_RESULT_CD || '심의중';
+            const detailLink = item.DETAIL_LINK || '';
+            const age = item.age || '22';
+
             return {
-                id: item.BILL_ID || index + 1, // BILL_ID가 없으면 인덱스 사용
-                billNumber: generateBillNumber(item.age, index), // 대수와 인덱스로 의안번호 생성
-                title: item.BILL_NM || '법안명 없음',
-                proposer: formatProposer(item.PROPOSER),
-                date: formatApiDate(item.RGS_PROC_DT),
-                status: normalizeStatus(item.PROC_RESULT_CD),
-                committee: generateCommittee(item.BILL_NM), // 법안명으로 위원회 추정
-                age: item.age || '22', // 대수
-                link: item.DETAIL_LINK || ''
+                id: billId,
+                billNumber: generateBillNumber(age, billId),
+                title: billName,
+                proposer: formatProposer(proposer),
+                date: formatApiDate(procDate),
+                status: normalizeStatus(resultCode),
+                committee: generateCommittee(billName),
+                age: age,
+                link: detailLink
             };
         });
     }
 
+    // 법안 ID 생성
+    function generateBillId(index) {
+        return `BILL_${new Date().getFullYear()}_${String(index + 1).padStart(6, '0')}`;
+    }
+
     // 의안 번호 생성 (대수 기반)
-    function generateBillNumber(age, index) {
-        const ageNum = age || '22'; // 기본값: 22대
+    function generateBillNumber(age, billId) {
+        const ageNum = age || '22';
         const year = new Date().getFullYear();
-        const billNum = String(index + 1).padStart(6, '0');
+        
+        // billId에서 숫자 추출
+        let billNum = '000001';
+        if (billId) {
+            const matches = billId.toString().match(/\d+/g);
+            if (matches && matches.length > 0) {
+                billNum = String(matches[matches.length - 1]).padStart(6, '0');
+            }
+        }
+        
         return `제${ageNum}대-${year}-${billNum}`;
     }
 
@@ -227,37 +251,73 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = billName.toLowerCase();
         
         // 키워드 기반 위원회 매핑
-        if (title.includes('교육') || title.includes('학교') || title.includes('대학')) {
-            return '교육위원회';
-        } else if (title.includes('환경') || title.includes('기후') || title.includes('노동') || title.includes('근로')) {
-            return '환경노동위원회';
-        } else if (title.includes('여성') || title.includes('가족') || title.includes('아동')) {
-            return '여성가족위원회';
-        } else if (title.includes('보건') || title.includes('복지') || title.includes('의료') || title.includes('건강')) {
-            return '보건복지위원회';
-        } else if (title.includes('국토') || title.includes('교통') || title.includes('건설') || title.includes('주택')) {
-            return '국토교통위원회';
-        } else if (title.includes('문화') || title.includes('체육') || title.includes('관광') || title.includes('예술')) {
-            return '문화체육관광위원회';
-        } else if (title.includes('산업') || title.includes('통상') || title.includes('자원') || title.includes('중소') || title.includes('벤처')) {
-            return '산업통상자원중소벤처기업위원회';
-        } else if (title.includes('농림') || title.includes('축산') || title.includes('식품') || title.includes('해양') || title.includes('수산')) {
-            return '농림축산식품해양수산위원회';
-        } else if (title.includes('국방') || title.includes('군사') || title.includes('보훈')) {
-            return '국방위원회';
-        } else if (title.includes('법제') || title.includes('사법') || title.includes('법원') || title.includes('검찰')) {
-            return '법제사법위원회';
-        } else if (title.includes('기획') || title.includes('재정') || title.includes('예산') || title.includes('세제') || title.includes('조세')) {
-            return '기획재정위원회';
-        } else if (title.includes('정무') || title.includes('행정') || title.includes('안전') || title.includes('인사')) {
-            return '정무위원회';
-        } else if (title.includes('과학') || title.includes('기술') || title.includes('정보') || title.includes('방송') || title.includes('통신')) {
-            return '과학기술정보방송통신위원회';
-        } else if (title.includes('외교') || title.includes('통일') || title.includes('국정감사')) {
-            return '외교통일위원회';
-        } else {
-            return '행정안전위원회'; // 기본값
+        const committeeMapping = {
+            '교육': '교육위원회',
+            '학교': '교육위원회',
+            '대학': '교육위원회',
+            '환경': '환경노동위원회',
+            '기후': '환경노동위원회',
+            '노동': '환경노동위원회',
+            '근로': '환경노동위원회',
+            '여성': '여성가족위원회',
+            '가족': '여성가족위원회',
+            '아동': '여성가족위원회',
+            '보건': '보건복지위원회',
+            '복지': '보건복지위원회',
+            '의료': '보건복지위원회',
+            '건강': '보건복지위원회',
+            '국토': '국토교통위원회',
+            '교통': '국토교통위원회',
+            '건설': '국토교통위원회',
+            '주택': '국토교통위원회',
+            '문화': '문화체육관광위원회',
+            '체육': '문화체육관광위원회',
+            '관광': '문화체육관광위원회',
+            '예술': '문화체육관광위원회',
+            '산업': '산업통상자원중소벤처기업위원회',
+            '통상': '산업통상자원중소벤처기업위원회',
+            '자원': '산업통상자원중소벤처기업위원회',
+            '중소': '산업통상자원중소벤처기업위원회',
+            '벤처': '산업통상자원중소벤처기업위원회',
+            '농림': '농림축산식품해양수산위원회',
+            '축산': '농림축산식품해양수산위원회',
+            '식품': '농림축산식품해양수산위원회',
+            '해양': '농림축산식품해양수산위원회',
+            '수산': '농림축산식품해양수산위원회',
+            '국방': '국방위원회',
+            '군사': '국방위원회',
+            '보훈': '국방위원회',
+            '법제': '법제사법위원회',
+            '사법': '법제사법위원회',
+            '법원': '법제사법위원회',
+            '검찰': '법제사법위원회',
+            '기획': '기획재정위원회',
+            '재정': '기획재정위원회',
+            '예산': '기획재정위원회',
+            '세제': '기획재정위원회',
+            '조세': '기획재정위원회',
+            '정무': '정무위원회',
+            '행정': '행정안전위원회',
+            '안전': '행정안전위원회',
+            '인사': '정무위원회',
+            '과학': '과학기술정보방송통신위원회',
+            '기술': '과학기술정보방송통신위원회',
+            '정보': '과학기술정보방송통신위원회',
+            '방송': '과학기술정보방송통신위원회',
+            '통신': '과학기술정보방송통신위원회',
+            '외교': '외교통일위원회',
+            '통일': '외교통일위원회',
+            '국정감사': '외교통일위원회'
+        };
+
+        // 매핑된 위원회 찾기
+        for (const [keyword, committee] of Object.entries(committeeMapping)) {
+            if (title.includes(keyword)) {
+                return committee;
+            }
         }
+        
+        return '행정안전위원회'; // 기본값
     }
 
     // 제안자 형식 변환
@@ -269,32 +329,51 @@ document.addEventListener('DOMContentLoaded', function() {
             return proposer;
         }
         
+        // 정부 제출인 경우
+        if (proposer.includes('정부') || proposer.includes('장관') || proposer.includes('청장')) {
+            return proposer;
+        }
+        
         // 개별 의원인 경우
         return `${proposer} 의원 외 ${Math.floor(Math.random() * 15) + 5}인`;
     }
 
     // API 날짜 형식을 화면 표시용으로 변환
     function formatApiDate(dateString) {
-        if (!dateString) return '-';
+        if (!dateString) return new Date().toISOString().split('T')[0];
         
         try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
+            // 날짜 문자열 정리
+            let cleanDate = dateString.toString().trim();
             
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }).replace(/\./g, '-').replace(/\-\s/g, '-');
+            // 이미 YYYY-MM-DD 형식인 경우
+            if (/^\d{4}-\d{2}-\d{2}$/.test(cleanDate)) {
+                return cleanDate;
+            }
+            
+            // YYYYMMDD 형식인 경우
+            if (/^\d{8}$/.test(cleanDate)) {
+                return `${cleanDate.substring(0, 4)}-${cleanDate.substring(4, 6)}-${cleanDate.substring(6, 8)}`;
+            }
+            
+            // 다른 형식의 날짜 시도
+            const date = new Date(cleanDate);
+            if (!isNaN(date.getTime())) {
+                return date.toISOString().split('T')[0];
+            }
+            
+            return cleanDate;
         } catch (error) {
             console.warn('날짜 변환 실패:', dateString);
-            return dateString;
+            return new Date().toISOString().split('T')[0];
         }
     }
 
     // API 상태 값을 내부 상태로 정규화
     function normalizeStatus(status) {
         if (!status) return '심의중';
+        
+        const statusStr = status.toString().toLowerCase();
         
         // 실제 API 상태값에 맞게 매핑
         const statusMapping = {
@@ -303,6 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
             '가결': '가결',
             '통과': '가결',
             '승인': '가결',
+            '의결': '가결',
             '부결': '부결',
             '거부': '부결',
             '반대': '부결',
@@ -323,14 +403,21 @@ document.addEventListener('DOMContentLoaded', function() {
             'reviewing': '심의중'
         };
         
-        return statusMapping[status] || statusMapping[status.toLowerCase()] || '심의중';
+        // 정확한 매칭 시도
+        for (const [key, value] of Object.entries(statusMapping)) {
+            if (statusStr.includes(key.toLowerCase()) || status === key) {
+                return value;
+            }
+        }
+        
+        return '심의중'; // 기본값
     }
 
     // 기본 법안 데이터 (API 실패 시 폴백)
     function getDefaultBillData() {
         return [
             {
-                id: 1,
+                id: "BILL_2024_000001",
                 billNumber: "제22대-2024-000001",
                 title: "국민건강보험법 일부개정법률안",
                 proposer: "김민수 의원 외 10인",
@@ -340,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 age: "22"
             },
             {
-                id: 2,
+                id: "BILL_2024_000002",
                 billNumber: "제22대-2024-000002",
                 title: "소득세법 일부개정법률안",
                 proposer: "이정희 의원 외 15인",
@@ -350,103 +437,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 age: "22"
             },
             {
-                id: 3,
+                id: "BILL_2024_000003",
                 billNumber: "제22대-2024-000003",
                 title: "교육기본법 일부개정법률안",
                 proposer: "박영진 의원 외 20인",
                 date: "2024-03-13",
                 status: "심의중",
                 committee: "교육위원회",
-                age: "22"
-            },
-            {
-                id: 4,
-                billNumber: "제22대-2024-000004",
-                title: "중소기업 지원에 관한 특별법안",
-                proposer: "정의당",
-                date: "2024-03-12",
-                status: "가결",
-                committee: "산업통상자원중소벤처기업위원회",
-                age: "22"
-            },
-            {
-                id: 5,
-                billNumber: "제22대-2024-000005",
-                title: "환경보호법 전부개정법률안",
-                proposer: "녹색당",
-                date: "2024-03-11",
-                status: "심의중",
-                committee: "환경노동위원회",
-                age: "22"
-            },
-            {
-                id: 6,
-                billNumber: "제22대-2024-000006",
-                title: "근로기준법 일부개정법률안",
-                proposer: "박정민 의원 외 8인",
-                date: "2024-03-10",
-                status: "가결",
-                committee: "환경노동위원회",
-                age: "22"
-            },
-            {
-                id: 7,
-                billNumber: "제22대-2024-000007",
-                title: "주택법 일부개정법률안",
-                proposer: "최영희 의원 외 12인",
-                date: "2024-03-09",
-                status: "부결",
-                committee: "국토교통위원회",
-                age: "22"
-            },
-            {
-                id: 8,
-                billNumber: "제22대-2024-000008",
-                title: "문화예술진흥법 일부개정법률안",
-                proposer: "김문수 의원 외 5인",
-                date: "2024-03-08",
-                status: "심의중",
-                committee: "문화체육관광위원회",
-                age: "22"
-            },
-            {
-                id: 9,
-                billNumber: "제22대-2024-000009",
-                title: "정보통신망법 일부개정법률안",
-                proposer: "이상호 의원 외 18인",
-                date: "2024-03-07",
-                status: "가결",
-                committee: "과학기술정보방송통신위원회",
-                age: "22"
-            },
-            {
-                id: 10,
-                billNumber: "제22대-2024-000010",
-                title: "농어촌정비법 일부개정법률안",
-                proposer: "강원도당",
-                date: "2024-03-06",
-                status: "심의중",
-                committee: "농림축산식품해양수산위원회",
-                age: "22"
-            },
-            {
-                id: 11,
-                billNumber: "제22대-2024-000011",
-                title: "국방개혁법 일부개정법률안",
-                proposer: "정태영 의원 외 22인",
-                date: "2024-03-05",
-                status: "가결",
-                committee: "국방위원회",
-                age: "22"
-            },
-            {
-                id: 12,
-                billNumber: "제22대-2024-000012",
-                title: "지방자치법 일부개정법률안",
-                proposer: "한미경 의원 외 15인",
-                date: "2024-03-04",
-                status: "부결",
-                committee: "행정안전위원회",
                 age: "22"
             }
         ];
@@ -564,7 +561,8 @@ document.addEventListener('DOMContentLoaded', function() {
             date: bill.date,
             status: bill.status,
             committee: bill.committee,
-            age: bill.age || '22'
+            age: bill.age || '22',
+            link: bill.link || ''
         });
         
         // more_meeting.html 페이지로 이동
@@ -776,6 +774,25 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('🎉 본회의 API 테스트 완료:', results);
             return results;
         },
+        testDataMapping: () => {
+            console.log('🔍 데이터 매핑 테스트:');
+            const sampleData = [
+                {
+                    BILL_ID: 'TEST_001',
+                    BILL_NM: '테스트 법안',
+                    PROPOSER: '테스트 의원',
+                    RGS_PROC_DT: '20240315',
+                    PROC_RESULT_CD: '원안가결',
+                    DETAIL_LINK: 'http://test.com',
+                    age: '22'
+                }
+            ];
+            
+            const transformed = transformBillData(sampleData);
+            console.log('원본 데이터:', sampleData);
+            console.log('변환된 데이터:', transformed);
+            return transformed;
+        },
         showInfo: () => {
             console.log('📊 본회의 페이지 정보:');
             console.log(`- 전체 데이터: ${billData.length}건`);
@@ -786,15 +803,23 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('  * getAllLegislation() - 전체 입법 데이터');
             console.log('  * getBillLegislation() - 법안 데이터');
             console.log('  * getCostlyLegislation() - 예산안 입법');
-            console.log('  * getCostLegislation() - 결산산 입법');
+            console.log('  * getCostLegislation() - 결산안 입법');
             console.log('  * getEtcLegislation() - 기타 입법');
             console.log('  * getLawLegislation() - 법률 입법');
+            console.log('- 데이터 매핑:');
+            console.log('  * BILL_NM → title (법안명)');
+            console.log('  * PROPOSER → proposer (제안자)');
+            console.log('  * RGS_PROC_DT → date (의결일)');
+            console.log('  * PROC_RESULT_CD/PRO_RESULT_CD → status (결과)');
+            console.log('  * DETAIL_LINK → link (상세링크)');
+            console.log('  * age → age (대수)');
         }
     };
 
     // 초기화 실행
     init();
     
-    console.log('✅ 본회의 페이지 스크립트 로드 완료 (API 연결)');
+    console.log('✅ 본회의 페이지 스크립트 로드 완료 (업데이트된 API 연결)');
     console.log('🔧 디버그: window.meetingDebug.showInfo()');
+    console.log('🧪 테스트: window.meetingDebug.testAllAPIs()');
 });
