@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         bill_pass_sum: convertCountToPercentage(party.bill_pass_sum, PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX),
                         bill_pass_count: parseInt(party.bill_pass_sum || 0), // 원본 개수 보존
                         
-                        // === 청원 관련 (최적화된 기준: 80건/60건) ===
+                        // === 청원 관련 (최적화된 기준: 100건) ===
                         petition_sum: convertCountToPercentage(party.petition_sum, PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX),
                         petition_count: parseInt(party.petition_sum || 0), // 원본 개수 보존
                         petition_pass_sum: convertCountToPercentage(party.petition_pass_sum, PERCENTAGE_CRITERIA.PETITION_RESULT_MAX),
@@ -405,10 +405,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 plenary_pass: performanceData.bill_pass_sum || 60.0,
                 
                 // 3. 청원 제안 → petition_sum (최적화된 퍼센트로 변환됨)
-                petition_proposal: performanceData.petition_sum || 50.0,
+                petition_proposal: performanceData.petition_sum || 0.0,
                 
                 // 4. 청원 결과 → petition_pass_sum (최적화된 퍼센트로 변환됨)
-                petition_result: performanceData.petition_pass_sum || 40.0,
+                petition_result: performanceData.petition_pass_sum || 0.0,
                 
                 // 5. 간사 → committee_secretary_count (최적화된 퍼센트: 있으면 5%)
                 secretary: performanceData.committee_secretary_count || 0.0,
