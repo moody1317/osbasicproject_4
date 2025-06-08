@@ -1,7 +1,7 @@
-// 정당 상세정보 페이지 (Django API 연동 + 퍼센트 정규화 버전)
+// 정당 상세정보 페이지 (Django API 연동 + 퍼센트 정규화 + styles.css 색상 적용 버전)
 
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 정당 상세 페이지 로드 시작 (Django API 연동 + 퍼센트 정규화 버전)');
+    console.log('🚀 정당 상세 페이지 로드 시작 (styles.css 색상 적용 + 최적화된 퍼센트 기준)');
 
     // === 🔧 페이지 상태 관리 ===
     let pageState = {
@@ -13,46 +13,46 @@ document.addEventListener('DOMContentLoaded', function() {
         hasError: false
     };
 
-    // === 🎨 정당별 브랜드 색상 ===
+    // === 🎨 정당별 브랜드 색상 (styles.css와 일치) ===
     const partyColors = {
         "더불어민주당": {
-            main: "#152484",
-            secondary: "#15248480",
+            main: "#152484",        // --party-dp-main
+            secondary: "#004EA2",   // --party-dp-secondary
             url: "https://theminjoo.kr/"
         },
         "국민의힘": {
-            main: "#E61E2B", 
-            secondary: "#E61E2B80",
+            main: "#E61E2B",        // --party-ppp-main
+            secondary: "#D32036",   // --party-ppp-secondary
             url: "https://www.peoplepowerparty.kr/"
         },
         "조국혁신당": {
-            main: "#06275E",
-            secondary: "#0073CF",
+            main: "#06275E",        // --party-rk-main
+            secondary: "#004098",   // --party-rk-secondary
             url: "https://rebuildingkoreaparty.kr"
         },
         "개혁신당": {
-            main: "#FF7210",
-            secondary: "#FF721080",
+            main: "#FF7210",        // --party-reform-main
+            secondary: "#F15A22",   // --party-reform-secondary
             url: "https://www.reformparty.kr/"
         },
         "진보당": {
-            main: "#D6001C",
-            secondary: "#D6001C80",
+            main: "#D6001C",        // --party-jp-main
+            secondary: "#B20017",   // --party-jp-secondary
             url: "https://jinboparty.com/"
         },
         "기본소득당": {
-            main: "#091E3A",
-            secondary: "#00D2C3",
+            main: "#091E3A",        // --party-bip-main
+            secondary: "#00D2C3",   // --party-bip-secondary
             url: "https://basicincomeparty.kr/"
         },
         "사회민주당": {
-            main: "#43A213",
-            secondary: "#F58400",
+            main: "#F58400",        // --party-sdp-main (주황색)
+            secondary: "#43A213",   // 보조색 (녹색)
             url: "https://www.samindang.kr/"
         },
         "무소속": {
-            main: "#4B5563",
-            secondary: "#9CA3AF",
+            main: "#4B5563",        // --party-ind-main
+            secondary: "#6B7280",   // --party-ind-secondary
             url: ""
         }
     };
@@ -69,6 +69,23 @@ document.addEventListener('DOMContentLoaded', function() {
         { key: 'vote_match', label: '투표 결과 일치', colorVar: '--current-party-eighth' },           // 8
         { key: 'vote_mismatch', label: '투표 결과 불일치', colorVar: '--current-party-ninth' }         // 9
     ];
+
+    // === 📊 최적화된 퍼센트 변환 기준 ===
+    const PERCENTAGE_CRITERIA = {
+        // 본회의 관련: 한 국회 회기 동안 평균적인 법안 수를 고려
+        PLENARY_BILLS_MAX: 154553,        // 본회의 가결 최대 기준 (더 현실적으로 조정)
+        
+        // 청원 관련: 정당별 평균 청원 처리 건수를 고려  
+        PETITION_PROPOSAL_MAX: 80,     // 청원 제안 최대 기준 (더 현실적으로 조정)
+        PETITION_RESULT_MAX: 60,       // 청원 결과 최대 기준 (처리율을 고려)
+        
+        // 위원회 관련: 정당 규모에 따른 고정 퍼센트
+        COMMITTEE_CHAIR_PERCENT: 8.0,  // 위원장: 있으면 8% (중요도 상향)
+        SECRETARY_PERCENT: 5.0,        // 간사: 있으면 5% (중요도 상향)
+        
+        // 무효표/기권: 일반적으로 5% 이하이므로 적절
+        INVALID_VOTE_MAX: 10.0         // 최대 10%로 제한
+    };
 
     // === 🔧 유틸리티 함수들 ===
 
@@ -176,33 +193,33 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 🔧 개수를 퍼센트로 변환 (본회의 가결, 청원 등)
-    function convertCountToPercentage(count, maxCount = 100) {
+    // 🔧 개수를 퍼센트로 변환 (최적화된 기준 적용)
+    function convertCountToPercentage(count, maxCount) {
         if (!count && count !== 0) return 0;
         
         const numCount = parseInt(count);
         if (isNaN(numCount)) return 0;
         
-        // 최대값 대비 퍼센트로 변환 (예: 50건/100건 = 50%)
+        // 최대값 대비 퍼센트로 변환
         const percentage = (numCount / maxCount) * 100;
         return Math.min(percentage, 100); // 최대 100%로 제한
     }
 
-    // 🔧 위원장/간사 수를 고정 퍼센트로 변환 (있음/없음 기준)
+    // 🔧 위원장/간사 수를 최적화된 퍼센트로 변환
     function convertLeaderToPercentage(count) {
         const numCount = parseInt(count || 0);
         if (isNaN(numCount)) return 0;
         
-        // 위원장: 있으면 5%, 없으면 0%
-        return numCount > 0 ? 5.0 : 0.0;
+        // 위원장: 있으면 8% (중요도 상향), 없으면 0%
+        return numCount > 0 ? PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT : 0.0;
     }
 
     function convertSecretaryToPercentage(count) {
         const numCount = parseInt(count || 0);
         if (isNaN(numCount)) return 0;
         
-        // 간사: 있으면 3%, 없으면 0%
-        return numCount > 0 ? 3.0 : 0.0;
+        // 간사: 있으면 5% (중요도 상향), 없으면 0%
+        return numCount > 0 ? PERCENTAGE_CRITERIA.SECRETARY_PERCENT : 0.0;
     }
 
     // === 📊 API 데이터 로드 함수들 ===
@@ -236,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 processedData = [];
             }
             
-            // 정당별 성과 데이터 매핑 (퍼센트 정규화 적용)
+            // 정당별 성과 데이터 매핑 (최적화된 퍼센트 기준 적용)
             const performanceData = {};
             processedData.forEach(party => {
                 const partyName = normalizePartyName(party.party);
@@ -263,24 +280,24 @@ document.addEventListener('DOMContentLoaded', function() {
                         // === 출석 관련 (이미 퍼센트) ===
                         avg_attendance: normalizePercentage(party.avg_attendance),
                         
-                        // === 본회의 가결 (개수 → 퍼센트 변환) ===
-                        bill_pass_sum: convertCountToPercentage(party.bill_pass_sum, 150), // 최대 150건 기준
+                        // === 본회의 가결 (최적화된 기준: 154553건) ===
+                        bill_pass_sum: convertCountToPercentage(party.bill_pass_sum, PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX),
                         bill_pass_count: parseInt(party.bill_pass_sum || 0), // 원본 개수 보존
                         
-                        // === 청원 관련 (개수 → 퍼센트 변환) ===
-                        petition_sum: convertCountToPercentage(party.petition_sum, 100), // 최대 100건 기준
+                        // === 청원 관련 (최적화된 기준: 80건/60건) ===
+                        petition_sum: convertCountToPercentage(party.petition_sum, PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX),
                         petition_count: parseInt(party.petition_sum || 0), // 원본 개수 보존
-                        petition_pass_sum: convertCountToPercentage(party.petition_pass_sum, 80), // 최대 80건 기준
+                        petition_pass_sum: convertCountToPercentage(party.petition_pass_sum, PERCENTAGE_CRITERIA.PETITION_RESULT_MAX),
                         petition_pass_count: parseInt(party.petition_pass_sum || 0), // 원본 개수 보존
                         
-                        // === 위원회 관련 (고정 퍼센트 변환) ===
-                        committee_leader_count: convertLeaderToPercentage(party.committee_leader_count), // 위원장: 있으면 5%
+                        // === 위원회 관련 (최적화된 퍼센트: 8%/5%) ===
+                        committee_leader_count: convertLeaderToPercentage(party.committee_leader_count), // 위원장: 있으면 8%
                         leader_count: parseInt(party.committee_leader_count || 0), // 원본 개수 보존
-                        committee_secretary_count: convertSecretaryToPercentage(party.committee_secretary_count), // 간사: 있으면 3%
+                        committee_secretary_count: convertSecretaryToPercentage(party.committee_secretary_count), // 간사: 있으면 5%
                         secretary_count: parseInt(party.committee_secretary_count || 0), // 원본 개수 보존
                         
-                        // === 무효표 및 기권 관련 (이미 퍼센트) ===
-                        avg_invalid_vote_ratio: normalizePercentage(party.avg_invalid_vote_ratio),
+                        // === 무효표 및 기권 관련 (이미 퍼센트, 최대 10%로 제한) ===
+                        avg_invalid_vote_ratio: Math.min(normalizePercentage(party.avg_invalid_vote_ratio), PERCENTAGE_CRITERIA.INVALID_VOTE_MAX),
                         
                         // === 표결 일치 관련 (이미 퍼센트) ===
                         avg_vote_match_ratio: normalizePercentage(party.avg_vote_match_ratio),
@@ -296,11 +313,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     };
                     
                     // 🔧 정규화된 값들 로깅 (디버깅용)
-                    console.log(`📊 ${partyName} 정규화된 데이터:`, {
+                    console.log(`📊 ${partyName} 최적화된 데이터:`, {
                         출석: `${performanceData[partyName].avg_attendance.toFixed(1)}%`,
-                        본회의가결: `${performanceData[partyName].bill_pass_sum.toFixed(1)}% (${performanceData[partyName].bill_pass_count}건)`,
-                        청원제안: `${performanceData[partyName].petition_sum.toFixed(1)}% (${performanceData[partyName].petition_count}건)`,
-                        청원결과: `${performanceData[partyName].petition_pass_sum.toFixed(1)}% (${performanceData[partyName].petition_pass_count}건)`,
+                        본회의가결: `${performanceData[partyName].bill_pass_sum.toFixed(1)}% (${performanceData[partyName].bill_pass_count}건/${PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX}건)`,
+                        청원제안: `${performanceData[partyName].petition_sum.toFixed(1)}% (${performanceData[partyName].petition_count}건/${PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX}건)`,
+                        청원결과: `${performanceData[partyName].petition_pass_sum.toFixed(1)}% (${performanceData[partyName].petition_pass_count}건/${PERCENTAGE_CRITERIA.PETITION_RESULT_MAX}건)`,
                         위원장: `${performanceData[partyName].committee_leader_count.toFixed(1)}% (${performanceData[partyName].leader_count}명)`,
                         간사: `${performanceData[partyName].committee_secretary_count.toFixed(1)}% (${performanceData[partyName].secretary_count}명)`,
                         무효표기권: `${performanceData[partyName].avg_invalid_vote_ratio.toFixed(1)}%`,
@@ -384,22 +401,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 1. 출석 → avg_attendance (이미 퍼센트)
                 attendance: performanceData.avg_attendance || 85.0,
                 
-                // 2. 본회의 가결 → bill_pass_sum (퍼센트로 변환됨)
+                // 2. 본회의 가결 → bill_pass_sum (최적화된 퍼센트로 변환됨)
                 plenary_pass: performanceData.bill_pass_sum || 60.0,
                 
-                // 3. 청원 제안 → petition_sum (퍼센트로 변환됨)
+                // 3. 청원 제안 → petition_sum (최적화된 퍼센트로 변환됨)
                 petition_proposal: performanceData.petition_sum || 50.0,
                 
-                // 4. 청원 결과 → petition_pass_sum (퍼센트로 변환됨)
+                // 4. 청원 결과 → petition_pass_sum (최적화된 퍼센트로 변환됨)
                 petition_result: performanceData.petition_pass_sum || 40.0,
                 
-                // 5. 간사 → committee_secretary_count (고정 퍼센트: 있으면 3%)
+                // 5. 간사 → committee_secretary_count (최적화된 퍼센트: 있으면 5%)
                 secretary: performanceData.committee_secretary_count || 0.0,
                 
-                // 6. 무효표 및 기권 → avg_invalid_vote_ratio (이미 퍼센트)
+                // 6. 무효표 및 기권 → avg_invalid_vote_ratio (이미 퍼센트, 최대 10%로 제한)
                 invalid_abstention: performanceData.avg_invalid_vote_ratio || 5.0,
                 
-                // 7. 위원장 → committee_leader_count (고정 퍼센트: 있으면 5%)
+                // 7. 위원장 → committee_leader_count (최적화된 퍼센트: 있으면 8%)
                 committee_chair: performanceData.committee_leader_count || 0.0,
                 
                 // 8. 투표 결과 일치 → avg_vote_match_ratio (이미 퍼센트)
@@ -483,7 +500,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // 순위 정보 포함한 성공 메시지
             const rankInfo = rankingData ? `${rankingData.rank}위` : '순위 정보 없음';
             const totalScore = currentPartyData.avg_total_score || 'N/A';
-            showSuccess(`${partyName} 통계 데이터를 성공적으로 불러왔습니다. (순위: ${rankInfo}, 총점: ${totalScore}점)`);
+            
+            // 퍼센트 기준 정보 추가
+            const criteriaInfo = `(본회의: /${PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX}건, 청원: /${PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX}건, 위원장: ${PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT}%, 간사: ${PERCENTAGE_CRITERIA.SECRETARY_PERCENT}%)`;
+            
+            showSuccess(`${partyName} 통계 데이터를 성공적으로 불러왔습니다. (순위: ${rankInfo}, 총점: ${totalScore}점) ${criteriaInfo}`);
             
         } catch (error) {
             console.error('[PercentParty] ❌ 정당 통계 데이터 로드 실패:', error);
@@ -510,24 +531,24 @@ document.addEventListener('DOMContentLoaded', function() {
             bill_pass_sum: 40 + Math.random() * 40,
             petition_sum: 30 + Math.random() * 50,
             petition_pass_sum: 20 + Math.random() * 40,
-            committee_leader_count: Math.random() > 0.7 ? 5.0 : 0.0, // 30% 확률로 위원장 있음 (5%)
-            committee_secretary_count: Math.random() > 0.5 ? 3.0 : 0.0, // 50% 확률로 간사 있음 (3%)
+            committee_leader_count: Math.random() > 0.7 ? PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT : 0.0,
+            committee_secretary_count: Math.random() > 0.5 ? PERCENTAGE_CRITERIA.SECRETARY_PERCENT : 0.0,
             avg_invalid_vote_ratio: Math.random() * 8 + 2,
             avg_vote_match_ratio: 75 + Math.random() * 20,
             avg_vote_mismatch_ratio: 5 + Math.random() * 20,
             avg_total_score: 60 + Math.random() * 30
         };
         
-        // 정당별 특성 반영
+        // 정당별 특성 반영 (styles.css 색상과 일치하는 정당들)
         switch(partyName) {
             case '국민의힘':
                 baseData.avg_attendance = 85.5;
                 baseData.bill_pass_sum = 92.3;
                 baseData.petition_sum = 76.8;
                 baseData.petition_pass_sum = 68.2;
-                baseData.committee_secretary_count = 3.0; // 간사 있음 (3%)
+                baseData.committee_secretary_count = PERCENTAGE_CRITERIA.SECRETARY_PERCENT; // 간사 있음
                 baseData.avg_invalid_vote_ratio = 7.1;
-                baseData.committee_leader_count = 5.0; // 위원장 있음 (5%)
+                baseData.committee_leader_count = PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT; // 위원장 있음
                 baseData.avg_vote_match_ratio = 89.7;
                 baseData.avg_vote_mismatch_ratio = 10.3;
                 break;
@@ -536,9 +557,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 baseData.bill_pass_sum = 89.1;
                 baseData.petition_sum = 82.4;
                 baseData.petition_pass_sum = 74.6;
-                baseData.committee_secretary_count = 3.0; // 간사 있음 (3%)
+                baseData.committee_secretary_count = PERCENTAGE_CRITERIA.SECRETARY_PERCENT; // 간사 있음
                 baseData.avg_invalid_vote_ratio = 5.8;
-                baseData.committee_leader_count = 5.0; // 위원장 있음 (5%)
+                baseData.committee_leader_count = PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT; // 위원장 있음
                 baseData.avg_vote_match_ratio = 91.2;
                 baseData.avg_vote_mismatch_ratio = 8.8;
                 break;
@@ -547,9 +568,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 baseData.bill_pass_sum = 86.7;
                 baseData.petition_sum = 78.9;
                 baseData.petition_pass_sum = 71.2;
-                baseData.committee_secretary_count = 3.0; // 간사 있음 (3%)
+                baseData.committee_secretary_count = PERCENTAGE_CRITERIA.SECRETARY_PERCENT; // 간사 있음
                 baseData.avg_invalid_vote_ratio = 6.4;
-                baseData.committee_leader_count = 0.0; // 위원장 없음 (0%)
+                baseData.committee_leader_count = 0.0; // 위원장 없음
                 baseData.avg_vote_match_ratio = 88.5;
                 baseData.avg_vote_mismatch_ratio = 11.5;
                 break;
@@ -568,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // === 🎨 UI 업데이트 함수들 ===
 
-    // CSS 변수 업데이트 함수
+    // CSS 변수 업데이트 함수 (styles.css 색상 팔레트 사용)
     function updatePartyColors(partyName) {
         const partyInfo = partyColors[partyName];
         
@@ -580,19 +601,45 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const root = document.documentElement;
         
-        // CSS 변수 업데이트 (HTML 순서와 정확히 일치하는 9개 색상)
-        root.style.setProperty('--current-party-main', partyInfo.main);
-        root.style.setProperty('--current-party-secondary', partyInfo.secondary);
-        root.style.setProperty('--current-party-tertiary', partyInfo.main + '99');
-        root.style.setProperty('--current-party-quaternary', partyInfo.main + '88');
-        root.style.setProperty('--current-party-quinary', partyInfo.main + '77');
-        root.style.setProperty('--current-party-sixth', partyInfo.main + '66');
-        root.style.setProperty('--current-party-seventh', partyInfo.main + '55');
-        root.style.setProperty('--current-party-eighth', partyInfo.main + '44');
-        root.style.setProperty('--current-party-ninth', partyInfo.main + '33');
-        root.style.setProperty('--current-party-bg', partyInfo.main);
+        // styles.css에 정의된 정당별 색상 팔레트 사용
+        const partyKey = {
+            "더불어민주당": "dp",
+            "국민의힘": "ppp", 
+            "조국혁신당": "rk",
+            "개혁신당": "reform",
+            "진보당": "jp",
+            "기본소득당": "bip",
+            "사회민주당": "sdp",
+            "무소속": "ind"
+        }[partyName];
         
-        console.log(`[PercentParty] ✅ ${partyName} 색상 업데이트 완료`);
+        if (partyKey) {
+            // styles.css에 정의된 정당별 색상 변수들을 현재 활성 색상으로 설정
+            root.style.setProperty('--current-party-main', `var(--party-${partyKey}-main)`);
+            root.style.setProperty('--current-party-secondary', `var(--party-${partyKey}-secondary)`);
+            root.style.setProperty('--current-party-tertiary', `var(--party-${partyKey}-tertiary)`);
+            root.style.setProperty('--current-party-quaternary', `var(--party-${partyKey}-quaternary)`);
+            root.style.setProperty('--current-party-quinary', `var(--party-${partyKey}-quinary)`);
+            root.style.setProperty('--current-party-sixth', `var(--party-${partyKey}-sixth)`);
+            root.style.setProperty('--current-party-seventh', `var(--party-${partyKey}-seventh)`);
+            root.style.setProperty('--current-party-eighth', `var(--party-${partyKey}-eighth)`);
+            root.style.setProperty('--current-party-ninth', `var(--party-${partyKey}-ninth)`);
+            root.style.setProperty('--current-party-bg', `var(--party-${partyKey}-bg)`);
+        } else {
+            // 폴백: 직접 색상 설정
+            root.style.setProperty('--current-party-main', partyInfo.main);
+            root.style.setProperty('--current-party-secondary', partyInfo.secondary);
+            root.style.setProperty('--current-party-tertiary', partyInfo.main + '99');
+            root.style.setProperty('--current-party-quaternary', partyInfo.main + '88');
+            root.style.setProperty('--current-party-quinary', partyInfo.main + '77');
+            root.style.setProperty('--current-party-sixth', partyInfo.main + '66');
+            root.style.setProperty('--current-party-seventh', partyInfo.main + '55');
+            root.style.setProperty('--current-party-eighth', partyInfo.main + '44');
+            root.style.setProperty('--current-party-ninth', partyInfo.main + '33');
+            root.style.setProperty('--current-party-bg', partyInfo.main);
+        }
+        
+        console.log(`[PercentParty] ✅ ${partyName} 색상 업데이트 완료 (styles.css 팔레트 사용)`);
     }
 
     // 각도를 라디안으로 변환
@@ -850,7 +897,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     await fetchPartyData(pageState.currentParty);
                     
                     console.log('[PercentParty] ✅ 가중치 업데이트 완료');
-                    showNotification('새로운 가중치가 적용되었습니다! 🎉', 'success');
+                    showNotification(`새로운 가중치가 적용되었습니다! (기준: 본회의 ${PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX}건, 청원 ${PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX}건) 🎉`, 'success');
                     
                     // 응답 전송 (WeightSync 모니터링용)
                     try {
@@ -859,7 +906,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             timestamp: new Date().toISOString(),
                             success: true,
                             source: source,
-                            currentParty: pageState.currentParty
+                            currentParty: pageState.currentParty,
+                            criteria: PERCENTAGE_CRITERIA
                         };
                         localStorage.setItem('weight_refresh_response', JSON.stringify(response));
                         setTimeout(() => localStorage.removeItem('weight_refresh_response'), 100);
@@ -931,7 +979,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // 정당 색상 업데이트
+        // 정당 색상 업데이트 (styles.css 팔레트 사용)
         updatePartyColors(selectedParty);
         
         // URL 업데이트
@@ -1090,6 +1138,8 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('- 성과 데이터:', Object.keys(pageState.partyPerformanceData).length > 0 ? '로드됨' : '미로드');
             console.log('- 랭킹 데이터:', Object.keys(pageState.partyRankingData).length > 0 ? '로드됨' : '미로드');
             console.log('- 환경 정보:', window.APIService?.getEnvironmentInfo());
+            console.log('- 퍼센트 기준:', PERCENTAGE_CRITERIA);
+            console.log('- 색상 시스템: styles.css 팔레트 사용');
         },
         testHTMLMapping: () => {
             console.log('[PercentParty] 🔍 HTML 매핑 테스트...');
@@ -1110,16 +1160,17 @@ document.addEventListener('DOMContentLoaded', function() {
             handleWeightUpdate(changeData, 'debug');
         },
         testNormalization: (testData) => {
-            console.log('[PercentParty] 🔧 퍼센트 정규화 테스트:');
+            console.log('[PercentParty] 🔧 퍼센트 정규화 테스트 (최적화된 기준):');
             console.log('입력 데이터:', testData);
+            console.log('퍼센트 기준:', PERCENTAGE_CRITERIA);
             
             const testPartyData = {
                 avg_attendance: testData?.attendance || 87.5,
-                bill_pass_sum: testData?.billPass || 145,
-                petition_sum: testData?.petition || 75,
-                petition_pass_sum: testData?.petitionPass || 42,
-                committee_leader_count: testData?.leader || 8, // 8명 → 5% (있음)
-                committee_secretary_count: testData?.secretary || 15, // 15명 → 3% (있음)
+                bill_pass_sum: testData?.billPass || 96, // 96건
+                petition_sum: testData?.petition || 64, // 64건  
+                petition_pass_sum: testData?.petitionPass || 42, // 42건
+                committee_leader_count: testData?.leader || 3, // 3명 → 8% (있음)
+                committee_secretary_count: testData?.secretary || 8, // 8명 → 5% (있음)
                 avg_invalid_vote_ratio: testData?.invalid || 0.058,
                 avg_vote_match_ratio: testData?.match || 0.892,
                 avg_vote_mismatch_ratio: testData?.mismatch || 0.108
@@ -1127,13 +1178,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             console.log('원본 API 형식:', testPartyData);
             
-            // 위원장/간사 변환 테스트
-            console.log('위원장 변환 테스트:');
-            console.log(`  - 8명 → ${convertLeaderToPercentage(8)}%`);
-            console.log(`  - 0명 → ${convertLeaderToPercentage(0)}%`);
-            console.log('간사 변환 테스트:');
-            console.log(`  - 15명 → ${convertSecretaryToPercentage(15)}%`);
-            console.log(`  - 0명 → ${convertSecretaryToPercentage(0)}%`);
+            // 최적화된 변환 테스트
+            console.log('최적화된 변환 테스트:');
+            console.log(`  - 본회의 가결: 96건 → ${convertCountToPercentage(96, PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX).toFixed(1)}% (기준: ${PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX}건)`);
+            console.log(`  - 청원 제안: 64건 → ${convertCountToPercentage(64, PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX).toFixed(1)}% (기준: ${PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX}건)`);
+            console.log(`  - 청원 결과: 42건 → ${convertCountToPercentage(42, PERCENTAGE_CRITERIA.PETITION_RESULT_MAX).toFixed(1)}% (기준: ${PERCENTAGE_CRITERIA.PETITION_RESULT_MAX}건)`);
+            console.log(`  - 위원장: 3명 → ${convertLeaderToPercentage(3)}% (고정)`);
+            console.log(`  - 간사: 8명 → ${convertSecretaryToPercentage(8)}% (고정)`);
             
             const mapped = mapApiDataToChartFormat(testPartyData, '테스트정당');
             console.log('매핑된 차트 데이터:', mapped);
@@ -1143,23 +1194,42 @@ document.addEventListener('DOMContentLoaded', function() {
         testPerformanceData: () => fetchPartyPerformanceData(),
         testRankingData: () => fetchPartyRankingData(),
         getPerformanceData: () => pageState.partyPerformanceData,
-        getRankingData: () => pageState.partyRankingData
+        getRankingData: () => pageState.partyRankingData,
+        getCriteria: () => PERCENTAGE_CRITERIA,
+        testColorSystem: () => {
+            console.log('[PercentParty] 🎨 색상 시스템 테스트:');
+            Object.keys(partyColors).forEach(partyName => {
+                const partyInfo = partyColors[partyName];
+                console.log(`${partyName}:`, {
+                    main: partyInfo.main,
+                    secondary: partyInfo.secondary,
+                    url: partyInfo.url || '없음'
+                });
+            });
+        }
     };
 
     // 초기화 실행
     initializePage();
 
-    console.log('[PercentParty] ✅ percent_party.js 로드 완료 (Django API 연동 + 퍼센트 정규화 버전)');
+    console.log('[PercentParty] ✅ percent_party.js 로드 완료 (styles.css 색상 적용 + 최적화된 퍼센트 기준)');
     console.log('[PercentParty] 🔗 API 모드: Django API 직접 연동');
-    console.log('[PercentParty] 📊 데이터 변환: 개수 → 퍼센트 자동 변환');
+    console.log('[PercentParty] 🎨 색상 시스템: styles.css 정당별 색상 팔레트 사용');
+    console.log('[PercentParty] 📊 최적화된 퍼센트 기준:');
+    console.log('[PercentParty]   - 본회의 가결:', `최대 ${PERCENTAGE_CRITERIA.PLENARY_BILLS_MAX}건 기준`);
+    console.log('[PercentParty]   - 청원 제안:', `최대 ${PERCENTAGE_CRITERIA.PETITION_PROPOSAL_MAX}건 기준`);
+    console.log('[PercentParty]   - 청원 결과:', `최대 ${PERCENTAGE_CRITERIA.PETITION_RESULT_MAX}건 기준`);
+    console.log('[PercentParty]   - 위원장:', `있으면 ${PERCENTAGE_CRITERIA.COMMITTEE_CHAIR_PERCENT}% (고정)`);
+    console.log('[PercentParty]   - 간사:', `있으면 ${PERCENTAGE_CRITERIA.SECRETARY_PERCENT}% (고정)`);
+    console.log('[PercentParty]   - 무효표/기권:', `최대 ${PERCENTAGE_CRITERIA.INVALID_VOTE_MAX}%로 제한`);
     console.log('[PercentParty] 🔧 주요 개선사항:');
-    console.log('[PercentParty]   - 본회의 가결/청원 개수를 퍼센트로 변환');
-    console.log('[PercentParty]   - 위원장/간사 수를 퍼센트로 변환');
-    console.log('[PercentParty]   - 비율 데이터 자동 정규화 (0.85 → 85%)');
+    console.log('[PercentParty]   - styles.css 정당별 색상 팔레트 완전 적용');
+    console.log('[PercentParty]   - 더 현실적인 퍼센트 변환 기준 설정');
+    console.log('[PercentParty]   - 위원장/간사 중요도 상향 조정 (8%/5%)');
     console.log('[PercentParty]   - 가중치 변경 실시간 감지 및 업데이트');
     console.log('[PercentParty] 🔧 디버그 명령어:');
     console.log('[PercentParty]   - window.partyPageDebug.showInfo() : 페이지 정보 확인');
-    console.log('[PercentParty]   - window.partyPageDebug.testAPICall() : API 테스트');
-    console.log('[PercentParty]   - window.partyPageDebug.testNormalization(data) : 정규화 테스트');
-    console.log('[PercentParty]   - window.partyPageDebug.simulateWeightChange() : 가중치 변경 시뮬레이션');
+    console.log('[PercentParty]   - window.partyPageDebug.testColorSystem() : 색상 시스템 테스트');
+    console.log('[PercentParty]   - window.partyPageDebug.getCriteria() : 퍼센트 기준 확인');
+    console.log('[PercentParty]   - window.partyPageDebug.testNormalization(data) : 최적화된 정규화 테스트');
 });
