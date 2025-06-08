@@ -1,4 +1,4 @@
-// 국회의원 상세정보 페이지 (API 응답 구조 수정 버전)
+// 국회의원 상세정보 페이지 (검색 기능 개선 버전)
 
 // 페이지 상태 관리
 let pageState = {
@@ -46,8 +46,10 @@ const elements = {
     voteMismatchStat: null
 };
 
-// DOM 요소 초기화
+// DOM 요소 초기화 (강화된 검색 요소 감지)
 function initializeElements() {
+    console.log('🔧 DOM 요소 초기화 시작...');
+    
     elements.memberName = document.getElementById('memberName');
     elements.memberParty = document.getElementById('memberParty');
     elements.memberPhoto = document.getElementById('memberPhoto');
@@ -65,6 +67,52 @@ function initializeElements() {
     elements.abstentionStat = document.getElementById('abstentionStat');
     elements.voteMatchStat = document.getElementById('voteMatchStat');
     elements.voteMismatchStat = document.getElementById('voteMismatchStat');
+    
+    // 🔧 검색 관련 요소 확인 및 대체 탐색
+    console.log('🔍 검색 관련 DOM 요소 확인:');
+    console.log('- memberSearchInput:', !!elements.searchInput);
+    console.log('- searchButton:', !!elements.searchButton);
+    console.log('- partyFilter:', !!elements.partyFilter);
+    
+    if (!elements.searchInput) {
+        console.warn('❌ 검색 입력창(memberSearchInput)을 찾을 수 없습니다');
+        
+        // 대체 검색 방법 시도
+        const searchInputs = document.querySelectorAll('input[type="text"], input[type="search"]');
+        console.log(`🔍 페이지에서 발견된 입력창: ${searchInputs.length}개`);
+        
+        searchInputs.forEach((input, index) => {
+            console.log(`${index + 1}. ID: "${input.id}", Class: "${input.className}", Placeholder: "${input.placeholder}"`);
+            
+            // 검색과 관련된 것으로 보이는 입력창 찾기
+            if (input.placeholder && (
+                input.placeholder.includes('검색') || 
+                input.placeholder.includes('이름') || 
+                input.placeholder.includes('의원')
+            )) {
+                console.log(`✅ 검색 입력창으로 추정: ${input.id || 'ID없음'}`);
+                elements.searchInput = input;
+            }
+        });
+    }
+    
+    if (!elements.searchButton) {
+        console.warn('❌ 검색 버튼(searchButton)을 찾을 수 없습니다');
+        
+        // 대체 검색 버튼 찾기
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach((button, index) => {
+            if (button.textContent && (
+                button.textContent.includes('검색') || 
+                button.textContent.includes('찾기')
+            )) {
+                console.log(`✅ 검색 버튼으로 추정: "${button.textContent.trim()}"`);
+                elements.searchButton = button;
+            }
+        });
+    }
+    
+    console.log('✅ DOM 요소 초기화 완료');
 }
 
 // 로딩 상태 표시/숨김
@@ -254,7 +302,6 @@ async function fetchPerformanceData() {
     }
 }
 
-
 // 🔧 개선된 위원회 데이터 가져오기
 async function fetchCommitteeData() {
     try {
@@ -359,7 +406,7 @@ async function fetchRankingData() {
     }
 }
 
-// 기타 API 로드 함수들 (기존 유지)
+// 기타 API 로드 함수들
 async function fetchPhotoList() {
     try {
         const photoData = await window.APIService.getMemberPhotos();
@@ -827,7 +874,7 @@ function getDefaultCommitteeInfo(member) {
     return defaultCommittees[member.party] || '위원회 정보 없음';
 }
 
-// UI 업데이트 함수들 (기존 유지)
+// UI 업데이트 함수들
 function updateMemberProfile(member) {
     if (!member) return;
     
@@ -998,25 +1045,72 @@ function updateStatsWithFallback(member, attendance, billCount, committees) {
     updateStatElement(elements.voteMismatchStat, fallbackStats.voteMismatch, '%');
 }
 
-// 검색 관련 함수들 (기존 유지 - 생략된 부분은 원본과 동일)
+// 🔧 대폭 개선된 검색 관련 함수들
 function setupSearch() {
-    if (!elements.searchInput) return;
+    console.log('🔍 검색 기능 설정 시작...');
     
-    const searchContainer = elements.searchInput.parentElement;
-    if (!elements.searchResults) {
-        elements.searchResults = document.createElement('div');
-        elements.searchResults.className = 'search-results';
-        elements.searchResults.style.display = 'none';
-        searchContainer.appendChild(elements.searchResults);
+    if (!elements.searchInput) {
+        console.warn('❌ 검색 입력창을 찾을 수 없습니다');
+        return;
     }
     
+    const searchContainer = elements.searchInput.parentElement;
+    if (!searchContainer) {
+        console.warn('❌ 검색 컨테이너를 찾을 수 없습니다');
+        return;
+    }
+    
+    // 검색 결과 컨테이너 생성 또는 재사용
+    let searchResults = searchContainer.querySelector('.search-results');
+    if (!searchResults) {
+        searchResults = document.createElement('div');
+        searchResults.className = 'search-results';
+        searchResults.style.cssText = `
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        `;
+        
+        // 컨테이너에 relative 포지션 설정
+        if (getComputedStyle(searchContainer).position === 'static') {
+            searchContainer.style.position = 'relative';
+        }
+        
+        searchContainer.appendChild(searchResults);
+        console.log('✅ 검색 결과 컨테이너 생성됨');
+    }
+    
+    elements.searchResults = searchResults;
+    
+    // 기존 이벤트 리스너 제거 (중복 방지)
+    const newInput = elements.searchInput.cloneNode(true);
+    elements.searchInput.parentNode.replaceChild(newInput, elements.searchInput);
+    elements.searchInput = newInput;
+    
     let searchTimeout;
+    
+    // 입력 이벤트
     elements.searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
         const query = this.value.trim();
         
+        console.log(`🔍 검색 입력: "${query}"`);
+        
         if (query.length === 0) {
             hideSearchResults();
+            return;
+        }
+        
+        if (query.length < 1) {
             return;
         }
         
@@ -1025,27 +1119,42 @@ function setupSearch() {
         }, 300);
     });
     
+    // 검색 버튼 클릭
     if (elements.searchButton) {
-        elements.searchButton.addEventListener('click', function() {
+        elements.searchButton.addEventListener('click', function(e) {
+            e.preventDefault();
             const query = elements.searchInput.value.trim();
+            console.log(`🔍 검색 버튼 클릭: "${query}"`);
             if (query) {
                 performSearch(query);
             }
         });
     }
     
+    // 엔터 키 처리
     elements.searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
+            e.preventDefault();
             const query = this.value.trim();
+            console.log(`🔍 엔터 키 검색: "${query}"`);
             if (query) {
                 performSearch(query);
             }
         }
     });
     
+    // 외부 클릭 시 검색 결과 숨김
     document.addEventListener('click', function(e) {
         if (!searchContainer.contains(e.target)) {
             hideSearchResults();
+        }
+    });
+    
+    // 포커스 이벤트
+    elements.searchInput.addEventListener('focus', function() {
+        const query = this.value.trim();
+        if (query && elements.searchResults.children.length > 0) {
+            elements.searchResults.style.display = 'block';
         }
     });
     
@@ -1053,84 +1162,212 @@ function setupSearch() {
 }
 
 function performSearch(query) {
-    if (pageState.isSearching) return;
+    if (pageState.isSearching) {
+        console.log('🔍 이미 검색 중...');
+        return;
+    }
 
+    console.log(`🔍 검색 수행: "${query}"`);
     pageState.isSearching = true;
 
     try {
+        // 의원 명단이 없으면 검색 불가
+        if (!pageState.memberList || pageState.memberList.length === 0) {
+            console.warn('❌ 의원 명단이 로드되지 않았습니다');
+            showSearchError('의원 명단을 불러오는 중입니다...');
+            return;
+        }
+        
+        console.log(`📋 검색 대상: ${pageState.memberList.length}명의 의원`);
+
         const normalize = (text) => text.toLowerCase().replace(/\s/g, '');
+        const normalizedQuery = normalize(query);
 
         const filtered = pageState.memberList.filter(member => {
-            const nameMatch = normalize(member.name).includes(normalize(query));
-            const partyMatch = normalize(member.party).includes(normalize(query));
+            if (!member.name) return false;
+            
+            const nameMatch = normalize(member.name).includes(normalizedQuery);
+            const partyMatch = member.party && normalize(member.party).includes(normalizedQuery);
 
+            // 정당 필터 적용
             const partyFilter = elements.partyFilter ? elements.partyFilter.value : '';
             const partyFilterMatch = !partyFilter || member.party === partyFilter;
 
-            return (nameMatch || partyMatch) && partyFilterMatch;
+            const isMatch = (nameMatch || partyMatch) && partyFilterMatch;
+            
+            if (isMatch) {
+                console.log(`✅ 매칭: ${member.name} (${member.party})`);
+            }
+            
+            return isMatch;
         });
 
-        displaySearchResults(filtered);
+        console.log(`🔍 검색 결과: ${filtered.length}명 발견`);
+        displaySearchResults(filtered, query);
 
     } catch (error) {
         console.error('❌ 검색 실패:', error);
-        showNotification('검색 중 오류가 발생했습니다', 'error');
+        showSearchError('검색 중 오류가 발생했습니다');
     } finally {
         pageState.isSearching = false;
     }
 }
 
-
-function displaySearchResults(results) {
+function showSearchError(message) {
     if (!elements.searchResults) return;
+    
+    elements.searchResults.innerHTML = `
+        <div class="search-error" style="
+            padding: 10px;
+            color: #666;
+            text-align: center;
+            font-style: italic;
+        ">${message}</div>
+    `;
+    elements.searchResults.style.display = 'block';
+}
+
+function displaySearchResults(results, query = '') {
+    if (!elements.searchResults) {
+        console.warn('❌ 검색 결과 컨테이너가 없습니다');
+        return;
+    }
+    
+    console.log(`📊 검색 결과 표시: ${results.length}개`);
     
     elements.searchResults.innerHTML = '';
     
     if (results.length === 0) {
-        elements.searchResults.innerHTML = '<div class="no-results">검색 결과가 없습니다</div>';
+        elements.searchResults.innerHTML = `
+            <div class="no-results" style="
+                padding: 15px;
+                color: #666;
+                text-align: center;
+                font-style: italic;
+            ">
+                "${query}"에 대한 검색 결과가 없습니다
+            </div>
+        `;
     } else {
-        results.slice(0, 10).forEach(member => {
+        // 최대 10개까지만 표시
+        const limitedResults = results.slice(0, 10);
+        
+        limitedResults.forEach((member, index) => {
             const item = document.createElement('div');
             item.className = 'search-result-item';
+            item.style.cssText = `
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transition: background-color 0.2s;
+            `;
             
+            // 호버 효과
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f5f5f5';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'transparent';
+            });
+            
+            // 사진 URL 찾기
             const photoUrl = findMemberPhoto(member.mona_cd, member.name);
+            
+            // 위원회 정보 찾기
             const committees = findMemberCommittees(member.name);
             const committeesText = committees.length > 0 ? 
-                committees.map(c => c.committee).join(', ') : 
+                committees.slice(0, 2).map(c => c.committee).join(', ') : 
                 '위원회 정보 없음';
             
             item.innerHTML = `
-                <img src="${photoUrl || ''}" alt="${member.name}" class="search-result-photo" 
+                <img src="${photoUrl || '/api/placeholder/40/40'}" 
+                     alt="${member.name}" 
+                     class="search-result-photo" 
+                     style="
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        flex-shrink: 0;
+                     "
                      onerror="this.style.display='none'">
-                <div class="search-result-info">
-                    <div class="search-result-name">${member.name}</div>
-                    <div class="search-result-details">${member.party} · ${committeesText}</div>
+                <div class="search-result-info" style="flex: 1; min-width: 0;">
+                    <div class="search-result-name" style="
+                        font-weight: bold;
+                        color: #333;
+                        margin-bottom: 2px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">${member.name}</div>
+                    <div class="search-result-details" style="
+                        font-size: 12px;
+                        color: #666;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    ">${member.party} · ${committeesText}</div>
                 </div>
             `;
             
-            item.addEventListener('click', () => {
+            // 클릭 이벤트
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(`👤 검색 결과에서 ${member.name} 선택`);
                 selectMember(member);
                 hideSearchResults();
             });
             
             elements.searchResults.appendChild(item);
         });
+        
+        // 더 많은 결과가 있을 때 안내 메시지
+        if (results.length > 10) {
+            const moreItem = document.createElement('div');
+            moreItem.style.cssText = `
+                padding: 10px 15px;
+                color: #666;
+                font-size: 12px;
+                text-align: center;
+                background-color: #f9f9f9;
+                border-top: 1px solid #eee;
+            `;
+            moreItem.textContent = `${results.length - 10}개의 추가 결과가 더 있습니다`;
+            elements.searchResults.appendChild(moreItem);
+        }
     }
     
+    // 검색 결과 표시
     elements.searchResults.style.display = 'block';
+    console.log('✅ 검색 결과 표시 완료');
 }
 
 function hideSearchResults() {
     if (elements.searchResults) {
         elements.searchResults.style.display = 'none';
+        console.log('🙈 검색 결과 숨김');
     }
 }
 
 function selectMember(member) {
     console.log(`👤 ${member.name} 선택됨`);
     
+    if (!member) {
+        console.warn('❌ 선택된 의원 정보가 없습니다');
+        return;
+    }
+    
     pageState.currentMember = member;
-    elements.searchInput.value = member.name;
+    
+    // 검색창에 선택된 의원 이름 표시
+    if (elements.searchInput) {
+        elements.searchInput.value = member.name;
+    }
     
     updateUrl(member.name);
     updateMemberProfile(member);
@@ -1138,7 +1375,7 @@ function selectMember(member) {
     showNotification(`${member.name} 의원 정보 로드 완료`, 'success');
 }
 
-// URL 관련 함수들 (기존 유지)
+// URL 관련 함수들
 function getMemberFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const memberName = urlParams.get('member') || urlParams.get('name');
@@ -1309,6 +1546,54 @@ window.memberPageDebug = {
         return null;
     },
     
+    // 🔧 새로운 검색 디버그 기능들
+    testSearch: (query) => {
+        console.log(`🧪 검색 테스트: "${query}"`);
+        if (elements.searchInput) {
+            elements.searchInput.value = query;
+            performSearch(query);
+        } else {
+            console.warn('❌ 검색 입력창이 없습니다');
+        }
+    },
+    
+    showSearchElements: () => {
+        console.log('🔍 검색 관련 DOM 요소 상태:');
+        console.log('- searchInput:', !!elements.searchInput, elements.searchInput);
+        console.log('- searchButton:', !!elements.searchButton, elements.searchButton);
+        console.log('- searchResults:', !!elements.searchResults, elements.searchResults);
+        console.log('- partyFilter:', !!elements.partyFilter, elements.partyFilter);
+        
+        if (elements.searchInput) {
+            console.log('- 입력창 값:', `"${elements.searchInput.value}"`);
+            console.log('- 입력창 부모:', elements.searchInput.parentElement);
+        }
+        
+        if (elements.searchResults) {
+            console.log('- 검색 결과 표시:', elements.searchResults.style.display);
+            console.log('- 검색 결과 자식 수:', elements.searchResults.children.length);
+        }
+    },
+    
+    clearSearch: () => {
+        if (elements.searchInput) {
+            elements.searchInput.value = '';
+        }
+        hideSearchResults();
+        console.log('🧹 검색 초기화 완료');
+    },
+    
+    getMemberList: () => {
+        console.log(`📋 전체 의원 목록 (${pageState.memberList.length}명):`);
+        pageState.memberList.slice(0, 10).forEach((member, index) => {
+            console.log(`${index + 1}. ${member.name} (${member.party})`);
+        });
+        if (pageState.memberList.length > 10) {
+            console.log(`... 외 ${pageState.memberList.length - 10}명`);
+        }
+        return pageState.memberList;
+    },
+    
     reloadData: () => loadAllData(),
     refreshData: () => refreshMemberDetails(),
     
@@ -1324,6 +1609,7 @@ window.memberPageDebug = {
         console.log(`- 랭킹 데이터: ${pageState.rankingData.length}개`);
         console.log(`- API 서비스: ${!!window.APIService}`);
         console.log(`- API 오류: ${Object.keys(pageState.apiErrors).filter(k => pageState.apiErrors[k]).length}개`);
+        console.log(`- 검색 중: ${pageState.isSearching}`);
         
         if (pageState.currentMember) {
             const ranking = findMemberRanking(pageState.currentMember.name);
@@ -1396,7 +1682,7 @@ window.memberPageDebug = {
 
 // DOM 로드 완료 후 초기화
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 percent_member.js DOM 로드 완료 (API 응답 구조 수정 버전)');
+    console.log('📄 percent_member.js DOM 로드 완료 (검색 기능 개선 버전)');
     
     let attempts = 0;
     const maxAttempts = 30;
@@ -1422,4 +1708,4 @@ document.addEventListener('DOMContentLoaded', function() {
     waitForAPI();
 });
 
-console.log('📦 percent_member.js 로드 완료 (API 응답 구조 수정 버전)');
+console.log('📦 percent_member.js 로드 완료 (검색 기능 개선 버전)');
