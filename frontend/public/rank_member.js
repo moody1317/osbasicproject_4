@@ -285,9 +285,6 @@ function renderTable() {
     
     // 페이지네이션 렌더링
     renderPagination();
-    
-    // 정당 색상 적용
-    applyPartyColors();
 }
 
 // 페이지네이션 렌더링
@@ -347,13 +344,6 @@ function renderPagination() {
             }
         });
     });
-}
-
-// 정당 색상 적용
-function applyPartyColors() {
-    if (typeof window.applyPartyColors === 'function') {
-        window.applyPartyColors();
-    }
 }
 
 // 검색 기능 설정
