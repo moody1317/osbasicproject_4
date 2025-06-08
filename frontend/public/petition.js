@@ -11,33 +11,30 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentPage = 1;
     let filteredData = [];
     let allPetitionData = [];
+    let petitionIntroducers = [];
 
-    // 상태별 한국어 매핑 (API 데이터에 맞게 조정 필요)
+    // 상태별 한국어 매핑
     const statusMap = {
-        '접수': '접수',
-        '심사중': '심사중', 
-        '위원회 회부': '위원회 회부',
-        '처리완료': '처리완료',
-        '폐기': '폐기',
-        '불채택': '불채택',
-        '처리중': '처리중',
-        '본회의불부의': '본회의불부의',
-        '철회': '철회',
-        '종료': '종료'
+        'pending': '접수',
+        'review': '심사중',
+        'committee': '위원회 회부',
+        'complete': '처리완료',
+        'rejected': '폐기',
+        'disapproved': '불채택',
+        'withdrawn': '철회',
+        'terminated': '종료'
     };
 
     // 상태별 CSS 클래스 매핑
     const statusClassMap = {
-        '접수': 'status-pending',
-        '심사중': 'status-review',
-        '위원회 회부': 'status-committee', 
-        '처리완료': 'status-complete',
-        '폐기': 'status-rejected',
-        '불채택': 'status-disapproved',
-        '처리중': 'status-review',
-        '본회의불부의': 'status-pending',
-        '철회': 'status-committee',
-        '종료': 'status-complete'
+        'pending': 'status-pending',
+        'review': 'status-review',
+        'committee': 'status-committee',
+        'complete': 'status-complete',
+        'rejected': 'status-rejected',
+        'disapproved': 'status-disapproved',
+        'withdrawn': 'status-committee',
+        'terminated': 'status-complete'
     };
 
     // 로딩 상태 표시
@@ -93,27 +90,148 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // API에서 청원 데이터 로드
+    // 청원 제목 기반 위원회 추정
+    function estimateCommittee(petitionTitle) {
+        if (!petitionTitle) return '기타위원회';
+        
+        const title = petitionTitle.toLowerCase();
+        
+        // 키워드 기반 위원회 매핑
+        const committeeMap = {
+            '교육': '교육위원회',
+            '학교': '교육위원회',
+            '대학': '교육위원회',
+            '경제': '기획재정위원회',
+            '예산': '기획재정위원회',
+            '세금': '기획재정위원회',
+            '환경': '환경노동위원회',
+            '노동': '환경노동위원회',
+            '근로': '환경노동위원회',
+            '의료': '보건복지위원회',
+            '복지': '보건복지위원회',
+            '건강': '보건복지위원회',
+            '교통': '국토교통위원회',
+            '건설': '국토교통위원회',
+            '국토': '국토교통위원회',
+            '문화': '문화체육관광위원회',
+            '관광': '문화체육관광위원회',
+            '체육': '문화체육관광위원회',
+            '농업': '농림축산식품해양수산위원회',
+            '축산': '농림축산식품해양수산위원회',
+            '수산': '농림축산식품해양수산위원회',
+            '해양': '농림축산식품해양수산위원회',
+            '과학': '과학기술정보방송통신위원회',
+            '기술': '과학기술정보방송통신위원회',
+            '통신': '과학기술정보방송통신위원회',
+            '인터넷': '과학기술정보방송통신위원회',
+            '국방': '국방위원회',
+            '군사': '국방위원회',
+            '외교': '외교통일위원회',
+            '통일': '외교통일위원회',
+            '안전': '행정안전위원회',
+            '행정': '행정안전위원회',
+            '법무': '법제사법위원회',
+            '사법': '법제사법위원회',
+            '정보': '정보위원회',
+            '여성': '여성가족위원회',
+            '가족': '여성가족위원회',
+            '아동': '여성가족위원회'
+        };
+
+        for (const [keyword, committee] of Object.entries(committeeMap)) {
+            if (title.includes(keyword)) {
+                return committee;
+            }
+        }
+
+        return '기타위원회';
+    }
+
+    // API 상태를 내부 상태로 변환
+    function normalizeStatus(procResultCd) {
+        if (!procResultCd) return 'pending';
+        
+        const status = procResultCd.toLowerCase();
+        
+        // API 상태 코드 매핑
+        const statusMapping = {
+            '접수': 'pending',
+            '심사중': 'review',
+            '위원회회부': 'committee',
+            '위원회 회부': 'committee',
+            '처리완료': 'complete',
+            '폐기': 'rejected',
+            '불채택': 'disapproved',
+            '철회': 'withdrawn',
+            '종료': 'terminated',
+            '본회의불부의': 'rejected'
+        };
+        
+        return statusMapping[status] || statusMapping[procResultCd] || 'pending';
+    }
+
+    // API 날짜 형식을 화면 표시용으로 변환
+    function formatApiDate(dateString) {
+        if (!dateString) return '-';
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+            
+            return date.toLocaleDateString('ko-KR', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+        } catch (error) {
+            console.warn('날짜 변환 실패:', dateString);
+            return dateString;
+        }
+    }
+
+    // 제안자 정보 포맷팅
+    function formatProposer(proposer) {
+        if (!proposer) return '미상';
+        
+        // 제안자 정보를 깔끔하게 정리
+        const cleanProposer = proposer.toString().trim();
+        
+        // 너무 긴 경우 줄임
+        if (cleanProposer.length > 20) {
+            return cleanProposer.substring(0, 17) + '...';
+        }
+        
+        return cleanProposer;
+    }
+
+    // API에서 청원 데이터 및 소개의원 데이터 로드
     async function loadPetitionData() {
         try {
             showLoading();
             console.log('📋 청원 데이터 로딩 시작...');
 
-            // API를 통해 청원 데이터 가져오기
-            const rawData = await window.APIService.getPetitions();
-            console.log('✅ 청원 API 응답:', rawData);
+            // 두 API를 병렬로 호출
+            const [petitionsResponse, introducersResponse] = await Promise.all([
+                window.APIService.getPetitions(),
+                window.APIService.getPetitionIntroducers()
+            ]);
 
-            // API 데이터를 내부 형식으로 변환
-            allPetitionData = transformPetitionData(rawData);
+            console.log('✅ 청원 API 응답:', petitionsResponse);
+            console.log('✅ 청원 소개의원 API 응답:', introducersResponse);
+
+            // 데이터 변환 및 저장
+            allPetitionData = transformPetitionData(petitionsResponse);
+            petitionIntroducers = introducersResponse || [];
             filteredData = [...allPetitionData];
 
             console.log(`📊 총 ${allPetitionData.length}건의 청원 데이터 로드 완료`);
+            console.log(`👥 총 ${petitionIntroducers.length}명의 소개의원 데이터 로드 완료`);
 
             // 초기 렌더링
             currentPage = 1;
             renderPetitionTable(filteredData, currentPage);
 
-            // 환경별 알림
+            // 성공 알림
             if (window.APIService.showNotification) {
                 window.APIService.showNotification(
                     `청원 데이터 ${allPetitionData.length}건 로드 완료`, 
@@ -139,61 +257,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         return apiData.map((item, index) => {
-            // 실제 API 데이터 구조에 맞게 매핑
+            const petitionId = item.BILL_NO || `petition_${index + 1}`;
+            const title = item.BILL_NAME || '제목 없음';
+            const proposer = formatProposer(item.PROPOSER);
+            const introduceDate = formatApiDate(item.PROPOSE_DT);
+            const status = normalizeStatus(item.PROC_RESULT_CD);
+            const committee = estimateCommittee(title);
+            
             return {
-                id: item.BILL_NO || `petition_${index + 1}`,
+                id: petitionId,
                 number: item.BILL_NO || '',
-                title: item.BILL_NAME || '제목 없음',
-                introducerMember: formatIntroducer(item.PROPOSER),
-                introduceDate: formatApiDate(item.PROPOSE_DT),
-                referralDate: formatApiDate(item.PROPOSE_DT), // 회부일은 접수일과 동일하거나 별도 처리
-                status: normalizeStatus(item.PROC_RESULT_CD),
-                committee: generateCommittee(item.BILL_NAME), // 청원명 기반으로 위원회 추정
+                title: title,
+                proposer: proposer,
+                introducerMember: proposer, // 호환성을 위해 유지
+                introduceDate: introduceDate,
+                referralDate: introduceDate, // 회부일은 접수일과 동일하게 처리
+                status: status,
+                committee: committee,
                 link: item.LINK_URL || '',
-                date: item.PROPOSE_DT
+                procResult: item.PROC_RESULT_CD || '',
+                rawData: item // 원본 데이터 보관
             };
         });
     }
 
-    // API 날짜 형식을 화면 표시용으로 변환
-    function formatApiDate(dateString) {
-        if (!dateString) return '-';
-        
-        try {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            
-            return date.toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            }).replace(/\./g, '.').replace(/\. /g, '.');
-        } catch (error) {
-            console.warn('날짜 변환 실패:', dateString);
-            return dateString;
-        }
-    }
-
-    // API 상태 값을 내부 상태로 정규화
-    function normalizeStatus(status) {
-        if (!status) return 'pending';
-        
-        const statusLower = status.toLowerCase();
-        
-        // 다양한 API 상태 값을 매핑
-        const statusMapping = {
-            '접수': 'pending',
-            '심사중': 'review',
-            '위원회회부': 'committee',
-            '위원회 회부': 'committee',
-            '처리완료': 'complete',
-            '폐기': 'rejected',
-            '불채택': 'disapproved',
-            '종료': 'complete',
-            '본회의불부의': 'rejected'
-        };
-        
-        return statusMapping[statusLower] || statusMapping[status] || 'pending';
+    // 소개의원 정보 조회
+    function getIntroducerInfo(memberName) {
+        const introducer = petitionIntroducers.find(
+            intro => intro.introducer_name === memberName
+        );
+        return introducer ? introducer.petition : 0;
     }
 
     // 페이지 변경 함수 (전역으로 노출)
@@ -247,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.createElement('tr');
             const globalIndex = startIndex + index + 1;
             const statusText = statusMap[petition.status] || petition.status;
-            const statusClass = statusClassMap[petition.status] || '';
+            const statusClass = statusClassMap[petition.status] || 'status-pending';
 
             // 상태에 따른 행 클래스 추가
             if (petition.status === 'complete') {
@@ -258,29 +351,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.classList.add('status-disapproved');
             }
 
+            // 제목 줄임 처리
+            const displayTitle = petition.title.length > 50 ? 
+                petition.title.substring(0, 47) + '...' : petition.title;
+
+            // 위원회명 줄임 처리
+            const displayCommittee = petition.committee.length > 15 ? 
+                petition.committee.substring(0, 12) + '...' : petition.committee;
+
             // 행 HTML 생성
             row.innerHTML = `
                 <td>${globalIndex}</td>
                 <td>
                     <span class="petition-title" title="${petition.title}">
-                        ${petition.title}
+                        ${displayTitle}
                     </span>
                 </td>
                 <td>
-                    <span class="member-name">
-                        ${petition.introducerMember}
+                    <span class="member-name" title="${petition.proposer}">
+                        ${petition.proposer}
                     </span>
                 </td>
                 <td>${petition.introduceDate}</td>
                 <td>${petition.referralDate}</td>
                 <td>
-                    <span class="status-badge ${statusClass}">
+                    <span class="status-badge ${statusClass}" title="${petition.procResult}">
                         ${statusText}
                     </span>
                 </td>
                 <td>
                     <span class="committee-name" title="${petition.committee}">
-                        ${petition.committee}
+                        ${displayCommittee}
                     </span>
                 </td>
             `;
@@ -306,8 +407,8 @@ document.addEventListener('DOMContentLoaded', function() {
     window.showPetitionDetail = function(petitionId) {
         console.log(`청원 [${petitionId}] 상세 페이지로 이동`);
         
-        // more_petition.html 페이지로 이동
-        window.location.href = `more_petition.html?petition_id=${petitionId}`;
+        // 청원 상세 페이지로 이동 (URL 파라미터로 전달)
+        window.location.href = `more_petition.html?petition_id=${encodeURIComponent(petitionId)}`;
     };
 
     // 검색 기능
@@ -322,8 +423,9 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             filteredData = allPetitionData.filter(petition => 
                 petition.title.toLowerCase().includes(searchTerm) ||
-                petition.introducerMember.toLowerCase().includes(searchTerm) ||
-                petition.committee.toLowerCase().includes(searchTerm)
+                petition.proposer.toLowerCase().includes(searchTerm) ||
+                petition.committee.toLowerCase().includes(searchTerm) ||
+                petition.number.toLowerCase().includes(searchTerm)
             );
         }
         
@@ -387,7 +489,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             filtered = filtered.filter(petition => {
                 try {
-                    const petitionDate = new Date(petition.introduceDate.replace(/\./g, '-'));
+                    const petitionDate = new Date(petition.introduceDate);
                     return petitionDate >= cutoffDate;
                 } catch (error) {
                     console.warn('날짜 필터링 오류:', petition.introduceDate);
@@ -411,8 +513,11 @@ document.addEventListener('DOMContentLoaded', function() {
         periodFilter.addEventListener('change', applyFilters);
     }
 
+    // 전역 함수로 데이터 새로고침 기능 제공
+    window.loadPetitionData = loadPetitionData;
+
     // 페이지 로드 시 데이터 로드
     loadPetitionData();
 
-    console.log('✅ 청원 현황 페이지 초기화 완료 (API 연결)');
+    console.log('✅ 청원 현황 페이지 초기화 완료 (API 연결 v2.0)');
 });
