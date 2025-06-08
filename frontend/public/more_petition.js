@@ -13,28 +13,61 @@ document.addEventListener('DOMContentLoaded', function() {
     // 로딩 상태 표시
     let isLoading = false;
 
-    // 상태별 한국어 매핑 (불채택 포함)
+    // 상태별 한국어 매핑 (API 응답 PROC_RESULT_CD 기준)
     const statusMap = {
-        '접수': '접수',
-        '심사중': '심사중', 
-        '위원회 회부': '위원회 회부',
-        '처리완료': '처리완료',
-        '폐기': '폐기',
-        '불채택': '불채택',
-        '처리중': '처리중',
-        '본회의불부의': '본회의불부의',
-        '철회': '철회',
-        '종료': '종료'
+        // API에서 받는 상태 코드들
+        '접수': { display: '접수', step: 1, type: 'pending' },
+        '심사중': { display: '심사중', step: 2, type: 'review' },
+        '위원회회부': { display: '위원회 회부', step: 2, type: 'committee' },
+        '위원회 회부': { display: '위원회 회부', step: 2, type: 'committee' },
+        '처리완료': { display: '처리완료', step: 5, type: 'complete' },
+        '폐기': { display: '폐기', step: 2, type: 'rejected' },
+        '불채택': { display: '불채택', step: 2, type: 'disapproved' },
+        '처리중': { display: '처리중', step: 3, type: 'review' },
+        '본회의불부의': { display: '본회의불부의', step: 3, type: 'rejected' },
+        '철회': { display: '철회', step: 2, type: 'rejected' },
+        '종료': { display: '종료', step: 5, type: 'complete' },
+        '회부': { display: '위원회 회부', step: 2, type: 'committee' }
     };
 
-    // 상태별 진행 단계 매핑
-    const stepMap = {
-        'pending': 1,      // 접수
-        'review': 2,       // 위원회 심사
-        'committee': 2,    // 위원회 심사
-        'complete': 5,     // 처리 통지
-        'disapproved': 2,  // 위원회 심사 (불채택)
-        'rejected': 3      // 위원회 심사 (폐기, 본회의 불부의)
+    // 위원회 매핑 (청원 제목 기반으로 추정)
+    const committeeMapping = {
+        '교육': '교육위원회',
+        '보건': '보건복지위원회',
+        '의료': '보건복지위원회',
+        '복지': '보건복지위원회',
+        '환경': '환경노동위원회',
+        '노동': '환경노동위원회',
+        '고용': '환경노동위원회',
+        '국방': '국방위원회',
+        '군인': '국방위원회',
+        '경제': '기획재정위원회',
+        '예산': '기획재정위원회',
+        '세금': '기획재정위원회',
+        '교통': '국토교통위원회',
+        '건설': '국토교통위원회',
+        '주택': '국토교통위원회',
+        '문화': '문화체육관광위원회',
+        '체육': '문화체육관광위원회',
+        '관광': '문화체육관광위원회',
+        '농업': '농림축산식품해양수산위원회',
+        '어업': '농림축산식품해양수산위원회',
+        '축산': '농림축산식품해양수산위원회',
+        '산업': '산업통상자원중소벤처기업위원회',
+        '중소기업': '산업통상자원중소벤처기업위원회',
+        '과학': '과학기술정보방송통신위원회',
+        '기술': '과학기술정보방송통신위원회',
+        '통신': '과학기술정보방송통신위원회',
+        '방송': '과학기술정보방송통신위원회',
+        '법무': '법제사법위원회',
+        '사법': '법제사법위원회',
+        '행정': '행정안전위원회',
+        '안전': '행정안전위원회',
+        '소방': '행정안전위원회',
+        '외교': '외교통일위원회',
+        '통일': '외교통일위원회',
+        '국정': '국정감사',
+        '감사': '국정감사'
     };
 
     // 로딩 표시
@@ -94,24 +127,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
             console.log(`📋 청원 상세 정보 로딩: ID ${petitionId}`);
             
-            // APIService를 통해 청원 목록에서 해당 청원 찾기
-            const allPetitions = await window.APIService.getPetitions();
+            // APIService를 통해 청원 목록과 소개의원 정보 가져오기
+            const [petitions, introducers] = await Promise.all([
+                window.APIService.getPetitions(),
+                window.APIService.getPetitionIntroducers().catch(err => {
+                    console.warn('청원 소개의원 정보 로드 실패:', err);
+                    return [];
+                })
+            ]);
             
-            if (!Array.isArray(allPetitions)) {
+            if (!Array.isArray(petitions)) {
                 throw new Error('청원 데이터 형식이 올바르지 않습니다');
             }
 
-            // ID로 해당 청원 찾기
-            const petition = allPetitions.find(p => 
-                String(p.petition_id || p.id) === String(petitionId)
+            // BILL_NO로 해당 청원 찾기
+            const petition = petitions.find(p => 
+                String(p.BILL_NO) === String(petitionId)
             );
 
             if (!petition) {
                 throw new Error(`청원 ID ${petitionId}를 찾을 수 없습니다`);
             }
 
+            // 소개의원 정보 찾기
+            const introducerInfo = Array.isArray(introducers) ? 
+                introducers.find(intro => intro.petition && intro.petition.toString().includes(petitionId)) : null;
+
             // API 데이터를 상세 페이지용으로 변환
-            return transformToDetailedPetition(petition);
+            return transformToDetailedPetition(petition, introducerInfo);
 
         } catch (error) {
             console.error('❌ 청원 상세 정보 로드 실패:', error);
@@ -122,71 +165,103 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // API 데이터를 상세 페이지용 형식으로 변환
-    function transformToDetailedPetition(apiData) {
-        const status = normalizeStatus(apiData.PROC_RESULT_CD);
+    function transformToDetailedPetition(apiData, introducerInfo = null) {
+        const statusInfo = getStatusInfo(apiData.PROC_RESULT_CD);
+        const committee = determineCommittee(apiData.BILL_NAME);
         
         return {
             id: apiData.BILL_NO,
             title: apiData.BILL_NAME || '제목 없음',
-            introducerMember: formatIntroducer(apiData.PROPOSER),
+            introducerMember: formatIntroducer(apiData.PROPOSER, introducerInfo),
             receiptDate: formatApiDate(apiData.PROPOSE_DT),
             referralDate: formatApiDate(apiData.PROPOSE_DT), // 회부일은 접수일과 동일하거나 별도 처리
-            status: status,
-            statusText: apiData.PROC_RESULT_CD || '접수',
+            status: statusInfo.type,
+            statusText: statusInfo.display,
             petitionNumber: apiData.BILL_NO || generatePetitionNumber(apiData.BILL_NO),
             sessionInfo: generateSessionInfo(apiData.PROPOSE_DT),
-            committee: generateCommittee(apiData.BILL_NAME),
-            currentStep: getStepFromStatus(status),
-            link: apiData.LINK_URL || ''
+            committee: committee,
+            currentStep: statusInfo.step,
+            link: apiData.LINK_URL || '',
+            rawData: apiData // 원본 데이터 보관
         };
     }
 
-    // API 상태 값을 내부 상태로 정규화
-    function normalizeStatus(status) {
-        if (!status) return 'pending';
+    // 상태 정보 가져오기
+    function getStatusInfo(statusCode) {
+        if (!statusCode) {
+            return { display: '접수', step: 1, type: 'pending' };
+        }
         
-        const statusLower = status.toLowerCase();
+        // 정확한 매칭 시도
+        let statusInfo = statusMap[statusCode];
         
-        // 상태별 한국어 매핑 
-            const statusMap = {
-            '접수': '접수',
-            '심사중': '심사중',
-            '위원회 회부': '위원회 회부',
-            '처리완료': '처리완료',
-            '불채택': '불채택',
-            '폐기': '폐기',
-            '본회의불부위': '본회의불부위',
-            '철회': '철회',
-            '처리중': '처리중',
-            '회부': '회부',
-            '종료': '종료'
-        };
+        // 부분 매칭 시도 (띄어쓰기 등 고려)
+        if (!statusInfo) {
+            const normalizedStatus = statusCode.replace(/\s+/g, '');
+            for (const [key, value] of Object.entries(statusMap)) {
+                if (key.replace(/\s+/g, '') === normalizedStatus) {
+                    statusInfo = value;
+                    break;
+                }
+            }
+        }
         
-        return statusMapping[statusLower] || statusMapping[status] || 'pending';
+        // 기본값 반환
+        return statusInfo || { display: statusCode, step: 1, type: 'pending' };
+    }
+
+    // 위원회 결정
+    function determineCommittee(petitionTitle) {
+        if (!petitionTitle) return '미정';
+        
+        const titleLower = petitionTitle.toLowerCase();
+        
+        for (const [keyword, committee] of Object.entries(committeeMapping)) {
+            if (titleLower.includes(keyword.toLowerCase()) || 
+                petitionTitle.includes(keyword)) {
+                return committee;
+            }
+        }
+        
+        return '기타 관련 위원회';
     }
 
     // 소개의원 형식 변환
-    function formatIntroducer(introducerName) {
-        if (!introducerName) return '정보 없음';
-        
-        // 이미 "의원"이 포함되어 있는지 확인
-        if (introducerName.includes('의원')) {
-            return introducerName;
+    function formatIntroducer(proposer, introducerInfo = null) {
+        // 소개의원 정보가 있는 경우
+        if (introducerInfo && introducerInfo.introducer_name) {
+            const introducerName = introducerInfo.introducer_name;
+            const petitionCount = introducerInfo.petition || 1;
+            
+            if (introducerName.includes('의원')) {
+                return `${introducerName} (청원 ${petitionCount}건)`;
+            } else {
+                return `${introducerName} 의원 (청원 ${petitionCount}건)`;
+            }
         }
         
-        // 랜덤하게 외 n인 추가
-        const additionalCount = Math.floor(Math.random() * 10) + 2;
-        return `${introducerName} 의원 외 ${additionalCount}인`;
+        // 제안자 정보만 있는 경우
+        if (proposer) {
+            if (proposer.includes('의원')) {
+                return proposer;
+            } else {
+                // 랜덤하게 외 n인 추가 (기존 로직 유지)
+                const additionalCount = Math.floor(Math.random() * 10) + 2;
+                return `${proposer} 의원 외 ${additionalCount}인`;
+            }
+        }
+        
+        return '정보 없음';
     }
 
-    // 청원 번호 생성
-    function generatePetitionNumber(petitionId) {
-        if (!petitionId) return '22000XX';
+    // 청원 번호 생성 (BILL_NO 사용)
+    function generatePetitionNumber(billNo) {
+        if (billNo) return billNo;
         
-        // ID를 기반으로 청원 번호 생성
+        // 폴백: 기본 번호 생성
         const baseNumber = 2200000;
-        const idNumber = parseInt(petitionId) || 1;
-        return String(baseNumber + idNumber);
+        const randomId = Math.floor(Math.random() * 1000) + 1;
+        return String(baseNumber + randomId);
     }
 
     // API 날짜 형식을 화면 표시용으로 변환
@@ -194,6 +269,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!dateString) return '-';
         
         try {
+            // YYYYMMDD 형식 처리
+            if (/^\d{8}$/.test(dateString)) {
+                const year = dateString.substring(0, 4);
+                const month = dateString.substring(4, 6);
+                const day = dateString.substring(6, 8);
+                return `${year}-${month}-${day}`;
+            }
+            
+            // 일반 날짜 형식 처리
             const date = new Date(dateString);
             if (isNaN(date.getTime())) return dateString;
             
@@ -208,6 +292,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // 세션 정보 생성
+    function generateSessionInfo(proposeDate) {
+        if (!proposeDate) return '제22대 (2024~2028)';
+        
+        try {
+            let year;
+            if (/^\d{8}$/.test(proposeDate)) {
+                year = parseInt(proposeDate.substring(0, 4));
+            } else {
+                year = new Date(proposeDate).getFullYear();
+            }
+            
+            if (year >= 2024) return '제22대 (2024~2028)';
+            if (year >= 2020) return '제21대 (2020~2024)';
+            if (year >= 2016) return '제20대 (2016~2020)';
+            
+            return '제22대 (2024~2028)';
+        } catch {
+            return '제22대 (2024~2028)';
+        }
+    }
+
     // 기본 청원 (API 실패 시 폴백)
     function getDefaultPetition() {
         return {
@@ -219,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function() {
             status: 'pending',
             statusText: '접수',
             committee: '미정',
-            petitionNumber: '22000XX',
+            petitionNumber: petitionId || '22000XX',
             sessionInfo: '제22대 (2024~2028)',
             currentStep: 1
         };
@@ -262,6 +368,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (element) {
                     element.textContent = updates[id];
                     element.style.color = 'var(--string)';
+                    
+                    // 상태 배지에 색상 클래스 추가
+                    if (id === 'statusBadge') {
+                        element.className = `status-badge ${petition.status}`;
+                    }
                 }
             });
             
@@ -316,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const statusColors = {
             'pending': '#2196f3',
             'review': '#f9a825',
-            'committee': '#7b1fa2',
+            'committee': '#7b1fa2', 
             'complete': '#4caf50',
             'disapproved': '#d84315',
             'rejected': '#f44336'
