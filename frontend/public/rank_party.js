@@ -675,11 +675,11 @@ function getPartyHomepage(partyName) {
     const homepages = {
         "더불어민주당": "https://www.theminjoo.kr",
         "국민의힘": "https://www.peoplepowerparty.kr",
-        "조국혁신당": "https://www.chogukparty.kr",
-        "개혁신당": "https://www.newreformparty.kr",
-        "진보당": "https://www.jinbo.or.kr",
-        "기본소득당": "https://www.basicincomekorea.org",
-        "사회민주당": "https://www.socialdemocrat.kr",
+        "조국혁신당": "https://rebuildingkoreaparty.kr/",
+        "개혁신당": "https://rallypoint.kr/main",
+        "진보당": "https://jinboparty.com/main/",
+        "기본소득당": "https://www.basicincomeparty.kr/",
+        "사회민주당": "https://www.samindang.kr/",
         "무소속": "#"
     };
     return homepages[partyName] || "#";
