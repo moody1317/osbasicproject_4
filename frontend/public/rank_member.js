@@ -655,11 +655,25 @@ async function loadAllData() {
             pageState.memberRanking = [];
         }
 
-        // 성과 데이터도 로드 (가중치 계산에 필요한 상세 정보)
+        // 🔥 성과 데이터 처리 수정 (mainpage.js와 동일한 방식)
         let memberPerformanceData = [];
         if (performanceResult.status === 'fulfilled') {
-            memberPerformanceData = performanceResult.value || [];
+            const rawData = performanceResult.value;
+            console.log('[RankMember] 🔍 성과 데이터 원본 구조:', rawData);
+            
+            // mainpage.js와 동일한 방식으로 데이터 추출
+            memberPerformanceData = rawData?.ranking || rawData || [];
+            
+            // 배열인지 확인
+            if (!Array.isArray(memberPerformanceData)) {
+                console.warn('[RankMember] ⚠️ 성과 데이터가 배열이 아닙니다:', typeof memberPerformanceData);
+                memberPerformanceData = [];
+            }
+            
             console.log(`[RankMember] ✅ 성과 데이터: ${memberPerformanceData.length}개`);
+        } else {
+            console.warn('[RankMember] ⚠️ 성과 데이터 로드 실패:', performanceResult.reason);
+            memberPerformanceData = [];
         }
         
         // 🎯 원본 데이터 병합 및 보관
@@ -690,15 +704,35 @@ async function loadAllData() {
     }
 }
 
-// === 🎯 원본 데이터 병합 및 저장 (수정된 버전) ===
+// === 🎯 원본 데이터 병합 및 저장 (안전한 버전) ===
 function mergeAndStoreOriginalData(performanceData) {
     try {
         console.log('[RankMember] 📊 원본 데이터 병합 중...');
+        console.log('[RankMember] 🔍 성과 데이터 확인:', {
+            isArray: Array.isArray(performanceData),
+            length: performanceData?.length,
+            type: typeof performanceData,
+            sample: performanceData?.[0]
+        });
+        
+        // 🔥 배열 검증 강화
+        const safePerformanceData = Array.isArray(performanceData) ? performanceData : [];
         
         pageState.originalMemberData = pageState.memberList.map((member, index) => {
             const memberName = member.name || '';
             const ranking = pageState.memberRanking.find(r => r.HG_NM === memberName);
-            const performance = performanceData.find(p => p.lawmaker_name === memberName);
+            
+            // 🔥 안전한 성과 데이터 검색
+            let performance = null;
+            if (safePerformanceData.length > 0) {
+                try {
+                    performance = safePerformanceData.find(p => 
+                        p && p.lawmaker_name === memberName
+                    );
+                } catch (findError) {
+                    console.warn(`[RankMember] 성과 데이터 검색 실패 (${memberName}):`, findError);
+                }
+            }
             
             // 🎯 실제 점수 계산 (mainpage.js와 동일한 방식)
             let actualScore = 0;
@@ -722,7 +756,7 @@ function mergeAndStoreOriginalData(performanceData) {
                 // 🔥 중요: 실제 점수 추가
                 score: actualScore, // ✅ 이것이 퍼센트로 표시될 점수
                 
-                // 🎯 가중치 계산에 필요한 상세 데이터
+                // 🎯 가중치 계산에 필요한 상세 데이터 (안전한 접근)
                 attendanceRate: parseFloat(performance?.attendance_rate || ranking?.출석률 || 85),
                 billPassSum: parseInt(performance?.bill_pass_sum || ranking?.본회의가결 || 0),
                 petitionSum: parseInt(performance?.petition_sum || ranking?.청원수 || 0),
@@ -741,13 +775,51 @@ function mergeAndStoreOriginalData(performanceData) {
         });
         
         console.log(`[RankMember] ✅ 원본 데이터 병합 완료: ${pageState.originalMemberData.length}명`);
+        
+        // 🔍 상위 3명 점수 확인 (디버깅용)
+        const top3WithScores = pageState.originalMemberData
+            .filter(m => m.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 3);
+            
         console.log('[RankMember] 📊 상위 3명 점수 확인:', 
-            pageState.originalMemberData.slice(0, 3).map(m => `${m.name}: ${m.score}%`)
+            top3WithScores.map(m => `${m.name}: ${m.score}% (순위: ${m.rank})`)
         );
+        
+        // 🔍 성과 데이터 매칭 현황
+        const matchedCount = pageState.originalMemberData.filter(m => m._performance !== null).length;
+        console.log(`[RankMember] 📈 성과 데이터 매칭: ${matchedCount}/${pageState.originalMemberData.length}명`);
         
     } catch (error) {
         console.error('[RankMember] ❌ 원본 데이터 병합 실패:', error);
-        pageState.originalMemberData = [];
+        
+        // 🔄 폴백: 기본 데이터만으로 처리
+        pageState.originalMemberData = pageState.memberList.map((member, index) => ({
+            rank: index + 1,
+            name: member.name || '',
+            party: member.party || '정당 정보 없음',
+            contact: member.phone || '',
+            homepage: member.homepage || '',
+            originalIndex: index,
+            score: 0, // 기본 점수
+            
+            // 기본값들
+            attendanceRate: 85,
+            billPassSum: 0,
+            petitionSum: 0,
+            petitionPassSum: 0,
+            chairmanCount: 0,
+            secretaryCount: 0,
+            invalidVoteRatio: 2,
+            voteMatchRatio: 85,
+            voteMismatchRatio: 15,
+            
+            _member: member,
+            _ranking: null,
+            _performance: null
+        }));
+        
+        console.log(`[RankMember] 🔄 폴백 데이터 생성: ${pageState.originalMemberData.length}명`);
     }
 }
 
