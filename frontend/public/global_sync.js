@@ -1,5 +1,5 @@
 /**
- * 백일하(Baek-il-ha)
+ * 백일하(Baek-il-ha) - Updated API Service
  */
 
 (function() {
@@ -31,6 +31,7 @@
             // === 본회의 관련 ===
             LEGISLATION_ALL: '/legislation/all/',
             LEGISLATION_COSTLY: '/legislation/costly/',
+            LEGISLATION_COST: '/legislation/cost/',
             LEGISLATION_ETC: '/legislation/etc/',
             LEGISLATION_LAW: '/legislation/law/',
             LEGISLATION_BILL: '/legislation/bill/',
@@ -243,7 +244,7 @@
                         log('debug', '청원 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
                         log('success', `청원 데이터 조회 완료`);
-                        return rawData; // 원본 데이터 반환, 각 페이지에서 매핑
+                        return rawData;
                     } catch (error) {
                         log('error', '청원 데이터 조회 실패:', error.message);
                         throw new Error(`청원 데이터를 가져올 수 없습니다: ${error.message}`);
@@ -269,7 +270,7 @@
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_ALL;
                         log('debug', '전체 본회의 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
-                        log('success', `전체 본회의 데이터 조회 완료`);
+                        log('success', `전체 본회의 데이터 조회 완료: ${rawData?.length || 0}건`);
                         return rawData;
                     } catch (error) {
                         log('error', '전체 본회의 데이터 조회 실패:', error.message);
@@ -282,11 +283,24 @@
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_COSTLY;
                         log('debug', '예산안 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
-                        log('success', `예산안 데이터 조회 완료`);
+                        log('success', `예산안 데이터 조회 완료: ${rawData?.length || 0}건`);
                         return rawData;
                     } catch (error) {
                         log('error', '예산안 데이터 조회 실패:', error.message);
                         throw new Error(`예산안 데이터를 가져올 수 없습니다: ${error.message}`);
+                    }
+                },
+
+                async getCostLegislation() {
+                    try {
+                        const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_COST;
+                        log('debug', '결산안 데이터 조회 시작');
+                        const rawData = await apiCallWithRetry(url);
+                        log('success', `결산안 데이터 조회 완료: ${rawData?.length || 0}건`);
+                        return rawData;
+                    } catch (error) {
+                        log('error', '결산안 데이터 조회 실패:', error.message);
+                        throw new Error(`결산안 데이터를 가져올 수 없습니다: ${error.message}`);
                     }
                 },
 
@@ -295,7 +309,7 @@
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_ETC;
                         log('debug', '기타 본회의 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
-                        log('success', `기타 본회의 데이터 조회 완료`);
+                        log('success', `기타 본회의 데이터 조회 완료: ${rawData?.length || 0}건`);
                         return rawData;
                     } catch (error) {
                         log('error', '기타 본회의 데이터 조회 실패:', error.message);
@@ -308,7 +322,7 @@
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_LAW;
                         log('debug', '법률안 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
-                        log('success', `법률안 데이터 조회 완료`);
+                        log('success', `법률안 데이터 조회 완료: ${rawData?.length || 0}건`);
                         return rawData;
                     } catch (error) {
                         log('error', '법률안 데이터 조회 실패:', error.message);
@@ -321,7 +335,7 @@
                         const url = API_CONFIG.BASE_URL + API_CONFIG.ENDPOINTS.LEGISLATION_BILL;
                         log('debug', '발의 법률안 데이터 조회 시작');
                         const rawData = await apiCallWithRetry(url);
-                        log('success', `발의 법률안 데이터 조회 완료`);
+                        log('success', `발의 법률안 데이터 조회 완료: ${rawData?.length || 0}건`);
                         return rawData;
                     } catch (error) {
                         log('error', '발의 법률안 데이터 조회 실패:', error.message);
@@ -473,12 +487,10 @@
                         
                         let url = `${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.PARTY_MEMBER_PERFORMANCE}?party=${encodedParty}`;
                         
-                        // 정렬 옵션 추가
                         if (order) {
                             url += `&order=${order}`;
                         }
                         
-                        // 제한 옵션 추가
                         if (limit) {
                             url += `&limit=${limit}`;
                         }
@@ -686,13 +698,13 @@
                     isDebugMode: () => DEBUG_MODE,
                     getValidParties: () => [...VALID_PARTIES],
                     getEndpoints: () => ({ ...API_CONFIG.ENDPOINTS }),
-                    getVersion: () => '2.0.0'
+                    getVersion: () => '2.1.0'
                 },
 
                 _isReady: false,
                 _hasError: false,
                 _initTime: Date.now(),
-                _version: '2.0.0'
+                _version: '2.1.0'
             };
 
         } catch (error) {
@@ -720,7 +732,7 @@
             window.APIService._isReady = true;
         }
 
-        log('success', '🚀 APIService 초기화 완료 (v2.0.0 - Django API 연동)');
+        log('success', '🚀 APIService 초기화 완료 (v2.1.0 - 업데이트된 Django API 연동)');
 
     } catch (error) {
         log('error', '🚨 APIService 초기화 실패:', error);
@@ -810,6 +822,6 @@
         setTimeout(initializeAfterDOM, 0);
     }
 
-    log('success', '✅ global_sync.js 로드 완료 (v2.0.0 - Django API 연동)');
+    log('success', '✅ global_sync.js 로드 완료 (v2.1.0 - 업데이트된 Django API 연동)');
 
 })();
