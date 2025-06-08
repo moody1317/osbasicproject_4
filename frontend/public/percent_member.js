@@ -821,10 +821,10 @@ function calculateMemberStats(performance, attendance, billCount, committees) {
         
         petitionProposal: performance?.petition_score || 0,
         petitionResult: performance?.petition_result_score || 0,
-        abstention: (performance?.invalid_vote_ratio || 0) * 100,
+        abstention: performance?.invalid_vote_ratio || 0,
         committee: getCommitteeInfo(committees) || getCommitteeScoreInfo(performance),
-        voteMatch: (performance?.vote_match_ratio || 0) * 100,
-        voteMismatch: (performance?.vote_mismatch_ratio || 0) * 100
+        voteMatch: performance?.vote_match_ratio || 0,
+        voteMismatch: performance?.vote_mismatch_ratio || 0
     };
 }
 
@@ -1029,7 +1029,7 @@ function updatePerformanceStats(member) {
     const stats = calculateMemberStats(performance, attendance, billCount, committees);
     
     updateStatElement(elements.attendanceStat, stats.attendance, '%');
-    updateStatElement(elements.billPassStat, stats.billPass, '%');
+    updateStatElement(elements.billPassStat, stats.billPass, '개');
     updateStatElement(elements.petitionProposalStat, stats.petitionProposal, '%');
     updateStatElement(elements.petitionResultStat, stats.petitionResult, '%');
     updateStatElement(elements.abstentionStat, stats.abstention, '%');
