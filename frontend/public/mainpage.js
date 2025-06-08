@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         rank: index + 1,
                         name: member.lawmaker_name,
                         party: normalizePartyName(member.party) || '정보없음',
-                        score: Math.round(Math.max(0, Math.min(100, score)))
+                        score: Math.round(score * 10) / 10
                     };
                 });
 
