@@ -1,6 +1,6 @@
-import requests
 import json
 import math
+import requests
 
 api_key = "927928bf24af47d4afa7b805ed0bf4fc"
 api_url = "https://open.assembly.go.kr/portal/openapi/nxjuyqnxadtotdrbw"

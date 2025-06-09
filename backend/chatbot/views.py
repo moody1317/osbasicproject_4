@@ -14,7 +14,8 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # DB 파일 경로
 PERFORMANCE_DB = os.path.join(os.path.dirname(__file__), '..', 'performance.db')
-RANKING_DB = os.path.join(os.path.dirname(__file__), '..', 'ranking.db')
+RANKING_DB = os.path.join(os.path.dirname(__file__), '..', 'ranking_parties.db')
+RANKING_MEMBER = os.path.join(os.path.dirname(__file__), '..', 'ranking_member.db')
 
 # 사용자 질문에서 키워드 추출 및 필드 판별
 KEYWORD_MAPPING = {
@@ -24,6 +25,7 @@ KEYWORD_MAPPING = {
     "청원": ("performance_score", ["HG_NM", "POLY_NM", "청원제시", "청원결과"]),
     "위원회": ("performance_score", ["HG_NM", "POLY_NM", "위원회"]),
     "기권": ("performance_score", ["HG_NM", "POLY_NM", "기권_무효"]),
+    "무효": ("performance_score", ["HG_NM", "POLY_NM", "기권_무효"]),
     "일치": ("performance_score", ["HG_NM", "POLY_NM", "표결일치"]),
     "불일치": ("performance_score", ["HG_NM", "POLY_NM", "표결불일치"]),
     "정당 요약": ("party_score", ["정당", "평균실적", "의원수", "가중점수"]),
@@ -73,7 +75,7 @@ def chatbot_api(request):
     - 국회의원을 묻는 질문엔 'ranking_members' 테이블을 기준으로 삼아.
     - 정당을 묻는 질문엔 'party_score' 또는 'party_statistics_kr' 테이블을 기준으로 삼아.
     - 정당의 '평균실적', '가중점수', '의원수' 등은 'party_score' 테이블을 참고해.
-    - 정당의 출석률, 기권률, 표결일치율 등은 'party_statistics_kr' 테이블을 참고해.
+    - 정당의 출석률, 기권률, 표결일치율 등의 세부정보는 'party_statistics_kr' 테이블을 참고해.
         - '정당의 의원수'는 party_score 테이블의 '의원수' 컬럼을 의미해.
         - '정당의 출석률'은 party_statistics_kr 테이블의 '출석_평균' 컬럼을 의미해.
         - '정당의 기권률'은 party_statistics_kr 테이블의 '기권무효_평균' 컬럼을 의미해.  
@@ -86,7 +88,7 @@ def chatbot_api(request):
     - '민주당', '더민주', '더민주당', '여당' → '더불어민주당'
     - '조국당', '혁신당' → '조국혁신당'
     - '기본당' → '기본소득당'
-3. 의원 이름이 불완전하면 '이름을 조금 더 정확히 입력해주세요'라고 응답해.
+3. 의원 이름이 HG_NM칼럼에 존재하지 않으면 '이름을 조금 더 정확히 입력해주세요'라고 응답해.
 4. 출석률, 청원제시, 법안가결 등 성과 항목을 묻는 질문은 평균, 최고, 최저, 표준편차 등 상세 항목을 구분하여 알려주거나 어떤 항목을 원하는지 사용자에게 되물어봐.
     - 예를 들어, '출석률이 가장 높은 의원은 누구야?'라고 하면 '출석률'을 기준으로 최고치를 가진 의원을 알려줘.
 5. '출석률 1위는 누구야?', '청원제시 1위 정당은?' 같은 순위 요청이 들어오면 해당 항목을 기준으로 순위를 답변해. '_순위'로 끝나는 컬럼명을 참고하면 돼.
