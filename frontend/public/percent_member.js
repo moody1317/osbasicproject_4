@@ -994,9 +994,9 @@ function updatePerformanceStats(member) {
         updateStatElement(elements.billPassStat, performance.bill_pass_score, '개');
         updateStatElement(elements.petitionProposalStat, performance.petition_score, '%');
         updateStatElement(elements.petitionResultStat, performance.petition_result_score, '%');
-        updateStatElement(elements.abstentionStat, performance.invalid_vote_ratio * 100, '%');
-        updateStatElement(elements.voteMatchStat, performance.vote_match_ratio * 100, '%');
-        updateStatElement(elements.voteMismatchStat, performance.vote_mismatch_ratio * 100, '%');
+        updateStatElement(elements.abstentionStat, performance.invalid_vote_ratio, '%');
+        updateStatElement(elements.voteMatchStat, performance.vote_match_ratio, '%');
+        updateStatElement(elements.voteMismatchStat, performance.vote_mismatch_ratio, '%');
         
         const committees = findMemberCommittees(member.name);
         const committeeInfo = committees.length > 0 ? 
