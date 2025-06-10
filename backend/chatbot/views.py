@@ -13,21 +13,20 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 # DB 파일 경로
-PERFORMANCE_DB = os.path.join(os.path.dirname(__file__), '..', 'performance.db')
 RANKING_DB = os.path.join(os.path.dirname(__file__), '..', 'ranking_parties.db')
 RANKING_MEMBER = os.path.join(os.path.dirname(__file__), '..', 'ranking_member.db')
 
 # 사용자 질문에서 키워드 추출 및 필드 판별
 KEYWORD_MAPPING = {
-    "총점": ("performance_score", ["HG_NM", "POLY_NM", "총점"]),
-    "출석": ("performance_score", ["HG_NM", "POLY_NM", "출석"]),
-    "법안": ("performance_score", ["HG_NM", "POLY_NM", "법안가결"]),
-    "청원": ("performance_score", ["HG_NM", "POLY_NM", "청원제시", "청원결과"]),
-    "위원회": ("performance_score", ["HG_NM", "POLY_NM", "위원회"]),
-    "기권": ("performance_score", ["HG_NM", "POLY_NM", "기권_무효"]),
-    "무효": ("performance_score", ["HG_NM", "POLY_NM", "기권_무효"]),
-    "일치": ("performance_score", ["HG_NM", "POLY_NM", "표결일치"]),
-    "불일치": ("performance_score", ["HG_NM", "POLY_NM", "표결불일치"]),
+    "총점": ("ranking_member", ["HG_NM", "POLY_NM", "총점"]),
+    "출석": ("ranking_member", ["HG_NM", "POLY_NM", "출석"]),
+    "법안": ("ranking_member", ["HG_NM", "POLY_NM", "법안가결"]),
+    "청원": ("ranking_member", ["HG_NM", "POLY_NM", "청원제시", "청원결과"]),
+    "위원회": ("ranking_member", ["HG_NM", "POLY_NM", "위원회"]),
+    "기권": ("ranking_member", ["HG_NM", "POLY_NM", "기권_무효"]),
+    "무효": ("ranking_member", ["HG_NM", "POLY_NM", "기권_무효"]),
+    "일치": ("ranking_member", ["HG_NM", "POLY_NM", "표결일치"]),
+    "불일치": ("ranking_member", ["HG_NM", "POLY_NM", "표결불일치"]),
     "정당 요약": ("party_score", ["정당", "평균실적", "의원수", "가중점수"]),
     "정당 통계": ("party_statistics_kr", ["정당"]),
 }
@@ -39,7 +38,7 @@ def get_filtered_data(user_input):
         for keyword, (table, columns) in KEYWORD_MAPPING.items():
             if keyword in user_input:
                 if table == "performance_score":
-                    with sqlite3.connect(PERFORMANCE_DB) as conn:
+                    with sqlite3.connect(RANKING_MEMBER) as conn:
                         conn.row_factory = sqlite3.Row
                         cur = conn.cursor()
                         cur.execute(f"SELECT {', '.join(columns)} FROM {table}")
